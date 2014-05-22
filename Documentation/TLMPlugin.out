@@ -1,0 +1,33 @@
+\BOOKMARK [0][-]{chapter.1}{Co-Simulation Framework}{}
+\BOOKMARK [1][-]{section.1.1}{Requirements on External Model Simulators}{chapter.1}
+\BOOKMARK [1][-]{section.1.2}{External Model startup}{chapter.1}
+\BOOKMARK [1][-]{section.1.3}{Meta-Model Simulation}{chapter.1}
+\BOOKMARK [1][-]{section.1.4}{Meta-Model XML Files}{chapter.1}
+\BOOKMARK [0][-]{chapter.2}{TLM background theory}{}
+\BOOKMARK [0][-]{chapter.3}{TLMManager System Design}{}
+\BOOKMARK [1][-]{subsection.3.0.1}{Co-Simulation Start-up}{chapter.3}
+\BOOKMARK [2][-]{subsection.3.0.2}{External Model Initialization}{subsection.3.0.1}
+\BOOKMARK [0][-]{chapter.4}{Simulink TLM Plugin}{}
+\BOOKMARK [0][-]{chapter.5}{MSC.Adams TLM Plugin}{}
+\BOOKMARK [0][-]{chapter.6}{BEAST TLM Plugin}{}
+\BOOKMARK [1][-]{section.6.1}{The TLMInterfaceHandler}{chapter.6}
+\BOOKMARK [1][-]{section.6.2}{The TLMTie}{chapter.6}
+\BOOKMARK [0][-]{chapter.7}{Modelica TLM Plugin}{}
+\BOOKMARK [0][-]{chapter.8}{External MSC/Adams Models}{}
+\BOOKMARK [1][-]{section.8.1}{Preparing the Model File}{chapter.8}
+\BOOKMARK [1][-]{section.8.2}{Modifying an ADAMS model step-by-step}{chapter.8}
+\BOOKMARK [1][-]{section.8.3}{Preparing the Scripts}{chapter.8}
+\BOOKMARK [0][-]{chapter.9}{External Simulink Models}{}
+\BOOKMARK [1][-]{section.9.1}{TLM Simulink Library}{chapter.9}
+\BOOKMARK [1][-]{section.9.2}{Test Case: Pendulum}{chapter.9}
+\BOOKMARK [1][-]{section.9.3}{Installation}{chapter.9}
+\BOOKMARK [1][-]{section.9.4}{Creating External Simulink Models}{chapter.9}
+\BOOKMARK [0][-]{chapter.10}{External BEAST Models}{}
+\BOOKMARK [1][-]{section.10.1}{TLM Enabled BEAST models}{chapter.10}
+\BOOKMARK [1][-]{section.10.2}{BEAST Startup Script}{chapter.10}
+\BOOKMARK [0][-]{chapter.11}{External Modelica Models}{}
+\BOOKMARK [1][-]{subsection.11.0.1}{Build and link TLM Manager to a Modelica tool}{chapter.11}
+\BOOKMARK [1][-]{section.11.1}{How to create a model with a TLM interface}{chapter.11}
+\BOOKMARK [2][-]{subsection.11.1.1}{Prepare the XML meta-modeling file for simulation }{section.11.1}
+\BOOKMARK [2][-]{subsection.11.1.2}{Set up simulation settings}{section.11.1}
+\BOOKMARK [1][-]{section.11.2}{How to start a TLM simulation.}{chapter.11}

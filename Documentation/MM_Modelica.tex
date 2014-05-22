@@ -1,0 +1,82 @@
+\chapter{External Modelica Models}
+
+In this chapter a description of how to design and co-simulate Modelica models with the TLM interface is given.
+
+\subsection{Build and link TLM Manager to a Modelica tool}
+
+The first step is to install the TLM manager. But please make sure you have Microsoft Visual Studio installed and the MinGW compiler for OMC and WSM (the MinGW compiler comes with OMC and WSM by default).
+
+~\\Depending on which Modelica tool you are using, do as follows:
+
+\subsubsection{In OpenModelica}
+Run the script \textit{InstallTlmForOmc.bat} in MS DOS.
+
+\subsubsection{In Wolfram SystemModeler}
+Run the script \textit{InstallTlmForWsm.bat} in MS DOS.
+
+\subsubsection{In Dymola}
+Run the script \textit{InstallTlmForDymola.bat} in MS DOS.
+
+~\\The above mentioned script files are located in \textit{\textbackslash TLMPlugin\textbackslash Modelica}.
+
+~\\Note: The default Windows TLM installation BAT script needs to be checked.
+This should probably be done together with a system administrator or a member of the BEAST team. The main issue is to modify the script file so the Modelica tool, Microsoft Visual Studio and the TLMPlugin folder paths are correct.
+
+~\\ The installation script will set all the necessary paths in order to use the TLM interface. Following, a library is generated and copied to the Modelica tool installation folder (for Dymola) or to the resource folder located in the TLM-plugin folder for OMC and WSM). For Dymola a tlmforce.h file is copied to the installation folder and for OMC and WSM the tlmforce.h file is copied to the resource folder. Next, the TLM Manager is compiled and builded.
+
+~\\In order to run the installation script simple start a commando prompt with administrator rights and execute the script.
+
+~\\Before running the TLM Manager please check the log after executing the installation script for any errors. If the installation was a success restart the computer in order to update the System Environment paths.
+
+\section{How to create a model with a TLM interface}
+In this example we will split a model of a double pendulum and run a simulation with the TLM interface. The first step is to split the full model of the double pendulum and create two models, which are saved in two separate folders.
+
+\image{!hbtp}{0.5}{path.png}{figuretext}{tableofcontentstext}
+In this example we will call the two new models 'DoublePendulum1' and 'DoublePendulum2'. At the end of each model (where the two models need to be connected) a TLM component is connected from the TLM Modelica library.
+
+\subsubsection{Full model}
+\image{!hbtp}{}{doublePendulum.png}{figuretext}{tableofcontentstext}
+
+\subsubsection{Sub-model 1 (DoublePendulum1)}
+
+\image{!hbtp}{}{doublePendulum1.png}{Sub-model 1 of a double Pendulum}{Sub-model 1 of a double Pendulum}
+~\\\\\\
+\subsubsection{Sub-model 2 (DoublePendulum2)}
+\image{!hbtp}{}{doublePendulum2.png}{Sub-model 2 of a double Pendulum}{Sub-model 2 of a double Pendulum}
+
+When using the TLM interface in Modelica it is important to note that the TLM connection has to be connected to a body! Therefore, if you compare DoublePendulum2 with the full model, you can see that an extra body has been added. \\\\The extra body (boxBody1) is half of the boxbody1 from the full model (half mass and length). Furthermore, the boxBody1 from DoublePendulum1 is half (mass and length) of the boxbody1 from the full model.\\\\It is important that the initial conditions for the objects are correct, i.e. the boxbody1 from DoublePendulum2 will have an initial position (r\textunderscore0[3] = {0.25,0,0})  for the given example.\\\\
+
+\subsection{Prepare the XML meta-modeling file for simulation }
+In the XML file we have to define how the models are connected and which Modelica tool is used. Furthermore the simulation time is defined.\\\\The XML file for the double pendulum: ~\\
+\image{!hbtp}{}{xml.png}{XML file for Modelica co-simulation}{XML file for Modelica co-simulation}
+
+Save the file to the top folder (\textit{\textbackslash MetaModels \textbackslash DoublePendulum}).
+
+\subsection{Set up simulation settings}
+The next step is to set up the simulation settings. For OpenModelica and Dymola all the simulation settings have to be modified in a BAT script. The BAT script is located in the bin folder: (\textit{\textbackslash TLMPlugin\textbackslash bin\textbackslash}).
+
+
+\begin{itemize}
+  \item For openModelica the file is called: \textit{StartTLMModelica.bat}.
+  \item For Wolfram SystemModeler the file is called: \textit{StartTLMWSM.bat}.
+  \item For Dymola the file is called: \textit{StartTLMDymola.bat}.
+\end{itemize}
+
+The first step is to modify the Modelica tool installation path so it matches the user's installation folder on his computer. Following, the simulation function in the BAT script has to been updated. The function defines the simulations settings, i.e. tolerance, number of intervals, solvers etc. \\\\When using Wolfram SystemModeler the user doesn't need to modify the simulation settings. Using the Simulation Center, the user can follow the simulation 'live'.
+
+\section{How to start a TLM simulation.}
+
+To start a TLM simulation, follow these 5 steps (please note the paths below are relative and needs to be fully specified according to the TLMPlugin installation folder).
+
+\begin{itemize}
+  \item Start a commando prompt.
+  \item Go to your metamodel folder, e.i. \textit{cd /TLMPlugin/MetaModels/OmcOmcDoublePendulum/}
+  \item To start the simulation run the following: \textit{tlmmanager.exe doublePendulum.xml}
+\end{itemize}
+
+When the simulation is done the result files are located in the respective folders where the models are saved. \\\\The MAT files can now be loaded into the respective Modelica tools an analyzed.
+\image{!hbtp}{}{doublePendulumResults.png}{Co-simulation of double pendulum results}{Co-simulation of double pendulum results}
+
+The blue plots are from the total model and the red are from DoublePendulum2. \\\\
+As can be seen, we have managed to carry out a parallel simulation with the TLM interface, and the results are almost identical. If the user wants to obtain better results, the 'Connection Form' parameters can be modified in the XML file to match the connection between the two TLM Modelica models even more accurately.
+
