@@ -1,0 +1,160 @@
+% macros.sty  Macros for mathematics, Dag Fritzson 92-07-29
+\typeout{Document style `macros':  Macros for mathematics, version 92-07-29}
+%
+% Fourth order tensor, second order tensor (matrix), and first order tensor (vector)
+\newcommand{\T}[1]{\mbox{\boldmath $\underline{#1}$}} % Forth order tensor
+\newcommand{\M}[1]{\mbox{\boldmath ${#1}$}}           % Second order tensor
+\newcommand{\V}[1]{\mbox{\boldmath $\vec{#1}$}}       % First order tensor
+%
+% Unit vectors, and zero vector
+\newcommand{\eHAT}{\mbox{$\bf\hat{e}$}}
+\newcommand{\aHAT}{\mbox{$\bf\hat{a}$}}
+\newcommand{\IHAT}{\mbox{$\bf\hat{I}$}}
+\newcommand{\vzero}{\mbox{\bf 0}}
+%
+% Versions of the \frac command with different font sizes
+\newcommand{\mbfrac}[2]{\mbox{$\frac{#1}{#2}$}}
+\newcommand{\nofrac}[2]{\frac{\mbox{\normalsize${#1}$}}
+                             {\mbox{\normalsize${#2}$}}}
+\newcommand{\smfrac}[2]{\mbox{\small$\frac{#1}{#2}$}}
+\newcommand{\fofrac}[2]{\frac{\mbox{\footnotesize${#1}$}}
+                             {\mbox{\footnotesize${#2}$}}}
+\newcommand{\scfrac}[2]{\frac{\mbox{\scriptsize${#1}$}}
+                             {\mbox{\scriptsize${#2}$}}}
+%
+% Superscript and subscript
+\newcommand{\ri}[1]{\mbox{{\scriptsize {#1}}}} % Two functions to get correct font
+\newcommand{\rii}[1]{\mbox{{\tiny {#1}}}}      % for labels in subscript
+\newcommand{\regtrademark}{$^{\hspace{1pt}\mbox{\tiny{R}}\hspace{-2.5mm}{\bigcirc}}$}
+\newcommand{\trademark}{$^{\hspace{1pt}\mbox{\tiny{TM}}}$}
+\newcommand{\inch}{\mbox{$^{\prime\prime}$}}
+\newcommand{\foot}{\mbox{$^{\prime}$}}
+\newcommand{\degrees}{\mbox{$^{\circ}$}}
+\newcommand{\twoprime}{\prime\prime}
+\newcommand{\threeprime}{\prime\prime\prime}
+%
+% Matrix(3x3), vector(3), vector(2) in component form
+
+% vector (3)
+\newcommand{\vcomp}[3]{\left[\begin{array}{c}   
+                       {#1} \\
+                       {#2} \\
+                       {#3}
+                     \end{array}\right]} 
+
+% matrix (3x3)
+\newcommand{\mcomp}[9]{\left[\begin{array}{ccc} 
+                       {#1} & {#2} & {#3} \\
+                       {#4} & {#5} & {#6} \\
+                       {#7} & {#8} & {#9} 
+                     \end{array}\right]} 
+
+\newcommand{\mcomptwo}[4]{\left[\begin{array}{cc}
+                       {#1} & {#2} \\
+                       {#3} & {#4}
+                     \end{array}\right]}
+
+% vector (2)
+\newcommand{\vcomptwo}[2]{\left[\begin{array}{c} 
+                       {#1} \\
+                       {#2}
+                     \end{array}\right]} 
+%
+% For computer variables or functions the font tt (Courier) should be used.
+\newcommand{\C}[1]{\mbox{\tt #1}}           % The tt font for variable or function.
+%
+% The arccos function
+\newcommand{\arccot}{\mbox{arccot}}
+%
+% Partial derivatives in rational notation
+
+% First order derivative
+\newcommand{\D}[2]{\mbox{$\nofrac{\partial {#1}}{\partial {#2}}$}}
+
+% Second order derivative 
+\newcommand{\Dii}[2]{\mbox{$\nofrac{\partial^{2} {#1}}    
+                                   {\partial {#2}^{2}}$}}
+
+% Mixed derivative
+\newcommand{\Dij}[3]{\mbox{$\nofrac{\partial^{2} {#1}}         
+                                   {\partial {#2}\partial{#3}}$}}
+
+% Third order derivative 
+\newcommand{\Diii}[2]{\mbox{$\nofrac{\partial^{3} {#1}}    
+                                   {\partial {#2}^{3}}$}}
+\newcommand{\FD}[2]{\mbox{$\nofrac{ d {#1}}{ d {#2}}$}}
+\newcommand{\FSD}[2]{\mbox{$\nofrac{ d^{2} {#1}}{ d {#2}^{2}}$}}
+\newcommand{\abs}[1]{\vert #1 \vert}
+%
+% Derivatives with respect to time (dot notation)
+%\def\stackrel#1#2{\mathrel{\mathop{#2}\limits^{#1}}}   % Internal definition
+\def\putunder#1#2{\mathrel{\mathop{#1}\limits_{#2}}}    % Internal definition
+\def\putunderr#1#2{\mathclose{\mathop{#1}\limits_{#2}}} % Internal definition
+\def\putunderl#1#2{\mathopen{\mathop{#1}\limits_{#2}}}  % Internal definition
+\newcommand{\dt}[1]{\mbox{$\dot{#1}$}}   % First order derivative
+\newcommand{\ddt}[1]{\mbox{$\ddot{#1}$}} % Second order derivative
+%
+% Total derivatives in rational notation
+\newcommand{\Dt}[2]{\mbox{$\nofrac{d {#1}}{d^{\mbox{}}{#2}}$}} % First order derivative
+\newcommand{\DDt}[2]{\mbox{$\nofrac{d^{2} {#1}}{d {#2}^{2}}$}} % Second order derivative
+%
+% Special notation to give the coordinate system in which the derivative is taken
+
+% For dot notation
+\newcommand{\reld}[1]{\mbox{$\putunderr{\left|\mbox{}\right.}{#1}$}}  
+
+% For rational notation
+\newcommand{\relD}[1]{\mbox{$\putunderr{{\left|\frac{\mbox{}}         
+                                                    {\mbox{}}\right.}}{#1}$}}
+
+%\newcommand{\dtrel}[2]{\mbox{$\dot{#1}\putunderr{\left|\mbox{}\right.}{#2}$}}
+%\newcommand{\ddtrel}[2]{\mbox{$\ddot{#1}\putunderr{\left|\mbox{}\right.}{#2}$}}
+%
+%%
+% A certain type of Postscript and special command. Kept for backward
+% compability. Use epsf.sty now.
+\newcounter{skallpostscriptritas}
+\setcounter{skallpostscriptritas}{1}
+\newcounter{skallcgipostritas}
+\setcounter{skallcgipostritas}{1}
+\newcommand{\mypath}{}
+\newcommand{\post}[5]{{
+% arg1 filename of postscript file
+% arg2 vsize in mm
+% arg3 hoffset in mm
+% arg4 voffset in mm
+% arg5 scale
+ \vspace*{#2 mm}
+ \ifnum\value{skallpostscriptritas}=1
+ \special{psfile=\mypath#1  hoffset=#3  voffset=#4  hscale=#5  vscale=#5 }
+ \fi
+}}
+\newcommand{\cgipost}[6]{{
+% arg1 filename of postscript file
+% arg2 hsize   in mm
+% arg3 vsize   in mm
+% arg4 hoffset in mm
+% arg5 voffset in mm
+% arg6 scale
+\begin{center}
+\begin{minipage}{#2mm}
+\vspace*{#3mm}
+\ifnum\value{skallcgipostritas}=1
+ \special{psfile=\mypath#1 hoffset=#4 voffset=#5 hscale=#6 vscale=#6}
+\fi
+\hspace*{#2mm}
+\end{minipage}
+\end{center}
+}}
+%
+% Default page settings
+\setlength{\textwidth}{142mm}
+\setlength{\oddsidemargin}{2.6mm}
+\setlength{\evensidemargin}{14.6mm}
+\setlength{\topmargin}{-13.4mm}
+\setlength{\textheight}{220mm}
+\setlength{\headheight}{19mm}
+\setlength{\headsep}{9mm}
+%\setlength{\footskip}{7mm}
+%\setlength{\footheight}{7mm}
+%
