@@ -45,17 +45,17 @@ void TransformVM(double V[3], double A[9])
 // The static GetForce function is a pure function that uses
 // parameters as defined for the GetForce above 
 void  TLMPlugin::GetForce(double position[],
-			 double orientation[],
-			 double speed[],
-			 double ang_speed[],
-			 TLMTimeData& Data,
-			 TLMConnectionParams& Params,
-			 double* force) {
+                          double orientation[],
+                          double speed[],
+                          double ang_speed[],
+                          TLMTimeData& Data,
+                          TLMConnectionParams& Params,
+                          double* force) {
 
     if(Data.time == TIME_WITHOUT_DATA) {
-	for(int i = 0; i < 6; i++) {
-	    force[i] = 0.0;
-	}
+        for(int i = 0; i < 6; i++) {
+            force[i] = 0.0;
+        }
     }
     else {
         double f[3] = {Data.GenForce[0], Data.GenForce[1], Data.GenForce[2]};
@@ -65,10 +65,10 @@ void  TLMPlugin::GetForce(double position[],
         TransformMV( Params.RotMatrix, f );
         TransformMV( Params.RotMatrix, m ); // BUG? correct translation of moment?
 
-	// The reaction force is (ReceivedWave - Impedance * Velocity)
-	for(int i = 0; i < 3; i++) {
-	    force[i] = f[i] -  Params.Zf * speed[i];
-	    force[i+3] = m[i] -  Params.Zfr * ang_speed[i];            
+        // The reaction force is (ReceivedWave - Impedance * Velocity)
+        for(int i = 0; i < 3; i++) {
+            force[i] = f[i] -  Params.Zf * speed[i];
+            force[i+3] = m[i] -  Params.Zfr * ang_speed[i];
         }
     }
 }

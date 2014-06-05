@@ -23,7 +23,7 @@ class PluginImplementer: public TLMPlugin {
     ~PluginImplementer();
 
 
- private:
+ protected:
 
     //! SetDebugOut function enables/disables debug information
     //! output from TLM plugin. 
@@ -62,21 +62,12 @@ class PluginImplementer: public TLMPlugin {
     //! initialize the object and connect to TLMManager. Will return true
     //! on success, false otherwize. Note that the method can be called
     //! only once.
-    bool Init( std::string model,
-	       double timeStart,
-	       double timeEnd,
-	       double maxStep,
-	       std::string ServerName);
+    virtual bool Init( std::string model,
+                       double timeStart,
+                       double timeEnd,
+                       double maxStep,
+                       std::string ServerName);
 
-
-    //! Initialize plugin for interface monitoring. Should be called
-    //! after the default constructor. It will initialize the object
-    //! and connect to TLMManager. Will return true on success, false
-    //! otherwize. Note that the method can be called only once.
-    bool InitMonitor( double timeStart,
-                      double timeEnd,
-                      double maxStep,
-                      std::string ServerName);
 
     //! Register TLM interface sends a registration request to TLMManager
     //! and returns the ID for the interface. '-1' is returned if
@@ -92,7 +83,7 @@ class PluginImplementer: public TLMPlugin {
     //! Input:
     //!   reqIfc - TLM interface that triggered the request;
     //!   time - time needed
-    void ReceiveTimeData(TLMInterface* reqIfc, double time);
+    virtual void ReceiveTimeData(TLMInterface* reqIfc, double time);
 
     //! Evaluate the reaction force from the TLM connection
     //! for a specified interface. Might need to receive messages from the 
@@ -138,10 +129,7 @@ class PluginImplementer: public TLMPlugin {
     //! The function might result in a request sent to TLM manager.
     virtual void GetTimeData(int interfaceID, double time, TLMTimeData& DataOut);
 
-    void GetTimeDataX(int interfaceID, double time, TLMTimeData& DataOut);
-    void ReceiveTimeDataX(TLMInterface* reqIfc, double time);
-
- private:
+ protected:
 
     //! StartTime - start time for the simulation
     double StartTime;

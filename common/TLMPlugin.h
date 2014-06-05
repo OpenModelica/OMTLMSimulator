@@ -55,22 +55,6 @@ class TLMPlugin {
 	       double maxStep,
 	       std::string serverName) = 0;
 
-    //! Init method for interface monitoring. Should be called after the 
-    //! default constructor. It will
-    //! initialize the object and connect to TLMManager. Will return true
-    //! on success, false otherwize. \note that the method can be called
-    //! only once.
-    //! \param timeStart start time for the simulation
-    //! \param timeEnd end time for the simulation 
-    //! \param maxStep maximum step of the solver
-    //! \param serverName IP address and port of the computer running TLM manager
-    //!        separated by colon (e.g., 198.111.123.2:1111)
-    virtual bool InitMonitor( double timeStart,
-                              double timeEnd,
-                              double maxStep,
-                              std::string serverName) = 0;
-
-
     //! Register TLM interface sends a registration request to TLMManager
     //! and returns the ID for the interface. '-1' is returned if
     //! the interface is not connected in the MetaModel.
@@ -136,7 +120,6 @@ class TLMPlugin {
     //! The function might result in a request sent to TLM manager.
     virtual void GetTimeData(int interfaceID, double time, TLMTimeData& DataOut) = 0;
 
-
     //! The static GetForce function is a pure function that uses
     //! parameters as defined for the GetForce function above.
     //! Additional parameters are obtained with GetConnectionParams & GetTimeData
@@ -151,8 +134,6 @@ class TLMPlugin {
     //! TIME_WITHOUT_DATA is a large negative constant used to
     //! indicate lack of data during simulation startup.
     static const int TIME_WITHOUT_DATA = -111111;
-
-    virtual void GetTimeDataX(int interfaceID, double time, TLMTimeData& DataOut){};
 
  protected:
 

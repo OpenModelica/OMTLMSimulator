@@ -3,15 +3,18 @@
 ifeq ($(MAKEFILEHEADHOME),)
   UP=$(PWD)/..
   MAKEFILEHEADHOME=$(UP)
+  BINDIR=$(UP)/bin
 else
   # This is for BEAST
   UP=$(MAKEFILEHEADHOME)/src
+  BINDIR=$(UP)/../bin/$(ABI)
 endif
 
 include $(MAKEFILEHEADHOME)/Makefile.head
 
 
 SRCCLT= PluginImplementer.cc \
+	MonitoringPluginImplementer.cc \
 	TLMClientComm.cc \
 	TLMCommUtil.cc \
 	TLMInterface.cc \
@@ -35,6 +38,11 @@ SRCSRVLIB= ManagerCommHandler.cc \
 	TLMMessageQueue.cc \
 	TLMErrorLog.cc
 
+SRCMONITOR= $(SRCCLT) \
+	MetaModel.cc \
+	MetaModelReader.cc \
+	MonitorManagerMain.cc
+
 CP=cp
 
 SRC= $($(SRCTYPE))
@@ -49,9 +57,9 @@ INCLUDES= -I. \
 	-I$(TIMEHOME) 
 
 LIBS = 	-L$(MISCHOME)/lib/$(ABI) \
+	-L$(THREADRUNHOME)/lib/$(ABI) \
 	-L$(TIMEHOME)/lib/$(ABI) \
-	-lmisc  -lrtime
-#	-L$(THREADRUNHOME)/lib/$(ABI) -lthreadrun
+	-lmisc -lthreadrun -lrtime
 
 INCXTR=
 
@@ -67,7 +75,7 @@ help:
 	@echo all, defaulf: build everything.
 
 
-all: lib manager 
+all: lib manager monitor test
 
 lib: lib_s
 	$(MAKE) dir
@@ -80,6 +88,14 @@ lib_s:
 manager: 
 	$(MAKE) dir
 	$(MAKE) SRCTYPE=SRCMGR $(ABI)/tlmmanager$(FEXT)
+
+monitor:
+	$(MAKE) dir
+	$(MAKE) SRCTYPE=SRCMONITOR $(ABI)/tlmmonitor$(FEXT)
+
+test:
+	$(MAKE) dir
+	$(MAKE) $(ABI)/testapp$(FEXT)
 
 
 $(ABI)/libTLM.a $(ABI)/libTLM_m.a: $(OBJS)
@@ -101,12 +117,22 @@ $(ABI)/tlmmanager$(FEXT): $(OBJS)
 	$(LINK) -o $(ABI)/tlmmanager$(FEXT) $(OBJS) $(LIBS) $(XTRLIBS) $(LIBXML)
 	if [ -f $(ABI)/tlmmanager.exe.manifest ] ; then \
 		(cd $(ABI) ; mt.exe -manifest tlmmanager.exe.manifest -outputresource:tlmmanager.exe\;1); fi
-	$(CP) $(ABI)/tlmmanager$(FEXT) ../../../bin/$(ABI)/tlmmanager$(FEXT)
+	$(CP) $(ABI)/tlmmanager$(FEXT) $(BINDIR)/tlmmanager$(FEXT)
+
+$(ABI)/tlmmonitor$(FEXT): $(OBJS)
+	$(MAKE) dir
+	$(LINK) -o $(ABI)/tlmmonitor$(FEXT) $(OBJS) $(LIBS) $(XTRLIBS) $(LIBXML)
+	if [ -f $(ABI)/tlmmonitor.exe.manifest ] ; then \
+		(cd $(ABI) ; mt.exe -manifest tlmmonitor.exe.manifest -outputresource:tlmmonitor.exe\;1); fi
+	$(CP) $(ABI)/tlmmonitor$(FEXT) $(BINDIR)/tlmmonitor$(FEXT)
+
+$(ABI)/testapp$(FEXT): $(ABI)/TLMTestApp.o $(ABI)/libTLM_m.a
+	$(LINK) $(ABI)/TLMTestApp.o -o $(ABI)/testapp$(FEXT) -L$(ABI) -lTLM_m $(XTRLIBS)
 
 $(ABI)/%.o: %.cc
 	$(CC) $(DEFINES) $(CCFLAGS) $(OPTFLAGS4) $(INCLUDES) $(INCLXML) -c $< -o $@
 
-.PHONY: clean dir depend lib manager 
+.PHONY: clean dir depend lib manager test
 
 clean:
 	rm -f $(ABI)/*.o  $(ABI)/*.a $(ABI)/tlmmanager$(FEXT)
