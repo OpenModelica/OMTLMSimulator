@@ -1,8 +1,15 @@
 # Makefile for TLMManager & Plugin
 
+ifeq ($(MAKEFILEHEADHOME),)
+  UP=$(PWD)/..
+  MAKEFILEHEADHOME=$(UP)
+else
+  # This is for BEAST
+  UP=$(MAKEFILEHEADHOME)/src
+endif
+
 include $(MAKEFILEHEADHOME)/Makefile.head
 
-UP=$(MAKEFILEHEADHOME)/src
 
 SRCCLT= PluginImplementer.cc \
 	TLMClientComm.cc \
@@ -42,9 +49,9 @@ INCLUDES= -I. \
 	-I$(TIMEHOME) 
 
 LIBS = 	-L$(MISCHOME)/lib/$(ABI) \
-	-L$(THREADRUNHOME)/lib/$(ABI) \
 	-L$(TIMEHOME)/lib/$(ABI) \
-	-lmisc -lthreadrun -lrtime
+	-lmisc  -lrtime
+#	-L$(THREADRUNHOME)/lib/$(ABI) -lthreadrun
 
 INCXTR=
 
@@ -126,4 +133,4 @@ depend:
 			$(INCLUDES) $(SRCCLT) $(SRCMGR) $(FORDEPEND) 2> /dev/null
 
 # if this file doesn't exist, a touch may be enough.
-include $(ABI)/makedepend.tail
+-include $(ABI)/makedepend.tail
