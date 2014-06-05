@@ -7,7 +7,7 @@
 // However for performance reasons, i.e. tp
 // avoid string maniplulations, they are turned off when this constant is false !
 // If TLM operation is correct, no messages should be produced by functions in this file.
-bool doDetailedLogging=true;
+bool doDetailedLogging=false;
 
 
 using std::string;
@@ -41,12 +41,17 @@ void TLMCommUtil::SendMessage( TLMMessage& mess){
         TLMCommUtil::ByteSwap(&mess.Header.TLMInterfaceID, sizeof (mess.Header.TLMInterfaceID));
     }
 
-    int sendBytes = send(mess.SocketHandle, (const char*)&(mess.Header) , sizeof(TLMMessageHeader), 0);
+#ifdef  WIN32
+    const int MSG_MORE = 0;
+#endif
+
+    // NOTE, "MSG_MORE" flag is important for Linux socket performance!
+    int sendBytes = send(mess.SocketHandle, (const char*)&(mess.Header) , sizeof(TLMMessageHeader), MSG_MORE);
 
     if( sendBytes < 0) {
         // try to resend
         TLMErrorLog::Warning("Failed to send message header, will try to continue anyway");
-        sendBytes = send(mess.SocketHandle, (const char*)&(mess.Header) , sizeof(TLMMessageHeader), 0);
+        sendBytes = send(mess.SocketHandle, (const char*)&(mess.Header) , sizeof(TLMMessageHeader), MSG_MORE);
     };
 
 #ifdef  WIN32
@@ -80,7 +85,9 @@ void TLMCommUtil::SendMessage( TLMMessage& mess){
 
 }
 
+#ifndef MSG_WAITALL
 #define MSG_WAITALL 0
+#endif
 // Danger : winsock2.h in
 // c:\program files\microsoft platform sdk for windows server 2003 r2\include\winsock2.h(658) 
 // previously defines it as 

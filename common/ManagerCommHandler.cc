@@ -77,7 +77,7 @@ void ManagerCommHandler::RunStartupProtocol() {
     TM_Start(&tInfo);
 
     while( (numToRegister > 0) || ( numCheckModel < TheModel.GetComponentsNum())) {
-	Comm.SelectReadSocket();
+        Comm.SelectReadSocket();
         
         // Check for timeout.
         TM_Stop(&tInfo);
@@ -94,74 +94,73 @@ void ManagerCommHandler::RunStartupProtocol() {
         
         TLMErrorLog::Log("Communicating with clients...");
         
-	Comm.ClearActiveSockets();
-	// Check all the components for interface registration messages
-	for(int iSock =  TheModel.GetComponentsNum() - 1; iSock >= 0 ; --iSock) {
-	    TLMComponentProxy& comp =  TheModel.GetTLMComponentProxy(iSock);
-	    int hdl = comp.GetSocketHandle();
-	    // The component needs to be connected to a socket
-	    if(hdl < 0) continue;
-	    // The component needs to be is startup mode, not waiting for check mode
-	    if(comp.GetReadyToSim()) continue;
+        Comm.ClearActiveSockets();
+        // Check all the components for interface registration messages
+        for(int iSock =  TheModel.GetComponentsNum() - 1; iSock >= 0 ; --iSock) {
+            TLMComponentProxy& comp =  TheModel.GetTLMComponentProxy(iSock);
+            int hdl = comp.GetSocketHandle();
+            // The component needs to be connected to a socket
+            if(hdl < 0) continue;
+            // The component needs to be is startup mode, not waiting for check mode
+            if(comp.GetReadyToSim()) continue;
 
-	    // There is data waiting
-	    if(!Comm.HasData(hdl)) {
-		Comm.AddActiveSocket(hdl); // expect more messages
-		continue;
-	    }
+            // There is data waiting
+            if(!Comm.HasData(hdl)) {
+                Comm.AddActiveSocket(hdl); // expect more messages
+                continue;
+            }
 
-	    TLMMessage* message = MessageQueue.GetReadSlot();
-	    message->SocketHandle = hdl;
-	    TLMCommUtil::ReceiveMessage(*message);	      
-		
-	    if(message->Header.MessageType ==  TLMMessageTypeConst::TLM_CHECK_MODEL) {
-		// This component is done with registration. It's will wait for others
-		TLMErrorLog::Log(string("Component ") + comp.GetName() + " is ready to simulation");;
+            TLMMessage* message = MessageQueue.GetReadSlot();
+            message->SocketHandle = hdl;
+            TLMCommUtil::ReceiveMessage(*message);
 
-		comp.SetReadyToSim();
-		numCheckModel++;		    
-	    }
-	    else {
-		TLMErrorLog::Log(string("Component ") + comp.GetName() + " registers interface");;
+            if(message->Header.MessageType ==  TLMMessageTypeConst::TLM_CHECK_MODEL) {
+                // This component is done with registration. It's will wait for others
+                TLMErrorLog::Log(string("Component ") + comp.GetName() + " is ready to simulation");;
 
-		Comm.AddActiveSocket(hdl); // expect more messages
-		ProcessRegInterfaceMessage(iSock, *message);
-		MessageQueue.PutWriteSlot(message);
-	    }
-	}
+                comp.SetReadyToSim();
+                numCheckModel++;
+            }
+            else {
+                TLMErrorLog::Log(string("Component ") + comp.GetName() + " registers interface");;
 
-	// Check if a new connection is waiting to be accepted.
-	if((numToRegister > 0) && Comm.HasData(acceptSocket)) { 
-	    int hdl = Comm.AcceptComponentConnections();
-	    // WARNING!!! This is potentially a problematic case
-	    // since I immediately try to receive a message from just accepted connection
-	    // and might block in 'read' while other clients wait.
-	    // Alternatively I could put the sockets that are not associated
-	    // with any component to a separate place and "select" on them once more.
-	    // Might be necessary to fix later.
+                Comm.AddActiveSocket(hdl); // expect more messages
+                ProcessRegInterfaceMessage(iSock, *message);
+                MessageQueue.PutWriteSlot(message);
+            }
+        }
 
-	    TLMMessage* message = MessageQueue.GetReadSlot();
-	    message->SocketHandle = hdl;
-	    if( !TLMCommUtil::ReceiveMessage(*message) ){
+        // Check if a new connection is waiting to be accepted.
+        if((numToRegister > 0) && Comm.HasData(acceptSocket)) {
+            int hdl = Comm.AcceptComponentConnections();
+            // WARNING!!! This is potentially a problematic case
+            // since I immediately try to receive a message from just accepted connection
+            // and might block in 'read' while other clients wait.
+            // Alternatively I could put the sockets that are not associated
+            // with any component to a separate place and "select" on them once more.
+            // Might be necessary to fix later.
+
+            TLMMessage* message = MessageQueue.GetReadSlot();
+            message->SocketHandle = hdl;
+            if( !TLMCommUtil::ReceiveMessage(*message) ){
                 TLMErrorLog::FatalError("Failed to get message, exiting");
                 abort();
             }
 
-	    ProcessRegComponentMessage(*message);
+            ProcessRegComponentMessage(*message);
 
-	    MessageQueue.PutWriteSlot(message);
-	    numToRegister --;
-	    if(numToRegister == 0)
-		TLMErrorLog::Log("All expected components are registered");
+            MessageQueue.PutWriteSlot(message);
+            numToRegister --;
+            if(numToRegister == 0)
+                TLMErrorLog::Log("All expected components are registered");
 
-	    Comm.AddActiveSocket(hdl);		
-	}
+            Comm.AddActiveSocket(hdl);
+        }
 
-	if(numToRegister)  // still more connections expected
-	    Comm.AddActiveSocket(acceptSocket);
+        if(numToRegister)  // still more connections expected
+            Comm.AddActiveSocket(acceptSocket);
         
     }
-    
 }
 
 // ProcessRegComponentMessage processes the first message after "accept"
@@ -400,22 +399,24 @@ void ManagerCommHandler::MarshalMessage(TLMMessage& message) {
     // forward the time data
     TLMInterfaceProxy& src = TheModel.GetTLMInterfaceProxy(message.Header.TLMInterfaceID);
     int destID = src.GetLinkedID();
-	
+
     if(destID < 0) {
-	TLMErrorLog::Warning("Received time data for an unconnected interface. Ignored.");
-	message.SocketHandle = -1;
-	message.Header.TLMInterfaceID = -1;
+        TLMErrorLog::Warning("Received time data for an unconnected interface. Ignored.");
+        message.SocketHandle = -1;
+        message.Header.TLMInterfaceID = -1;
     }
     else {
-	TLMInterfaceProxy& dest = TheModel.GetTLMInterfaceProxy(destID);
-	TLMComponentProxy& destComp = TheModel.GetTLMComponentProxy(dest.GetComponentID());
-	message.SocketHandle = destComp.GetSocketHandle();
-	message.Header.TLMInterfaceID = destID;
+        TLMInterfaceProxy& dest = TheModel.GetTLMInterfaceProxy(destID);
+        TLMComponentProxy& destComp = TheModel.GetTLMComponentProxy(dest.GetComponentID());
+        message.SocketHandle = destComp.GetSocketHandle();
+        message.Header.TLMInterfaceID = destID;
 
-	TLMErrorLog::Log(string("Forwarding from " + 
-		   TheModel.GetTLMComponentProxy(src.GetComponentID()).GetName() + '.'+
-		   src.GetName()
-		   + " to " + destComp.GetName() + '.' + dest.GetName()));
+        if(TLMErrorLog::LogEnabled()){
+            TLMErrorLog::Log(string("Forwarding from " +
+                                    TheModel.GetTLMComponentProxy(src.GetComponentID()).GetName() + '.'+
+                                    src.GetName()
+                                    + " to " + destComp.GetName() + '.' + dest.GetName()));
+        }
     }
 }
 
@@ -561,8 +562,12 @@ void ManagerCommHandler::MonitorThreadRun()
         //return;
     }
 
+    if( TheModel.GetSimParams().GetMonitorPort() != monComm.GetServerPort() ){
+        TLMErrorLog::Warning("Used monitoring port : " + TLMErrorLog::ToStdStr(monComm.GetServerPort()));
+    }
+
     // Update the meta-model with the selected server port.
-    TheModel.GetSimParams().SetMonitorPort(monComm.GetServerPort());    
+    TheModel.GetSimParams().SetMonitorPort(monComm.GetServerPort());
 
     // Never switch to running mode but use active sockets instead.
     monComm.AddActiveSocket(acceptSocket);
@@ -605,8 +610,10 @@ void ManagerCommHandler::MonitorThreadRun()
             message->SocketHandle = hdl;
             
             if( !TLMCommUtil::ReceiveMessage(*message) ){
-                TLMErrorLog::FatalError("Failed to get message, exiting");
-                abort();
+                TLMErrorLog::Warning("Failed to get message from monitor, disconected?");
+                //abort();
+                monComm.DropActiveSocket(hdl);
+                continue;
             }
             
             if(message->Header.MessageType ==  TLMMessageTypeConst::TLM_CHECK_MODEL) {
@@ -615,34 +622,34 @@ void ManagerCommHandler::MonitorThreadRun()
                 message->Header.TLMInterfaceID = 1;
                 message->Header.DataSize = 0;
 
-		MessageQueue.PutWriteSlot(message);
+                MessageQueue.PutWriteSlot(message);
             }
             else {
-                int IfcID = ProcessInterfaceMonitoringMessage(*message);                        
-		MessageQueue.PutWriteSlot(message);
+                int IfcID = ProcessInterfaceMonitoringMessage(*message);
+                MessageQueue.PutWriteSlot(message);
 		
                 if( IfcID >= 0 ){
 
-		  TLMErrorLog::Log("Register monitor handle");
-		  //std::cout << "hdl=" << hdl << ", ifID=" << IfcID << std::endl;
-		  localIntMap.insert(std::make_pair(hdl, IfcID));
-		  //std::cout << "hdl count=" << localIntMap.count(hdl) << ", if count=" << TheModel.GetInterfacesNum() << std::endl;
+                    TLMErrorLog::Log("Register monitor handle");
+                    //std::cout << "hdl=" << hdl << ", ifID=" << IfcID << std::endl;
+                    localIntMap.insert(std::make_pair(hdl, IfcID));
+                    //std::cout << "hdl count=" << localIntMap.count(hdl) << ", if count=" << TheModel.GetInterfacesNum() << std::endl;
 
-                  if(localIntMap.count(hdl) == TheModel.GetInterfacesNum()){
-		    monitorMapLock.lock();
-		    std::multimap<int,int>::iterator it;
-		    for( it = localIntMap.lower_bound(hdl) ;
-			 it != localIntMap.upper_bound(hdl) ; 
-			 it++ ){
-		        monitorInterfaceMap.insert(std::make_pair(it->second, hdl));
-		    }
-		    monitorMapLock.unlock();                    
-		  }
-		  else{
-		  }
+                    if(localIntMap.count(hdl) == TheModel.GetInterfacesNum()){
+                        monitorMapLock.lock();
+                        std::multimap<int,int>::iterator it;
+                        for( it = localIntMap.lower_bound(hdl) ;
+                             it != localIntMap.upper_bound(hdl) ;
+                             it++ ){
+                            monitorInterfaceMap.insert(std::make_pair(it->second, hdl));
+                        }
+                        monitorMapLock.unlock();
+                    }
+                    else{
+                    }
 
-		}
-	    }            
+                }
+            }
             //MessageQueue.PutWriteSlot(message);
         }
         else {

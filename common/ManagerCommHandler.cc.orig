@@ -30,6 +30,7 @@ void ManagerCommHandler::Run(CommunicationMode CommMode_In) {
 
     // start the reader & writer threads
     pthread_create( &reader, &attr, thread_ReaderThreadRun, (void*)this);
+
     pthread_create( &writer, &attr, thread_WriterThreadRun, (void*)this);
 
 #if 1
@@ -75,17 +76,17 @@ void ManagerCommHandler::RunStartupProtocol() {
     TM_Init(&tInfo);
     TM_Start(&tInfo);
 
-    while( (numToRegister > 0) || ( numCheckModel < TheModel.GetComponentsNum()) && runningMode != ShutdownMode) {
-        Comm.SelectReadSocket();
+    while( (numToRegister > 0) || ( numCheckModel < TheModel.GetComponentsNum())) {
+	Comm.SelectReadSocket();
         
         // Check for timeout.
         TM_Stop(&tInfo);
         if( tInfo.total.tv_sec > TheModel.GetSimParams().GetTimeout() ){
             Comm.closeAll();
-            TLMErrorLog::FatalError("Timeout - failed to start all components, give up! ("
-                                    + TLMErrorLog::ToStdStr(tInfo.total.tv_sec)
-                                    + " > " + TLMErrorLog::ToStdStr(TheModel.GetSimParams().GetTimeout())
-                                    + ")" );
+            TLMErrorLog::FatalError("Timeout - failed to start all components, give up! (" 
+                                    + TLMErrorLog::ToStdStr(tInfo.total.tv_sec) 
+                                    + " > " + TLMErrorLog::ToStdStr(TheModel.GetSimParams().GetTimeout()) 
+                                    + ")" );            
             break;
         }
         // Restart is needed for correct time accumulation.
@@ -93,73 +94,74 @@ void ManagerCommHandler::RunStartupProtocol() {
         
         TLMErrorLog::Log("Communicating with clients...");
         
-        Comm.ClearActiveSockets();
-        // Check all the components for interface registration messages
-        for(int iSock =  TheModel.GetComponentsNum() - 1; iSock >= 0 ; --iSock) {
-            TLMComponentProxy& comp =  TheModel.GetTLMComponentProxy(iSock);
-            int hdl = comp.GetSocketHandle();
-            // The component needs to be connected to a socket
-            if(hdl < 0) continue;
-            // The component needs to be is startup mode, not waiting for check mode
-            if(comp.GetReadyToSim()) continue;
+	Comm.ClearActiveSockets();
+	// Check all the components for interface registration messages
+	for(int iSock =  TheModel.GetComponentsNum() - 1; iSock >= 0 ; --iSock) {
+	    TLMComponentProxy& comp =  TheModel.GetTLMComponentProxy(iSock);
+	    int hdl = comp.GetSocketHandle();
+	    // The component needs to be connected to a socket
+	    if(hdl < 0) continue;
+	    // The component needs to be is startup mode, not waiting for check mode
+	    if(comp.GetReadyToSim()) continue;
 
-            // There is data waiting
-            if(!Comm.HasData(hdl)) {
-                Comm.AddActiveSocket(hdl); // expect more messages
-                continue;
-            }
+	    // There is data waiting
+	    if(!Comm.HasData(hdl)) {
+		Comm.AddActiveSocket(hdl); // expect more messages
+		continue;
+	    }
 
-            TLMMessage* message = MessageQueue.GetReadSlot();
-            message->SocketHandle = hdl;
-            TLMCommUtil::ReceiveMessage(*message);
+	    TLMMessage* message = MessageQueue.GetReadSlot();
+	    message->SocketHandle = hdl;
+	    TLMCommUtil::ReceiveMessage(*message);	      
+		
+	    if(message->Header.MessageType ==  TLMMessageTypeConst::TLM_CHECK_MODEL) {
+		// This component is done with registration. It's will wait for others
+		TLMErrorLog::Log(string("Component ") + comp.GetName() + " is ready to simulation");;
 
-            if(message->Header.MessageType ==  TLMMessageTypeConst::TLM_CHECK_MODEL) {
-                // This component is done with registration. It's will wait for others
-                TLMErrorLog::Log(string("Component ") + comp.GetName() + " is ready to simulation");;
+		comp.SetReadyToSim();
+		numCheckModel++;		    
+	    }
+	    else {
+		TLMErrorLog::Log(string("Component ") + comp.GetName() + " registers interface");;
 
-                comp.SetReadyToSim();
-                numCheckModel++;
-            }
-            else {
-                TLMErrorLog::Log(string("Component ") + comp.GetName() + " registers interface");;
+		Comm.AddActiveSocket(hdl); // expect more messages
+		ProcessRegInterfaceMessage(iSock, *message);
+		MessageQueue.PutWriteSlot(message);
+	    }
+	}
 
-                Comm.AddActiveSocket(hdl); // expect more messages
-                ProcessRegInterfaceMessage(iSock, *message);
-                MessageQueue.PutWriteSlot(message);
-            }
-        }
+	// Check if a new connection is waiting to be accepted.
+	if((numToRegister > 0) && Comm.HasData(acceptSocket)) { 
+	    int hdl = Comm.AcceptComponentConnections();
+	    // WARNING!!! This is potentially a problematic case
+	    // since I immediately try to receive a message from just accepted connection
+	    // and might block in 'read' while other clients wait.
+	    // Alternatively I could put the sockets that are not associated
+	    // with any component to a separate place and "select" on them once more.
+	    // Might be necessary to fix later.
 
-        // Check if a new connection is waiting to be accepted.
-        if((numToRegister > 0) && Comm.HasData(acceptSocket)) {
-            int hdl = Comm.AcceptComponentConnections();
-            // WARNING!!! This is potentially a problematic case
-            // since I immediately try to receive a message from just accepted connection
-            // and might block in 'read' while other clients wait.
-            // Alternatively I could put the sockets that are not associated
-            // with any component to a separate place and "select" on them once more.
-            // Might be necessary to fix later.
-
-            TLMMessage* message = MessageQueue.GetReadSlot();
-            message->SocketHandle = hdl;
-            if( !TLMCommUtil::ReceiveMessage(*message) ){
+	    TLMMessage* message = MessageQueue.GetReadSlot();
+	    message->SocketHandle = hdl;
+	    if( !TLMCommUtil::ReceiveMessage(*message) ){
                 TLMErrorLog::FatalError("Failed to get message, exiting");
                 abort();
             }
 
-            ProcessRegComponentMessage(*message);
+	    ProcessRegComponentMessage(*message);
 
-            MessageQueue.PutWriteSlot(message);
-            numToRegister --;
-            if(numToRegister == 0)
-                TLMErrorLog::Log("All expected components are registered");
+	    MessageQueue.PutWriteSlot(message);
+	    numToRegister --;
+	    if(numToRegister == 0)
+		TLMErrorLog::Log("All expected components are registered");
 
-            Comm.AddActiveSocket(hdl);
-        }
+	    Comm.AddActiveSocket(hdl);		
+	}
 
-        if(numToRegister)  // still more connections expected
-            Comm.AddActiveSocket(acceptSocket);
+	if(numToRegister)  // still more connections expected
+	    Comm.AddActiveSocket(acceptSocket);
         
     }
+    
 }
 
 // ProcessRegComponentMessage processes the first message after "accept"
@@ -297,6 +299,12 @@ void ManagerCommHandler::SetupInterfaceRequestMessage(TLMMessage& mess)
     
 }
 
+void print_timing(const std::string& str, tTM_Info& timeInfo)
+{
+    double totaltime = timeInfo.total.tv_sec + timeInfo.total.tv_nsec/1.0e9;
+    double maxtime = timeInfo.max.tv_sec + timeInfo.max.tv_nsec/1.0e9;
+    TLMErrorLog::Log("Time for " + str + ": " + TLMErrorLog::ToStdStr(totaltime) + " (" + TLMErrorLog::ToStdStr(maxtime) + ")");
+}
 
 // ReaderThreadRun processes incomming messages and creates
 // messages to be sent.
@@ -310,18 +318,18 @@ void ManagerCommHandler::ReaderThreadRun() {
     
     // Send the status result to all components
     for(int iSock =  TheModel.GetComponentsNum() - 1; iSock >= 0 ; --iSock) {
-	int hdl = TheModel.GetTLMComponentProxy(iSock).GetSocketHandle();
-	TLMMessage* message = MessageQueue.GetReadSlot();
-	message->SocketHandle = hdl;
-	message->Header.MessageType = TLMMessageTypeConst::TLM_CHECK_MODEL;
-	message->Header.DataSize = 0;
-	message->Header.TLMInterfaceID = StartupOK;
-	MessageQueue.PutWriteSlot(message);
+        int hdl = TheModel.GetTLMComponentProxy(iSock).GetSocketHandle();
+        TLMMessage* message = MessageQueue.GetReadSlot();
+        message->SocketHandle = hdl;
+        message->Header.MessageType = TLMMessageTypeConst::TLM_CHECK_MODEL;
+        message->Header.DataSize = 0;
+        message->Header.TLMInterfaceID = StartupOK;
+        MessageQueue.PutWriteSlot(message);
     }
 
     if(!StartupOK) {
-	MessageQueue.Terminate();
-	return;
+        MessageQueue.Terminate();
+        return;
     }
 
     TLMErrorLog::Log("------------------  Starting time data exchange   ------------------");
@@ -329,47 +337,86 @@ void ManagerCommHandler::ReaderThreadRun() {
     Comm.SwitchToRunningMode();
     runningMode = RunMode;
 
+    tTM_Info tReadSock; TM_Init(&tReadSock);
+    tTM_Info tReadSlot; TM_Init(&tReadSlot);
+    tTM_Info tReceive; TM_Init(&tReceive);
+    tTM_Info tMarshall; TM_Init(&tMarshall);
+    tTM_Info tForward; TM_Init(&tForward);
+    tTM_Info tHasData; TM_Init(&tHasData);
+    tTM_Info tWriteSlot; TM_Init(&tWriteSlot);
+
     int nClosedSock = 0;
 
-    while(nClosedSock != TheModel.GetComponentsNum() && runningMode != ShutdownMode) {
-	Comm.SelectReadSocket(); // wait for a change
+    while(nClosedSock != TheModel.GetComponentsNum()) {
 
-	for(int iSock =  TheModel.GetComponentsNum() - 1; iSock >= 0 ; --iSock) {
-	    TLMComponentProxy& comp = TheModel.GetTLMComponentProxy(iSock);    
-	    int hdl = comp.GetSocketHandle();
+        TM_Start(&tReadSock);
+        Comm.SelectReadSocket(); // wait for a change
+        TM_Stop(&tReadSock);
 
-	    if((hdl != -1 ) && Comm.HasData(hdl)) { // there is data to be received on the socket
+        for(int iSock =  TheModel.GetComponentsNum() - 1; iSock >= 0 ; --iSock) {
+            TLMComponentProxy& comp = TheModel.GetTLMComponentProxy(iSock);
+            int hdl = comp.GetSocketHandle();
 
-		TLMMessage* message = MessageQueue.GetReadSlot();
-		message->SocketHandle = hdl;
-		if(TLMCommUtil::ReceiveMessage(*message)) {
+            TM_Start(&tHasData);
+            bool dataFlg = Comm.HasData(hdl);
+            TM_Stop(&tHasData);
+
+            if((hdl != -1 ) && dataFlg ) { // there is data to be received on the socket
+
+                TM_Start(&tReadSlot);
+                TLMMessage* message = MessageQueue.GetReadSlot();
+                TM_Stop(&tReadSlot);
+
+                message->SocketHandle = hdl;
+
+                TM_Start(&tReceive);
+                bool receiveFlg = TLMCommUtil::ReceiveMessage(*message);
+                TM_Stop(&tReceive);
+
+                if(receiveFlg) {
                     if( CommMode == CoSimulationMode ){
+
+                        TM_Start(&tMarshall);
                         MarshalMessage(*message);
-                        
+                        TM_Stop(&tMarshall);
+
                         // Forward message for monitoring.
+                        TM_Start(&tForward);
                         ForwardToMonitor(*message);
-                        
+                        TM_Stop(&tForward);
+
                         // Place in send buffer
+                        TM_Start(&tWriteSlot);
                         MessageQueue.PutWriteSlot(message);
+                        TM_Stop(&tWriteSlot);
                     }
                     else {
-		        // CommMode == InterfaceRequestMode
-                        UnpackAndStoreTimeData(*message); 
+                        // CommMode == InterfaceRequestMode
+                        UnpackAndStoreTimeData(*message);
                     }
-		}
-		else {
-		    TLMErrorLog::Log(string("Connection to component ") + comp.GetName() + " is closed");
-		    Comm.DropActiveSocket(hdl);
-		    comp.SetSocketHandle(-1);
-		    nClosedSock ++;
-		}
-	    }
-	}
+                }
+                else {
+                    TLMErrorLog::Log(string("Connection to component ") + comp.GetName() + " is closed");
+                    Comm.DropActiveSocket(hdl);
+                    comp.SetSocketHandle(-1);
+                    nClosedSock ++;
+                }
+            }
+        }
     }
 
-    TLMErrorLog::Log("All sockets are closed - exiting");
     runningMode = ShutdownMode;
     MessageQueue.Terminate();
+
+    // Log timing
+    TLMErrorLog::SetDebugOut(true);
+    print_timing("ReadSock", tReadSock);
+    print_timing("ReadSlot", tReadSlot);
+    print_timing("HasData ", tHasData);
+    print_timing("Receive ", tReceive);
+    print_timing("Marshall", tMarshall);
+    print_timing("Forward ", tForward);
+    print_timing("ToWrite ", tWriteSlot);
 
     Comm.closeAll();
 }
@@ -379,13 +426,33 @@ void ManagerCommHandler::WriterThreadRun() {
     TLMMessage* tlm_mess;
     TLMErrorLog::Log(string("TLM manager is ready to send messages"));
 
-    while(( tlm_mess = MessageQueue.GetWriteSlot()) != NULL && runningMode != ShutdownMode) {
+    tTM_Info tGetSlot; TM_Init(&tGetSlot);
+    tTM_Info tSend; TM_Init(&tSend);
+    tTM_Info tRelease; TM_Init(&tRelease);
+
+    tlm_mess = MessageQueue.GetWriteSlot();
+
+    while( tlm_mess != NULL) {
       //TLMCommUtil::SendMessage(*tlm_mess);
       TLMMessage &mm = *tlm_mess;
+
+      TM_Start(&tSend);
       TLMCommUtil::SendMessage(mm);
+      TM_Stop(&tSend);
+
+      TM_Start(&tRelease);
       MessageQueue.ReleaseSlot(tlm_mess);
+      TM_Stop(&tRelease);
+
+      TM_Start(&tGetSlot);
+      tlm_mess = MessageQueue.GetWriteSlot();
+      TM_Stop(&tGetSlot);
     }
     
+    TLMErrorLog::SetDebugOut(true);
+    print_timing("Send GetSlot", tGetSlot);
+    print_timing("Send Send   ", tSend);
+    print_timing("Send Release", tRelease);
 }
 
 
@@ -398,22 +465,24 @@ void ManagerCommHandler::MarshalMessage(TLMMessage& message) {
     // forward the time data
     TLMInterfaceProxy& src = TheModel.GetTLMInterfaceProxy(message.Header.TLMInterfaceID);
     int destID = src.GetLinkedID();
-	
+
     if(destID < 0) {
-	TLMErrorLog::Warning("Received time data for an unconnected interface. Ignored.");
-	message.SocketHandle = -1;
-	message.Header.TLMInterfaceID = -1;
+        TLMErrorLog::Warning("Received time data for an unconnected interface. Ignored.");
+        message.SocketHandle = -1;
+        message.Header.TLMInterfaceID = -1;
     }
     else {
-	TLMInterfaceProxy& dest = TheModel.GetTLMInterfaceProxy(destID);
-	TLMComponentProxy& destComp = TheModel.GetTLMComponentProxy(dest.GetComponentID());
-	message.SocketHandle = destComp.GetSocketHandle();
-	message.Header.TLMInterfaceID = destID;
+        TLMInterfaceProxy& dest = TheModel.GetTLMInterfaceProxy(destID);
+        TLMComponentProxy& destComp = TheModel.GetTLMComponentProxy(dest.GetComponentID());
+        message.SocketHandle = destComp.GetSocketHandle();
+        message.Header.TLMInterfaceID = destID;
 
-	TLMErrorLog::Log(string("Forwarding from " + 
-		   TheModel.GetTLMComponentProxy(src.GetComponentID()).GetName() + '.'+
-		   src.GetName()
-		   + " to " + destComp.GetName() + '.' + dest.GetName()));
+        if(TLMErrorLog::LogEnabled()){
+            TLMErrorLog::Log(string("Forwarding from " +
+                                    TheModel.GetTLMComponentProxy(src.GetComponentID()).GetName() + '.'+
+                                    src.GetName()
+                                    + " to " + destComp.GetName() + '.' + dest.GetName()));
+        }
     }
 }
 
@@ -656,11 +725,4 @@ void ManagerCommHandler::MonitorThreadRun()
 
     // Close all sockets
     monComm.closeAll();
-}
-
-void ManagerCommHandler::Terminate()
-{
-    runningMode = ShutdownMode;
-    MessageQueue.Terminate();
-    Comm.closeAll();
 }

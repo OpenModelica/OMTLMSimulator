@@ -69,7 +69,7 @@ class TLMManagerComm {
 
     //! Add a socket handle to the active sockets set
     void AddActiveSocket(int socket) {
-	ActiveSockets.push_back(socket);
+        ActiveSockets.push_back(socket);
     }
 
     //! Remove a socket handle from the active sockets set

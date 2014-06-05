@@ -50,8 +50,8 @@ std::ostream* TLMErrorLog::outStream = NULL;
 void TLMErrorLog::open(){
     if(TLMErrorLog::outStream==NULL){
         TLMErrorLog::outStream=new ofstream("Logfile.log");
+        *outStream << "Starting log" << std::endl;
     }
-    *outStream << "Starting log" << std::endl;
 }
 
 void TLMErrorLog::SetDebugOut(bool Enable) {

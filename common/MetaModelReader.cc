@@ -77,8 +77,12 @@ void MetaModelReader::ReadTLMInterfaceNodes(xmlNode* node, int ComponentID) {
 // from XML-element node for a TLMConnection
 void MetaModelReader::ReadSimParams(xmlNode* node) {
 
-    xmlNode* curAttrVal = FindAttributeByName(node, "ManagerPort");
-    int Port = atoi((const char*)curAttrVal->content);
+    xmlNode* curAttrVal = FindAttributeByName(node, "ManagerPort", false);
+
+    int Port = 11111; // Some default port.
+    if( curAttrVal != NULL ){
+        Port = atoi((const char*)curAttrVal->content);
+    }
 	
     curAttrVal = FindAttributeByName(node, "StartTime");
     double StartTime = atof((const char*)curAttrVal->content);
@@ -86,10 +90,23 @@ void MetaModelReader::ReadSimParams(xmlNode* node) {
     curAttrVal = FindAttributeByName(node, "StopTime");
     double StopTime = atof((const char*)curAttrVal->content);
 
+    if( StartTime >= StopTime ){
+        TLMErrorLog::FatalError("StartTime must be smaller than StopTime, check your model!");
+        exit(1);
+    }
+
+    double WriteTimeStep = (StopTime-StartTime)/1000.0;
+    curAttrVal = FindAttributeByName(node, "WriteTimeStep", false);
+    if(curAttrVal != 0){
+        WriteTimeStep = atof((const char*)curAttrVal->content);
+    }
+
     //curAttrVal = FindAttributeByName(node, "SimInputFile");
     //std::string Infile = (const char*)curAttrVal->content;
 
+    // Note, order is important here!
     TheModel.GetSimParams().Set(Port, StartTime, StopTime);
+    TheModel.GetSimParams().SetWriteTimeStep(WriteTimeStep);
 }
 
 
