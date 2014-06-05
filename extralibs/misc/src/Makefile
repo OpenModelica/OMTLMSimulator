@@ -12,12 +12,12 @@ UP=../../../src
 #################################################################################
 
 B_INCLUDES = -I../include
-MINCLUDE= $(B_INCLUDES) -I$(NMATHOME)
+MINCLUDE= $(B_INCLUDES) 
 
 
-CCSRC=PrivPack.cc lightmat.cc tostr.cc ErrorLog.cc portability.cc Bstring.cc Btokenizer.cc \
-	double33s.cc dsyevv3.cc  dsyevq3.cc dsyevc3.cc dsytrd3.cc \
-	MathUtilityFunc.cc
+CCSRC= lightmat.cc tostr.cc ErrorLog.cc portability.cc Bstring.cc Btokenizer.cc 
+#	double33s.cc dsyevv3.cc  dsyevq3.cc dsyevc3.cc dsytrd3.cc 
+#	MathUtilityFunc.cc
 
 CSRC=g2c_w32.c  
 

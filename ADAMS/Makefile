@@ -4,12 +4,20 @@
 #
 # Iakov Nakhimovski. Makefile for the tlmadams dynamic library
 
+# The following is need for BEAST compatibility
+ifeq ($(MAKEFILEHEADHOME),)
+  UP=$(PWD)/..
+  MAKEFILEHEADHOME=$(UP)
+  BINDIR=$(UP)/bin/
+else
+  # This is for BEAST
+  UP=$(MAKEFILEHEADHOME)/src
+  BINDIR=$(UP)/../bin/$(ABI)
+endif
+
 include $(MAKEFILEHEADHOME)/Makefile.head
-UP=../..
 
-#include $(UP)/Versions/Format.mak
 
-BINDIR=$(UP)/../bin/$(ABI)
 
 #################################################################################
 #
@@ -57,6 +65,8 @@ dirs:
 	mkdir -p $(INSTDIR) ; fi ;
 
 clean:
-	rm -fr $(ABI)/*
+	if [ -d $(ABI) ] ; then\
+		rm -fr $(ABI)/*; \
+	fi;
 
 # DO NOT DELETE
