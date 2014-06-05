@@ -494,22 +494,6 @@ public:
     //! Return the transpose of the matrix.
     inline const double33 T() const;
 
-    // Compute SVD of the 3x3 matrix: A = U S Transpose(V), where U & V are unary (rotation) matrices
-    // and S is diagonal (singular values)
-    void calc_svd(double3 U[3], double3& S, double3 V[3]);
-
-    // Compute rotation matrix U from polar decomposition of the 3x3 matrix:
-    // A = P U = U P'
-    void calc_polar_rotation(double33& U);
-
-    // Compute left polar decomposition of the 3x3 matrix: A = P U,
-    // P i positive semidefinite and U is unary (rotation) matrix
-    void calc_left_polar(double33& P, double33& U);
-
-    // Compute right polar decomposition of the 3x3 matrix: A = U P,
-    // P i positive semidefinite and U is unary (rotation) matrix
-    void calc_right_polar(double33& U, double33& P);
-
  private:  // We try private intead of protected.
     //! Private data area. (1,*) = 0,1,2, (2,*)=3,4,5, (3,*)=6,7,8
     double x[9]; 
