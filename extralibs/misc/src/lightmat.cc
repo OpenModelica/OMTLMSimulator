@@ -1,7 +1,6 @@
 #include <cmath>
 #include <cassert>
 #include "lightmat.h"
-#include "double33s.h"
 #include "mathdefs.h"
 #include "ErrorLog.h"
 #include "tostr.h"
@@ -141,85 +140,6 @@ void double33::Get(double& a11,  double& a12,  double& a13,
     a31 = x[6]; a32 = x[7]; a33 = x[8];
 }
 
-
-// Compute SVD of the 3x3 matrix: A = U S Transpose(V), where U & V are unary (rotation) matrices
-// and S is diagonal (singular values)
-void double33::calc_svd(double3 U[3], double3& S, double3 V[3])
-{
-    double ata11 = x[0]*x[0] + x[3]*x[3] + x[6]*x[6];
-    double ata12 = x[0]*x[1] + x[3]*x[4] + x[6]*x[7];
-    double ata13 = x[0]*x[2] + x[3]*x[5] + x[6]*x[8];
-
-    double ata22 = x[1]*x[1] + x[4]*x[4] + x[7]*x[7];
-    double ata23 = x[1]*x[2] + x[4]*x[5] + x[7]*x[8];
-
-    double ata33 = x[2]*x[2] + x[5]*x[5] + x[8]*x[8];
-
-    double33s AtA(ata11,ata22,ata33,ata12,ata23,ata13);
-
-    double3 evAtA;
-    AtA.calc_eigensystem(evAtA, V);
-
-    for(int i = 1; i <= 3; i++) {
-        double ev = evAtA(i);
-        if(ev < 0)
-            ev = 0; // this is pure numerics. Negative is not possible
-        else
-            ev = sqrt(ev);
-        S(i) = ev;
-        if(ev > 1e-30 || ev < -1e-30) {
-            U[i-1] = (*this) * V[i-1];
-            U[i-1] /= ev;
-        }
-        else {
-            U[i-1] = V[i-1];
-        }
-    }
-}
-
-// Compute rotation matrix U from polar decomposition of the 3x3 matrix:
-// A = P U = U P'
-void double33::calc_polar_rotation(double33& U)
-{
-    double3 W[3], V[3];
-    double3 S;
-    calc_svd(W,S,V);
-    U = OuterProduct(W[0],V[0]);
-    U += OuterProduct(W[1],V[1]);
-    U += OuterProduct(W[2],V[2]);
-}
-
-// Compute left polar decomposition of the 3x3 matrix: A = P U,
-// P i positive semidefinite and U is unary (rotation) matrix
-void double33::calc_left_polar(double33& P, double33& U)
-{
-    double3 W[3], V[3];
-    double3 S;
-    calc_svd(W,S,V);
-    U = OuterProduct(W[0],V[0]);
-    U += OuterProduct(W[1],V[1]);
-    U += OuterProduct(W[2],V[2]);
-
-    P = OuterProduct(W[0],W[0]) * S(1);
-    P += OuterProduct(W[1],W[1]) * S(2);
-    P += OuterProduct(W[2],W[2]) * S(3);
-}
-
-// Compute right polar decomposition of the 3x3 matrix: A = U P,
-// P i positive semidefinite and U is unary (rotation) matrix
-void double33::calc_right_polar(double33& U, double33& P)
-{
-    double3 W[3], V[3];
-    double3 S;
-    calc_svd(W,S,V);
-    U = OuterProduct(W[0],V[0]);
-    U += OuterProduct(W[1],V[1]);
-    U += OuterProduct(W[2],V[2]);
-
-    P = OuterProduct(V[0],V[0]) * S(1);
-    P += OuterProduct(V[1],V[1]) * S(2);
-    P += OuterProduct(V[2],V[2]) * S(3);
-}
 
 // M * V
 const double3 operator*(const double33& a, const double3& b)
