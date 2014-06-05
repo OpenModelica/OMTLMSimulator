@@ -4,24 +4,27 @@
 #
 # Alexander Siemers. Makefile for the Simulink TLM plugin
 
+# The following is need for BEAST compatibility
+ifeq ($(MAKEFILEHEADHOME),)
+  UP=$(PWD)/..
+  MAKEFILEHEADHOME=$(UP)
+  BINDIR=$(UP)/bin/
+else
+  # This is for BEAST
+  UP=$(MAKEFILEHEADHOME)/src
+  BINDIR=$(UP)/../bin/$(ABI)
+endif
+
 include $(MAKEFILEHEADHOME)/Makefile.head
-UP=../..
 
-#include $(UP)/Versions/Format.mak
-
-BINDIR=$(UP)/../bin/$(ABI)
-INSTDIR=../../../bin/$(ABI)/Simulink
+INSTDIR=$(BINDIR)/Simulink
 
 INCLUDES=  -I. \
 	-I../common \
 	-I$(MISCHOME)/include
 
-#MHOME=`$(MISCHOME)`
-#MHOME=$(BEAST)/lib/misc
-MHOME=../../../lib/misc
-#MEX_DEBUGFLG=-g
+MHOME=`$(MISCHOME)`
 MEX_DEBUGFLG=
-#CC=g++ -fPIC $(DEBUGFLGS)
 CC += -fPIC
 
 $(ABI)/%.o: %.c
@@ -54,7 +57,6 @@ ABIOBJS=$(OBJS:%.o= $(ABI)/%.o) $(EXT_OBJS:%.o= $(ABI)/%.o)
 
 default:  dirs $(ABIOBJS)
 	$(MEX) $(MEX_DEBUGFLG) $(INCLUDES) tlmforce.cc $(ABIOBJS) 
-#$(XTRLIBS)
 
 install: default
 	cp tlmforce.mex* $(INSTDIR)

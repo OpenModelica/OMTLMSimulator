@@ -10,7 +10,7 @@ else
 endif
 
 
-plugins=ADAMS Simulink
+plugins=ADAMS Simulink Modelica
 extralibs=misc/src threadrun rtime 
 
 all  default:
