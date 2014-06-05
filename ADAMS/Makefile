@@ -28,7 +28,7 @@ include $(MAKEFILEHEADHOME)/Makefile.head
 
 
 BNAME=tlmadams
-INSTDIR=../../../bin/$(ABI)/MSC.ADAMS
+INSTDIR=$(BINDIR)/MSC.ADAMS
 
 INCLUDES=  -I. \
 	-I../common 

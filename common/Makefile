@@ -67,7 +67,7 @@ help:
 	@echo all, defaulf: build everything.
 
 
-all: lib manager test
+all: lib manager 
 
 lib: lib_s
 	$(MAKE) dir
@@ -80,10 +80,6 @@ lib_s:
 manager: 
 	$(MAKE) dir
 	$(MAKE) SRCTYPE=SRCMGR $(ABI)/tlmmanager$(FEXT)
-
-test:
-	$(MAKE) dir
-	$(MAKE) $(ABI)/testapp$(FEXT)
 
 
 $(ABI)/libTLM.a $(ABI)/libTLM_m.a: $(OBJS)
@@ -107,13 +103,10 @@ $(ABI)/tlmmanager$(FEXT): $(OBJS)
 		(cd $(ABI) ; mt.exe -manifest tlmmanager.exe.manifest -outputresource:tlmmanager.exe\;1); fi
 	$(CP) $(ABI)/tlmmanager$(FEXT) ../../../bin/$(ABI)/tlmmanager$(FEXT)
 
-$(ABI)/testapp$(FEXT): $(ABI)/TLMTestApp.o $(ABI)/libTLM_m.a
-	$(LINK) $(ABI)/TLMTestApp.o -o $(ABI)/testapp$(FEXT) -L$(ABI) -lTLM_m $(XTRLIBS)
-
 $(ABI)/%.o: %.cc
 	$(CC) $(DEFINES) $(CCFLAGS) $(OPTFLAGS4) $(INCLUDES) $(INCLXML) -c $< -o $@
 
-.PHONY: clean dir depend lib manager test
+.PHONY: clean dir depend lib manager 
 
 clean:
 	rm -f $(ABI)/*.o  $(ABI)/*.a $(ABI)/tlmmanager$(FEXT)
