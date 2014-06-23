@@ -38,6 +38,27 @@ class MetaModelReader {
     //! from XML-element node for a TLMConnection
     void ReadSimParams(xmlNode* node);
 
+    //! ReadVectorAttribute method reads a nodes 3D vector attribute, if applicable.
+    //! For instance, reads a position vector "x,y,z", that is, Position="0.0,1.0,-0.3".
+    //! \param node The current XML node that might have an attribute of the given name "attribute"
+    //! \param attribute The name of the attribute, for instance, "Position"
+    //! \param pos The 3D vector that contains the result, that is, the 3D vector read from the XML node.
+    //!            This field will be unchanged if the attribute is not found.
+    void ReadVectorAttribute(xmlNode* node, char* attribute, double pos[3]);
+
+    //! ReadDoubleAttribute method reads a double value attribute, if applicable.
+    //! \param node The current XML node that might have an attribute of the given name "attribute"
+    //! \param attribute The name of the attribute, for instance, "Position"
+    //! \return The result, that is, the double value read from the XML node.
+    //!         Returns 0.0 if the attribute is not found.
+    double ReadDoubleAttribute(xmlNode* node, char *attribute);
+
+    //! ReadPositionAndOrientation method reads position and orientation (phi angles) from the meta-model XML file.
+    //! Orientation 3x3 matrix A is created from the phi angles.
+    //! \param node The current XML node that contains the location and orientation attributes.
+    //! \param R    The position vector, output.
+    //! \param A    The 3x3 orientation matrix, output.
+    void ReadPositionAndOrientation(xmlNode* node, double R[3], double A[9]);
 
     //! FindChildByName is an utility function used for finding child elements by name
     //! for a given XML node. Used for looking up required sections in the XML document.
