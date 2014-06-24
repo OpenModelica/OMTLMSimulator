@@ -56,7 +56,8 @@ TLMInterfaceProxy::TLMInterfaceProxy(int CompID, int IfcID, string& aName) :
     ConnectionID(-1),
     LinkedID(-1),
     Name(aName),
-    Connected(false)
+    Connected(false),
+    time0Data()
 {
 }
 
