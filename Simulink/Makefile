@@ -39,6 +39,9 @@ $(ABI)/%.o: ../common/%.cc
 $(ABI)/%.o: $(MHOME)/src/%.cc
 	$(CC) $(DEFINES) $(CCFLAGS) $(OPTFLAGS4) $(INCLUDES) -c $< -o $@ 
 
+$(ABI)/%.o: $(MISCHOME)/src/%.cc
+	$(CC) $(DEFINES) $(CCFLAGS) $(OPTFLAGS4) $(INCLUDES) -c $< -o $@
+
 OBJS=   
 
 EXT_OBJS = PluginImplementer.o \

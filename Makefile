@@ -4,7 +4,6 @@
 ifeq ($(MAKEFILEHEADHOME),)
   UP=$(PWD)
   MAKEFILEHEADHOME=$(UP)
-  $(info set MAKEFILEHEADHOME)
 else
   # This is for BEAST
   UP=$(MAKEFILEHEADHOME)/src
@@ -12,9 +11,8 @@ endif
 
 
 plugins=ADAMS Simulink Modelica
-extralibs=misc/src threadrun rtime 
 
-all  default:
+all default: lib
 	cd common; $(MAKE) all
 
 lib:
@@ -22,7 +20,8 @@ lib:
 	cd extralibs; $(MAKE) 
 	cd common; $(MAKE) lib
 
-install: default
+install:
+	cd common ; $(MAKE) install
 	for i in ${plugins} ; do \
 		( cd $$i ; $(MAKE) UP=$(UP) MAKEFILEHEADHOME=$(MAKEFILEHEADHOME) install ) \
 	done

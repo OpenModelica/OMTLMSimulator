@@ -10,8 +10,6 @@ else
   BINDIR=$(UP)/../bin/$(ABI)
 endif
 
-$(info $(MAKEFILEHEADHOME)/Makefile.head)
-
 include $(MAKEFILEHEADHOME)/Makefile.head
 
 
@@ -99,6 +97,8 @@ test:
 	$(MAKE) dir
 	$(MAKE) $(ABI)/testapp$(FEXT)
 
+install: manager monitor
+	cp $(ABI)/tlmmonitor$(FEXT) $(ABI)/tlmmanager$(FEXT) ../bin
 
 $(ABI)/libTLM.a $(ABI)/libTLM_m.a: $(OBJS)
 	$(MAKE) dir

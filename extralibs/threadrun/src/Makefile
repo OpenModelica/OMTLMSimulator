@@ -4,7 +4,7 @@
 SHELL=/bin/sh
 
 include $(MAKEFILEHEADHOME)/Makefile.head
-UP=../../../src
+UP=$(MAKEFILEHEADHOME)
 
 
 # Architectures ends here, DO NOT delete this line config depends on it.
@@ -20,7 +20,7 @@ endif
 
 MINCLUDE= -I../include -I$(MISCHOME)/include -I$(NMATHOME) -I$(SCHEDULERHOME)/src $(MINCLUDE_SCHEDULER) -I$(TIMEHOME)/include -I$(PVM_ROOT)/include
 
-CCSRC=LoopScheduler.cc TaskQueue.cc TaskQueueNode.cc 
+CCSRC=TaskQueue.cc TaskQueueNode.cc 
 
 .cc.o:
 	$(CC) $(SPECFLAGS) $(CLIBFLAGS) $(MINCLUDE) -c $< -o $@ 

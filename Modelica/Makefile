@@ -34,6 +34,7 @@ cc += -DYY_NEVER_INTERACTIVE -fPIC
 
 BNAME=libtlmmodelica.a
 INSTDIR=$(BINDIR)/Modelica
+MHOME=`$(MISCHOME)`
 
 INCLUDES=  -I. \
 	-I../common \
@@ -50,6 +51,9 @@ $(ABI)/%.o: ../common/%.cc
 
 $(ABI)/%.o: $(MISCHOME)/src/%.cc
 	$(CC) $(INCLUDES) -c $< -o $@ 
+
+$(ABI)/%.o: $(MHOME)/src/%.cc
+	$(CC) $(INCLUDES) -c $< -o $@
 
 OBJS=  tlmforce.o 
 
