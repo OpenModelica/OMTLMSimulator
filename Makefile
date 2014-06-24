@@ -1,12 +1,13 @@
 .PHONY: all lib default depend clean
 
 # The following is need for BEAST compatibility
-ifeq ($(MAKEFILEHEADHOME),"")
+ifeq ($(MAKEFILEHEADHOME),)
+  UP=$(PWD)
+  MAKEFILEHEADHOME=$(UP)
+  $(info set MAKEFILEHEADHOME)
+else
   # This is for BEAST
   UP=$(MAKEFILEHEADHOME)/src
-else
-  UP=$(shell pwd)
-  MAKEFILEHEADHOME=$(UP)	
 endif
 
 
