@@ -4,7 +4,7 @@
 SHELL=/bin/sh
 
 include $(MAKEFILEHEADHOME)/Makefile.head
-UP=../../../src
+UP=$(MAKEFILEHEADHOME)
 
 
 # Architectures ends here, DO NOT delete this line config depends on it.
