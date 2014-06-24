@@ -10,6 +10,8 @@ else
   BINDIR=$(UP)/../bin/$(ABI)
 endif
 
+$(info $(MAKEFILEHEADHOME)/Makefile.head)
+
 include $(MAKEFILEHEADHOME)/Makefile.head
 
 
