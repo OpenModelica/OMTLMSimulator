@@ -116,14 +116,14 @@ $(ABI)/libTLM_s.a: $(OBJS)
 
 $(ABI)/tlmmanager$(FEXT): $(OBJS)
 	$(MAKE) dir
-	$(LINK) -o $(ABI)/tlmmanager$(FEXT) $(OBJS) $(LIBS) $(XTRLIBS) $(LIBXML)
+	$(LINK) -o $(ABI)/tlmmanager$(FEXT) $(OBJS) $(LIBS) $(XTRLIBS) $(LIBXML) $(LIBPTHREAD)
 	if [ -f $(ABI)/tlmmanager.exe.manifest ] ; then \
 		(cd $(ABI) ; mt.exe -manifest tlmmanager.exe.manifest -outputresource:tlmmanager.exe\;1); fi
 	$(CP) $(ABI)/tlmmanager$(FEXT) $(BINDIR)/tlmmanager$(FEXT)
 
 $(ABI)/tlmmonitor$(FEXT): $(OBJS)
 	$(MAKE) dir
-	$(LINK) -o $(ABI)/tlmmonitor$(FEXT) $(OBJS) $(LIBS) $(XTRLIBS) $(LIBXML)
+	$(LINK) -o $(ABI)/tlmmonitor$(FEXT) $(OBJS) $(LIBS) $(XTRLIBS) $(LIBXML) $(LIBPTHREAD)
 	if [ -f $(ABI)/tlmmonitor.exe.manifest ] ; then \
 		(cd $(ABI) ; mt.exe -manifest tlmmonitor.exe.manifest -outputresource:tlmmonitor.exe\;1); fi
 	$(CP) $(ABI)/tlmmonitor$(FEXT) $(BINDIR)/tlmmonitor$(FEXT)

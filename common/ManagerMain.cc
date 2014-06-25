@@ -7,6 +7,7 @@
 #include <string>
 #include <cstdlib>
 #include <cstring>
+#include <getopt.h>
 #include "TLMErrorLog.h"
 #include "MetaModel.h"
 #include "MetaModelReader.h"

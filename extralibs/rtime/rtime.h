@@ -96,7 +96,7 @@ int clock_gettime(clockid_t clock_id, struct timespec *tp);
 
 #endif
 
-#if defined (_MSC_VER) && !defined(NO_POSIX_THREADS)
+#if (defined (_MSC_VER) && !defined(NO_POSIX_THREADS)) || defined(__MINGW32__)
 
 #include <pthread.h>
 #define CLOCK_REALTIME 0

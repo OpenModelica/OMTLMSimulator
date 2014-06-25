@@ -18,7 +18,7 @@ else
 endif
 
 
-MINCLUDE= -I../include -I$(MISCHOME)/include -I$(NMATHOME) -I$(SCHEDULERHOME)/src $(MINCLUDE_SCHEDULER) -I$(TIMEHOME)/include -I$(PVM_ROOT)/include
+MINCLUDE= -I../include -I$(MISCHOME)/include -I$(NMATHOME) -I$(SCHEDULERHOME)/src $(MINCLUDE_SCHEDULER) -I$(TIMEHOME)/include -I./include
 
 CCSRC=TaskQueue.cc TaskQueueNode.cc 
 
