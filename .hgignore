@@ -1,0 +1,16 @@
+syntax: glob
+*.o
+bin/tlmmanager.exe
+bin/tlmmonitor.exe
+common/WINDOWS64/libTLM.a
+common/WINDOWS64/libTLM_m.a
+common/WINDOWS64/libTLM_s.a
+common/WINDOWS64/makedepend.tail
+common/WINDOWS64/testapp.exe
+common/WINDOWS64/tlmmanager.exe
+common/WINDOWS64/tlmmonitor.exe
+extralibs/misc/lib/WINDOWS64/libmisc.a
+extralibs/misc/src/WINDOWS64/makedepend.tail
+extralibs/rtime/WINDOWS64/makedepend.tail
+extralibs/rtime/lib/WINDOWS64/librtime.a
+extralibs/threadrun/lib/WINDOWS64/libthreadrun.a
