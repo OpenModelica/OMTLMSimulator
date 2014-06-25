@@ -262,6 +262,8 @@ void PluginImplementer::SetMotion(int forceID,
         // needed anything ?
 #endif     
 
+        TLMErrorLog::Log(string("Takedown due to finished interface data request."));
+
         // If we got here, we have a shutdown request from all interfaces
         abort(); // Some systems don't handle exit() very well, let's try abort();
         exit(10);
