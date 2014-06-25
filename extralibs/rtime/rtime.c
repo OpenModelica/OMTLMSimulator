@@ -204,7 +204,7 @@ int clock_getres(clockid_t clock_id, timespec_t *res)
 #endif
 
 
-#if defined (_MSC_VER)
+#if defined (_MSC_VER) || defined(__MINGW32__)
 
 /* 
    New approach for MSC using clock()

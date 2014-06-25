@@ -26,12 +26,22 @@ LIBXML-WINDOWS64=-L$(UP)/extralibs/libxml2/$(ABI)/lib -lxml2
 INCLXML-WINDOWS32=-I$(UP)/extralibs/libxml2/include
 LIBXML-WINDOWS32=-L$(UP)/extralibs/libxml2/$(ABI)/lib -lxml2
 
+XTRLIBS-WINDOWS64=-lws2_32
+XTRLIBS-WINDOWS32=-lws2_32
+
 INCLXML-LINUX64=-I/usr/include/libxml2
 LIBXML-LINUX64=-lxml2
 XTRLIBS-LINUX64=-lrt
 
+INCLPTHREAD-WINDOWS64=-I$(UP)/extralibs/pthread/include
+LIBPTHREAD-WINDOWS64=-L$(UP)/extralibs/pthread/$(ABI)/lib -lpthread
+
+INCLPTHREAD-WINDOWS32=-I$(UP)/extralibs/pthread/include
+LIBPTHREAD-WINDOWS32=-L$(UP)/extralibs/pthread/$(ABI)/lib -lpthread
+
 INCLXML=$(INCLXML-$(ABI))
 LIBXML=$(LIBXML-$(ABI))
 XTRLIBS=$(XTRLIBS-$(ABI))
+LIBPTHREAD=$(LIBPTHREAD-$(ABI))
 
 MEX=mex

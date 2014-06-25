@@ -8,6 +8,7 @@
 #include <cstdlib>
 #include <cstring>
 #include <map>
+#include <getopt.h>
 #include "TLMErrorLog.h"
 #include "MetaModel.h"
 #include "MetaModelReader.h"
@@ -44,17 +45,17 @@ TLMPlugin* initializeTLMConnection(MetaModel& model, std::string& serverName)
 
     int nTLMInterfaces = model.GetInterfacesNum();
     for( int i=0 ; i<nTLMInterfaces ; i++ ){
-        TLMInterfaceProxy& interface = model.GetTLMInterfaceProxy(i);
-        TLMComponentProxy& component = model.GetTLMComponentProxy(interface.GetComponentID());
+        TLMInterfaceProxy& interfaceProxy = model.GetTLMInterfaceProxy(i);
+        TLMComponentProxy& component = model.GetTLMComponentProxy(interfaceProxy.GetComponentID());
 
-        TLMErrorLog::Log( "Trying to register monitoring interface " + interface.GetName() );
-        int TLMInterfaceID = TLMlink->RegisteTLMInterface( component.GetName() + "." + interface.GetName() );
+        TLMErrorLog::Log( "Trying to register monitoring interface " + interfaceProxy.GetName() );
+        int TLMInterfaceID = TLMlink->RegisteTLMInterface( component.GetName() + "." + interfaceProxy.GetName() );
 
         if(TLMInterfaceID >= 0) {
             TLMErrorLog::Log("Registration was successful");
         }
         else{
-            TLMErrorLog::Log("Interface not connected in Meta-Model: " + component.GetName() + "." + interface.GetName() );
+            TLMErrorLog::Log("Interface not connected in Meta-Model: " + component.GetName() + "." + interfaceProxy.GetName() );
         }
     }
 
@@ -69,11 +70,11 @@ void MonitorTimeStep(TLMPlugin* TLMlink, MetaModel& model, double SimTime, std::
         int nTLMInterfaces = model.GetInterfacesNum();
 
         for( int i=0 ; i<nTLMInterfaces ; i++ ){
-            TLMInterfaceProxy& interface = model.GetTLMInterfaceProxy(i);
+            TLMInterfaceProxy& interfaceProxy = model.GetTLMInterfaceProxy(i);
 
-            TLMErrorLog::Log("Data request for " + interface.GetName() + " for time " + ToStr(SimTime) );
+            TLMErrorLog::Log("Data request for " + interfaceProxy.GetName() + " for time " + ToStr(SimTime) );
 
-            int interfaceID = interface.GetID();
+            int interfaceID = interfaceProxy.GetID();
             if( interfaceID >= 0 ){
                 TLMTimeData& CurTimeData = dataStorage[interfaceID];
                 TLMlink->GetTimeData(interfaceID, SimTime, CurTimeData);
@@ -92,15 +93,15 @@ void printHeader(MetaModel& model, std::ofstream& dataFile)
 
     int nActiveInterfaces = 0;
     for( int i=0 ; i<nTLMInterfaces ; i++ ){
-        TLMInterfaceProxy& interface = model.GetTLMInterfaceProxy(i);
-        TLMComponentProxy& component = model.GetTLMComponentProxy(interface.GetComponentID());
-        if( interface.GetID() >= 0 ){
+        TLMInterfaceProxy& interfaceProxy = model.GetTLMInterfaceProxy(i);
+        TLMComponentProxy& component = model.GetTLMComponentProxy(interfaceProxy.GetComponentID());
+        if( interfaceProxy.GetID() >= 0 ){
 
             // Comma between interfaces
             if(nActiveInterfaces > 0) dataFile << ",";
 
             // Add all TLM variable names for all active interfaces
-            std::string name = component.GetName() + "." + interface.GetName();
+            std::string name = component.GetName() + "." + interfaceProxy.GetName();
             dataFile << name << ".rx," << name << ".ry," << name << ".rz,"; // Position vector
             dataFile << name << ".ax," << name << ".ay," << name << ".az,"; // Orientation vector (three angles)
             dataFile << name << ".vx," << name << ".vy," << name << ".vz,"; // velocity
@@ -124,10 +125,10 @@ void printData(MetaModel& model, std::ofstream& dataFile, std::map<int, TLMTimeD
     int nActiveInterfaces = 0;
 
     for( int i=0 ; i<nTLMInterfaces ; i++ ){
-        TLMInterfaceProxy& interface = model.GetTLMInterfaceProxy(i);
-        if( interface.GetID() >= 0 ){
+        TLMInterfaceProxy& interfaceProxy = model.GetTLMInterfaceProxy(i);
+        if( interfaceProxy.GetID() >= 0 ){
 
-            TLMTimeData& timeData = dataStorage.at(interface.GetID());
+            TLMTimeData& timeData = dataStorage.at(interfaceProxy.GetID());
 
             // Print time only once, that is, for the first entry.
             if( printTimeFlg ){
@@ -153,7 +154,7 @@ void printData(MetaModel& model, std::ofstream& dataFile, std::map<int, TLMTimeD
             // The wave is: C = - Force + Impedance * Velocity -> F = -(C - Imp*Vel)
             double3 force(0.0);
             double3 torque(0.0);
-            TLMConnection& connection = model.GetTLMConnection(interface.GetConnectionID());
+            TLMConnection& connection = model.GetTLMConnection(interfaceProxy.GetConnectionID());
             for(int i = 0; i < 3; i++) {
 #if 0
                 force(i+1) =  -timeData.GenForce[i] + connection.GetParams().Zf * timeData.Velocity[i];
