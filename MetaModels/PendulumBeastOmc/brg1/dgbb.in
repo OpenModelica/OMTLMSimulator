@@ -1,5 +1,5 @@
 # FORMAT-11.2
-# BEAST_VERSION: [11.2 - Dec 20 2013 11:18:49] Linked [Fri Dec 20 12:38:01 2013] in [/disk1/Beast/alex_devRep/src/Beast] Revision date=[Mon Dec 16 14:12:56 2013 +0100]  Tag=28435:4b3237ec1a2a
+# BEAST_VERSION: [11.2 - Jun 24 2014 08:09:36] Linked [Tue Jun 24 08:14:40 2014] in [/home/Beast/alex_devRep/src/Beast] Revision date=[Mon Jun 23 14:28:46 2014 +0200]  Tag=29422:97b36fa70886
 
 environment type=Environment
   uservar_section type=UserVariableSection name=General
@@ -117,6 +117,7 @@ environment type=Environment
     end uservar_section; /* General:UserVariableSection */ 
     def Description="DGBB";
     def DrawingName="";
+    def FluidSimulationMode=0;
     def Lubricant="Shell_Turbo_T68";
     def WearMode=0;
     coordinate_system type=FixedCtlPoint name=cc autocreate=true

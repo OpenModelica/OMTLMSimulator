@@ -8,7 +8,7 @@
 
         <SubModel Name="shaft1"
                 StartCommand="StartTLMModelica" 
-                ExactStep="0"
+                ExactStep="1"
                 ModelFile="shaft1.mo">
 
                 <!-- TLM interface points for SubModel A -->
@@ -17,7 +17,7 @@
 
         <SubModel Name="shaft2" 
                 StartCommand="StartTLMModelica" 
-                ExactStep="0"
+                ExactStep="1"
                 ModelFile="shaft2.mo">
 
                 <!-- TLM interface points for SubModel C -->
@@ -34,7 +34,7 @@
     </Connections>
 
     <!-- Parameters for the simulation -->
-    <SimulationParams ManagerPort="11113" 
+    <SimulationParams  
                 StartTime="0" 
                 StopTime="1"/>
 
