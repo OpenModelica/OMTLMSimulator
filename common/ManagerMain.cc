@@ -19,7 +19,7 @@ void usage(){
     string usageStr =
             "Usage: tlmmananger [-d] [-m <monitor-port>] [-p <server-port>] [-r] <metamodel>, where metamodel is a name of XML file.\n"
             "-d                 : enable debug mode\n"
-            "-m <monitor-port>  : set the port port monitoring connections\n"
+            "-m <monitor-port>  : set the port for monitoring connections\n"
             "-p <server-port>   : set the server network port for communication with the simulation tools\n"
             "-r                 : run manager in interface request mode, get information about interface locations";
     TLMErrorLog::SetDebugOut(true);
