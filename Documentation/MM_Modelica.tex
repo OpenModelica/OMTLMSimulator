@@ -1,4 +1,5 @@
 \chapter{External Modelica Models}
+\label{MMModelica}
 
 In this chapter a description of how to design and co-simulate Modelica models with the TLM interface is given.
 
@@ -20,7 +21,7 @@ Run the script \textit{InstallTlmForDymola.bat} in MS DOS.
 ~\\The above mentioned script files are located in \textit{\textbackslash TLMPlugin\textbackslash Modelica}.
 
 ~\\Note: The default Windows TLM installation BAT script needs to be checked.
-This should probably be done together with a system administrator or a member of the BEAST team. The main issue is to modify the script file so the Modelica tool, Microsoft Visual Studio and the TLMPlugin folder paths are correct.
+This should probably be done together with a system administrator or a member of the BEAST team. The main issue is to modify the script file so the Modelica tool, Microsoft Visual Studio and the TLMPlugin folder paths are correct. Furthermore, it is important to add the TLMPlugin/bin folder path to the Windows System Environment Path.  
 
 ~\\ The installation script will set all the necessary paths in order to use the TLM interface. Following, a library is generated and copied to the Modelica tool installation folder (for Dymola) or to the resource folder located in the TLM-plugin folder for OMC and WSM). For Dymola a tlmforce.h file is copied to the installation folder and for OMC and WSM the tlmforce.h file is copied to the resource folder. Next, the TLM Manager is compiled and builded.
 

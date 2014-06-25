@@ -1,6 +1,7 @@
 
 default:
 	pdflatex TLMPlugin.tex
+	pdflatex TLMPlugin.tex
 	$(MAKE) clean
 
 clean:

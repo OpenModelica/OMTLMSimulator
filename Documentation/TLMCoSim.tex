@@ -1,4 +1,5 @@
 \chapter{Co-Simulation Framework}
+\label{framework}
 A general framework for meta-model based co-simulations has previously
 been designed~\cite{Siemers+Nakhimovski+Fritzson-05}. The design goals
 for the simulation part of the framework were portability, simplicity
@@ -158,6 +159,7 @@ Simpack  & Fortran wrapper & SIMPACK User routine  \\
 \end{table}
 
 \section{External Model startup}
+\label{xmodel-startup}
 The requirements on the external model simulators, that is, the
 simulation tools that are supposed to participate in a meta-model
 simulation are defined above, see Section~\ref{sec:requirements}. One
@@ -410,54 +412,84 @@ Here a sample meta-model XML file for a Modelica with Beast co-simulation:
 <!-- The root node is the meta-model -->
 <Model Name="Pendulum">
 
-    <!-- List of connected sub-models -->
-    <SubModels>	
+  <!-- List of connected sub-models -->
+  <SubModels>	
+    
+    <!-- Each sub-model defines an external simulation model, 
+         the following is an Modelica model that is started with
+         the StartTLMModelica command and the model file shaft1.mo -->
+    <SubModel Name="shaft1"
+              StartCommand="StartTLMModelica" 
+              ExactStep="0"
+              ModelFile="shaft1.mo">
+      
+      <!-- TLM interface points for SubModel shaft1. 
+	   For each interface one can define position and 
+           orientation vectors. These are mainly useful for
+           3D modeling. Orientation is defined as three angles
+           aroung x, y, and z axis "x,y,z" in radians. Angle321
+           defines rotation order 321 (z,y,x) of the three angles. 
+	   Position and orientation is defined with respect to the 
+	   external models inertial system. -->
+      <InterfacePoint Name="tlm"
+		      Position="0,-0.1,0"
+		      Angle321="0,0,0"/>
+    </SubModel>
+    
+    <!-- SubModel brg1. This is a BEAST model. Also for sub-models
+	 one can define position and orientation vectors. These are
+	 useful for translations between the different models.
+	 Position and orientation is defined with respect to the meta
+	 models global inertial system. -->
+    <SubModel Name="brg1" 
+              StartCommand="StartTLMBeast" 
+              ExactStep="0"
+              ModelFile="dgbb"
+              Position="0,0,0"
+              Angle321="1.5708,0,0">
+      
+      <!-- TLM interface points for SubModel brg1 -->
+      <InterfacePoint Name="bIR`cs1"/>
+      <InterfacePoint Name="bER`cs1"/>
+    </SubModel>
+    
+    <!-- SubModel shaft2. This is another Modelica model. -->
+    <SubModel Name="shaft2" 
+              StartCommand="StartTLMModelica" 
+              ExactStep="0"
+              ModelFile="shaft2.mo">
+      
+      <!-- TLM interface points for SubModel C -->
+      <InterfacePoint Name="tlm"/>
+    </SubModel>    
+  </SubModels>
 
-        <SubModel Name="shaft1"
-                StartCommand="StartTLMModelica"
-                ExactStep="0"
-                ModelFile="shaft1.mo">
-
-                <!-- TLM interface points for SubModel A -->
-                <InterfacePoint Name="tlm"/>
-        </SubModel>
-
-        <SubModel Name="brg1"
-                StartCommand="StartTLMBeast"
-                ExactStep="0"
-                ModelFile="dgbb">
-
-                <!-- TLM interface points for SubModel C -->
-                <InterfacePoint Name="bIR`cs1"/>
-                <InterfacePoint Name="bER`cs1"/>
-        </SubModel>
-
-        <SubModel Name="shaft2"
-                StartCommand="StartTLMModelica"
-                ExactStep="0"
-                ModelFile="shaft2.mo">
-
-                <!-- TLM interface points for SubModel C -->
-                <InterfacePoint Name="tlm"/>
-        </SubModel>
-
-    </SubModels>
-
-    <!-- List of TLM connections -->
-    <Connections>
-	<!-- Some more physical values: Delay="1e-5" Zf="8e4" Zfr="400" alpha="0.2" -->
-        <Connection From="shaft1.tlm" To="brg1.bER`cs1"
+  <!-- List of TLM connections -->
+  <Connections>
+    <!-- For each connections individual TLM parameters are defined.
+	 Note, that the maximum step size must be smaller than the
+	 shortest delay of all TLM connections for a single simulation
+	 tool. This is taken care of by the tlmmanager. --> 
+    <Connection From="shaft1.tlm" To="brg1.bER`cs1"
+	 Delay="1e-3" Zf="1e4" Zfr="1e2" alpha="0.2"/>
+    <!-- Each connections defines which interface of which models are 
+         connected.
+	 In these interfaces forces are exchanged, see TLM definition. -->
+    <Connection From="shaft2.tlm" To="brg1.bIR`cs1" 
 		Delay="1e-3" Zf="1e4" Zfr="1e2" alpha="0.2"/>
-        <Connection From="shaft2.tlm" To="brg1.bIR`cs1"
-		Delay="1e-3" Zf="1e4" Zfr="1e2" alpha="0.2"/>
-    </Connections>
-
-    <!-- Parameters for the simulation -->
-    <SimulationParams ManagerPort="11113"
-                StartTime="0"
-                StopTime="1"
-                NetworkTimeout="600"/>
-
+  </Connections>
+  
+  <!-- "Global" parameters for the co-simulation. 
+       Typically the overall simulation time is defined here.
+       This information is propageted to all simulation tools. 
+       Note, some additional parameters for network port and 
+       timeout can be defined here as well. But it is recommended 
+       to not define this "system dependent settings" here.
+       Use some system setup instead that can be given or read by 
+       the tlmmanager.  -->
+  <SimulationParams StartTime="0.0" 
+                    StopTime="1.0"/>
+  
 </Model>
 \end{verbatim}
 }
