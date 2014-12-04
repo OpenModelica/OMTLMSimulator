@@ -7,21 +7,29 @@
     <SubModels>	
 
         <SubModel Name="shaft1"
-                StartCommand="StartTLMModelica" 
-                ExactStep="1"
-                ModelFile="shaft1.mo">
+                  StartCommand="StartTLMOpenModelica" 
+                  ExactStep="1"
+                  ModelFile="shaft1.mo"
+                  Position="0.0,0.0,0.0"
+		  Angle321="0.0,0.0,0.0">
 
                 <!-- TLM interface points for SubModel A -->
-                <InterfacePoint Name="tlm"/>
+                <InterfacePoint Name="tlm"
+				Position="0.1,0.0,0.0"
+				Angle321="0.0,0.0,0.0"/>
         </SubModel>
 
         <SubModel Name="shaft2" 
-                StartCommand="StartTLMModelica" 
-                ExactStep="1"
-                ModelFile="shaft2.mo">
+                  StartCommand="StartTLMOpenModelica" 
+                  ExactStep="1"
+                  ModelFile="shaft2.mo"
+		  Position="0.0,0.0,0.0"
+		  Angle321="0.0,0.0,0.0">
 
                 <!-- TLM interface points for SubModel C -->
-                <InterfacePoint Name="tlm"/>
+                <InterfacePoint Name="tlm"
+				Position="0.0,0.0,0.0"
+				Angle321="0.0,0.0,0.0"/>
         </SubModel>
 
     </SubModels>
