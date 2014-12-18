@@ -3,30 +3,34 @@
 <!-- The root node is the meta-model -->
 <Model Name="Pendulum">
 
-    <!-- List of connected sub-models -->
+    <!-- List of connected external-models -->
     <SubModels>	
 
+        <!-- external model "shaft1" positioned at (0,0,0) inside meta-model  -->
         <SubModel Name="shaft1"
                   StartCommand="StartTLMOpenModelica" 
-                  ExactStep="1"
+                  ExactStep="0"
                   ModelFile="shaft1.mo"
                   Position="0.0,0.0,0.0"
 		  Angle321="0.0,0.0,0.0">
 
-                <!-- TLM interface points for SubModel A -->
+                <!-- TLM interface points for external-model shaft1 -->
+                <!-- positioned (0,0,0.5) inside external-model -->
                 <InterfacePoint Name="tlm"
-				Position="0.1,0.0,0.0"
+				Position="0.0,0.0,0.5"
 				Angle321="0.0,0.0,0.0"/>
         </SubModel>
 
+        <!-- external model "shaft2" positioned at (0,0,0.5) inside meta-model  -->
         <SubModel Name="shaft2" 
                   StartCommand="StartTLMOpenModelica" 
-                  ExactStep="1"
+                  ExactStep="0"
                   ModelFile="shaft2.mo"
-		  Position="0.0,0.0,0.0"
+		  Position="0.0,0.0,0.5"
 		  Angle321="0.0,0.0,0.0">
 
-                <!-- TLM interface points for SubModel C -->
+                <!-- TLM interface points for external-model shaft2 -->
+                <!-- positioned (0,0,0) inside external-model -->
                 <InterfacePoint Name="tlm"
 				Position="0.0,0.0,0.0"
 				Angle321="0.0,0.0,0.0"/>
@@ -44,6 +48,6 @@
     <!-- Parameters for the simulation -->
     <SimulationParams  
                 StartTime="0" 
-                StopTime="1"/>
+                StopTime="5"/>
 
 </Model>
