@@ -9,7 +9,7 @@ package TLM
       input Real w[3] "Angular velocity";
     
       external "C" set_tlm_motion(name, time_in, R, A, v, w) annotation(Include = "#include<tlmforce.h>", Library = "tlmopenmodelica", IncludeDirectory = "modelica://TLM/Resources/Include", LibraryDirectory = "modelica://TLM/Resources/Library");
-      annotation(Icon(coordinateSystem(extent = {{-100, -100}, {100, 100}}, preserveAspectRatio = true, initialScale = 0.1, grid = {10, 10}), graphics = {Rectangle(visible = true, fillColor = {255, 85, 0}, fillPattern = FillPattern.Solid, extent = {{-100, -100}, {100, 100}}, radius = 20), Text(visible = true, origin = {3.13, 5}, textColor = {255, 255, 255}, extent = {{-66.87, -65}, {66.87, 65}}, textString = "F")}));
+      annotation(Icon(coordinateSystem(extent = {{-100, -100}, {100, 100}}, preserveAspectRatio = true, initialScale = 0.1, grid = {10, 10}), graphics = {Rectangle(origin = {-50, -50}, lineColor = {85, 255, 127}, fillColor = {0, 170, 255}, fillPattern = FillPattern.Sphere, extent = {{-35, 90}, {50, 10}}), Text(origin = {-40, 0}, extent = {{-25, 25}, {25, -25}}, textString = "TLM"), Line(origin = {50, 0}, points = {{-50, 0}, {40, 0}}, thickness = 10, arrow = {Arrow.Filled, Arrow.None}, arrowSize = 32)}));
     end TLMSetMotion;
 
     function TLMGetForce
@@ -63,10 +63,8 @@ package TLM
       w[2] = 0.0;
       w[3] = 0.0;
       flange_b.tau = torque[1];
-
     algorithm
       (f, torque) := TLMGetForce(interfaceName, time, TLMTorque1D.r, TLMTorque1D.A, TLMTorque1D.vel, w);
-
       annotation(Diagram, Icon(coordinateSystem(preserveAspectRatio = false, extent = {{-100, -100}, {100, 100}}, initialScale = 0.1, grid = {10, 10}), graphics = {Line(visible = true, points = {{-63.226, -2.581}, {-28.387, -2.581}}, color = {170, 0, 127}, thickness = 5), Rectangle(visible = true, lineColor = {128, 0, 128}, fillColor = {0, 0, 255}, fillPattern = FillPattern.HorizontalCylinder, extent = {{-29.548, -45.806}, {96.90300000000001, 42.581}}, radius = 20), Text(visible = true, origin = {35, -1.626}, textColor = {255, 255, 255}, extent = {{-55, -26.837}, {55, 26.837}}, textString = "1D Torque")}));
     end TLMTorque1D;
 
@@ -89,10 +87,8 @@ package TLM
       vel[2] = 0.0;
       vel[3] = 0.0;
       flange_b.f = force[1];
-
     algorithm
       (force, torque) := TLMGetForce(interfaceName, time, TLMForce1D.r, TLMForce1D.A, vel, TLMForce1D.w);
-
       annotation(Diagram, Icon(coordinateSystem(preserveAspectRatio = false, extent = {{-100, -100}, {100, 100}}, initialScale = 0.1, grid = {10, 10}), graphics = {Rectangle(visible = true, lineColor = {128, 0, 128}, fillColor = {128, 0, 128}, fillPattern = FillPattern.HorizontalCylinder, extent = {{-29.548, -45.806}, {96.90300000000001, 42.581}}, radius = 20), Line(visible = true, points = {{-63.226, -2.581}, {-28.387, -2.581}}, color = {128, 0, 128}, thickness = 5), Text(visible = true, origin = {33.696, 0}, textColor = {255, 255, 255}, extent = {{-53.696, -30}, {53.696, 30}}, textString = "1D Force")}));
     end TLMForce1D;
     annotation(Icon(coordinateSystem(extent = {{-100, -100}, {100, 100}}, preserveAspectRatio = true, initialScale = 0.1, grid = {10, 10}), graphics = {Rectangle(visible = true, fillColor = {170, 9, 95}, fillPattern = FillPattern.Solid, extent = {{-100, -100}, {100, 100}}, radius = 20), Text(visible = true, origin = {0, 2.861}, textColor = {255, 255, 255}, extent = {{-84.78700000000001, -62.861}, {84.78700000000001, 62.861}}, textString = "1D")}), Diagram(coordinateSystem(extent = {{-148.5, -105}, {148.5, 105}}, preserveAspectRatio = true, initialScale = 0.1, grid = {5, 5})));
@@ -102,7 +98,6 @@ package TLM
     model TLMInterface3D
       import F = Modelica.Mechanics.MultiBody.Frames;
       import M = Modelica.Mechanics.MultiBody.Frames.TransformationMatrices;
-      Modelica.Mechanics.MultiBody.Interfaces.Frame_a frame_a annotation(Placement(visible = true, transformation(origin = {-67.9907, -3.03738}, extent = {{-12, -12}, {12, 12}}, rotation = 0), iconTransformation(origin = {-67.9907, -3.03738}, extent = {{-12, -12}, {12, 12}}, rotation = 0)));
       parameter String interfaceName = "tlm";
       parameter Boolean debugFlg = false;
       Real v[3];
@@ -113,6 +108,7 @@ package TLM
       Real A[3, 3];
       Real AT[3, 3];
       parameter Real tlmDelay = TLM_Functions.TLMGetDelay(interfaceName);
+      Modelica.Mechanics.MultiBody.Interfaces.Frame_a frame_a annotation(Placement(visible = true, transformation(origin = {-67.9907, -3.03738}, extent = {{-12, -12}, {12, 12}}, rotation = 0), iconTransformation(origin = {-70, 0}, extent = {{-12, -12}, {12, 12}}, rotation = 0)));
     initial algorithm
       assert(tlmDelay > 0.0, "Bad TLM delay in" + interfaceName + ", give up");
       TLM_Functions.TLMSetDebugMode(debugFlg);
@@ -133,11 +129,9 @@ package TLM
       // Transform force and moment into local system
       frame_a.f = M.resolve2(A, f);
       frame_a.t = M.resolve2(A, t - cross(r, f));
-
-   algorithm
+    algorithm
       (f, t) := TLM_Functions.TLMGetForce(interfaceName, time, r, A, v, w);
-
-      annotation(Diagram, Icon(coordinateSystem(preserveAspectRatio = false, extent = {{-100, -100}, {100, 100}}, initialScale = 0.1, grid = {10, 10}), graphics = {Rectangle(visible = true, lineColor = {255, 255, 255}, fillColor = {0, 0, 255}, fillPattern = FillPattern.HorizontalCylinder, extent = {{-29.548, -45.806}, {96.90300000000001, 42.581}}, radius = 20), Line(visible = true, points = {{-63.226, -2.581}, {-28.387, -2.581}}, color = {0, 0, 255}, thickness = 5), Text(visible = true, origin = {35.194, -1.225}, textColor = {255, 255, 255}, extent = {{-59.815, -21.225}, {59.815, 21.225}}, textString = "3D Force and Torque")}));
+      annotation(Diagram, Icon(coordinateSystem(extent = {{-100, -100}, {100, 100}}, preserveAspectRatio = false, initialScale = 0.1, grid = {10, 10}), graphics = {Rectangle(origin = {10, 0}, fillColor = {0, 170, 0}, fillPattern = FillPattern.Sphere, extent = {{-80, 70}, {70, -80}}), Text(origin = {15, -5}, extent = {{-65, 65}, {65, -65}}, textString = "TLM")}));
     end TLMInterface3D;
     annotation(Icon(coordinateSystem(extent = {{-100, -100}, {100, 100}}, preserveAspectRatio = true, initialScale = 0.1, grid = {10, 10}), graphics = {Rectangle(visible = true, fillColor = {0, 170, 0}, fillPattern = FillPattern.Solid, extent = {{-100, -100}, {100, 100}}, radius = 20), Text(visible = true, origin = {-3.808, 3.341}, textColor = {255, 255, 255}, extent = {{-78.774, -56.659}, {78.774, 56.659}}, textString = "3D")}), Diagram(coordinateSystem(extent = {{-148.5, -105}, {148.5, 105}}, preserveAspectRatio = true, initialScale = 0.1, grid = {5, 5})));
   end TLM_Interface_3D;
@@ -156,10 +150,8 @@ package TLM
     initial algorithm
       assert(tlmDelay > 0.0, "Bad TLM delay in" + interfaceName + ", give up");
       TLMSetDebugMode(debugFlg);
-
-   algorithm
+    algorithm
       (f, t) := TLMGetForce(interfaceName, time, r, A, v, w);
- 
       annotation(Icon(coordinateSystem(extent = {{-100, -100}, {100, 100}}, preserveAspectRatio = true, initialScale = 0.1, grid = {10, 10}), graphics = {Rectangle(visible = true, origin = {-10.651, -8.377000000000001}, lineColor = {0, 0, 255}, fillColor = {128, 0, 0}, fillPattern = FillPattern.Solid, extent = {{-89.349, -91.623}, {110.651, 108.377}}, radius = 20), Text(visible = true, origin = {-15.021, -3.686}, textColor = {255, 255, 255}, extent = {{-81.61199999999999, -54.575}, {111.654, 66.09099999999999}}, textString = "S")}), Diagram(coordinateSystem(preserveAspectRatio = false, extent = {{-100, -100}, {100, 100}}, initialScale = 0.1, grid = {10, 10}), graphics = {Rectangle(visible = true, lineColor = {0, 0, 255}, fillColor = {255, 255, 255}, fillPattern = FillPattern.Solid, extent = {{-74.476, -43.157}, {92.232, 51.048}}), Text(visible = true, origin = {-6.228, -0.744}, textColor = {0, 0, 255}, extent = {{-50.313, -33.645}, {68.833, 40.744}}, textString = "TLM Sensor")}));
     end TLMSensor;
     annotation(Icon(coordinateSystem(extent = {{-100, -100}, {100, 100}}, preserveAspectRatio = true, initialScale = 0.1, grid = {10, 10}), graphics = {Rectangle(visible = true, origin = {-10.651, -8.377000000000001}, lineColor = {0, 0, 255}, fillColor = {128, 0, 0}, fillPattern = FillPattern.Solid, extent = {{-89.349, -91.623}, {110.651, 108.377}}, radius = 20), Text(visible = true, origin = {-15.021, -3.686}, textColor = {255, 255, 255}, extent = {{-81.61199999999999, -54.575}, {111.654, 66.09099999999999}}, textString = "S")}), Diagram(coordinateSystem(extent = {{-148.5, -105}, {148.5, 105}}, preserveAspectRatio = true, initialScale = 0.1, grid = {5, 5})));
