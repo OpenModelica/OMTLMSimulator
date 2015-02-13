@@ -34,6 +34,7 @@ cc += -DYY_NEVER_INTERACTIVE -fPIC
 
 BNAME=libtlmopenmodelica.a
 INSTDIR=$(BINDIR)/OpenModelica
+RESOURCESDIR=$(INSTDIR)/Resources
 MHOME=`$(MISCHOME)`
 
 INCLUDES=  -I. \
@@ -76,7 +77,8 @@ default: dirs $(ABIOBJS)
 	$(AR) ruv $(ABI)/$(BNAME) $(ABIOBJS)
 
 install: default
-	cp $(ABI)/$(BNAME) $(INSTDIR)
+	cp $(ABI)/$(BNAME) $(RESOURCESDIR)/Library
+	cp tlmforce.h $(RESOURCESDIR)/Include
 	cp OM_TLM.mo $(INSTDIR)
 	cp StartTLMOpenModelica* $(BINDIR)
 	chmod +x $(BINDIR)/StartTLMOpenModelica*
@@ -86,6 +88,8 @@ install: default
 dirs:
 	-mkdir -p $(ABI)
 	-mkdir -p $(INSTDIR)
+	-mkdir -p $(RESOURCESDIR)/Include
+	-mkdir -p $(RESOURCESDIR)/Library
 
 clean:
 	rm -fr $(ABI)/*
