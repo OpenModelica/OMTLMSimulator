@@ -11,8 +11,8 @@ ifeq ($(MAKEFILEHEADHOME),)
   BINDIR=$(UP)/bin/
 else
   # This is for BEAST
-  UP=$(MAKEFILEHEADHOME)/src
-  BINDIR=$(UP)/../bin/$(ABI)
+  UP=$(MAKEFILEHEADHOME)
+  BINDIR=$(UP)/bin/
 endif
 
 include $(MAKEFILEHEADHOME)/Makefile.head

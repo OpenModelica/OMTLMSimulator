@@ -62,6 +62,7 @@ install: rtime.h $(LIBNAME)
 
 clean:
 	rm -f $(ABIOBJS) $(ABI)/*.o *~ core a.out $(ABI)/timing_test $(ABI)/test
+	rm -rf $(ABI) lib
 #	rm -f $(LIBNAME)
 
 distclean: clean
