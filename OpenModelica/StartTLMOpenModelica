@@ -60,6 +60,7 @@ echo "getErrorString();" >> $MOSFILE
 echo "loadFile(\"$6\");" >> $MOSFILE
 echo "getErrorString();" >> $MOSFILE
 echo "simulate($MODELNAME, startTime=$2, stopTime=$3, method=\"dassl\", outputFormat=\"plt\", simflags=\"-noEquidistantTimeGrid -maxStepSize=$4\");" >> $MOSFILE
+echo "getErrorString();" >> $MOSFILE
 
 echo Starting OpenModelica
 echo $OMC_Cmd $MOSFILE
