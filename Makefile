@@ -10,7 +10,7 @@ else
 endif
 
 
-plugins=ADAMS Simulink Modelica
+plugins=ADAMS Simulink Modelica OpenModelica
 
 all default: lib
 	cd common; $(MAKE) all

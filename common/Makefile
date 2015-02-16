@@ -137,7 +137,7 @@ $(ABI)/%.o: %.cc
 .PHONY: clean dir depend lib manager test
 
 clean:
-	rm -f $(ABI)/*.o  $(ABI)/*.a $(ABI)/tlmmanager$(FEXT)
+	rm -rf $(ABI)
 
 # Change 080701: $ABI is used for *.o files and .tail files
 

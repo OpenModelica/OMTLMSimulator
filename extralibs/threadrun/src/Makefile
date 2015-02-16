@@ -37,7 +37,8 @@ lib:
 	$(MAKE)	../lib/$(ABI)/libthreadrun.a  
 
 clean:
-	rm -f $(OBJS) testTaskQueue 
+	rm -f $(OBJS) testTaskQueue
+	rm -rf $(ABI) ../lib
 #	rm -f ../lib/$(ABI)/libthreadrun.a 
 
 

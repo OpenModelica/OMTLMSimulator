@@ -11,8 +11,8 @@ ifeq ($(MAKEFILEHEADHOME),)
   BINDIR=$(UP)/bin/
 else
   # This is for BEAST
-  UP=$(MAKEFILEHEADHOME)/src
-  BINDIR=$(UP)/../bin/$(ABI)
+  UP=$(MAKEFILEHEADHOME)
+  BINDIR=$(UP)/bin/
 endif
 
 include $(MAKEFILEHEADHOME)/Makefile.head
@@ -34,6 +34,7 @@ cc += -DYY_NEVER_INTERACTIVE -fPIC
 
 BNAME=libtlmmodelica.a
 INSTDIR=$(BINDIR)/Modelica
+RESOURCESDIR=$(INSTDIR)/Resources
 MHOME=`$(MISCHOME)`
 
 INCLUDES=  -I. \
@@ -76,7 +77,9 @@ default: dirs $(ABIOBJS)
 	$(AR) ruv $(ABI)/$(BNAME) $(ABIOBJS)
 
 install: default
-	cp $(ABI)/$(BNAME) $(INSTDIR)
+	cp $(ABI)/$(BNAME) $(RESOURCESDIR)/Library
+	cp tlmforce.h $(RESOURCESDIR)/Include
+	cp TLM.mo $(INSTDIR)
 
 
 .PHONY: dirs clean
@@ -84,6 +87,8 @@ install: default
 dirs:
 	-mkdir -p $(ABI)
 	-mkdir -p $(INSTDIR)
+	-mkdir -p $(RESOURCESDIR)/Include
+	-mkdir -p $(RESOURCESDIR)/Library
 
 # Problem that MingW contains no shell to perform the "if" command.	
 dirs_unix:	
@@ -91,6 +96,6 @@ dirs_unix:
 	mkdir $(ABI) ; fi ;
 
 clean:
-	rm -fr $(ABI)/*
+	rm -rf $(ABI)
 
 # DO NOT DELETE

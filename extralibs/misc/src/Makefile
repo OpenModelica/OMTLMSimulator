@@ -40,6 +40,7 @@ lib: dirs ../lib/$(ABI)/libmisc.a
 
 clean:
 	rm -f $(OBJS) 
+	rm -rf $(ABI) ../lib
 #	../lib/$(ABI)/libmisc.a 
 
 testpp: testpp.cc PrivPack.cc ../include/PrivPack.h
