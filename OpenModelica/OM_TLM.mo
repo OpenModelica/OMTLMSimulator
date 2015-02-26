@@ -31,13 +31,13 @@ package TLM
       output Real TLMdelay "The TLM delay for the secific interface";
     
       external "C" TLMdelay = get_tlm_delay(name) annotation(Include = "#include<tlmforce.h>", Library = "tlmopenmodelica", IncludeDirectory = "modelica://TLM/Resources/Include", LibraryDirectory = "modelica://TLM/Resources/Library");
-      annotation(Icon(coordinateSystem(extent = {{-100, -100}, {100, 100}}, preserveAspectRatio = true, initialScale = 0.1, grid = {10, 10}), graphics = {Rectangle(visible = true, fillColor = {255, 85, 0}, fillPattern = FillPattern.Solid, extent = {{-100, -100}, {100, 100}}, radius = 20), Text(visible = true, origin = {3.13, 5}, textColor = {255, 255, 255}, extent = {{-66.87, -65}, {66.87, 65}}, textString = "F")}));
+      annotation(Icon(coordinateSystem(extent = {{-100, -100}, {100, 100}}, preserveAspectRatio = true, initialScale = 0.1, grid = {10, 10}), graphics = {Rectangle(visible = true, fillColor = {255, 85, 0}, fillPattern = FillPattern.Solid, extent = {{-100, -100}, {100, 100}}, radius = 20), Text(visible = true, origin = {3.13, 5}, textColor = {255, 255, 255}, extent = {{-66.87, -65}, {66.87, 65}}, textString = "F")}), __OpenModelica_Impure=true);
     end TLMGetDelay;
 
     function TLMSetDebugMode
       input Boolean DebugFlg "The TLM debug flag, enable or disable debug mode";
     
-      external "C" set_debug_mode(DebugFlg) annotation(Include = "#include<tlmforce.h>", Library = "tlmopenmodelica", IncludeDirectory = "modelica://TLM/Resources/Include", LibraryDirectory = "modelica://TLM/Resources/Library");
+      external "C" set_debug_mode(DebugFlg) annotation(Include = "#include<tlmforce.h>", Library = "tlmopenmodelica", IncludeDirectory = "modelica://TLM/Resources/Include", LibraryDirectory = "modelica://TLM/Resources/Library", __OpenModelica_Impure=true);
       annotation(Icon(coordinateSystem(extent = {{-100, -100}, {100, 100}}, preserveAspectRatio = true, initialScale = 0.1, grid = {10, 10}), graphics = {Rectangle(visible = true, fillColor = {255, 85, 0}, fillPattern = FillPattern.Solid, extent = {{-100, -100}, {100, 100}}, radius = 20), Text(visible = true, origin = {3.13, 5}, textColor = {255, 255, 255}, extent = {{-66.87, -65}, {66.87, 65}}, textString = "F")}));
     end TLMSetDebugMode;
     annotation(Icon(coordinateSystem(extent = {{-100, -100}, {100, 100}}, preserveAspectRatio = true, initialScale = 0.1, grid = {10, 10}), graphics = {Rectangle(visible = true, fillColor = {255, 85, 0}, fillPattern = FillPattern.Solid, extent = {{-100, -100}, {100, 100}}, radius = 20), Text(visible = true, origin = {3.13, 5}, textColor = {255, 255, 255}, extent = {{-66.87, -65}, {66.87, 65}}, textString = "F")}), Diagram(coordinateSystem(extent = {{-148.5, -105}, {148.5, 105}}, preserveAspectRatio = true, initialScale = 0.1, grid = {5, 5})));
@@ -54,7 +54,7 @@ package TLM
       constant Real A[3, 3] = identity(3);
       Real f[3](start = zeros(3));
       Real torque[3](start = zeros(3));
-      parameter Real tlmDelay = TLMGetDelay(interfaceName);
+      Real tlmDelay = TLMGetDelay(interfaceName);
     initial algorithm
       assert(tlmDelay > 0.0, "Bad TLM delay in" + interfaceName + ", give up");
       TLMSetDebugMode(debugFlg);
@@ -78,7 +78,7 @@ package TLM
       constant Real A[3, 3] = identity(3);
       Real force[3](start = zeros(3));
       Real torque[3](start = zeros(3));
-      parameter Real tlmDelay = TLMGetDelay(interfaceName);
+      Real tlmDelay = TLMGetDelay(interfaceName);
     initial algorithm
       assert(tlmDelay > 0.0, "Bad TLM delay in" + interfaceName + ", give up");
       TLMSetDebugMode(debugFlg);
@@ -107,7 +107,7 @@ package TLM
       Real r[3];
       Real A[3, 3];
       Real AT[3, 3];
-      parameter Real tlmDelay = TLM_Functions.TLMGetDelay(interfaceName);
+      Real tlmDelay = TLM_Functions.TLMGetDelay(interfaceName);
       Modelica.Mechanics.MultiBody.Interfaces.Frame_a frame_a annotation(Placement(visible = true, transformation(origin = {-67.9907, -3.03738}, extent = {{-12, -12}, {12, 12}}, rotation = 0), iconTransformation(origin = {-70, 0}, extent = {{-12, -12}, {12, 12}}, rotation = 0)));
     initial algorithm
       assert(tlmDelay > 0.0, "Bad TLM delay in" + interfaceName + ", give up");
@@ -146,7 +146,7 @@ package TLM
       Real t[3];
       Real r[3] = {0, 0, 0};
       Real A[3, 3] = {{1, 0, 0}, {0, 1, 0}, {0, 0, 1}};
-      parameter Real tlmDelay = TLMGetDelay(interfaceName);
+      Real tlmDelay = TLMGetDelay(interfaceName);
     initial algorithm
       assert(tlmDelay > 0.0, "Bad TLM delay in" + interfaceName + ", give up");
       TLMSetDebugMode(debugFlg);
