@@ -9,7 +9,7 @@ endif
 
 include $(MAKEFILEHEADHOME)/Makefile.head
 
-buildlibs=misc/src threadrun/src rtime 
+buildlibs=misc/src rtime
 
 
 all:
