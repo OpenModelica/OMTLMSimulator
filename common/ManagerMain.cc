@@ -7,12 +7,18 @@
 #include <string>
 #include <cstdlib>
 #include <cstring>
-#include <getopt.h>
 #include "TLMErrorLog.h"
 #include "MetaModel.h"
 #include "MetaModelReader.h"
 #include "ManagerCommHandler.h"
 #include "lightmat.h"
+
+#ifdef MSC_VER
+#include "mygetopt.h"
+#else
+#include <getopt.h>
+#endif
+
 
 using std::string;
 

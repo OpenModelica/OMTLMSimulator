@@ -8,7 +8,6 @@
 #include <cstdlib>
 #include <cstring>
 #include <map>
-#include <getopt.h>
 #include "TLMErrorLog.h"
 #include "MetaModel.h"
 #include "MetaModelReader.h"
@@ -16,6 +15,12 @@
 #include "MonitoringPluginImplementer.h"
 #include "lightmat.h"
 #include "timing.h"
+
+#ifdef MSC_VER
+#include "mygetopt.h"
+#else
+#include <getopt.h>
+#endif
 
 using std::string;
 
