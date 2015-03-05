@@ -1,4 +1,4 @@
-#ifndef _portability_h
+ #ifndef _portability_h
 #define _portability_h
 
 #include "portable_long.h"
@@ -42,7 +42,7 @@ double multiply_pairs(const double & a1,const double & b1,
 #define GCC_VERSION (__GNUC__ * 10000 + __GNUC_MINOR__ * 100 + __GNUC_PATCHLEVEL__)
 #endif
 
-#if ( defined (__GNUC__) && GCC_VERSION < 30300 ) || defined (_MSC_VER)
+#if ( defined (__GNUC__) && GCC_VERSION < 30300 ) || (defined (_MSC_VER) && _MSC_VER<1800) 
 // Round is missing for old compilers.
 extern "C" double round(const double x);
 #define ROUND_DEFINED_IN_PORTABILITY_CC
@@ -156,14 +156,15 @@ extern "C" {
 unsigned int sleep(unsigned int secs);
 FILE* popen(const char *command, const char *mode);
 int pclose(FILE* stream);
-
 //int unlink(const char *filename);
-
+void usleep(__int64 usec);
+#define setenv(x,y,z) _putenv_s(x,y)
 #endif 
 
 typedef int socklen_t;
 typedef int pid_t;
-#define isnan(x) _isnan(x)
+//#define isnan(x) _isnan(x)
+// Moved to portable_isnan.h
 #define finite(x) _finite(x)
 
 #ifdef __cplusplus
