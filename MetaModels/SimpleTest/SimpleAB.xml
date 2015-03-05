@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<!-- The root node is the meta-model -->
+<Model Name="SimpleAB">
+
+    <!-- List of connected sub-models -->
+    <SubModels>	
+        <SubModel Name="A"
+                StartCommand="starttestA" 
+                ExactStep="0">
+            <!-- TLM interface points for SubModel A -->
+                <InterfacePoint Name="px"/>
+        </SubModel>
+        <SubModel Name="B" 
+                StartCommand="starttestB" 
+                ExactStep="0">
+            <!-- TLM interface points for SubModel B -->
+                <InterfacePoint Name="px"/>
+        </SubModel>
+    </SubModels>
+
+    <!-- List of TLM connections -->
+    <Connections>
+        <Connection From="A.px" To="B.px" 
+                Delay="0.3" Zf="1" alpha="1e-6"/>
+    </Connections>
+
+    <!-- Parameters for the simulation -->
+    <SimulationParams ManagerPort="11111" 
+                StartTime="0" StopTime="10"/>
+
+</Model>
