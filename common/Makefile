@@ -1,7 +1,7 @@
 # Makefile for TLMManager & Plugin
 
 ifeq ($(MAKEFILEHEADHOME),)
-  UP=$(PWD)/..
+  UP=..
   MAKEFILEHEADHOME=$(UP)
   BINDIR=$(UP)/bin
 else
@@ -59,7 +59,7 @@ INCLUDES= -I. \
 LIBS = 	-L$(MISCHOME)/lib/$(ABI) \
 	-L$(THREADRUNHOME)/lib/$(ABI) \
 	-L$(TIMEHOME)/lib/$(ABI) \
-	-lmisc -lthreadrun -lrtime
+        -lmisc -lrtime
 
 INCXTR=
 

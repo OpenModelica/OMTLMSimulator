@@ -6,7 +6,7 @@
 
 # The following is need for BEAST compatibility
 ifeq ($(MAKEFILEHEADHOME),)
-  UP=$(PWD)/..
+  UP=..
   MAKEFILEHEADHOME=$(UP)
   BINDIR=$(UP)/bin/
 else

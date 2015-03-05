@@ -10,7 +10,8 @@ else
 endif
 
 
-plugins=ADAMS Simulink Modelica OpenModelica
+allplugins=ADAMS Simulink Modelica OpenModelica
+plugins=Modelica OpenModelica
 
 all default: lib
 	cd common; $(MAKE) all
@@ -23,7 +24,7 @@ lib:
 install:
 	cd common ; $(MAKE) install
 	for i in ${plugins} ; do \
-		( cd $$i ; $(MAKE) UP=$(UP) MAKEFILEHEADHOME=$(MAKEFILEHEADHOME) install ) \
+		( cd $$i ; $(MAKE) install ) \
 	done
 
 
@@ -33,6 +34,6 @@ depend:
 clean:
 	cd common; $(MAKE) clean
 	cd extralibs; $(MAKE) clean
-	for i in ${plugins} ; do \
-		( cd $$i ; $(MAKE) UP=$(UP) MAKEFILEHEADHOME=$(MAKEFILEHEADHOME) clean ) \
+	for i in ${allplugins} ; do \
+		( cd $$i ; $(MAKE) clean ) \
 	done
