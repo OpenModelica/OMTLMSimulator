@@ -98,7 +98,7 @@ int TLMClientComm::ConnectManager(string& callname, int portnr) {
 
     hp = gethostbyname(callname.c_str());
     if (hp == NULL) {
-        TLMErrorLog::FatalError(string("TLM: Cannot resolve the host") + callname);
+        TLMErrorLog::FatalError(string("TLM: Cannot resolve the host ") + callname);
         return(-1);
     }
     localIP = inet_ntoa (*(struct in_addr *)*hp->h_addr_list);
@@ -120,9 +120,11 @@ int TLMClientComm::ConnectManager(string& callname, int portnr) {
 
     hp = gethostbyname(callname.c_str());
     if (hp == NULL) {
-        TLMErrorLog::FatalError(string("TLM: Cannot resolve the host") + callname);
+        TLMErrorLog::FatalError(string("TLM: Cannot resolve the host :") + callname + ":");
         return(-1);
     }
+
+    TLMErrorLog::Log(string("TLM: connect to :") + callname + ":" + TLMErrorLog::ToStdStr(portnr));
 
     memset(&sa, 0 , sizeof(sa));
     memcpy((char *)&sa.sin_addr, hp->h_addr, hp->h_length);
@@ -155,7 +157,7 @@ int TLMClientComm::ConnectManager(string& callname, int portnr) {
         }
 
         TLMErrorLog::Log("Pausing...");
-#ifndef _MSC_VER
+#ifndef WIN32
         usleep(count * count * 1000000); // micro seconds
 #else
         Sleep(count * count * 1000); // milli seconds
