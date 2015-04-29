@@ -17,7 +17,7 @@ ifeq ($(ABI),WINDOWS64)
 else
     CC=g++
     cc=gcc
-    LINK=g++ -lws2_32 -lwsock32 
+    LINK=g++ 
     AR=ar
     CP=cp
 endif
@@ -31,22 +31,23 @@ OPTFLAGS4=-O2
 
 INCLXML-WINDOWS64=-I$(UP)/extralibs/libxml2/include
 LIBXML-WINDOWS64=-L$(UP)/extralibs/libxml2/$(ABI)/lib libxml2.lib
+XTRLIBS-WINDOWS64=user32.lib shell32.lib ws2_32.lib Gdi32.lib pthreadVC2.lib
+INCLPTHREAD-WINDOWS64=-I$(UP)/extralibs/pthread/include
+LIBPTHREAD-WINDOWS64=-L$(UP)/extralibs/pthread/$(ABI)/lib pthreadVC2.lib
 
 INCLXML-WINDOWS32=-I$(UP)/extralibs/libxml2/include
 LIBXML-WINDOWS32=-L$(UP)/extralibs/libxml2/$(ABI)/lib -lxml2
-
-XTRLIBS-WINDOWS64=user32.lib shell32.lib ws2_32.lib Gdi32.lib pthreadVC2.lib
+INCLPTHREAD-WINDOWS32=-I$(UP)/extralibs/pthread/include
+LIBPTHREAD-WINDOWS32=-L$(UP)/extralibs/pthread/$(ABI)/lib -lpthread
 XTRLIBS-WINDOWS32=-lws2_32
 
 INCLXML-LINUX64=-I/usr/include/libxml2
 LIBXML-LINUX64=-lxml2
 XTRLIBS-LINUX64=-lrt
 
-INCLPTHREAD-WINDOWS64=-I$(UP)/extralibs/pthread/include
-LIBPTHREAD-WINDOWS64=-L$(UP)/extralibs/pthread/$(ABI)/lib pthreadVC2.lib
-
-INCLPTHREAD-WINDOWS32=-I$(UP)/extralibs/pthread/include
-LIBPTHREAD-WINDOWS32=-L$(UP)/extralibs/pthread/$(ABI)/lib -lpthread
+INCLXML-MINGW64=-I/usr/include/libxml2
+LIBXML-MINGW64=-lxml2
+XTRLIBS-MINGW6464=-lrt -lws2_32 -lwsock32
 
 INCLXML=$(INCLXML-$(ABI))
 LIBXML=$(LIBXML-$(ABI))
