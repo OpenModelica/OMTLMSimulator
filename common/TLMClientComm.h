@@ -26,6 +26,8 @@ class TLMClientComm {
     //! Constructor
     TLMClientComm();
 
+    //! Destructor, closes socket.
+    ~TLMClientComm();
 
     //! Fill in TLMMessage with the information from TLMTimeData vector 
     //! coming to given InterfaceID. This function is called by TLMPlugin

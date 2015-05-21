@@ -12,14 +12,15 @@ bool doDetailedLogging=false;
 
 using std::string;
 
-const char TLMMessageHeader::TLMSignature[TLM_SIGNATURE_LENGTH+1] = "TLM_0100";
+const char TLMMessageHeader::TLMSignature[TLM_SIGNATURE_LENGTH+1] = "TLM_0101";
 const char TLMMessageHeader::IsBigEndianSystem =  TLMCommUtil::IsBigEndian();
 TLMMessageHeader::TLMMessageHeader():
-// Constructor
-MessageType(0),
-SourceIsBigEndianSystem(IsBigEndianSystem),
-DataSize(0),
-TLMInterfaceID(-1)
+    // Constructor
+    //Signature({0}),
+    MessageType(0),
+    SourceIsBigEndianSystem(IsBigEndianSystem),
+    DataSize(0),
+    TLMInterfaceID(-1)
 {
     strncpy(Signature, TLMSignature, TLM_SIGNATURE_LENGTH);
 }
@@ -123,9 +124,18 @@ bool TLMCommUtil::ReceiveMessage( TLMMessage& mess){
         TLMErrorLog::Log("ReceiveMessage:recv() returned "+Int2Str(bcount)+ " bytes ");
     }
 
-    if(strncmp(mess.Header.Signature, TLMMessageHeader::TLMSignature, 
-        TLMMessageHeader::TLM_SIGNATURE_LENGTH) != 0) {
-            TLMErrorLog::FatalError("Wrong signature in the received message");
+    if(strncmp(mess.Header.Signature, TLMMessageHeader::TLMSignature, TLMMessageHeader::TLM_SIGNATURE_LENGTH) != 0) {
+        char sig1[TLMMessageHeader::TLM_SIGNATURE_LENGTH+1] = {0};
+        char sig2[TLMMessageHeader::TLM_SIGNATURE_LENGTH+1] = {0};
+
+        strncpy(sig1, mess.Header.Signature, TLMMessageHeader::TLM_SIGNATURE_LENGTH);
+        strncpy(sig2, TLMMessageHeader::TLMSignature, TLMMessageHeader::TLM_SIGNATURE_LENGTH);
+
+        // Just to make sure we have 0 terminated strings.
+        sig1[TLMMessageHeader::TLM_SIGNATURE_LENGTH] = 0x00;
+        sig2[TLMMessageHeader::TLM_SIGNATURE_LENGTH] = 0x00;
+
+        TLMErrorLog::FatalError("Wrong signature in TLM message, incompatiple TLM format!\n" + std::string(sig1) + " != " + std::string(sig2));
     }
 
     if(TLMMessageHeader::IsBigEndianSystem != mess.Header.SourceIsBigEndianSystem) {

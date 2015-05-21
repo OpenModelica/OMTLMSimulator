@@ -187,7 +187,7 @@ void MetaModelReader::ReadSimParams(xmlNode* node) {
 // for a given XML node. Used for looking up required sections in the XML document.
 // Returns: xmlNode* giving address of the found node or NULL if an optional node
 // is not found.
-xmlNode* MetaModelReader::FindChildByName(xmlNode* node, char* name, bool required ){
+xmlNode* MetaModelReader::FindChildByName(xmlNode* node, const char* name, bool required ){
 
     for(xmlNode* curNode = node->children ; curNode; curNode = curNode->next) {
         if(    (XML_ELEMENT_NODE == curNode->type)
@@ -207,7 +207,7 @@ xmlNode* MetaModelReader::FindChildByName(xmlNode* node, char* name, bool requir
 // for a given XML element node. Used for looking up required attributes while
 // building the Model structure.
 // Returns: xmlNode* providing address of the found attribute or NULL
-xmlNode* MetaModelReader::FindAttributeByName(xmlNode* node, char* name, bool required ){
+xmlNode* MetaModelReader::FindAttributeByName(xmlNode* node, const char* name, bool required ){
 
     for(xmlAttr* curAttr = node->properties; curAttr; curAttr = curAttr->next) {
         if(strcmp(name, (const char*)curAttr->name) == 0) {

@@ -28,7 +28,7 @@ void usage(){
     string usageStr = "Usage: tlmmonitor [-d] [-n num-seps | -t time-step-size] <server:port> <metamodel>, where metamodel is an XML file.";
     TLMErrorLog::SetDebugOut(true);
     TLMErrorLog::Log(usageStr);
-    cout << usageStr << endl;
+    std::cout << usageStr << std::endl;
     exit(1);
 }
 

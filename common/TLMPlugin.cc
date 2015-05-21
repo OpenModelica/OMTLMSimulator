@@ -62,8 +62,8 @@ void  TLMPlugin::GetForce(double position[],
         double m[3] = {Data.GenForce[3], Data.GenForce[4], Data.GenForce[5]};
 
         // Transform into local inertial system
-        TransformMV( Params.RotMatrix, f );
-        TransformMV( Params.RotMatrix, m ); // BUG? correct translation of moment?
+        TransformMV( Params.cX_A_cG, f );
+        TransformMV( Params.cX_A_cG, m ); // BUG? correct translation of moment?
 
         // The reaction force is (ReceivedWave - Impedance * Velocity)
         for(int i = 0; i < 3; i++) {

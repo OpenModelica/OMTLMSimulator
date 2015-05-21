@@ -42,6 +42,9 @@ const double EULER = 0.577215664901532860606512090082;
 //! So we choose sqrt(1.0e-300)=1.0e-150.
 const double smallPositiveNumber = 1.0e-150;
 
+//! Zero degrees Celsius in degrees Kelvin
+const double Kelvin_0 = 273.15;
+
 //! New line
 #define nl std::endl;
 // This is in order to differ from local variable called nl
@@ -276,6 +279,34 @@ inline double Max(const double w, const double x, const double y, const double z
     return Max(Max(w, x), Max(y, z));
 }
 
+
+// --------- LimitMinMax(x, minlim, maxlim) functions for base types -------------
+
+inline int LimitMinMax(const int x, const int minlim, const int maxlim) {
+    return( (x > maxlim) ? maxlim : (x < minlim ? minlim : x) );
+}
+
+inline unsigned int LimitMinMax(const unsigned int x, const unsigned int minlim, const unsigned int maxlim) {
+    return( (x > maxlim) ? maxlim : (x < minlim ? minlim : x) );
+}
+
+inline long LimitMinMax(const long x, const long minlim, const long maxlim) {
+    return( (x > maxlim) ? maxlim : (x < minlim ? minlim : x) );
+}
+
+inline long long  LimitMinMax(const long long x, const long long minlim, const long long maxlim) {
+    return( (x > maxlim) ? maxlim : (x < minlim ? minlim : x) );
+}
+
+inline float LimitMinMax(const float x, const float minlim, const float maxlim) {
+    return( (x > maxlim) ? maxlim : (x < minlim ? minlim : x));
+}
+
+inline double LimitMinMax(const double x, const double minlim, const double maxlim) {
+    return( (x > maxlim) ? maxlim : (x < minlim ? minlim : x));
+}
+
+
 // --------- special double functions -----------------------
 
 inline int sameSide(double x, double y, double z, double w) {
@@ -323,7 +354,7 @@ inline double AlignCyclic_2pi(const double aIn)
     return a;
 }
 
-//! The parameter must be inside the interval [-pi,pi].
+//! The parameter must be inside the interval [-pi,pi[.
 //! Therefore we "align" this value if necessary.
 inline double AlignCyclic_pi_pi(const double aIn)
 {
@@ -348,7 +379,7 @@ inline double AlignCyclic_pi_pi(const double aIn)
 }
 
 
-//! The parameter must be inside the interval [-pi,pi].
+//! The parameter must be inside the interval [-pi,pi[.
 //! Therefore we "align" this value if necessary.
 //! Same as above, but uses long long to get a larger range.
 inline double AlignCyclicLL_pi_pi(const double aIn)
@@ -372,6 +403,31 @@ inline double AlignCyclicLL_pi_pi(const double aIn)
     
     return a;
 }
+
+
+//! The parameter must be inside the interval [-pi,pi].
+//! Therefore we "align" this value if necessary.
+//! Both -pi and +pi are valid values
+inline double AlignCyclic_pi_pi_closed(const double aIn)
+{
+    double frac = (aIn+pi)/pix2;
+
+    double a;
+    if(frac<0.0){
+        assert(frac>-2.0e9); // This test is for the integer conversion below.
+	int div = int(frac);
+	a = -pi + pix2*(frac+double(1-div)); // div negative or zero
+    } else if(frac>1.0){
+        assert(frac<2.0e9);  // This test is for the integer conversion below.
+	int div = int(frac);
+	a = -pi + pix2*(frac-double(div));
+    } else {
+	a = -pi + pix2*frac;
+    }
+
+    return a;
+}
+
 
 #if 0
 

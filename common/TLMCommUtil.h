@@ -69,7 +69,7 @@ struct TLMMessageHeader {
     // Note, length was TLM_SIGNATURE_LENGTH, I added one since it's a string and is copied from
     // TLMSignature. I'm not totally sure if this affects big-little endian swapping though!?
     // Alex S. 21/02/2014
-    char Signature[TLM_SIGNATURE_LENGTH+1];
+    char Signature[TLM_SIGNATURE_LENGTH];
 
     //! Message king (see TLMMessageTypeConst above)
     char MessageType;                     
@@ -94,6 +94,13 @@ struct TLMMessage {
 
     //! Data array (contents depends on the message type)
     std::vector<unsigned char> Data;
+
+    //! Constructor, initializes all attributes.
+    TLMMessage()
+        : SocketHandle(-1)
+        , Header()
+        , Data()
+    {}
 };
 
 
@@ -102,6 +109,10 @@ struct TLMMessage {
 class TLMCommUtil {
 
  public:
+
+    //! Empty contructor.
+    TLMCommUtil(){}
+
 
     //! The IsBigEndian() function detects if the current hardware 
     //! uses Large or Small endian conversion

@@ -1,0 +1,124 @@
+#ifndef _FLOAT3_ICC
+#define _FLOAT3_ICC
+
+// Inline functions for float3
+
+// Inline definitions for float3
+
+inline float float3::operator()(const int i) const
+{
+    float x;
+#ifdef DEBUGFLG
+    assert(i > 0 && i <= 3);
+#endif
+    switch(i) {
+    case 1:
+      x = XX;
+      break;
+    case 2:
+      x = YY;
+      break;
+    default:
+      x = ZZ;
+      break;
+    }
+
+    return x;
+}
+
+
+inline float& float3::operator()(const int i)
+{
+    float *x;
+#ifdef DEBUGFLG
+    assert(i > 0 && i <= 3);
+#endif
+
+    switch(i) {
+    case 1:
+      x = &XX;
+      break;
+    case 2:
+      x = &YY;
+      break;
+    default:
+      x = &ZZ;
+      break;
+    }
+
+//    if (i==1) x = &XX;
+//    else if (i==2) x = &YY;
+//    else x = &ZZ;
+
+    return *x;
+}
+
+
+inline float float3::norm2() const
+{
+    return sqrt(XX * XX + YY * YY + ZZ * ZZ);
+}
+
+//! Return "length" of XY components of vector.
+inline float float3::norm2XY() const{
+    return sqrt(XX * XX + YY * YY);
+}
+
+
+inline const float3 operator+(const float3& a, const float3& b){
+    return float3(a.XX+b.XX,a.YY+b.YY,a.ZZ+b.ZZ);
+}
+
+inline const float3 operator-(const float3& a, const float3& b){
+    return float3(a.XX-b.XX,a.YY-b.YY,a.ZZ-b.ZZ);
+}
+
+inline bool operator==(const float3& a, const float3& b) {
+    return (a.XX == b.XX) && (a.YY == b.YY) && (a.ZZ == b.ZZ);
+}
+
+//! M != M (no fuzz for comparison)
+inline bool operator!=(const float3& a, const float3& b) {
+    return !(a==b);
+}
+
+inline float3& float3::operator=(const float3& m) {
+    XX = m.XX;
+    YY = m.YY;
+    ZZ = m.ZZ;
+    return (*this);
+}
+
+//! Conversion to string.
+Bstring ToStr(const float3& val);
+
+inline float3& float3::operator+=(const float3& m) {
+    XX += m.XX;
+    YY += m.YY;
+    ZZ += m.ZZ;
+    return (*this);
+}
+
+inline float3& float3::operator-=(const float3& m) {
+    XX += m.XX;
+    YY += m.YY;
+    ZZ += m.ZZ;
+    return (*this);
+}
+
+inline float3::float3(const float a1, const float a2, const float a3):
+    XX(a1),YY(a2),ZZ(a3){}
+
+inline bool float3::isZero() const
+{
+    return (XX==0.0)&&(YY==0.0)&&(ZZ==0.0);
+}
+
+inline bool float3::isNonZero() const
+{
+    return (XX!=0.0)||(YY!=0.0)||(ZZ!=0.0);
+}
+
+
+#endif
+

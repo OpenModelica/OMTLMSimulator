@@ -1,0 +1,520 @@
+#ifndef _DOUBLE33S_ICC
+#define _DOUBLE33S_ICC
+
+#include "dsyevq3.h"
+#include "dsyevv3.h"
+////////////////////////////////////////////////////////////////////////
+//
+// .SS Method definitions
+//
+
+
+//! Constructor that initializes the components to the given value.
+inline double33s::double33s(const double val) :
+                 x11(val),
+                 x22(val),
+                 x33(val),
+                 x12(val),
+                 x23(val),
+                 x13(val){}
+
+double33s::double33s(const double a11, const double a22, const double a33,
+		     const double a12, const double a23, const double a13) :
+x11(a11),
+    x22(a22),
+    x33(a33),
+    x12(a12),
+    x23(a23),
+    x13(a13){}
+
+//! Copy constructor.
+double33s::double33s(const double33s& val):
+x11(val.x11),
+    x22(val.x22),
+    x33(val.x33),
+    x12(val.x12),
+    x23(val.x23),
+    x13(val.x13){}
+
+#ifdef USE_IMPLICIT_CONV
+
+//! Conversion constructor from  float33s.
+inline double33s::double33s(const float33s& val):
+                 x11(val.x11),
+                 x22(val.x22),
+                 x33(val.x33),
+                 x12(val.x12),
+                 x23(val.x23),
+                 x13(val.x13){}
+
+#endif
+
+inline double& double33s::operator()(const int row, const int col) {
+	switch(row) {
+	case 1:
+	    switch(col) {
+	    case 1: return x11;
+	    case 2: return x12;
+            case 3: return x13;
+            default:assert(false);
+	    }
+	case 2:
+	    switch(col) {
+	    case 1: return x12;
+	    case 2: return x22;
+            case 3: return x23;
+            default:assert(false);
+	    }
+	case 3:
+	    switch(col) {
+	    case 1: return x13;
+	    case 2: return x23;
+            case 3: return x33;
+            default:assert(false);
+	    }
+        default:assert(false);
+
+	}
+
+        return x11;// Never reaches here
+}
+
+//! Access elements. Can not be used as lvalue.
+inline double double33s::operator()(const int row, const int col) const	{
+    switch(row) {
+    case 1:
+	switch(col) {
+	case 1: return x11;
+	case 2: return x12;
+        case 3: return x13;
+        default:assert(false);
+	}
+    case 2:
+	switch(col) {
+	case 1: return x12;
+	case 2: return x22;
+        case 3: return x23;
+        default:assert(false);
+	}
+    case 3:
+	switch(col) {
+	case 1: return x13;
+	case 2: return x23;
+        case 3: return x33;
+        default:assert(false);
+        }
+    default:assert(false);
+    }
+    assert(0);
+    return x11;
+}
+
+inline double33s& double33s::operator=(const double33s& m) {
+    x11 = m.x11;
+    x22 = m.x22;
+    x33 = m.x33;
+    x12 = m.x12;
+    x23 = m.x23;
+    x13 = m.x13;
+    return (*this);
+}
+
+inline double33s& double33s::operator=(const double a) {
+    x11 = a;
+    x22 = a;
+    x33 = a;
+    x12 = a;
+    x23 = a;
+    x13 = a;
+    return (*this);
+}
+
+inline double33s& double33s::operator+=(const double33s& m) {
+    x11 += m.x11;
+    x22 += m.x22;
+    x33 += m.x33;
+    x12 += m.x12;
+    x23 += m.x23;
+    x13 += m.x13;
+    return (*this);
+}
+
+inline double33s& double33s::operator+=(const double a) {
+    x11 += a;
+    x22 += a;
+    x33 += a;
+    x12 += a;
+    x23 += a;
+    x13 += a;
+    return (*this);
+}
+
+inline double33s& double33s::operator-=(const double33s& m) {
+    x11 -= m.x11;
+    x22 -= m.x22;
+    x33 -= m.x33;
+    x12 -= m.x12;
+    x23 -= m.x23;
+    x13 -= m.x13;
+    return (*this);
+}
+
+inline double33s& double33s::operator-=(const double a) {
+    x11 -= a;
+    x22 -= a;
+    x33 -= a;
+    x12 -= a;
+    x23 -= a;
+    x13 -= a;
+    return (*this);
+}
+
+inline double33s& double33s::operator*=(const double a) {
+    x11 *= a;
+    x22 *= a;
+    x33 *= a;
+    x12 *= a;
+    x23 *= a;
+    x13 *= a;
+    return (*this);
+}
+
+inline double33s& double33s::operator/=(const double a) {
+    x11 /= a;
+    x22 /= a;
+    x33 /= a;
+    x12 /= a;
+    x23 /= a;
+    x13 /= a;
+    return (*this);
+}
+
+//! Fills a matrix of type double33s from two vectors diag=[11, 22, 33]  overdiag[12, 23, 13]
+inline void double33s::Set(const double3& diag, const double3& overdiag) {
+    Set(diag(1),diag(2),diag(3), overdiag(1),overdiag(2),overdiag(3));
+}
+
+inline void double33s::Get(double3& diag, double3& overdiag) const {
+    Get(diag(1),diag(2),diag(3), overdiag(1),overdiag(2),overdiag(3));
+}
+
+//! Fills a matrix of type double33s from a C-array (6 elements)
+//! in the order [11, 22, 33, 12, 23, 13]
+inline void double33s::Set(const double data[]) {
+    x11 = data[0];
+    x22 = data[1];
+    x33 = data[2];
+    x12 = data[3];
+    x23 = data[4];
+    x13 = data[5];
+}
+
+//! Get matrix data into a C-array (6 elements)
+//! in the order [11, 22, 33, 12, 23, 13]
+inline void double33s::Get( double data[]) const {
+    data[0] = x11;
+    data[1] = x22;
+    data[2] = x33;
+    data[3] = x12;
+    data[4] = x23;
+    data[5] = x13;
+}
+
+//! Fills a matrix of type double33s from the elements or components.
+inline void double33s::Set(const double a11, const double a22, const double a33,
+			   const double a12, const double a23, const double a13) {
+    x11 = a11; x22 = a22; x33=a33; x12=a12; x23=a23; x13=a13;    
+}
+
+//! Get the components a11, a12, ... a33 from a matrix of type double33s.
+inline void double33s::Get(double& a11,  double& a22,  double& a33,
+			   double& a12,  double& a23,  double& a13) const {
+    a11 = x11; a22 = x22; a33=x33; a12=x12; a23=x23; a13=x13;
+}
+
+
+inline bool double33s::isZero() const
+{
+    return (x11==0.0)&&(x22==0.0)&&(x33==0.0)&&(x12==0.0)&&(x23==0.0)&&(x13==0.0);
+}
+
+inline bool double33s::isNonZero() const
+{
+    return (x11!=0.0)||(x22!=0.0)||(x33!=0.0)||(x12!=0.0)||(x23!=0.0)||(x13!=0.0);
+}
+
+
+//! Dot product: M * V
+const double3 operator*(const double33s& a, const double3& b) {
+    return double3(a.x11 * b(1) + a.x12 * b(2) + a.x13 * b(3),
+		   a.x12 * b(1) + a.x22 * b(2) + a.x23 * b(3),
+		   a.x13 * b(1) + a.x23 * b(2) + a.x33 * b(3)
+		   );
+}
+
+//! Dot product: V * M
+const double3 operator*(const double3& a, const double33s& b) {
+    return b * a;
+}
+
+//! returns the size of a double33s
+inline int sizeOf(const double33s &) {
+    return 6*sizeof(double);
+}
+
+////////////////////////////////////////////////////////////////////////
+//
+// .SS Definition of functions
+//
+// Here we declare global functions related to double33s.
+// For the description we use the notation: "V" denotes a double3, 
+// "s" scalar, and "M" a double33s
+//
+
+//! -M
+inline const double33s operator-(const double33s& m) {
+    return double33s(-m.x11, -m.x22, -m.x33, -m.x12, -m.x23, -m.x13);
+}
+
+//! s * M
+inline const double33s operator*(const double s, const double33s& m) {
+    return double33s(s*m.x11, s*m.x22, s*m.x33, s*m.x12, s*m.x23, s*m.x13);
+}
+
+//! M * s 
+inline const double33s operator*(const double33s& m, const double s) {
+    return double33s(s*m.x11, s*m.x22, s*m.x33, s*m.x12, s*m.x23, s*m.x13);
+}
+
+//! M / s 
+inline const double33s operator/(const double33s& m, const double s){
+    return double33s(m.x11/s, m.x22/s, m.x33/s, m.x12/s, m.x23/s, m.x13/s);
+}
+
+
+//! M + M 
+inline const double33s operator+(const double33s& a, const double33s& b){
+    return double33s(a.x11+b.x11,a.x22+b.x22,a.x33+b.x33,a.x12+b.x12,a.x23+b.x23,a.x13+b.x13);
+}
+
+
+
+//! M + s 
+inline const double33s operator+(const double33s& m, const double s) {
+    return double33s(m.x11+s, m.x22+s, m.x33+s, m.x12+s, m.x23+s, m.x13+s);
+}
+
+//! s + M
+inline const double33s operator+(const double s, const double33s& m) {
+    return double33s(m.x11+s, m.x22+s, m.x33+s, m.x12+s, m.x23+s, m.x13+s);
+}
+
+//! M - M 
+inline const double33s operator-(const double33s& a, const double33s& b){
+    return double33s(a.x11-b.x11,a.x22-b.x22,a.x33-b.x33,a.x12-b.x12,a.x23-b.x23,a.x13-b.x13);
+}
+
+//! M - s 
+inline const double33s operator-(const double33s& m, const double s){
+    return double33s(m.x11-s, m.x22-s, m.x33-s, m.x12-s, m.x23-s, m.x13-s);
+}
+
+//! s - M
+inline const double33s operator-(const double s, const double33s& m){
+    return double33s(s-m.x11, s-m.x22, s-m.x33, s-m.x12, s-m.x23, s-m.x13);
+}
+
+//! Dot product: M * M
+inline const double33 operator*(const double33s& a, const double33s& b){
+    return a.get_as_double33()*b.get_as_double33();
+}
+
+
+//! M == M (no fuzz for comparison) 
+inline bool operator==(const double33s& a, const double33s& b) {
+    return ((a.x11 == b.x11) && (a.x22 == b.x22) && (a.x33 == b.x33) && 
+	    (a.x12 == b.x12) && (a.x23 == b.x23) && (a.x13 == b.x13));
+}
+
+//! M == s (no fuzz for comparison) 
+inline bool operator==(const double33s& a, const double b) {
+    return ((a.x11 == b) && (a.x22 == b) && (a.x33 == b) && 
+	    (a.x12 == b) && (a.x23 == b) && (a.x13 == b));
+}
+
+//! s == M (no fuzz for comparison) 
+inline bool operator==(const double a, const double33s& b) {
+    return (b == a);
+}
+
+//! M != M (no fuzz for comparison) 
+inline bool operator!=(const double33s& a, const double33s& b) {
+    return !(a==b);
+}
+
+//! Return the maximum absolute value of the relative errors of each component.
+//! Use a tolerance to avoid division by zero.
+double MaxRelAbsError(const double33s& a, const double33s& b, const double tol);
+
+
+double double33s::det() const {
+    return  x11*(x22*x33-x23*x23)
+          -x12*(x12*x33-x23*x13)
+          +x13*(x12*x23-x22*x13);
+}
+
+
+//!  B = Transpose(A) * M * A
+inline void double33s::calc_Transform1(const double33& A, double33s& B) const 
+{
+    double a11, a12, a13, a21, a22, a23, a31, a32, a33;
+    A. Get( a11, a12, a13,
+            a21, a22, a23,
+            a31, a32, a33);
+    double a21x12_a31x13 = (a21*x12+a31*x13);
+    double a22x12_a32x13 = (a22*x12+a32*x13);
+    double a23x12_a33x13 = (a23*x12+a33*x13);
+    double a21x22_a31x23 = (a21*x22+a31*x23);
+    double a21x23_a31x33 = (a21*x23+a31*x33);
+    double a22x22_a32x23 = (a22*x22+a32*x23);
+    double a22x23_a32x33 = (a22*x23+a32*x33);
+    B.Set(
+	  a11*a11*x11+2*a11*a21x12_a31x13+a21*a21x22_a31x23+a31*a21x23_a31x33,
+	  a12*a12*x11+2*a12*a22x12_a32x13+a22*a22x22_a32x23+a32*a22x23_a32x33,
+	  a13*a13*x11+2*a13*a23x12_a33x13+a23*(a23*x22+a33*x23)+a33*(a23*x23+a33*x33),
+	  a12*a21x12_a31x13+a11*(a12*x11+a22x12_a32x13)+a22*a21x22_a31x23+a32*a21x23_a31x33,
+	  a13*a22x12_a32x13+a12*(a13*x11+a23x12_a33x13)+a23*a22x22_a32x23+a33*a22x23_a32x33,
+	  a13*a21x12_a31x13+a11*(a13*x11+a23x12_a33x13)+a23*a21x22_a31x23+a33*a21x23_a31x33
+	  );
+    
+}
+
+//!  B = A * M * Transpose(A)
+inline void double33s::calc_Transform2(const double33& A, double33s& B) const 
+{
+    double a11, a12, a13, a21, a22, a23, a31, a32, a33;
+
+    // In order to get it on the form implemented in calc_Transform1 we get the transformed
+    // componets.
+    A. Get( a11, a21, a31,
+            a12, a22, a32,
+            a13, a23, a33);
+
+    double a21x12_a31x13 = (a21*x12+a31*x13);
+    double a22x12_a32x13 = (a22*x12+a32*x13);
+    double a23x12_a33x13 = (a23*x12+a33*x13);
+    double a21x22_a31x23 = (a21*x22+a31*x23);
+    double a21x23_a31x33 = (a21*x23+a31*x33);
+    double a22x22_a32x23 = (a22*x22+a32*x23);
+    double a22x23_a32x33 = (a22*x23+a32*x33);
+
+    B.Set(
+	  a11*a11*x11+2*a11*a21x12_a31x13+a21*a21x22_a31x23+a31*a21x23_a31x33,
+	  a12*a12*x11+2*a12*a22x12_a32x13+a22*a22x22_a32x23+a32*a22x23_a32x33,
+	  a13*a13*x11+2*a13*a23x12_a33x13+a23*(a23*x22+a33*x23)+a33*(a23*x23+a33*x33),
+	  a12*a21x12_a31x13+a11*(a12*x11+a22x12_a32x13)+a22*a21x22_a31x23+a32*a21x23_a31x33,
+	  a13*a22x12_a32x13+a12*(a13*x11+a23x12_a33x13)+a23*a22x22_a32x23+a33*a22x23_a32x33,
+	  a13*a21x12_a31x13+a11*(a13*x11+a23x12_a33x13)+a23*a21x22_a31x23+a33*a21x23_a31x33
+	  );
+    
+}
+
+const double33 double33s::get_as_double33() const {
+    return double33(
+		    x11, x12, x13,
+		    x12, x22, x23,
+		    x13, x23, x33);
+}
+
+//! Compute effective (von Misses) stress
+inline double double33s::calc_vonMises() const {
+    double tmp = x11*(x11 - x22) + x22*(x22 - x33) + x33*(x33 - x11)
+            + 3*(x12*x12 + x23*x23 + x13*x13);
+    // Due to numerical error, we can get small negative values.
+    return (tmp > 0) ? sqrt(tmp):0;
+}
+
+void double33s::calc_eigensystem( double3& ev, double3* V) const
+{
+    if(0 == V) {
+	calc_eigenvalues(ev);
+	return;
+    }
+
+    double A[3][3], Q[3][3], w[3];
+
+    Get(A[0][0], A[1][1], A[2][2],A[0][1],A[1][2],A[0][2]);
+
+    if(-1 == dsyevq3( A,  Q, w )) { // QL does not converge
+	dsyevv3( A,  Q, w );
+    }
+
+    ev(1) = w[0]; ev(2) = w[1]; ev(3) = w[2];
+    
+    for (int i = 0; i < 3; i++) {
+	double3& Vi = V[i]; Vi(1) = Q[0][i]; Vi(2) = Q[1][i]; Vi(3) = Q[2][i];
+    }
+}
+
+//! M / M
+//! Elementwise division, mainly used for testing stress tensors.
+inline const double33s elementwise_Div(const double33s& a, const double33s& b) {
+    return double33s(a.x11/b.x11,a.x22/b.x22,a.x33/b.x33,a.x12/b.x12,a.x23/b.x23,a.x13/b.x13);
+}
+
+//*****************************************************************************************
+inline const double33s Max(const double33s& a,const double33s& b)
+{
+    return double33s(a.x11>b.x11?a.x11:b.x11,
+                     a.x22>b.x22?a.x22:b.x22,
+                     a.x33>b.x33?a.x33:b.x33,
+                     a.x12>b.x12?a.x12:b.x12,
+                     a.x23>b.x23?a.x23:b.x23,
+                     a.x13>b.x13?a.x13:b.x13);
+}
+inline const double33s Min(const double33s& a,const double33s& b)
+{
+    return double33s(a.x11<b.x11?a.x11:b.x11,
+                     a.x22<b.x22?a.x22:b.x22,
+                     a.x33<b.x33?a.x33:b.x33,
+                     a.x12<b.x12?a.x12:b.x12,
+                     a.x23<b.x23?a.x23:b.x23,
+                     a.x13<b.x13?a.x13:b.x13);
+}
+
+inline const double33s fabs(const double33s& a)
+{
+    return double33s(fabs(a.x11),
+                     fabs(a.x22),
+                     fabs(a.x33),
+                     fabs(a.x12),
+                     fabs(a.x23),
+                     fabs(a.x13));
+}
+
+//*******************************************************************************************
+
+
+//! Output on ostream
+inline std::ostream& operator<<(std::ostream& o, const double33s& a) {    
+    o << "s11=" << a.x11 << ", " 
+      << "s22=" << a.x22 << ", " 
+      << "s33=" << a.x33 << ", " 
+      << "s12=" << a.x12 << ", " 
+      << "s23=" << a.x23 << ", " 
+      << "s13=" << a.x13; 
+    return o;
+ }
+
+//! Conversion to string.
+Bstring ToStr(const double33s& val);
+
+#endif
+
+
+
+
+
+
+
+

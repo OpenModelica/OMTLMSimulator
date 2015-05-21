@@ -1,3 +1,6 @@
+#ifndef _portable_long_h
+#define _portable_long_h
+
 // The definition of long64 is moved from portability.h to a separate file.
 // The reason is that including portability.h is unnecssary in 
 // many cases, and it is sufficient to use just this file for
@@ -43,3 +46,4 @@ typedef  long long int long64 ;
 #endif
 
 
+#endif //  _portable_long_h

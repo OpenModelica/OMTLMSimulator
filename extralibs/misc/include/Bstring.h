@@ -90,7 +90,7 @@
 //#include <iostream>
 //#include <fstream>
 
-using namespace std;
+using std::string;
 
 #if defined(_MSC_VER)
 // It is a MSC warning C4100 about unused formal parameters.
@@ -143,12 +143,12 @@ public:
     Bstring(string s):string(s){};
     
     //! This creates a string containing cs. 
-    //! If NULL is passed then emoty string is used for initialization.
-    Bstring(const char* cs):string( (cs?cs:"") ){};
+    //! If NULL is passed then empty string is used for initialization.
+    Bstring(const char* cs):string( (cs!=NULL ? cs : "") ){};
     
     //! This creates a string containing cs. 
-    //! If NULL is passed then emoty string is used for initialization.
-    Bstring(char * cs):string(  (cs?cs:"")   ){};
+    //! If NULL is passed then empty string is used for initialization.
+    Bstring(char * cs):string( (cs!=NULL ? cs : "") ){};
 
     //! This creates a string which contains only 1 character.
     //! But it is forbidden to convert automatically.
@@ -167,7 +167,7 @@ public:
     Bstring(const Bstring& str):string(str){};
     
     //! The destructor
-    virtual ~Bstring(){};
+    ~Bstring(){};
 
 	
     
@@ -210,10 +210,11 @@ public:
     //! summation must be surrounded by brackest and followed by .c_str(). This may
     //! be because for safety reasons string doesn't have an automatic type conversion
     //! to const char*. 
+
+    //! A problem detected  : BString a;ToStr(a) calls conversion to
+    //!  const char* and then printing with ToStr(void*).
     operator  const char*() const{return c_str();}
-  
-  
-    
+      
     //! Pattern Maching.
     //! Starts with index i, searches for 1st occurance of pat in self.
     size_t index(const char* pat, size_t i=0,caseCompare c=exact)const;
@@ -275,13 +276,13 @@ public:
     
     //! Reads characters from the input stream s, preplacing the previous contents of self, until
     //! EOF is reached. Null characters are treated the same as other characters.
-    istream& readFile(istream& s);
+    std::istream& readFile(std::istream& s);
 
     //! Reads characters from the input stream s, replacing the previous contents of self, until
     //! a newline (or an EOF) is encountered. The newline is removed from the input stream but is 
     //! not stored. Null characters are treated the same as other characters.
     //! The 2nd argument (skipWS) is always ignored.
-    istream& readLine(istream& s, bool skipWS=true);
+    std::istream& readLine(std::istream& s, bool skipWS=true);
 
 
     //! Reads characters from the input stream s, replacing the previous contents of self, until 
@@ -290,7 +291,7 @@ public:
     //! prior to using this method. See "Implementation Details" in the User's Guide for more 
     //! information. This function is incompatible with strings with embedded nulls. This function 
     //! may be incompatible with MBCS strings.
-    istream& readString(istream& s);
+    std::istream& readString(std::istream& s);
 
 
     //! Reads characters from the input stream s, replacing the previous contents of self, until
@@ -298,7 +299,7 @@ public:
     //! input stream but is not stored. Null characters are treated the same as other characters.
     //! If delim is '\0' then this function is incompatible with strings with embedded nulls. 
     //! If delim is '\0' then this function may be incompatible with MBCS strings.
-    istream& readToDelim(istream& s, char delim ='\n');
+    std::istream& readToDelim(std::istream& s, char delim ='\n');
 
 
     //! This takes in the string inString, searches for the 1st occurancd of replaceString 
@@ -324,6 +325,11 @@ public:
     //! Removes the prefix, otherwise asserts(false)
     void dropPrefix(const Bstring& s1);
 
+    //! Adds spaces to the right, to get so many characters totally, and do not remove any. Return this.
+    Bstring padRight(size_t chars);
+
+    //! Adds spaces to the left, to get so many characters totally, and do not remove any. Return this.
+    Bstring padLeft(size_t chars);
 
 private:
     

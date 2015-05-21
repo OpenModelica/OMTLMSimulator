@@ -11,8 +11,8 @@ ifeq ($(MAKEFILEHEADHOME),)
   BINDIR=$(UP)/bin/
 else
   # This is for BEAST
-  UP=$(MAKEFILEHEADHOME)
-  BINDIR=$(UP)/bin/
+  UP=$(MAKEFILEHEADHOME)/src
+  BINDIR=$(UP)/../bin/
 endif
 
 include $(MAKEFILEHEADHOME)/Makefile.head
@@ -35,7 +35,8 @@ cc += -DYY_NEVER_INTERACTIVE -fPIC
 BNAME=libtlmopenmodelica.a
 INSTDIR=$(BINDIR)/OpenModelica
 RESOURCESDIR=$(INSTDIR)/Resources
-MHOME=`$(MISCHOME)`
+#MHOME=`$(MISCHOME)`
+MHOME=../extralibs/misc
 
 INCLUDES=  -I. \
 	-I../common \
@@ -64,10 +65,17 @@ EXT_OBJS = PluginImplementer.o \
 	TLMInterface.o \
 	TLMErrorLog.o \
 	TLMPlugin.o \
-	lightmat.o \
+	double3.o \
+	double33.o \
+	double33s.o \
+	coordTransform.o \
 	ErrorLog.o \
 	tostr.o \
 	Bstring.o \
+	dsyevq3.o \
+	dsyevv3.o \
+	dsytrd3.o \
+	dsyevc3.o
 
 
 ABIOBJS=$(OBJS:%.o= $(ABI)/%.o) $(EXT_OBJS:%.o= $(ABI)/%.o)

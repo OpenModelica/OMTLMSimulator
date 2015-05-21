@@ -49,6 +49,33 @@ void ManagerCommHandler::Run(CommunicationMode CommMode_In) {
     }
 #endif
 #endif
+
+    if(exceptionMsg.size() > 0){
+        throw(exceptionMsg);
+    }
+
+}
+
+//! Thread exception handler.
+void ManagerCommHandler::threadException(const std::string &msg)
+{
+    exceptionLock.lock();
+
+    exceptionMsg += msg + "\n";
+
+    // Terminate message queue, this will unblock the writer thread if needed.
+    MessageQueue.Terminate();
+
+    // We close all sockets on exception.
+    Comm.closeAll();
+
+    exceptionLock.unlock();
+}
+
+bool ManagerCommHandler::gotException(std::string &msg)
+{
+    msg = exceptionMsg;
+    return (msg.size() > 0);
 }
 
 // RunStartupProtocol implements startup protocol that
@@ -275,7 +302,12 @@ void ManagerCommHandler::SetupInterfaceConnectionMessage(int IfcID, std::string&
 
     // Apply component transformation for each interface.
     int CompId = ifc.GetComponentID();
-    TheModel.GetTLMComponentProxy(CompId).GetInertialTranformation(param.Position, param.RotMatrix);
+    TheModel.GetTLMComponentProxy(CompId).GetInertialTranformation(param.cX_R_cG_cG, param.cX_A_cG);
+
+    // Send initial interface position
+    TLMTimeData& td = ifc.getTime0Data();
+    for(int i=0 ; i<3 ; i++ ) param.Nom_cI_R_cX_cX[i] = td.Position[i];
+    for(int i=0 ; i<9 ; i++ ) param.Nom_cI_A_cX[i] = td.RotMatrix[i];
 
     mess.Header.DataSize = sizeof (TLMConnectionParams);
 
@@ -377,14 +409,14 @@ void ManagerCommHandler::ReaderThreadRun() {
 
 void ManagerCommHandler::WriterThreadRun() {
 
-    TLMMessage* tlm_mess;
+    TLMMessage* tlm_mess = 0;
     TLMErrorLog::Log(string("TLM manager is ready to send messages"));
 
     while(( tlm_mess = MessageQueue.GetWriteSlot()) != NULL) {
-      //TLMCommUtil::SendMessage(*tlm_mess);
-      TLMMessage &mm = *tlm_mess;
-      TLMCommUtil::SendMessage(mm);
-      MessageQueue.ReleaseSlot(tlm_mess);
+        TLMCommUtil::SendMessage(*tlm_mess);
+        //TLMMessage &mm = *tlm_mess;
+        //TLMCommUtil::SendMessage(mm);
+        MessageQueue.ReleaseSlot(tlm_mess);
     }
     
 }
@@ -527,6 +559,9 @@ void ManagerCommHandler::ForwardToMonitor(TLMMessage& message){
             MessageQueue.PutWriteSlot(newMessage);
         }
     }
+    else {
+        TLMErrorLog::Log( "Nothing to forward for monitor interface " + TLMErrorLog::ToStdStr(TLMInterfaceID));
+    }
     monitorMapLock.unlock();
 }
 
@@ -630,11 +665,13 @@ void ManagerCommHandler::MonitorThreadRun()
 		
                 if( IfcID >= 0 ){
 
-                    TLMErrorLog::Log("Register monitor handle");
+                    TLMErrorLog::Log("Register monitor handle for interface " + ToStr(IfcID));
+#if 0
                     //std::cout << "hdl=" << hdl << ", ifID=" << IfcID << std::endl;
                     localIntMap.insert(std::make_pair(hdl, IfcID));
                     //std::cout << "hdl count=" << localIntMap.count(hdl) << ", if count=" << TheModel.GetInterfacesNum() << std::endl;
 
+                    // NOTE, here we register interfaces first if all interfaces are monitored.
                     if(localIntMap.count(hdl) == TheModel.GetInterfacesNum()){
                         monitorMapLock.lock();
                         std::multimap<int,int>::iterator it;
@@ -647,6 +684,11 @@ void ManagerCommHandler::MonitorThreadRun()
                     }
                     else{
                     }
+#else
+                    monitorMapLock.lock();
+                    monitorInterfaceMap.insert(std::make_pair(IfcID, hdl));
+                    monitorMapLock.unlock();
+#endif
 
                 }
             }

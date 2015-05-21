@@ -35,7 +35,14 @@ class TLMMessageQueue {
  public:
 
     //! Constructor
-    TLMMessageQueue(): Terminated(false) {}
+    TLMMessageQueue()
+        : SendBufLock()
+        , SendBuffers()
+        , FreeBufLock()
+        , FreeBuffers()
+        , SenderWait()
+        , Terminated(false)
+    {}
 
     //! Destructor
     ~TLMMessageQueue() ;
