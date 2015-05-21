@@ -5,10 +5,10 @@
 #include <cerrno>
 
 
-
 //! Locking of error file.
 extern mutex_t ErrorFileLock;
 #endif 
+
 
 #include <cstdlib>
  
@@ -16,9 +16,18 @@ extern mutex_t ErrorFileLock;
 #include <iostream>
 #include <fstream>
 #include <cassert>
+
+using std::cout;
+using std::cerr;
+using std::endl;
+using std::ios;
+
+#include <cmath>
+// for isnan
+
 #include "ErrorLog.h"
 #include "tostr.h"
-
+#include "portable_isnan.h"
 #include <ctime>
 #if !defined(_MSC_VER)
 #include <sys/time.h>
@@ -122,7 +131,6 @@ static int oError_NameDefined = 0;
 static Bstring TheErrorFileName = "";
 
 
-
 int IsOpenQ()
 // Local function for opening the file.
 {  
@@ -157,7 +165,7 @@ int IsOpenQ()
         assert(oError.good());
 
 	oError_OpenFlg = 1;
-    byteCounter=0;
+	byteCounter=0;
 	oError.precision(17);
 	oError.setf( ios::scientific, ios::floatfield );
 
@@ -258,6 +266,7 @@ ostream* SetStdError( ostream* n_stdErr )
 #else
 static FILE *oError;
 static FILE *stdErr = stderr;
+static FILE *stdOut = stdout;
 static int oError_OpenFlg = 0;
 static int oError_NameDefined = 0;
 static Bstring TheErrorFileName = "";
@@ -519,7 +528,9 @@ void setMessageReportingFunction(void (myErrorReportingFunction)(int severity,co
 
 
 const Bstring & getMessagePrefix(int severity){
-   static Bstring messagePrefix[]={"",prL1,prL2,prTr,prW,"",prTr,prE};
+  //static Bstring messagePrefix[]={"",prL1,prL2,prTr,prW,"",prTr,prE};
+   static Bstring messagePrefix[]={"","LOG1    : ", "LOG2    : ", "BTRACEF : ",
+                                    "WARNING : ",   "",       "BTRACEF : ", "ERROR   : "};
    return messagePrefix[severity];
 }
 
@@ -560,7 +571,11 @@ void  messageHandler(int severity, const Bstring& Message){
 #else
         fprintf(oError, "%s\n",fullMessage.c_str());
         fflush(oError);
-        if(severity>=useLargerForPrintingToStderr) fprintf(stdErr, "%s\n",fullMessage.c_str());
+        if(severity>useLargerForPrintingToStderr) fprintf(stdErr, "%s\n",fullMessage.c_str());
+
+        // If you want to redirect PrintInfo to stdout do this:
+        if(severity==useLargerForPrintingToStderr) fprintf(stdErr, "%s\n",fullMessage.c_str());
+
 #endif
 
         byteCounter+=fullMessage.length();
@@ -595,10 +610,16 @@ void BtracefLog2( const Bstring & Message)
 
 void Warning(const Bstring& Message)
 {
+    if(Message=="") {
+        return;
+    }
     messageHandler(4,Message);
 }
 
-
+void PrintInfo(const Bstring& Message)
+{
+    messageHandler(5,Message);
+}
 
 void BtracefError( const Bstring & Message)
 {
@@ -607,6 +628,9 @@ void BtracefError( const Bstring & Message)
 
 void Error(const Bstring& Message)
 {
+    if(Message=="") {
+        return;
+    }
     messageHandler(7,Message);
     monitoredErrors++;
 #ifdef WINDOWSDEBUGGER
@@ -618,7 +642,93 @@ void Error(const Bstring& Message)
 
 
 
+int validity_warnings=1;
 
+void valid(double x, const Bstring & fromWhere, bool allowErrors )
+{
+    if (portable_isnan(x)) {
+        Error("Not a number detected (NaN) in call to valid(). Probably non-initialized value. Happened at "+fromWhere+".");
+        if (!allowErrors) {
+            assert(0);
+        }else{
+            Error("Allow this error.");
+        }
+
+    }
+
+    if (!portable_isfinite(x)) {
+        Error("Infinte number detected (inf) in call to valid(). Probably non-initialized value. Happened at "+fromWhere+".");
+        if (!allowErrors) {
+            assert(0);
+        }else{
+            Error("Allow this error.");
+        }
+
+    }
+
+    //cerr << "valid(" << x << ")" << endl;
+    if ((x>1.0e+200 || x<-1.0e+200)) {
+
+        // double * p=0;
+        // *p=x; // A way to force stop execution
+
+        Error("Suspicious number detected in call to valid() in compress.cc.  x=" + ToStr(x)+
+              ". Suspicious because |x|>1e200. Simulation is not permitted. Probably non-initialized value. Happened at "+fromWhere+".");
+
+        if (!allowErrors) {
+            assert(0);
+        }else{
+            Error("Allow this error.");
+        }
+
+    }
+
+#ifdef DEBUGFLG
+    if (  ((x<1.0e-200)&&(x>0))
+          ||
+          ((x>-1.0e-200)&&(x<0))  ) {
+
+        if (validity_warnings)
+        {
+            validity_warnings--;
+            Warning("Under DEBUGFLG: Very small number is passed to valid()=" + ToStr(x) + ". This might be caused by non-initialized value."+
+                    "Further messages of this kind are suppressed ."+ " Happened at "+fromWhere+".");
+        }
+    }
+#endif
+}
+
+
+
+//--------------------------------------------------------------------
+bool  isvalid(double x )
+{
+    if (portable_isnan(x)) {
+        return false;
+    }
+    if (!portable_isfinite(x)) {
+        return false;
+    }
+    //cerr << "valid(" << x << ")" << endl;
+    if ((x>1.0e+200 || x<-1.0e+200)) {
+        return false;
+    }
+#ifdef DEBUGFLG
+    if (  ((x<1.0e-200)&&(x>0))
+          ||
+          ((x>-1.0e-200)&&(x<0))  ) {
+
+        if (validity_warnings)
+        {
+
+
+            return false;
+
+        }
+    }
+#endif
+    return true;
+}
 
 
 

@@ -31,7 +31,7 @@ void usage(){
             "-r                 : run manager in interface request mode, get information about interface locations";
     TLMErrorLog::SetDebugOut(true);
     TLMErrorLog::Log(usageStr);
-    cout << usageStr << endl;
+    std::cout << usageStr << std::endl;
     exit(1);
 }
 
@@ -39,11 +39,11 @@ void usage(){
 void print_interface_information(MetaModel& theModel)
 {
     if( theModel.GetInterfacesNum() == 0 ){
-        cout << "No TLM interfaces found." << endl;
+        std::cout << "No TLM interfaces found." << std::endl;
         return;
     }
 
-    cout << "Positions and orientations:" << endl;
+    std::cout << "Positions and orientations:" << std::endl;
 
     for(size_t idx=0 ; idx<theModel.GetInterfacesNum() ; idx++ ){
         TLMInterfaceProxy& intProx = theModel.GetTLMInterfaceProxy(idx);
@@ -55,9 +55,9 @@ void print_interface_information(MetaModel& theModel)
                     tlmData.RotMatrix[3], tlmData.RotMatrix[4], tlmData.RotMatrix[5],
                     tlmData.RotMatrix[6], tlmData.RotMatrix[7], tlmData.RotMatrix[8]);
 
-        cout << comProx.GetName() << "." << intProx.GetName() << ":" << endl;
-        cout << "R  : " << R << endl;
-        cout << "phi: " << ATophi321(A) << endl;
+        std::cout << comProx.GetName() << "." << intProx.GetName() << ":" << std::endl;
+        std::cout << "R  : " << R << std::endl;
+        std::cout << "phi: " << ATophi321(A) << std::endl;
     }
 }
 

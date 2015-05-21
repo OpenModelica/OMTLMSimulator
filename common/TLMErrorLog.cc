@@ -49,7 +49,7 @@ std::ostream* TLMErrorLog::outStream = NULL;
 
 void TLMErrorLog::open(){
     if(TLMErrorLog::outStream==NULL){
-        TLMErrorLog::outStream=new ofstream("Logfile.log");
+        TLMErrorLog::outStream=new std::ofstream("TLMlogfile.log");
         *outStream << "Starting log" << std::endl;
     }
 }

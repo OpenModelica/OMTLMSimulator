@@ -1,0 +1,444 @@
+#ifndef _DOUBLE33_ICC
+#define _DOUBLE33_ICC
+
+#include <cassert>
+#include "double3.h"
+// For repetive division it can be more efficient to create a intermediate variable
+// and to do multiplication instead. Some low level tests indicate a factor 4.
+// On other hand, we loose some precision. Which is most important, tests will tell.
+// To activate, define these. DF 2011-04-04
+#define FASTDIV          // Was activated in the past.
+//#define FASTDIVX       // Was not activated in the past. 
+	                 // Tried 2011-04-13, was a bit slower on test cases! Needs more investigation. DF
+
+
+
+
+////////////////////////////////////////////////////////////////////////////////
+//
+// Definition of double33 member functions
+//
+
+
+inline double33::double33(const double val)
+{
+    x[0] = val; x[1] = val; x[2] = val;
+    x[3] = val; x[4] = val; x[5] = val;
+    x[6] = val; x[7] = val; x[8] = val;
+}
+
+
+
+inline double& double33::operator()(const int row, const int col) 
+{
+#ifdef DEBUGFLG
+    assert(row>=1 && row<=3);
+    assert(col>=1 && col<=3);
+#endif
+    return x[(row-1)*3+(col-1)];
+}
+
+inline double double33::operator()(const int row, const int col) const
+{
+#ifdef DEBUGFLG
+    assert(row>=1 && row<=3);	
+    assert(col>=1 && col<=3);	
+#endif
+    return x[(row-1)*3+(col-1)];
+}
+
+
+inline const double3 double33::operator()(const int row) const
+{
+#ifdef DEBUGFLG
+    assert(row>=1 && row<=3);	
+#endif
+    return double3(x[(row-1)*3], x[(row-1)*3+1], x[(row-1)*3+2]);
+}
+
+inline const double3 double33::GetRow(const int row) const
+{
+#ifdef DEBUGFLG
+    assert(row>=1 && row<=3);	
+#endif
+    return double3(x[(row-1)*3], x[(row-1)*3+1], x[(row-1)*3+2]);
+}
+
+inline const double3 double33::GetCol(const int col) const
+{
+#ifdef DEBUGFLG
+    assert(col>=1 && col<=3);	
+#endif
+    return double3(x[(col-1)], x[(col-1)+3], x[(col-1)+6]);
+}
+
+
+inline double33& double33::operator=(const double a)
+{
+    x[0] = a; x[1] = a; x[2] = a;
+    x[3] = a; x[4] = a; x[5] = a;
+    x[6] = a; x[7] = a; x[8] = a;
+    return *this;
+}
+
+
+
+// New stuff
+
+inline double33& double33::operator+=(const double33& b)
+{
+    x[0] += b.x[0];
+    x[1] += b.x[1];
+    x[2] += b.x[2];
+    x[3] += b.x[3];
+    x[4] += b.x[4];
+    x[5] += b.x[5];
+    x[6] += b.x[6];
+    x[7] += b.x[7];
+    x[8] += b.x[8];
+
+    return *this;
+}
+
+
+
+inline double33& double33::operator+=(const double s)
+{
+    x[0] += s;
+    x[1] += s;
+    x[2] += s;
+    x[3] += s;
+    x[4] += s;
+    x[5] += s;
+    x[6] += s;
+    x[7] += s;
+    x[8] += s;
+
+    return *this;
+}
+
+inline double33& double33::operator-=(const double33& b)
+{
+    x[0] -= b.x[0];
+    x[1] -= b.x[1];
+    x[2] -= b.x[2];
+    x[3] -= b.x[3];
+    x[4] -= b.x[4];
+    x[5] -= b.x[5];
+    x[6] -= b.x[6];
+    x[7] -= b.x[7];
+    x[8] -= b.x[8];
+
+    return *this;
+}
+
+inline double33& double33::operator-=(const double s)
+{
+    x[0] -= s;
+    x[1] -= s;
+    x[2] -= s;
+    x[3] -= s;
+    x[4] -= s;
+    x[5] -= s;
+    x[6] -= s;
+    x[7] -= s;
+    x[8] -= s;
+
+    return *this;
+}
+
+
+inline double33& double33::operator*=(const double s)
+{
+    x[0] *= s;
+    x[1] *= s;
+    x[2] *= s;
+    x[3] *= s;
+    x[4] *= s;
+    x[5] *= s;
+    x[6] *= s;
+    x[7] *= s;
+    x[8] *= s;
+
+    return *this;
+}
+
+
+
+inline double33& double33::operator/=(const double s)
+{
+#ifdef FASTDIVX
+    double tmp = 1.0 / s;	
+    x[0] *= tmp;
+    x[1] *= tmp;
+    x[2] *= tmp;
+    x[3] *= tmp;
+    x[4] *= tmp;
+    x[5] *= tmp;
+    x[6] *= tmp;
+    x[7] *= tmp;
+    x[8] *= tmp;
+#else
+    x[0] /= s;
+    x[1] /= s;
+    x[2] /= s;
+    x[3] /= s;
+    x[4] /= s;
+    x[5] /= s;
+    x[6] /= s;
+    x[7] /= s;
+    x[8] /= s;
+#endif
+
+    return *this;
+}
+
+
+inline void double33::SetRows(const double3& r1,
+                              const double3& r2,
+                              const double3& r3)
+{
+    // Data is stored row-wise
+    //x[0] = a11; x[1] = a12; x[2] = a13;
+    //x[3] = a21; x[4] = a22; x[5] = a23;
+    //x[6] = a31; x[7] = a32; x[8] = a33;
+
+    x[0] = r1.XX; x[1] = r1.YY; x[2] = r1.ZZ;
+    x[3] = r2.XX; x[4] = r2.YY; x[5] = r2.ZZ;
+    x[6] = r3.XX; x[7] = r3.YY; x[8] = r3.ZZ;
+}
+
+inline void double33::Set(const double3& a1, const double3& a2, const double3& a3)
+{
+    SetRows(a1,a2,a3);
+}
+
+inline void double33::SetCols(const double3& c1,
+                              const double3& c2,
+                              const double3& c3)
+{
+    // Data is stored row-wise
+    //x[0] = a11; x[1] = a12; x[2] = a13;
+    //x[3] = a21; x[4] = a22; x[5] = a23;
+    //x[6] = a31; x[7] = a32; x[8] = a33;
+
+
+    x[0] = c1.XX; x[1] = c2.XX; x[2] = c3.XX;
+    x[3] = c1.YY; x[4] = c2.YY; x[5] = c3.YY;
+    x[6] = c1.ZZ; x[7] = c2.ZZ; x[8] = c3.ZZ;
+}
+
+inline double double33::det() const 
+{
+    return(x[0]*(x[4]*x[8] - x[5]*x[7]) +
+           x[1]*(x[5]*x[6] - x[3]*x[8]) +
+           x[2]*(x[3]*x[7] - x[4]*x[6])  );
+}
+
+
+inline const double33 double33::T() const
+{
+    
+    return double33(x[0], x[3], x[6],
+                    x[1], x[4], x[7],
+                    x[2], x[5], x[8]);
+}
+
+
+inline bool double33::isZero() const
+{
+    return (x[0]==0.0)&&(x[1]==0.0)&&(x[2]==0.0)&&
+            (x[3]==0.0)&&(x[4]==0.0)&&(x[5]==0.0)&&
+            (x[6]==0.0)&&(x[7]==0.0)&&(x[8]==0.0);
+}
+
+inline bool double33::isNonZero() const
+{
+    return (x[0]!=0.0)||(x[1]!=0.0)||(x[2]!=0.0)||
+            (x[3]!=0.0)||(x[4]!=0.0)||(x[5]!=0.0)||
+            (x[6]!=0.0)||(x[7]!=0.0)||(x[8]!=0.0);
+}
+
+
+////////////////////////////////////////////////////////////////////////
+//
+// Definition of global double33 related functions
+//
+
+// -M
+inline const double33 operator-(const double33& m)
+{
+    return double33(-m.x[0], -m.x[1], -m.x[2],
+		       -m.x[3], -m.x[4], -m.x[5],
+		       -m.x[6], -m.x[7], -m.x[8]);
+}
+
+// s * M
+inline const double33 operator*(const double s, const double33& m)
+{
+    return double33(s * m.x[0], s * m.x[1], s * m.x[2],
+		       s * m.x[3], s * m.x[4], s * m.x[5],
+		       s * m.x[6], s * m.x[7], s * m.x[8]);
+}
+
+// M * s 
+inline const double33 operator*(const double33& m, const double s) 
+{
+    return double33(s * m.x[0], s * m.x[1], s * m.x[2],
+		       s * m.x[3], s * m.x[4], s * m.x[5],
+		       s * m.x[6], s * m.x[7], s * m.x[8]);
+}
+
+// M * M
+inline const double33 operator*(const double33& a, const double33& b)
+{
+#if 0
+    // This old implementation had problem with inlining for SUN C++.
+    return double33(a.x[0]*b.x[0] + a.x[1]*b.x[3] + a.x[2]*b.x[6],
+ 		       a.x[0]*b.x[1] + a.x[1]*b.x[4] + a.x[2]*b.x[7],
+ 		       a.x[0]*b.x[2] + a.x[1]*b.x[5] + a.x[2]*b.x[8],
+ 		       a.x[3]*b.x[0] + a.x[4]*b.x[3] + a.x[5]*b.x[6],
+ 		       a.x[3]*b.x[1] + a.x[4]*b.x[4] + a.x[5]*b.x[7],
+ 		       a.x[3]*b.x[2] + a.x[4]*b.x[5] + a.x[5]*b.x[8],
+ 		       a.x[6]*b.x[0] + a.x[7]*b.x[3] + a.x[8]*b.x[6],
+ 		       a.x[6]*b.x[1] + a.x[7]*b.x[4] + a.x[8]*b.x[7],
+ 		       a.x[6]*b.x[2] + a.x[7]*b.x[5] + a.x[8]*b.x[8]);
+#endif
+    double33 c; // Stop Chaperon complaints.
+    c.x[0] = a.x[0]*b.x[0] + a.x[1]*b.x[3] + a.x[2]*b.x[6];
+    c.x[1] = a.x[0]*b.x[1] + a.x[1]*b.x[4] + a.x[2]*b.x[7];
+    c.x[2] = a.x[0]*b.x[2] + a.x[1]*b.x[5] + a.x[2]*b.x[8];
+    c.x[3] = a.x[3]*b.x[0] + a.x[4]*b.x[3] + a.x[5]*b.x[6];
+    c.x[4] = a.x[3]*b.x[1] + a.x[4]*b.x[4] + a.x[5]*b.x[7];
+    c.x[5] = a.x[3]*b.x[2] + a.x[4]*b.x[5] + a.x[5]*b.x[8];
+    c.x[6] = a.x[6]*b.x[0] + a.x[7]*b.x[3] + a.x[8]*b.x[6];
+    c.x[7] = a.x[6]*b.x[1] + a.x[7]*b.x[4] + a.x[8]*b.x[7];
+    c.x[8] = a.x[6]*b.x[2] + a.x[7]*b.x[5] + a.x[8]*b.x[8];
+
+    return c;
+}	
+
+// M / s 
+inline const double33 operator/(const double33& m, const double s)
+{
+#ifdef FASTDIV
+    double recip = 1.0 / s;
+    return double33(m.x[0] * recip, m.x[1] * recip, m.x[2] * recip,
+                    m.x[3] * recip, m.x[4] * recip, m.x[5] * recip,
+                    m.x[6] * recip, m.x[7] * recip, m.x[8] * recip);
+#else
+    return double33(m.x[0] / s, m.x[1] / s, m.x[2] / s,
+		    m.x[3] / s, m.x[4] / s, m.x[5] / s,
+                    m.x[6] / s, m.x[7] / s, m.x[8] / s);
+#endif
+}
+
+// M + M 
+inline const double33 operator+(const double33& a, const double33& b)
+{
+    return double33(a.x[0] + b.x[0], a.x[1] + b.x[1], a.x[2] + b.x[2],
+		       a.x[3] + b.x[3], a.x[4] + b.x[4], a.x[5] + b.x[5],
+		       a.x[6] + b.x[6], a.x[7] + b.x[7], a.x[8] + b.x[8]);
+}
+
+// M + s 
+inline const double33 operator+(const double33& m, const double s)
+{
+    return double33(m.x[0] + s, m.x[1] + s, m.x[2] + s,
+		       m.x[3] + s, m.x[4] + s, m.x[5] + s,
+		       m.x[6] + s, m.x[7] + s, m.x[8] + s);
+}
+
+// s + M
+inline const double33 operator+(const double s, const double33& m)
+{
+    return double33(m.x[0] + s, m.x[1] + s, m.x[2] + s,
+		       m.x[3] + s, m.x[4] + s, m.x[5] + s,
+		       m.x[6] + s, m.x[7] + s, m.x[8] + s);
+}
+
+// M - M 
+inline const double33 operator-(const double33& a, const double33& b)
+{
+    return double33(a.x[0] - b.x[0], a.x[1] - b.x[1], a.x[2] - b.x[2],
+		       a.x[3] - b.x[3], a.x[4] - b.x[4], a.x[5] - b.x[5],
+		       a.x[6] - b.x[6], a.x[7] - b.x[7], a.x[8] - b.x[8]);
+}
+
+// M - s 
+inline const double33 operator-(const double33& m, const double s)
+{
+    return double33(m.x[0] - s, m.x[1] - s, m.x[2] - s,
+		       m.x[3] - s, m.x[4] - s, m.x[5] - s,
+		       m.x[6] - s, m.x[7] - s, m.x[8] - s);
+}
+
+// s - M
+inline const double33 operator-(const double s, const double33& m)
+{
+    return double33(s - m.x[0], s - m.x[1], s - m.x[2],
+		       s - m.x[3], s - m.x[4], s - m.x[5],
+		       s - m.x[6], s - m.x[7], s - m.x[8]);
+}
+
+// M == M (no fuzz for comparison) 
+inline bool operator==(const double33& a, const double33& b)
+{
+    return (a.x[0] == b.x[0] && a.x[1] == b.x[1] && a.x[2] == b.x[2] &&
+	    a.x[3] == b.x[3] && a.x[4] == b.x[4] && a.x[5] == b.x[5] &&
+	    a.x[6] == b.x[6] && a.x[7] == b.x[7] && a.x[8] == b.x[8]);
+}
+
+
+// M == s (no fuzz for comparison) 
+inline bool operator==(const double33& a, const double b)
+{
+    return (a.x[0] == b && a.x[1] == b && a.x[2] == b &&
+	    a.x[3] == b && a.x[4] == b && a.x[5] == b &&
+	    a.x[6] == b && a.x[7] == b && a.x[8] == b);
+}
+
+// s == M (no fuzz for comparison) 
+inline bool operator==(const double a, const double33& b)
+{
+    return (a == b.x[0] && a == b.x[1] && a == b.x[2] &&
+	    a == b.x[3] && a == b.x[4] && a == b.x[5] &&
+	    a == b.x[6] && a == b.x[7] && a == b.x[8]);
+}
+
+// M != M (no fuzz for comparison) 
+inline bool operator!=(const double33& a, const double33& b) 
+{
+    return !(a == b);
+}
+
+
+inline const double33 OuterProduct(const double3& a, const double3& b)
+{
+    return double33(a.XX*b.XX, a.XX*b.YY, a.XX*b.ZZ,
+		       a.YY*b.XX, a.YY*b.YY, a.YY*b.ZZ,
+		       a.ZZ*b.XX, a.ZZ*b.YY, a.ZZ*b.ZZ);
+}	
+
+
+// inline const double33 Transpose(const double33& a)
+// {
+    
+//     return double33(a.x[0], a.x[3], a.x[6],
+//                        a.x[1], a.x[4], a.x[7],
+//                        a.x[2], a.x[5], a.x[8]);
+// }
+
+
+#endif
+
+
+
+
+
+
+
+
+
+
+

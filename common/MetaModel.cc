@@ -14,6 +14,9 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
+#include <signal.h>
+#include <sys/types.h>
+#include <sys/wait.h>
 #else
 #include <winsock2.h>
 #endif
@@ -68,7 +71,6 @@ void TLMInterfaceProxy::SetConnection( TLMConnection& conn) {
 	conn.GetToID():conn.GetFromID();
 }
 
-
 //! Set position and orientation of the component inertial system relative the 
 //! meta-models inertial system.
 void TLMComponentProxy::SetInertialTranformation( double pos[], double orientation[] )
@@ -111,11 +113,38 @@ void TLMComponentProxy::GetInertialTranformation( double pos[3], double orientat
     orientation[8] = cX_A_cG[8];
 }
 
+#ifdef WIN32
+// Constructor
+MetaModel::MetaModel()
+{
+}
+#else
+void child_signal_handler(int s)
+{
+    int pid, status;
+    while (1)
+      {
+        // Catch all SIGCHLD signals
+        pid = waitpid (WAIT_ANY, &status, WNOHANG);
+
+        if (pid <= 0){
+            // No child found, we simply break.
+            break;
+        }
+
+        if( status != 0 ){
+            // Here we get the actual error, typically the command could not be executed.
+            TLMErrorLog::FatalError("Execution failed, please verify command (script), execution path, and check TLM logfile.");
+        }
+      }
+}
 
 // Constructor
 MetaModel::MetaModel()
-{}
-
+{
+    signal(SIGCHLD, child_signal_handler);
+}
+#endif
 
 // Destructor
 MetaModel::~MetaModel() {
@@ -278,61 +307,71 @@ void MetaModel::Print(std::ostream &os )
 }
 
 
-
 // Start the component executable
 void TLMComponentProxy::StartComponent(SimulationParams& SimParams, double MaxStep) {
     TLMErrorLog::Log(string("Starting ") + StartCommand );
 
-    string startTime = SimParams.GetStartTimeStr();
-    string endTime = SimParams.GetEndTimeStr();
-    string strMaxStep = TLMErrorLog::ToStdStr(MaxStep);
-    string serverName = SimParams.GetServerName();
+    // In the special case where start-command is explicitely set to "none"
+    // we skip startup. This is useful for integrated simulation/tlm-manager.
+    if( StartCommand != "none" ){
+        string startTime = SimParams.GetStartTimeStr();
+        string endTime = SimParams.GetEndTimeStr();
+        string strMaxStep = TLMErrorLog::ToStdStr(MaxStep);
+        string serverName = SimParams.GetServerName();
 
 #if defined(WIN32)
-    _spawnlp(_P_NOWAIT, StartCommand.c_str(), StartCommand.c_str(),
-	     Name.c_str(),
-	     startTime.c_str(),
-	     endTime.c_str(),
-	     strMaxStep.c_str(),
-	     serverName.c_str(),
-	     ModelName.c_str(),
-	     NULL
-	     );
+	_spawnlp(_P_NOWAIT, StartCommand.c_str(), StartCommand.c_str(),
+		 Name.c_str(),
+		 startTime.c_str(),
+		 endTime.c_str(),
+		 strMaxStep.c_str(),
+		 serverName.c_str(),
+		 ModelName.c_str(),
+		 NULL
+		 );
 
 
 #elif defined(__CYGWIN__)
-    spawnlp(_P_NOWAIT, StartCommand.c_str(), StartCommand.c_str(),
-	    Name.c_str(),
-	    startTime.c_str(),
-	    endTime.c_str(),
-	    strMaxStep.c_str(),
-	    serverName.c_str(),
-	    ModelName.c_str(),
-	    NULL );
-#else
-    // We create a child that runs the simulation program.
-    pid_t child;
-    switch (child = fork()) {
-    case -1:  // failed!!!!
-	TLMErrorLog::FatalError("StartComponent: Failed to start a component") ;
-	break;
-    case 0:   // I'm a child. I'll execute the program
-	execlp( StartCommand.c_str(), StartCommand.c_str(),
+	spawnlp(_P_NOWAIT, StartCommand.c_str(), StartCommand.c_str(),
 		Name.c_str(),
 		startTime.c_str(),
 		endTime.c_str(),
 		strMaxStep.c_str(),
-		serverName.c_str(), 
+		serverName.c_str(),
 		ModelName.c_str(),
 		NULL );
+#else
+        // We create a child that runs the simulation program.
+        pid_t child;
+        switch (child = fork()) {
+        case -1:  // failed!!!!
+            TLMErrorLog::FatalError("StartComponent: Failed to start a component") ;
+            break;
+        case 0:   // I'm a child. I'll execute the program
+            execlp( StartCommand.c_str(), StartCommand.c_str(),
+                    Name.c_str(),
+                    startTime.c_str(),
+                    endTime.c_str(),
+                    strMaxStep.c_str(),
+                    serverName.c_str(),
+                    ModelName.c_str(),
+                    NULL );
 
-        // If we get here, something went wrong.
-	TLMErrorLog::FatalError("StartComponent: Failed to start the component " + Name + " with command " + StartCommand);
-	exit(-1);
-	break;
-    default:  // I'm the parent, so just continue.
-	break;
-    }
+            // We add a try, catch around fatal error in order to force a exit-value other than 0!
+            try {
+                // If we get here, something went wrong.
+                TLMErrorLog::FatalError("StartComponent: Failed to start the component " + Name + " with command " + StartCommand);
+            }
+            catch(...){
+            }
+            exit(-1);
+            break;
+        default:  // I'm the parent, so just continue.
+            break;
+        }
 #endif    
+    }
+    else{
+        TLMErrorLog::Log( "Start command \"none\" nothing started!" );
+    }
 }
-

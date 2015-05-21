@@ -71,7 +71,21 @@ bool MonitoringPluginImplementer::Init(std::string name,
 
     string host = ServerName.substr(0,colPos);
 
+#if 0
+    // We wait a certain time for the Manager since initialization might take time.
+    const int MAX_WAITTIME = 120; // Two minutes
+    int nSecs = 0;
+    while((Message.SocketHandle = ClientComm.ConnectManager(host, port)) < 0 && nSecs < MAX_WAITTIME ) {
+#ifndef _MSC_VER
+        sleep(1);
+#else
+        Sleep(1000);
+#endif
+        nSecs++;
+    }
+#else
     Message.SocketHandle = ClientComm.ConnectManager(host, port);
+#endif
 
     if( Message.SocketHandle < 0 ){
         TLMErrorLog::Warning("In " + name + ": initialization failed, could not connect to TLM manager");

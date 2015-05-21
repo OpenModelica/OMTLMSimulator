@@ -43,13 +43,14 @@ class TLMManagerComm {
     //! Listen on the specified port.
     TLMManagerComm(int numClients, unsigned short portNr)
 	: ContactSocket(-1),
-	//!	ClientSockets,
-	//!	ActiveSockets, 
-	StartupMode(true),
-	ServerPort (portNr),
-	NumClients(numClients)
-	{
-	};
+	  ClientSockets(),
+	  ActiveSockets(),
+	  StartupMode(true),
+	  ServerPort (portNr),
+	  NumClients(numClients)
+    {
+        FD_ZERO(& CurFDSet);
+    };
 
     //! Create socket that will accept the client connections on port ServerPort
     int CreateServerSocket();

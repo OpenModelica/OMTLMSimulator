@@ -2,6 +2,7 @@
 #define _TOSTR_H_
 #include "Bstring.h"
 
+#include <vector>
 #include "portable_long.h"
 // (for long64)
 
@@ -14,7 +15,7 @@ Bstring Int2Str(const int val);
 
 
 //! Convert adress to string in hex. All leading and trailing spaces are elliminated.
-Bstring ToStr(const void* val);
+Bstring Pointer2Str(const void* val);
 
 //! Convert int to string. All leading and trailing spaces are elliminated.
 //! Set hexFlg to 1 for hexadezimal output, default is decimal.
@@ -24,15 +25,9 @@ Bstring ToStr(const long64 val, int hexFlg);
 //! All trailing zeros are elliminated.
 Bstring ToStr(const double val);
 
-//! Convert int to string. All leading and trailing spaces are elliminated
-//! except a space representing a plus sign.
-Bstring ToStrS(const int val);
-
-//! Convert double to string. All leading and trailing spaces are elliminated
-//! except a space representing a plus sign.
+//! Convert std::vector of double to string. All leading and trailing spaces are elliminated.
 //! All trailing zeros are elliminated.
-Bstring ToStrS(const double val);
-
+Bstring ToStr(const std::vector<double> & vals);
 
 //! This is for variables that should be a multiple of pi.
 //! Convert double to string. All leading and trailing spaces are elliminated.
@@ -71,8 +66,11 @@ Bstring ToStrHex(const double val);
 //! Returns "true" or "false"
 Bstring ToBoolStr(const bool val);
 
-
-
+//! In case it is needed for debugging of computer arithmetics
+//! it is possible to set a extremely high precision.
+//! so that ToStr(double) uses so many digits
+//! that any different double values are printed differently 
+void setExtremePrecision(const bool val);
 
 
 

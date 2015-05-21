@@ -474,6 +474,13 @@ void Bstring::dropSuffix(const Bstring& s1){
         size_t s1Len=s1.length();
         erase(length()-s1Len, s1Len);
     } else {
+
+
+        Error("Internal error: The  function dropSuffix(\""+
+              s1+
+              "\") applied to \""+
+              this->c_str()
+              +"\". You must use hasSuffix() before this");
         assert(false); // cannot drop suffix which is missing
     }
  
@@ -497,5 +504,17 @@ void Bstring::dropPrefix(const Bstring& s1){
        assert(false); // cannot drop suffix which is missing
    }
 
+}
+
+Bstring Bstring::padRight(size_t chars)
+{
+    if(chars > length()) this->append(chars-length(),' ');
+    return *this;
+}
+
+Bstring Bstring::padLeft(size_t chars)
+{
+    if(chars > length()) this->insert(0,chars-length(),' ');
+    return *this;
 }
 

@@ -25,6 +25,7 @@
 //! ManagerCommHandler class implements the communication protocol 
 //! It uses the classes defined in TLMManagerComm.h
 class ManagerCommHandler {
+private:
     //! send message queue
     TLMMessageQueue MessageQueue; 
 
@@ -51,10 +52,16 @@ private:
 public:
     //! The current running mode. Mainly used for monitoring.
     enum RunningMode{ StartUpMode, RunMode, ShutdownMode };
-    
+
 private:
     //! The current running mode.
     RunningMode runningMode;
+
+    //! Exception message
+    std::string exceptionMsg;
+
+    //! Lock for setting exception message.
+    SimpleLock exceptionLock;
 
 public:
     //! Constructor. 
@@ -65,7 +72,9 @@ public:
         CommMode(CoSimulationMode),
         monitorInterfaceMap(),
         monitorMapLock(),
-        runningMode(StartUpMode)
+        runningMode(StartUpMode),
+        exceptionMsg(""),
+        exceptionLock()
     {
     };
 
@@ -76,9 +85,18 @@ public:
 
     //! Forward start to the particular object
     static void* thread_ReaderThreadRun(void * arg) {
-	ManagerCommHandler* con = (ManagerCommHandler*)arg;
-	con -> ReaderThreadRun();
-	return NULL;
+        ManagerCommHandler* con = (ManagerCommHandler*)arg;
+
+        try {
+            con->ReaderThreadRun();
+        }
+        catch(std::string& msg) {
+            con->threadException(msg);
+        }
+        catch(...) {
+            con->threadException("Manager run thread caught exception");
+        }
+        return NULL;
     };
 
     //! RunStartupProtocol implements startup protocol that
@@ -106,9 +124,17 @@ public:
 
     //! Forward start to the particular object
     static void* thread_WriterThreadRun(void * arg) {
-	ManagerCommHandler* con = (ManagerCommHandler*)arg;
-	con ->WriterThreadRun();
-	return NULL;
+        ManagerCommHandler* con = (ManagerCommHandler*)arg;
+        try {
+            con->WriterThreadRun();
+        }
+        catch(std::string& msg) {
+            con->threadException(msg);
+        }
+        catch(...) {
+            con->threadException("Manager writer thread caught exception");
+        }
+        return NULL;
     };
 
     //! Send out messages in a separate thread
@@ -120,8 +146,17 @@ public:
 
     //! Forward start to the particular object
     static void* thread_MonitorThreadRun(void * arg) {
-	ManagerCommHandler* con = (ManagerCommHandler*)arg;
-	con ->MonitorThreadRun();
+        ManagerCommHandler* con = (ManagerCommHandler*)arg;
+        try {
+            con->MonitorThreadRun();
+        }
+        catch(std::string& msg) {
+            con->threadException(msg);
+        }
+        catch(...) {
+            con->threadException("Manager monitor thread caught exception");
+        }
+
 	return NULL;
     };
 
@@ -130,6 +165,11 @@ public:
 
     //! Get the current running state.
     RunningMode getRunState(){ return runningMode; }
+
+    //! Check if we got an exception and return exception message.
+    //! \param[out] msg The exception message, or empty string if no exception occured.
+    //! \return True if an exception occured, false otherwise.
+    bool gotException(std::string &msg);
 
 private:
     //! Setup interface connection message. 
@@ -152,6 +192,10 @@ private:
     //! Forwards message to monitoring ports if necessary.
     void ForwardToMonitor(TLMMessage& message);
 
+    //! Thread exception handler.
+    //! Shuts down all communications and sets the exception message.
+    //! Invoked by threads.
+    void threadException(const std::string& msg);
 };
 
 #endif

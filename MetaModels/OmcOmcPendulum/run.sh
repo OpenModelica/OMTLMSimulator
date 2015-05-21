@@ -15,9 +15,9 @@ if [ -d ${TLMPLUGINDIR}/bin ] ; then
     # The following is for OpenModelica start script.
     CYGDRIVE=`echo $TLMPLUGINDIR | grep cygdrive | grep -v grep`;
     if [ -z "$CYGDRIVE" ]; then
-        export TLMPluginPath=${TLMPLUGINDIR};
+        export TLMPluginPath=${TLMPLUGINDIR}/bin;
     else
-        export TLMPluginPath=`echo $TLMPLUGINDIR | awk -F "/" '{print $3 ":/" $4 "/" $5 "/" $6 "/" $7}'`
+        export TLMPluginPath=`echo $TLMPLUGINDIR | awk -F "/" '{print $3 ":/" $4 "/" $5 "/" $6 "/" $7}'`/bin;
     fi
     echo TLMPluginPath=$TLMPluginPath;
 
@@ -28,4 +28,4 @@ fi
 # Start tlmmanager and monitor.
 tlmmanager -p 8678 -m 8689 pendulum.xml&
 sleep 1;
-tlmmonitor -n 1000 172.16.0.100:8689 pendulum.xml
+tlmmonitor -n 1000 localhost:8689 pendulum.xml

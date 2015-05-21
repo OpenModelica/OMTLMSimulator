@@ -24,23 +24,19 @@ public:
         alpha(0.0), 
         //Position,
         //RotMatrix,
+        //Nom_cI_R_cX_cX,
+        //Nom_cI_A_cX,
         mode(0.0) 
     {
-        Position[0] = 0.0;
-        Position[1] = 0.0;
-        Position[2] = 0.0;
+        for(int i=0 ; i<3 ; i++){
+            cX_R_cG_cG[i] = 0.0;
+            Nom_cI_R_cX_cX[i] = cX_R_cG_cG[i];
+        }
 
-        RotMatrix[0] = 1.0;
-        RotMatrix[1] = 0.0;
-        RotMatrix[2] = 0.0;
-
-        RotMatrix[3] = 0.0;
-        RotMatrix[4] = 1.0;
-        RotMatrix[5] = 0.0;
-
-        RotMatrix[6] = 0.0;
-        RotMatrix[7] = 0.0;
-        RotMatrix[8] = 1.0;
+        for(int i=0 ; i<9 ; i++){
+            cX_A_cG[i] = (i%4 == 0 ? 1.0 : 0.0);
+            Nom_cI_A_cX[i] = cX_A_cG[i];
+        }
     }
 
     //! time delay in the line
@@ -52,11 +48,37 @@ public:
     //! damping 
     double alpha;
 
-    //! Position cX_R_cG_cG of the component in a common coordinate system (typically global) cG.
-    double Position[3];
+    //! Position cX_R_cG_cG of the component in the common coordinate system (typically global) cG.
+    //! Notation is:
+    //! cX - Xmodel inertial coordinate system
+    //! R  - Position vector
+    //! cG - Global meta-model inertial coordinate system
+    //! cX_R_cG_cG - cX position relative cG, expressed in cG.
+    double cX_R_cG_cG[3];
 
     //! Rotation matrix cX_A_cG stored row-wise. 
-    double RotMatrix[9];
+    //! Notation is:
+    //! cX - Xmodel inertial coordinate system
+    //! A  - Cartesian orientation matrix (x,y,z)
+    //! cG - Global meta-model inertial coordinate system
+    //! cX_A_cG - cX orientation relative cG.
+    double cX_A_cG[9];
+
+    //! Nominal start position of interface point in component (XModel) system.
+    //! Notation is:
+    //! cI - Interface point coordinate system
+    //! R  - Position vector
+    //! cX - XModel inertial coordinate system
+    //! cI_R_cX_cX - cI position relative cX, expressed in cX.
+    double Nom_cI_R_cX_cX[3];
+
+    //! Nominal start rotation matrix cI_A_cX stored row-wise.
+    //! Notation is:
+    //! cI - Interface point inertial coordinate system
+    //! A  - Cartesian orientation matrix (x,y,z)
+    //! cX - Xmodel inertial coordinate system
+    //! cI_A_cX - cI orientation relative cX.
+    double Nom_cI_A_cX[9];
 
     //! Connection mode, currently: 
     //! 0.0 = Real simulation

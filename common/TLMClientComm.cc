@@ -37,9 +37,16 @@ using std::string;
 #endif
 
 // Constructor
-TLMClientComm::TLMClientComm():
-SocketHandle(-1) 
+TLMClientComm::TLMClientComm()
+    : SocketHandle(-1)
 {
+}
+
+TLMClientComm::~TLMClientComm()
+{
+    if(SocketHandle != -1) {
+        close(SocketHandle);
+    }
 }
 
 

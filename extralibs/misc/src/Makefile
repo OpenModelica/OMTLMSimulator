@@ -4,28 +4,20 @@
 SHELL=/bin/sh
 
 include $(MAKEFILEHEADHOME)/Makefile.head
-UP=$(MAKEFILEHEADHOME)
-
+UP=../../../src
 
 # Architectures ends here, DO NOT delete this line config depends on it.
 #
 #################################################################################
 
 B_INCLUDES = -I../include
-MINCLUDE= $(B_INCLUDES) 
+MINCLUDE= $(B_INCLUDES)
 
-
-CCSRC= lightmat.cc tostr.cc ErrorLog.cc portability.cc Bstring.cc Btokenizer.cc 
-#	double33s.cc dsyevv3.cc  dsyevq3.cc dsyevc3.cc dsytrd3.cc 
-#	MathUtilityFunc.cc
+CCSRC= double3.cc float2.cc double2.cc float3.cc double33.cc coordTransform.cc doubleN.cc doubleN3.cc doubleN33.cc intN.cc tostr.cc ErrorLog.cc portability.cc Bstring.cc Btokenizer.cc \
+        double33s.cc doubleN33s.cc float33s.cc dsyevv3.cc  dsyevq3.cc dsyevc3.cc dsytrd3.cc 
+# PrivPack.cc MathUtilityFunc.cc
 
 CSRC=g2c_w32.c  
-
-.cc.o:
-	$(CC) $(SPECFLAGS) $(CLIBFLAGS) $(MINCLUDE) -c $< -o $@ 
-
-.c.o:
-	$(cc) $(SPECFLAGS) $(CLIBFLAGS) $(MINCLUDE) -c $< -o $@ 
 
 OBJS=$(CCSRC:%.cc=$(ABI)/%.o)
 OBJS+=$(CSRC:%.c=$(ABI)/%.o)
@@ -39,14 +31,19 @@ $(ABI)/%.o: %.c
 lib: dirs ../lib/$(ABI)/libmisc.a  
 
 clean:
-	rm -f $(OBJS) 
-	rm -rf $(ABI) ../lib
-#	../lib/$(ABI)/libmisc.a 
+	-rm -f $(ABI)/*
+	-rm -f ../lib/$(ABI)/libmisc.a 
 
 testpp: testpp.cc PrivPack.cc ../include/PrivPack.h
 	$(CC) -o testpp $(MINCLUDE) testpp.cc \
 		../lib/$(ABI)/libmisc.a \
 		-lm
+
+testbp: testbp.cc boolPack.cc ../include/boolPack.h
+	$(CC) -o testbp $(MINCLUDE) testbp.cc \
+		../lib/$(ABI)/libmisc.a \
+		-lm
+
 
 testdouble33s: testdouble33s.cc double33s.cc ../include/double33s.h lib
 	$(CC) -o testdouble33s $(CLIBFLAGS)  $(MINCLUDE) testdouble33s.cc \
@@ -91,4 +88,4 @@ depend:
 			$(B_INCLUDES) $(CCSRC) $(CSRC) $(FORDEPEND) 2> /dev/null
 
 
-include $(ABI)/makedepend.tail
+-include $(ABI)/makedepend.tail

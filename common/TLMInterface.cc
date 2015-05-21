@@ -23,11 +23,12 @@ static const double TLM_DAMP_DELAY = 1.5;
 TLMInterface::TLMInterface(TLMClientComm& theComm, std::string& aName, double StartTime):
     LastSendTime(StartTime),
     NextRecvTime(0.0),
-    // Params,
+    Message(),
+    Params(),
     CurrentIntervalIndex(0),
     Name(aName),
     Comm(theComm),
-    // InterfaceID,
+    InterfaceID(-1),
     waitForShutdownFlg(false)
 { // TLMInterface constructor
     Comm.CreateInterfaceRegMessage(aName, Message);
@@ -280,20 +281,30 @@ void TLMInterface::GetTimeData(TLMTimeData& Instance, std::deque<TLMTimeData>& D
             Instance.GenForce[i++] = 0.0;
         }
 
+        double3 ci_R_cX_cX(Params.Nom_cI_R_cX_cX[0], Params.Nom_cI_R_cX_cX[1], Params.Nom_cI_R_cX_cX[2]);
+        double33 ci_A_cX(Params.Nom_cI_A_cX[0], Params.Nom_cI_A_cX[1], Params.Nom_cI_A_cX[2],
+                Params.Nom_cI_A_cX[3], Params.Nom_cI_A_cX[4], Params.Nom_cI_A_cX[5],
+                Params.Nom_cI_A_cX[6], Params.Nom_cI_A_cX[7], Params.Nom_cI_A_cX[8]);
+
+        double3 cX_R_cG_cG(Params.cX_R_cG_cG[0], Params.cX_R_cG_cG[1], Params.cX_R_cG_cG[2]);
+        double33 cX_A_cG(Params.cX_A_cG[0], Params.cX_A_cG[1], Params.cX_A_cG[2],
+                Params.cX_A_cG[3], Params.cX_A_cG[4], Params.cX_A_cG[5],
+                Params.cX_A_cG[6], Params.cX_A_cG[7], Params.cX_A_cG[8]);
+
+        double33 ci_A_cG =  ci_A_cX*cX_A_cG;
+        double3 ci_R_cG_cG = cX_R_cG_cG + ci_R_cX_cX*cX_A_cG;
+
         i = 0;
         while(i < 3) {
-            Instance.Position[i++] = 0.0;
+            Instance.Position[i] = ci_R_cG_cG(i+1);
+            i++;
         }
 
-        Instance.RotMatrix[0] = 1.0;
-        Instance.RotMatrix[1] = 0.0;
-        Instance.RotMatrix[2] = 0.0;
-        Instance.RotMatrix[3] = 0.0;
-        Instance.RotMatrix[4] = 1.0;
-        Instance.RotMatrix[5] = 0.0;
-        Instance.RotMatrix[6] = 0.0;
-        Instance.RotMatrix[7] = 0.0;
-        Instance.RotMatrix[8] = 1.0;
+        i = 0;
+        while(i < 9) {
+            Instance.RotMatrix[i] = ci_A_cG((i%3)+1,(i/3)+1);
+            i++;
+        }
 
         Instance.time = TLMPlugin::TIME_WITHOUT_DATA;
 
@@ -478,10 +489,10 @@ void TLMInterface::TransformTimeDataToCG(std::vector<TLMTimeData>& timeData, TLM
                 data.RotMatrix[3], data.RotMatrix[4], data.RotMatrix[5],
                 data.RotMatrix[6], data.RotMatrix[7], data.RotMatrix[8]);
         
-        double3 cX_R_cG_cG(params.Position[0], params.Position[1], params.Position[2]);
-        double33 cX_A_cG(params.RotMatrix[0], params.RotMatrix[1], params.RotMatrix[2],
-                params.RotMatrix[3], params.RotMatrix[4], params.RotMatrix[5],
-                params.RotMatrix[6], params.RotMatrix[7], params.RotMatrix[8]);
+        double3 cX_R_cG_cG(params.cX_R_cG_cG[0], params.cX_R_cG_cG[1], params.cX_R_cG_cG[2]);
+        double33 cX_A_cG(params.cX_A_cG[0], params.cX_A_cG[1], params.cX_A_cG[2],
+                params.cX_A_cG[3], params.cX_A_cG[4], params.cX_A_cG[5],
+                params.cX_A_cG[6], params.cX_A_cG[7], params.cX_A_cG[8]);
         
         double33 ci_A_cG =  ci_A_cX*cX_A_cG;
         double3 ci_R_cG_cG = cX_R_cG_cG + ci_R_cX_cX*cX_A_cG;

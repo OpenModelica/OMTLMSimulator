@@ -100,16 +100,11 @@ test:
 install: manager monitor
 	cp $(ABI)/tlmmonitor$(FEXT) $(ABI)/tlmmanager$(FEXT) ../bin
 
-$(ABI)/libTLM.a $(ABI)/libTLM_m.a: $(OBJS)
+$(ABI)/libTLM.a: $(OBJS)
 	$(MAKE) dir
 	@echo Use TLM-library for client applications using misc library.
 	@echo Use TLM_m library otherwise.
 	$(AR) ruv $(ABI)/libTLM.a $(OBJS) 
-	$(AR) ruv $(ABI)/libTLM_m.a $(OBJS) \
-		$(MISCHOME)/src/$(ABI)/lightmat.o \
-		$(MISCHOME)/src/$(ABI)/tostr.o \
-		$(MISCHOME)/src/$(ABI)/Bstring.o \
-		$(MISCHOME)/src/$(ABI)/ErrorLog.o 
 
 $(ABI)/libTLM_s.a: $(OBJS)
 	$(AR) ruv $(ABI)/libTLM_s.a $(OBJS) 
@@ -128,8 +123,8 @@ $(ABI)/tlmmonitor$(FEXT): $(OBJS)
 		(cd $(ABI) ; mt.exe -manifest tlmmonitor.exe.manifest -outputresource:tlmmonitor.exe\;1); fi
 	$(CP) $(ABI)/tlmmonitor$(FEXT) $(BINDIR)/tlmmonitor$(FEXT)
 
-$(ABI)/testapp$(FEXT): $(ABI)/TLMTestApp.o $(ABI)/libTLM_m.a
-	$(LINK) $(ABI)/TLMTestApp.o -o $(ABI)/testapp$(FEXT) -L$(ABI) -lTLM_m $(XTRLIBS)
+$(ABI)/testapp$(FEXT): $(ABI)/TLMTestApp.o
+	$(LINK) $(ABI)/TLMTestApp.o -o $(ABI)/testapp$(FEXT) -L$(ABI) -lTLM $(LIBS) $(XTRLIBS)
 
 $(ABI)/%.o: %.cc
 	$(CC) $(DEFINES) $(CCFLAGS) $(OPTFLAGS4) $(INCLUDES) $(INCLXML) -c $< -o $@

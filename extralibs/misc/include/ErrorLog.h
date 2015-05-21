@@ -36,8 +36,48 @@
 #include "Bstring.h"
 
 
-#define Mog1(x) Log1(Bstring(__FILE__)+":"+ToStr(__LINE__)+Bstring(" ")+x)
-#define BTRACEF(x) Btracef(Bstring(__FILE__)+":"+ToStr(__LINE__)+":"+Bstring(__FUNCTION__)+":"+Bstring(" ")+x)
+#define Mog1(x) Log1(Bstring(__FILE__)+":"+Int2Str(__LINE__)+Bstring(" ")+x)
+
+
+#ifdef USE_PRETTY_FUNCTION
+#define _HERE_ Bstring(__FILE__)+":"+Int2Str(__LINE__)+":"+Bstring(__PRETTY_FUNCTION__)+":"+Bstring(" ")
+#else
+#define _HERE_ Bstring(__FILE__)+":"+Int2Str(__LINE__)+":"+Bstring(__FUNCTION__)+":"+Bstring(" ")
+#endif
+
+#ifdef DEBUG_BTRACEF
+// Used for debugging. Must be off in any products, release tests, beacuse strings waste time
+#define BTRACEF(x) Btracef(_HERE_+x)
+#define BVALID(x) valid(x,_HERE_,false)
+#else
+// Should not waste time for evaluation of x, because string conversions is there.
+#define BTRACEF(x)
+#define BVALID(x)
+#endif
+
+// Prints name and value
+#define BTRACEN(x) BTRACEF(#x+"="+ToStr(x))
+#define BTRACEN2(x,y) BTRACEF(#x+("="+ToStr(x)+" ")+ #y+("="+ToStr(y) ))
+#define BTRACEN3(x,y,z) BTRACEF(#x+("="+ToStr(x)+" ") +#y+ ("="+ToStr(y)  + " ")  +#z+  ("="+ToStr(z) ) )
+
+#define BTRACEI(x) BTRACEF(#x+"="+Int2Str(x))
+#define BTRACEI2(x,y) BTRACEF(#x+("="+Int2Str(x)+" ")+ #y+("="+Int2Str(y) ))
+#define BTRACEI3(x,y,z) BTRACEF(#x+("="+Int2Str(x)+" ") +#y+ ("="+Int2Str(y)  + " ")  +#z+  ("="+Int2Str(z) ) )
+
+#define BTRACES(x) BTRACEF(#x+"=\""+x+"\"")
+#define BTRACES2(x,y) BTRACEF(#x+("=\""+x+"\" ")+ #y+("=\""+y+"\"" ))
+#define BTRACES3(x,y,z) BTRACEF(#x+("=\""+x+"\" ") +#y+ ("=\""+y  + "\" ")  +#z+  ("=\""+z+"\"" ) )
+
+
+
+//! Macro to print a NewMat object to the BTRACEF log.
+#define NTRACEF(xf)\
+    { std::ostrstream valConv;\
+    valConv << xf;\
+    Bstring valStr(valConv.str(),valConv.pcount());\
+    BTRACEF(#xf+Bstring("=")+valStr);\
+    }
+
 
 //! Sets the error file name and optionally opens the file.
 void SetErrorFileName(const Bstring& ErrorFileName, const int OpenItFlg=0);
@@ -106,8 +146,15 @@ void Error(const Bstring& Message);
 //! However, we can continue the calculation by means of some
 //! default behaviour but the result might then be of little interest.
 //! A correct calculation should have no warning messages.
+//! Warnings do not appear in stderr during simulations.
 //! Multithread safe.
 void Warning(const Bstring& Message);
+
+//! Write any merssage that should not contain any prefix at all.
+//! It will appear in the log and in stderr.
+//! Used mainly for Out2In that generates reports, and to avoid
+//! any prefixes that makes no sense there.
+void PrintInfo(const Bstring& Message);
 
 //! Write log message of level 1 on error file.
 //! A log message of level 1 is output that is always desired
@@ -153,5 +200,20 @@ void BtracefLog2(const Bstring& Message);
 //!   void myErrorReportingFunction(int severity,const Bstring & errorMsg)
 //! is automatically called each time when Error, Log1,Log2,Warning are called.
 void setMessageReportingFunction(void (myErrorReportingFunction)(int severity,const Bstring&  errorMsg));
+
+
+//! For double value validation.
+//! Any value outside 1e-200,1e+200 will cause a warning
+//! nan will cause assert if we do not allow errors.
+//! Best use is valid(77.77,_HERE_,false);
+void valid(double x,const Bstring & fromwhere, bool allowErrors);
+
+//! For double value validation, no string evaluation.
+//!Any value outside 1e-200,1e+200 will cause false
+//!isnan will cause false
+bool isvalid(double x);
+
+extern  int validity_warnings;
+
 
 #endif // !_ERRORLOG_H

@@ -64,13 +64,13 @@ class MetaModelReader {
     //! for a given XML node. Used for looking up required sections in the XML document.
     //! Returns: xmlNode* giving address of the found node or NULL if an optional node
     //! is not found.
-    xmlNode* FindChildByName(xmlNode* node, char* name, bool required = true);
+    xmlNode* FindChildByName(xmlNode* node, const char* name, bool required = true);
 
     //! FindAttributeByName is an utility function for finding node attributes by name
     //! for a given XML element node. Used for looking up required attributes while
     //! building the Model structure.
     //! Returns: xmlNode* providing address of the found attribute or NULL
-    xmlNode* FindAttributeByName(xmlNode* node, char* name, bool required = true);
+    xmlNode* FindAttributeByName(xmlNode* node, const char* name, bool required = true);
 
 
     //! ReadTLMConnectionNode method processes an TLM connection definition in XML file.
