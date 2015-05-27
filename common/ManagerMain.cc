@@ -11,7 +11,8 @@
 #include "MetaModel.h"
 #include "MetaModelReader.h"
 #include "ManagerCommHandler.h"
-#include "lightmat.h"
+#include "double3Vec.h"
+#include "double33Mat.h"
 
 #ifdef MSC_VER
 #include "mygetopt.h"
@@ -19,7 +20,7 @@
 #include <getopt.h>
 #endif
 
-
+using namespace tlmMisc;
 using std::string;
 
 void usage(){
@@ -50,8 +51,8 @@ void print_interface_information(MetaModel& theModel)
         TLMComponentProxy& comProx = theModel.GetTLMComponentProxy(intProx.GetComponentID());
         TLMTimeData& tlmData = intProx.getTime0Data();
 
-        double3 R(tlmData.Position[0], tlmData.Position[1], tlmData.Position[2]);
-        double33 A( tlmData.RotMatrix[0], tlmData.RotMatrix[1], tlmData.RotMatrix[2],
+        double3Vec R(tlmData.Position[0], tlmData.Position[1], tlmData.Position[2]);
+        double33Mat A( tlmData.RotMatrix[0], tlmData.RotMatrix[1], tlmData.RotMatrix[2],
                     tlmData.RotMatrix[3], tlmData.RotMatrix[4], tlmData.RotMatrix[5],
                     tlmData.RotMatrix[6], tlmData.RotMatrix[7], tlmData.RotMatrix[8]);
 

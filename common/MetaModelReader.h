@@ -44,14 +44,14 @@ class MetaModelReader {
     //! \param attribute The name of the attribute, for instance, "Position"
     //! \param pos The 3D vector that contains the result, that is, the 3D vector read from the XML node.
     //!            This field will be unchanged if the attribute is not found.
-    void ReadVectorAttribute(xmlNode* node, char* attribute, double pos[3]);
+    void ReadVectorAttribute(xmlNode* node, const char* attribute, double pos[3]);
 
     //! ReadDoubleAttribute method reads a double value attribute, if applicable.
     //! \param node The current XML node that might have an attribute of the given name "attribute"
     //! \param attribute The name of the attribute, for instance, "Position"
     //! \return The result, that is, the double value read from the XML node.
     //!         Returns 0.0 if the attribute is not found.
-    double ReadDoubleAttribute(xmlNode* node, char *attribute);
+    double ReadDoubleAttribute(xmlNode* node, const char *attribute);
 
     //! ReadPositionAndOrientation method reads position and orientation (phi angles) from the meta-model XML file.
     //! Orientation 3x3 matrix A is created from the phi angles.

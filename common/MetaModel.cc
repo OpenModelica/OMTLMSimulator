@@ -6,7 +6,7 @@
 #include <string>
 #include "MetaModel.h"
 #include "TLMCommUtil.h"
-#include "portability.h"
+//#include "portability.h"
 #include <cstdlib>
 
 #ifndef WIN32

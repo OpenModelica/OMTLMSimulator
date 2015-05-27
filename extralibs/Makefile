@@ -2,15 +2,14 @@
 ifeq ($(MAKEFILEHEADHOME),)
   UP=$(PWD)/..
   MAKEFILEHEADHOME=$(UP)
+  buildlibs=misc/src rtime
 else
   # This is for BEAST
   UP=$(MAKEFILEHEADHOME)/src
+  buildlibs=misc/src
 endif
 
 include $(MAKEFILEHEADHOME)/Makefile.head
-
-buildlibs=misc/src rtime
-
 
 all:
 	for i in ${buildlibs} ; do \

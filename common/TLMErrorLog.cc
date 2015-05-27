@@ -7,10 +7,11 @@
 #include "TLMErrorLog.h"
 #include <iostream>
 #include <cstdlib>
+#include <cstring>
 
 
 
-#define USE_ERRORLOG
+//#define USE_ERRORLOG
 // to use Error/Log file as well for reporting, also with time stamps 
 // Due to BZ306 we had to add detailed logging on Windows.
 // If you get any difficulties in linking with lib/misc

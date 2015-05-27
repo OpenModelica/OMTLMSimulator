@@ -1,7 +1,7 @@
 // #ident "$Id$"
 
-#ifndef MATHDEFS_H
-#define MATHDEFS_H
+#ifndef MATHDEF_H
+#define MATHDEF_H
 
 #include <cassert>
 
@@ -12,6 +12,9 @@
 //  #define LEFT -1
 //  #define RIGHT 1
 //  #define NEAREST 0
+
+namespace tlmMisc
+{
 
 #define False 0
 #define True 1
@@ -488,7 +491,7 @@ inline int sameSign(Type x, Type y, Type w) {
 }
 #endif
 
-
+};
 
 
 #endif

@@ -1,4 +1,5 @@
 #include "ManagerCommHandler.h"
+#include "strConv.h"
 #include <iostream>
 #ifdef USE_THREADS
 #include <pthread.h>
@@ -425,7 +426,7 @@ void ManagerCommHandler::WriterThreadRun() {
 void ManagerCommHandler::MarshalMessage(TLMMessage& message) {
 
     if(message.Header.MessageType !=   TLMMessageTypeConst::TLM_TIME_DATA) {
-        TLMErrorLog::FatalError("Unexpected message received " + ToStr(message.Header.MessageType));
+        TLMErrorLog::FatalError("Unexpected message received " + tlmMisc::ToStr(message.Header.MessageType));
     };
 
     // forward the time data
@@ -665,7 +666,7 @@ void ManagerCommHandler::MonitorThreadRun()
 		
                 if( IfcID >= 0 ){
 
-                    TLMErrorLog::Log("Register monitor handle for interface " + ToStr(IfcID));
+                    TLMErrorLog::Log("Register monitor handle for interface " + tlmMisc::ToStr(IfcID));
 #if 0
                     //std::cout << "hdl=" << hdl << ", ifID=" << IfcID << std::endl;
                     localIntMap.insert(std::make_pair(hdl, IfcID));

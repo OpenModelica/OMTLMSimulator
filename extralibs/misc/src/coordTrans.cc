@@ -1,25 +1,24 @@
 #include <cmath>
 #include <cassert>
-#include "coordTransform.h"
-#include "mathdefs.h"
-#include "ErrorLog.h"
+#include <float.h>
+#include "coordTrans.h"
+#include "mathDef.h"
 
-#include "float.h"
-// DBL_MIN
-
+namespace tlmMisc
+{
 
 // Create a transformation matrix from base system to local system.
 // We use 1,2,3 rotation scheme.
-const double33 A123(const double3& phi) 
+const double33Mat A123(const double3Vec& phi) 
 { 
-    double c1 = cos(phi.XX);
-    double s1 = sin(phi.XX);
-    double c2 = cos(phi.YY);
-    double s2 = sin(phi.YY);
-    double c3 = cos(phi.ZZ);
-    double s3 = sin(phi.ZZ);
+    double c1 = ::cos(phi.XX);
+    double s1 = ::sin(phi.XX);
+    double c2 = ::cos(phi.YY);
+    double s2 = ::sin(phi.YY);
+    double c3 = ::cos(phi.ZZ);
+    double s3 = ::sin(phi.ZZ);
 
-    return double33( c2 * c3,     c1 * s3 + s1 * s2 * c3,    s1 * s3 - c1 * s2 * c3, 
+    return double33Mat( c2 * c3,     c1 * s3 + s1 * s2 * c3,    s1 * s3 - c1 * s2 * c3, 
 		    -c2 * s3,     c1 * c3 - s1 * s2 * s3,    s1 * c3 + c1 * s2 * s3, 
  		     s2,         -s1 * c2,                   c1 * c2               );
 }
@@ -27,16 +26,16 @@ const double33 A123(const double3& phi)
 
 // Create an inverse transformation matrix from base system to local system.
 // We use 1,2,3 rotation scheme.
-const double33 invA123(const double3& phi) 
+const double33Mat invA123(const double3Vec& phi) 
 { 
-    double c1 = cos(phi.XX);
-    double s1 = sin(phi.XX);
-    double c2 = cos(phi.YY);
-    double s2 = sin(phi.YY);
-    double c3 = cos(phi.ZZ);
-    double s3 = sin(phi.ZZ);
+    double c1 = ::cos(phi.XX);
+    double s1 = ::sin(phi.XX);
+    double c2 = ::cos(phi.YY);
+    double s2 = ::sin(phi.YY);
+    double c3 = ::cos(phi.ZZ);
+    double s3 = ::sin(phi.ZZ);
 
-    return double33( c2 * c3,                 -c2 * s3,                    s2, 
+    return double33Mat( c2 * c3,                 -c2 * s3,                    s2, 
                      c1 * s3 + s1 * s2 * c3,   c1 * c3 - s1 * s2 * s3,    -s1 * c2, 
                      s1 * s3 - c1 * s2 * c3,   s1 * c3 + c1 * s2 * s3,     c1 * c2);
 }
@@ -44,16 +43,16 @@ const double33 invA123(const double3& phi)
 
 // Create a transformation matrix from base system to local system.
 // We use 3,2,1 rotation scheme.
-const double33 A321(const double3& phi) 
+const double33Mat A321(const double3Vec& phi) 
 { 
-    double c1 = cos(phi.XX);
-    double s1 = sin(phi.XX);
-    double c2 = cos(phi.YY);
-    double s2 = sin(phi.YY);
-    double c3 = cos(phi.ZZ);
-    double s3 = sin(phi.ZZ);
+    double c1 = ::cos(phi.XX);
+    double s1 = ::sin(phi.XX);
+    double c2 = ::cos(phi.YY);
+    double s2 = ::sin(phi.YY);
+    double c3 = ::cos(phi.ZZ);
+    double s3 = ::sin(phi.ZZ);
 
-    return double33( c2 * c3, 	               c2 * s3,                    -s2, 
+    return double33Mat( c2 * c3, 	               c2 * s3,                    -s2, 
 		    -c1 * s3 + s1 * s2 * c3,   c1 * c3 + s1 * s2 * s3, 	    s1 * c2, 
                      s1 * s3 + c1 * s2 * c3,  -s1 * c3 + c1 * s2 * s3, 	    c1 * c2);
 }
@@ -61,22 +60,22 @@ const double33 A321(const double3& phi)
 
 // Create an inverse transformation matrix from base system to local system.
 // We use 3,2,1 rotation scheme.
-const double33 invA321(const double3& phi) 
+const double33Mat invA321(const double3Vec& phi) 
 { 
-    double c1 = cos(phi.XX);
-    double s1 = sin(phi.XX);
-    double c2 = cos(phi.YY);
-    double s2 = sin(phi.YY);
-    double c3 = cos(phi.ZZ);
-    double s3 = sin(phi.ZZ);
+    double c1 = ::cos(phi.XX);
+    double s1 = ::sin(phi.XX);
+    double c2 = ::cos(phi.YY);
+    double s2 = ::sin(phi.YY);
+    double c3 = ::cos(phi.ZZ);
+    double s3 = ::sin(phi.ZZ);
 
-    return double33( c2 * c3,     -c1 * s3 + s1 * s2 * c3,    s1 * s3 + c1 * s2 * c3, 
+    return double33Mat( c2 * c3,     -c1 * s3 + s1 * s2 * c3,    s1 * s3 + c1 * s2 * c3, 
 		     c2 * s3,      c1 * c3 + s1 * s2 * s3,   -s1 * c3 + c1 * s2 * s3, 
 		    -s2,           s1 * c2,                   c1 * c2               );
 }
 
 // Create a transformation matrix from base system to local system.
-const double33 A(const double3& phi, const int phiSequence) 
+const double33Mat A(const double3Vec& phi, const int phiSequence) 
 {
     switch (phiSequence) {
     case 0: // We have 321 rotation.
@@ -87,18 +86,18 @@ const double33 A(const double3& phi, const int phiSequence)
 	break;
     default:
         assert(false);
-	return double33(0.0); // Just dummy.
+	return double33Mat(0.0); // Just dummy.
     }
 }
 
 // Create a transformation matrix from base system to local system.
 // We use only rotation around the axis number 3 (z-axis).
-const double33 A3(const double phi_3) 
+const double33Mat A3(const double phi_3) 
 { 
-    double c3 = cos(phi_3);
-    double s3 = sin(phi_3);
+    double c3 = ::cos(phi_3);
+    double s3 = ::sin(phi_3);
 
-    return double33(  c3,  s3,  0.0, 
+    return double33Mat(  c3,  s3,  0.0, 
 		     -s3,  c3,  0.0, 
 		      0.0, 0.0, 1.0);
 }
@@ -106,12 +105,12 @@ const double33 A3(const double phi_3)
 
 // Create a transformation matrix from base system to local system.
 // We use only rotation around the axis number 2 (y-axis).
-const double33 A2(const double phi_2) 
+const double33Mat A2(const double phi_2) 
 { 
-    double c2 = cos(phi_2);
-    double s2 = sin(phi_2);
+    double c2 = ::cos(phi_2);
+    double s2 = ::sin(phi_2);
 
-    return double33( c2,  0.0, -s2, 
+    return double33Mat( c2,  0.0, -s2, 
 		     0.0, 1.0,  0.0, 
 		     s2,  0.0,  c2);
 }
@@ -119,136 +118,136 @@ const double33 A2(const double phi_2)
 
 // Create a transformation matrix from base system to local system.
 // We use only rotation around the axis number 1 (x-axis).
-const double33 A1(const double phi_1) 
+const double33Mat A1(const double phi_1) 
 { 
-    double c1 = cos(phi_1);
-    double s1 = sin(phi_1);
+    double c1 = ::cos(phi_1);
+    double s1 = ::sin(phi_1);
 
-    return double33(1.0,  0.0, 0.0, 
+    return double33Mat(1.0,  0.0, 0.0, 
 		    0.0,  c1,  s1, 
 		    0.0, -s1,  c1);
 }
 
-const double33 U123(const double3& phi) 
+const double33Mat U123(const double3Vec& phi) 
 { 
     // Temp. variables for cos and sin etc.
-    double c2 = cos(phi.YY);
-    double s2 = sin(phi.YY);
-    double c3 = cos(phi.ZZ);
-    double s3 = sin(phi.ZZ);
+    double c2 = ::cos(phi.YY);
+    double s2 = ::sin(phi.YY);
+    double c3 = ::cos(phi.ZZ);
+    double s3 = ::sin(phi.ZZ);
 
     // Transformation matrix U We use 1,2,3 rotation
 
-    return double33( c2 * c3,  s3,  0.0,
+    return double33Mat( c2 * c3,  s3,  0.0,
 		    -c2 * s3,  c3,  0.0,
 		     s2,       0.0, 1.0);
 }
 
-const double33 U321(const double3& phi) 
+const double33Mat U321(const double3Vec& phi) 
 { 
     // Temp. variables for cos and sin etc.
-    double c1 = cos(phi.XX);
-    double s1 = sin(phi.XX);
-    double c2 = cos(phi.YY);
-    double s2 = sin(phi.YY);
+    double c1 = ::cos(phi.XX);
+    double s1 = ::sin(phi.XX);
+    double c2 = ::cos(phi.YY);
+    double s2 = ::sin(phi.YY);
 
     // Transformation matrix U We use 3,2,1 rotation
 
-    return double33(1.0,  0.0,  -s2,
+    return double33Mat(1.0,  0.0,  -s2,
 		    0.0,  c1,    s1*c2,
 		    0.0, -s1,    c1*c2);
 }
 
 
-const double33 H321(const double3& phi) 
+const double33Mat H321(const double3Vec& phi) 
 { 
     // Temp. variables for cos and sin etc.
-    double c2 = cos(phi.YY);
-    double s2 = sin(phi.YY);
-    double c3 = cos(phi.ZZ);
-    double s3 = sin(phi.ZZ);
+    double c2 = ::cos(phi.YY);
+    double s2 = ::sin(phi.YY);
+    double c3 = ::cos(phi.ZZ);
+    double s3 = ::sin(phi.ZZ);
 
     // Transformation matrix H We use 3,2,1 rotation
 
 
-    return double33( c2 * c3, -s3,  0.0,
+    return double33Mat( c2 * c3, -s3,  0.0,
 		     c2 * s3,  c3,  0.0,
 		    -s2,       0.0, 1.0);
 }
 
 
-const double33 H123(const double3& phi) 
+const double33Mat H123(const double3Vec& phi) 
 { 
     // Transformation matrix H We use 1,2,3 rotation
 
     //return (invA123(phi) * U123(phi));
     // Temp. variables for cos and sin etc.
-    double c1 = cos(phi.XX);
-    double s1 = sin(phi.XX);
-    double c2 = cos(phi.YY);
-    double s2 = sin(phi.YY);
+    double c1 = ::cos(phi.XX);
+    double s1 = ::sin(phi.XX);
+    double c2 = ::cos(phi.YY);
+    double s2 = ::sin(phi.YY);
 
-    return double33(1.0, 0.0,  s2, 
+    return double33Mat(1.0, 0.0,  s2, 
 		    0.0, c1,  -c2*s1,
 		    0.0, s1,   c1*c2);
 
 }
 
 
-const double33 invU123(const double3& phi) 
+const double33Mat invU123(const double3Vec& phi) 
 { 
     // Temp. variables for cos and sin etc.
-    double c2 = cos(phi.YY);
+    double c2 = ::cos(phi.YY);
     c2 += Sign(c2)*1.0e-50;
-    double s2 = sin(phi.YY);
-    double c3 = cos(phi.ZZ);
-    double s3 = sin(phi.ZZ);
+    double s2 = ::sin(phi.YY);
+    double c3 = ::cos(phi.ZZ);
+    double s3 = ::sin(phi.ZZ);
 
     // Transformation matrix U.  We use 1,2,3 rotation
 
-    return double33( c3/c2,   -s3/c2,    0.0,
+    return double33Mat( c3/c2,   -s3/c2,    0.0,
 		     s3,       c3,       0.0,
 		    -s2*c3/c2, s2*s3/c2, 1.0);
 }
 
 
 
-const double33 invH321(const double3& phi) 
+const double33Mat invH321(const double3Vec& phi) 
 { 
     // Temp. variables for cos and sin etc.
     double c2 = cos(phi.YY);
     c2 += Sign(c2)*1.0e-50;
-    double s2 = sin(phi.YY);
-    double c3 = cos(phi.ZZ);
-    double s3 = sin(phi.ZZ);
+    double s2 = ::sin(phi.YY);
+    double c3 = ::cos(phi.ZZ);
+    double s3 = ::sin(phi.ZZ);
 
     // Transformation matrix invH.  We use 3,2,1 rotation
 
-    return double33( c3/c2,    s3/c2,    0.0,
+    return double33Mat( c3/c2,    s3/c2,    0.0,
 		    -s3,       c3,       0.0,
 		     s2*c3/c2, s2*s3/c2, 1.0);
 }
 
-const double33 invH123(const double3& phi) 
+const double33Mat invH123(const double3Vec& phi) 
 { 
     // Transformation matrix invH We use 1,2,3 rotation
 
     //return (invU123(phi) * A123(phi));
 
     // Temp. variables for cos and sin etc.
-    double c1 = cos(phi.XX);
-    double s1 = sin(phi.XX);
-    double c2 = cos(phi.YY);
+    double c1 = ::cos(phi.XX);
+    double s1 = ::sin(phi.XX);
+    double c2 = ::cos(phi.YY);
     c2 += Sign(c2)*1.0e-50;
-    double s2 = sin(phi.YY);
+    double s2 = ::sin(phi.YY);
 
-    return double33(1.0,  s1*s2/c2, -c1*s2/c2, 
+    return double33Mat(1.0,  s1*s2/c2, -c1*s2/c2, 
 		    0.0,  c1,        s1, 
 		    0.0, -s1/c2,     c1/c2);
 
 }
 
-const double33 invH(const double3& phi, const int phiSequence)
+const double33Mat invH(const double3Vec& phi, const int phiSequence)
 {
     switch (phiSequence) {
     case 0: // We have 321 rotation.
@@ -259,85 +258,85 @@ const double33 invH(const double3& phi, const int phiSequence)
 	break;
     default:
 	assert(False);
-	return double33(0.0); // Just dummy.
+	return double33Mat(0.0); // Just dummy.
     }
 
 }
 
 
-const double33 invU321(const double3& phi) 
+const double33Mat invU321(const double3Vec& phi) 
 { 
     // Temp. variables for cos and sin etc.
-    double c1 = cos(phi.XX);
-    double s1 = sin(phi.XX);
-    double c2 = cos(phi.YY);
+    double c1 = ::cos(phi.XX);
+    double s1 = ::sin(phi.XX);
+    double c2 = ::cos(phi.YY);
     c2 += Sign(c2)*1.0e-50;
-    double s2 = sin(phi.YY);
+    double s2 = ::sin(phi.YY);
 
     // Transformation matrix invU.  We use 3,2,1 rotation
 
-    return double33(1.0, s2*s1/c2, s2*c1/c2,
+    return double33Mat(1.0, s2*s1/c2, s2*c1/c2,
 		    0.0, c1,      -s1,
 		    0.0, s1/c2,    c1/c2);
 }
 
 
 
-const double33 vU123(const double3& phi, const double3& vphi) 
+const double33Mat vU123(const double3Vec& phi, const double3Vec& vphi) 
 { 
     // Temp. variables for cos and sin etc.
-    double c2 = cos(phi.YY);
-    double s2 = sin(phi.YY);
-    double c3 = cos(phi.ZZ);
-    double s3 = sin(phi.ZZ);
+    double c2 = ::cos(phi.YY);
+    double s2 = ::sin(phi.YY);
+    double c3 = ::cos(phi.ZZ);
+    double s3 = ::sin(phi.ZZ);
 
     // Transformation matrix vU.  We use 1,2,3 rotation
-    return double33(-s2*c3*vphi.YY - c2*s3*vphi.ZZ,   c3*vphi.ZZ,     0.0,
+    return double33Mat(-s2*c3*vphi.YY - c2*s3*vphi.ZZ,   c3*vphi.ZZ,     0.0,
 		     s2*s3*vphi.YY - c2*c3*vphi.ZZ,  -s3 * vphi.ZZ,   0.0,
  		     c2 * vphi.YY,                    0.0,            0.0);
 }
 
 
-const double33 vH123(const double3& phi,
-		     const double3& vphi) 
+const double33Mat vH123(const double3Vec& phi,
+		     const double3Vec& vphi) 
 { 
     return (invA123(phi) * vU123(phi,vphi));
 }
 
 
 
-const double33 vH321(const double3& phi,
-		     const double3& vphi) 
+const double33Mat vH321(const double3Vec& phi,
+		     const double3Vec& vphi) 
 { 
     // Temp. variables for cos and sin etc.
     double c2 = cos(phi.YY);
-    double s2 = sin(phi.YY);
+    double s2 = ::sin(phi.YY);
     double c3 = cos(phi.ZZ);
-    double s3 = sin(phi.ZZ);
+    double s3 = ::sin(phi.ZZ);
 
-    return double33(-c3*vphi.YY*s2 - c2*vphi.ZZ*s3,  -c3*vphi.ZZ,  0.0, 
+    return double33Mat(-c3*vphi.YY*s2 - c2*vphi.ZZ*s3,  -c3*vphi.ZZ,  0.0, 
 		     c2*c3*vphi.ZZ - vphi.YY*s2*s3,  -vphi.ZZ*s3,  0.0, 
 		    -c2*vphi.YY,                      0.0,         0.0);
 }
 
 
-const double33 vU321(const double3& phi,
-		     const double3& vphi) 
+const double33Mat vU321(const double3Vec& phi,
+		     const double3Vec& vphi) 
 { 
     // Temp. variables for cos and sin etc.
     double c2 = cos(phi.YY);
-    double s2 = sin(phi.YY);
+    double s2 = ::sin(phi.YY);
     double c1 = cos(phi.XX);
-    double s1 = sin(phi.XX);
+    double s1 = ::sin(phi.XX);
 
-    return double33(0.0,    0.0,         -c2*vphi.YY,
+    return double33Mat(0.0,    0.0,         -c2*vphi.YY,
 		    0.0,   -vphi.XX*s1,   c1*c2*vphi.XX - vphi.YY*s1*s2, 
 		    0.0,   -c1*vphi.XX,  -c2*vphi.XX*s1 - c1*vphi.YY*s2);
 }
 
 
-const double3 Omega_U123(const double3& phi,
-			 const double3& vphi) 
+const double3Vec Omega_U123(const double3Vec& phi,
+			 const double3Vec& vphi) 
 { 
     // Angular speed Omega_cBase this.  We use 1,2,3 rotation.
     // Omega[cBase][this] = U[cBase] . vphi[cBase]
@@ -345,13 +344,13 @@ const double3 Omega_U123(const double3& phi,
 
     // Temp. variables for cos and sin etc.
     double c2 = cos(phi.YY);
-    double s2 = sin(phi.YY);
+    double s2 = ::sin(phi.YY);
     double c3 = cos(phi.ZZ);
-    double s3 = sin(phi.ZZ);
+    double s3 = ::sin(phi.ZZ);
 
     // Transformation matrix U We use 1,2,3 rotation
 
-    return double3(c2*c3*vphi.XX + s3*vphi.YY,
+    return double3Vec(c2*c3*vphi.XX + s3*vphi.YY,
 		   -c2*s3*vphi.XX + c3*vphi.YY,
 		   s2*vphi.XX + vphi.ZZ);
 
@@ -359,8 +358,8 @@ const double3 Omega_U123(const double3& phi,
 
 
 
-const double3 Omega_H123(const double3& phi,
-			 const double3& vphi) 
+const double3Vec Omega_H123(const double3Vec& phi,
+			 const double3Vec& vphi) 
 { 
     // Angular speed Omega_cBase_cBase.  We use 1,2,3 rotation.
     // Omega[cBase][cBase] = H[cBase] . vphi[cBase]
@@ -368,26 +367,26 @@ const double3 Omega_H123(const double3& phi,
 }
 
 
-const double3 Omega_H321(const double3& phi,
-			 const double3& vphi) 
+const double3Vec Omega_H321(const double3Vec& phi,
+			 const double3Vec& vphi) 
 { 
     // Angular speed Omega_cBase_cBase.  We use 3,2,1 rotation.
     // Omega[cBase][cBase] = H[cBase] . vphi[cBase]
 
     // Temp. variables for cos and sin etc.
     double c2 = cos(phi.YY);
-    double s2 = sin(phi.YY);
+    double s2 = ::sin(phi.YY);
     double c3 = cos(phi.ZZ);
-    double s3 = sin(phi.ZZ);
+    double s3 = ::sin(phi.ZZ);
 
-    return double3(c2*c3*vphi.XX - s3*vphi.YY,
+    return double3Vec(c2*c3*vphi.XX - s3*vphi.YY,
 		   c2*s3*vphi.XX + c3*vphi.YY,
 		   -s2*vphi.XX + vphi.ZZ);
 }
 
 
-const double3 Omega_U321(const double3& phi,
-			 const double3& vphi) 
+const double3Vec Omega_U321(const double3Vec& phi,
+			 const double3Vec& vphi) 
 { 
     // Angular speed Omega_cBase this.  We use 3,2,1 rotation.
     // Omega[cBase][this] = U[cBase] . vphi[cBase]
@@ -395,24 +394,24 @@ const double3 Omega_U321(const double3& phi,
 
     // Temp. variables for cos and sin etc.
     double c1 = cos(phi.XX);
-    double s1 = sin(phi.XX);
+    double s1 = ::sin(phi.XX);
     double c2 = cos(phi.YY);
-    double s2 = sin(phi.YY);
+    double s2 = ::sin(phi.YY);
 
     // Transformation matrix U We use 3,2,1 rotation
 
-    return double3(vphi.XX - s2*vphi.ZZ,
+    return double3Vec(vphi.XX - s2*vphi.ZZ,
 		   c1*vphi.YY + s1*c2*vphi.ZZ,
 		   -s1*vphi.YY + c1*c2*vphi.ZZ);
 }
 
 //! Transformation from cylindrical coordinates and its 1-st & 2-nd derivative to acceleration in Cartesian coordinates.
-const double3 aRC2aR(const double3& RC, 
-                     const double3& vRC,
-                     const double3& aRC)
+const double3Vec aRC2aR(const double3Vec& RC, 
+                     const double3Vec& vRC,
+                     const double3Vec& aRC)
 {
     double c = cos(RC.YY);
-    double s = sin(RC.YY);
+    double s = ::sin(RC.YY);
 
     double x = c * RC.XX;
     double y = s * RC.XX;
@@ -420,18 +419,18 @@ const double3 aRC2aR(const double3& RC,
     double vx = -vRC.YY * y + c * vRC.XX;
     double vy =  vRC.YY * x + s * vRC.XX;
 
-    return double3(c * aRC.XX - ( aRC.YY * y + vRC.YY * ( vy + s * vRC.XX)),
+    return double3Vec(c * aRC.XX - ( aRC.YY * y + vRC.YY * ( vy + s * vRC.XX)),
 		   aRC.YY * x + vRC.YY * (vx + c * vRC.XX) + s * aRC.YY,
 		   aRC.ZZ);
 }
 
 
-const double3 aR2aRC(const double3& aR,
-		     const double3& RC, 
-		     const double3& vRC) 
+const double3Vec aR2aRC(const double3Vec& aR,
+		     const double3Vec& RC, 
+		     const double3Vec& vRC) 
 {
     double c = cos(RC.YY);
-    double s = sin(RC.YY);
+    double s = ::sin(RC.YY);
 
     double aR_cmp_1 =  c*aR.XX + s*aR.YY;
     double aR_cmp_2 = -s*aR.XX + c*aR.YY;
@@ -439,13 +438,13 @@ const double3 aR2aRC(const double3& aR,
     double aRC_1 = aR_cmp_1 + RC.XX * vRC.YY*vRC.YY;
     double aRC_2 = (aR_cmp_2 - 2 * vRC.XX * vRC.YY ) / RC.XX;
 
-    return double3(aRC_1, aRC_2, aR.ZZ);
+    return double3Vec(aRC_1, aRC_2, aR.ZZ);
 }
 
 
-const double3 vOmega_U123(const double3& phi,
-			  const double3& vphi,
-			  const double3& aphi) 
+const double3Vec vOmega_U123(const double3Vec& phi,
+			  const double3Vec& vphi,
+			  const double3Vec& aphi) 
 { 
     // Angular acc. vOmega_cBase_cBase_this.  We use 1,2,3 rotation.
     // vOmega[cBase][cBase,this] =  vOmega[cBase][this,this] =
@@ -457,9 +456,9 @@ const double3 vOmega_U123(const double3& phi,
 
 
 
-const double3 vOmega_H123(const double3& phi,
-			  const double3& vphi,
-			  const double3& aphi) 
+const double3Vec vOmega_H123(const double3Vec& phi,
+			  const double3Vec& vphi,
+			  const double3Vec& aphi) 
 { 
     // Angular acc. vOmega_cBase_cBase_cBase.  We use 1,2,3 rotation.
     // vOmega[cBase][cBase,cBase] =  vOmega[cBase][this,cBase] =
@@ -469,9 +468,9 @@ const double3 vOmega_H123(const double3& phi,
 }
 
 
-const double3 vOmega_U321(const double3& phi,
-			  const double3& vphi,
-			  const double3& aphi) 
+const double3Vec vOmega_U321(const double3Vec& phi,
+			  const double3Vec& vphi,
+			  const double3Vec& aphi) 
 { 
     // Angular acc. vOmega_cBase_cBase_this.  We use 3,2,1 rotation.
     // vOmega[cBase][cBase,this] =  vOmega[cBase][this,this] =
@@ -483,9 +482,9 @@ const double3 vOmega_U321(const double3& phi,
 
 
 
-const double3 vOmega_H321(const double3& phi,
-			  const double3& vphi,
-			  const double3& aphi) 
+const double3Vec vOmega_H321(const double3Vec& phi,
+			  const double3Vec& vphi,
+			  const double3Vec& aphi) 
 { 
     // Angular acc. vOmega_cBase_cBase_cBase.  We use 3,2,1 rotation.
     // vOmega[cBase][cBase,cBase] =  vOmega[cBase][this,cBase] =
@@ -503,7 +502,6 @@ int validate_euler(double q1,double q2,double q3,double q4)
     double fel = fabs(sqrt(q1*q1+q2*q2+q3*q3+q4*q4) - 1);
 
     if (fel>1.0e-6) {
-	Error("validate_euler error=" + ToStr(fel));
 	return 0 ;
     }
     return 1;
@@ -515,7 +513,6 @@ int validate_euler2(double q1,double q2,double q3,double q4)
 
     double fel = fabs(sqrt(q1*q1+q2*q2+q3*q3+q4*q4) - 1);
     if (fel>2.0e-15) {
-        Error("validate_euler error=" + ToStr(fel));
 	return 0 ;
     }
     return 1;
@@ -527,7 +524,7 @@ int validate_euler(double* q) {
 } 
 
 
-const double33 Aeuler(const double q1,
+const double33Mat Aeuler(const double q1,
 		      const double q2,
 		      const double q3,
 		      const double q4)
@@ -540,12 +537,12 @@ const double33 Aeuler(const double q1,
     double a21 = 2.0*(q1*q2 - q3*q4);           double a22 = q2*q2 - q3*q3 - q1*q1 + q4*q4; double a23 = 2.0*(q2*q3 + q1*q4) ;
     double a31 = 2.0*(q1*q3 + q2*q4);           double a32 = 2.0*(q2*q3 - q1*q4);           double a33 = q3*q3 - q1*q1 - q2*q2 + q4*q4;
             
-    return double33(a11, a12, a13,
+    return double33Mat(a11, a12, a13,
 		    a21, a22, a23,
 		    a31, a32, a33) ;
 }
 
-const double33 invAeuler(const double q1,
+const double33Mat invAeuler(const double q1,
 			 const double q2,
 			 const double q3,
 			 const double q4)
@@ -560,12 +557,12 @@ const double33 invAeuler(const double q1,
     double a31 = 2.0*(q1*q3 + q2*q4);           double a32 = 2.0*(q2*q3 - q1*q4);           double a33 = q3*q3 - q1*q1 - q2*q2 + q4*q4 ;
 
     // Here we transpose the data before setting.
-    return double33(a11, a21, a31,
+    return double33Mat(a11, a21, a31,
 		    a12, a22, a32,
 		    a13, a23, a33) ;
 }
 
-const double3 EulerTophi321(const double q1,
+const double3Vec EulerTophi321(const double q1,
 			    const double q2,
 			    const double q3,
 			    const double q4)
@@ -594,11 +591,11 @@ const double3 EulerTophi321(const double q1,
     double phi1 = atan2(a23/cosphi2, a33/cosphi2);
     double phi3 = atan2(a12/cosphi2, a11/cosphi2);
     
-    return double3(phi1, phi2, phi3) ;
+    return double3Vec(phi1, phi2, phi3) ;
 }
 
 
-const double3 ATophi321(const double33& A)
+const double3Vec ATophi321(const double33Mat& A)
 {
     double a11 = A.x[0]; // A(1,1);
     double a12 = A.x[1]; // A(1,2);
@@ -624,10 +621,10 @@ const double3 ATophi321(const double33& A)
     if(fabs(phi1) < DBL_MIN) phi1 = 0.0;
     if(fabs(phi3) < DBL_MIN) phi3 = 0.0;
 
-    return double3(phi1, phi2, phi3) ;
+    return double3Vec(phi1, phi2, phi3) ;
 }
 
-const double3 ATophi123(const double33& A)
+const double3Vec ATophi123(const double33Mat& A)
 {
     double a11 = A.x[0]; // A(1,1);
     double a21 = A.x[3]; // A(2,1);
@@ -653,10 +650,10 @@ const double3 ATophi123(const double33& A)
     if(fabs(phi1) < DBL_MIN) phi1 = 0.0;
     if(fabs(phi3) < DBL_MIN) phi3 = 0.0;
 
-    return double3(phi1, phi2, phi3) ;
+    return double3Vec(phi1, phi2, phi3) ;
 }
 
-const double3 ATophi(const double33& A, const int phiSequence)
+const double3Vec ATophi(const double33Mat& A, const int phiSequence)
 {
     switch (phiSequence) {
     case 0: // We have 321 rotation.
@@ -667,23 +664,23 @@ const double3 ATophi(const double33& A, const int phiSequence)
 	break;
     default:
 	assert(False);
-	return double3(0.0); // Just dummy.
+	return double3Vec(0.0); // Just dummy.
     }
 }
 
 
-void phi321ToEuler(const double3& phi,
+void phi321ToEuler(const double3Vec& phi,
 		   double& q1,
 		   double& q2,
 		   double& q3,
 		   double& q4)
 {
     double c1 = cos(phi.XX/2.0);
-    double s1 = sin(phi.XX/2.0);
+    double s1 = ::sin(phi.XX/2.0);
     double c2 = cos(phi.YY/2.0);
-    double s2 = sin(phi.YY/2.0);
+    double s2 = ::sin(phi.YY/2.0);
     double c3 = cos(phi.ZZ/2.0);
-    double s3 = sin(phi.ZZ/2.0);
+    double s3 = ::sin(phi.ZZ/2.0);
     
     q1 =  s1*c2*c3 - c1*s2*s3 ;
     q2 =  c1*s2*c3 + s1*c2*s3 ;
@@ -695,18 +692,18 @@ void phi321ToEuler(const double3& phi,
 }
 
 
-void phi321ToEulerDer(const double3& phi,
-                      double3& dq1_dphi,
-                      double3& dq2_dphi,
-                      double3& dq3_dphi,
-                      double3& dq4_dphi)
+void phi321ToEulerDer(const double3Vec& phi,
+                      double3Vec& dq1_dphi,
+                      double3Vec& dq2_dphi,
+                      double3Vec& dq3_dphi,
+                      double3Vec& dq4_dphi)
 {
     const double c1 = cos(phi.XX/2.0);
-    const double s1 = sin(phi.XX/2.0);
+    const double s1 = ::sin(phi.XX/2.0);
     const double c2 = cos(phi.YY/2.0);
-    const double s2 = sin(phi.YY/2.0);
+    const double s2 = ::sin(phi.YY/2.0);
     const double c3 = cos(phi.ZZ/2.0);
-    const double s3 = sin(phi.ZZ/2.0);
+    const double s3 = ::sin(phi.ZZ/2.0);
 
     // q1 = s1*c2*c3 - c1*s2*s3;
     dq1_dphi.XX = ( c1*c2*c3 + s1*s2*s3)/2;
@@ -726,7 +723,7 @@ void phi321ToEulerDer(const double3& phi,
     dq4_dphi.ZZ = (-c1*c2*s3 + s1*s2*c3)/2;
 }
 
-void phi123ToEuler(const double3& phi,
+void phi123ToEuler(const double3Vec& phi,
 		   double& q1,
 		   double& q2,
 		   double& q3,
@@ -734,11 +731,11 @@ void phi123ToEuler(const double3& phi,
 {
     
     double c1 = cos(phi.XX/2.0);
-    double s1 = sin(phi.XX/2.0);
+    double s1 = ::sin(phi.XX/2.0);
     double c2 = cos(phi.YY/2.0);
-    double s2 = sin(phi.YY/2.0);
+    double s2 = ::sin(phi.YY/2.0);
     double c3 = cos(phi.ZZ/2.0);
-    double s3 = sin(phi.ZZ/2.0);
+    double s3 = ::sin(phi.ZZ/2.0);
     
     q1 =  s1*c2*c3 + c1*s2*s3 ;
     q2 =  c1*s2*c3 - s1*c2*s3 ;
@@ -750,19 +747,19 @@ void phi123ToEuler(const double3& phi,
 }
 
 
-void phi123ToEulerDer(const double3& phi,
-                      double3& dq1_dphi,
-                      double3& dq2_dphi,
-                      double3& dq3_dphi,
-                      double3& dq4_dphi)
+void phi123ToEulerDer(const double3Vec& phi,
+                      double3Vec& dq1_dphi,
+                      double3Vec& dq2_dphi,
+                      double3Vec& dq3_dphi,
+                      double3Vec& dq4_dphi)
 {
 
     const double c1 = cos(phi.XX/2.0);
-    const double s1 = sin(phi.XX/2.0);
+    const double s1 = ::sin(phi.XX/2.0);
     const double c2 = cos(phi.YY/2.0);
-    const double s2 = sin(phi.YY/2.0);
+    const double s2 = ::sin(phi.YY/2.0);
     const double c3 = cos(phi.ZZ/2.0);
-    const double s3 = sin(phi.ZZ/2.0);
+    const double s3 = ::sin(phi.ZZ/2.0);
 
     // q1 = s1*c2*c3 + c1*s2*s3;
     dq1_dphi.XX = (c1*c2*c3 - s1*s2*s3)/2 ;
@@ -783,7 +780,7 @@ void phi123ToEulerDer(const double3& phi,
 }
 
 
-void phiToEuler(const double3& phi,
+void phiToEuler(const double3Vec& phi,
                 const int phiSequence,
                 double& q1,
                 double& q2,
@@ -803,7 +800,7 @@ void phiToEuler(const double3& phi,
 }
 
 
-void AToEuler(const double33& A,
+void AToEuler(const double33Mat& A,
 	      double& q1,
 	      double& q2,
 	      double& q3,
@@ -1236,7 +1233,7 @@ void FormSS(double SS[4][4], const double q[4], const double qdot[4])
 
 
 // Create the inverse to a symmetric matrix.
-const double33 invAsym(const double xx, 
+const double33Mat invAsym(const double xx, 
 		       const double xy, 
 		       const double xz,
 		       const double yy, 
@@ -1250,7 +1247,7 @@ const double33 invAsym(const double xx,
     double t2 = ( xz*yy - xy*yz)/tmp ;
     double t3 = (-xy*xz + xx*yz)/tmp ;
     
-    return double33((yz*yz-yy*zz)/tmp, t1, t2, 
+    return double33Mat((yz*yz-yy*zz)/tmp, t1, t2, 
 		    t1, (xz*xz-xx*zz)/tmp, t3,
 		    t2, t3, (xy*xy-xx*yy)/tmp) ;
 }
@@ -1265,7 +1262,7 @@ void RotSym2(// Input parameters
              const double ayy,
              const double ayz,
              const double azz,
-             const double33& A,
+             const double33Mat& A,
              // Output parameters 
              double& bxx,
              double& bxy,
@@ -1275,7 +1272,7 @@ void RotSym2(// Input parameters
              double& bzz)
 {   // res = A . Asym . invA
     
-    double33 J, invA;
+    double33Mat J, invA;
     
     J = Asym(axx,axy,axz,ayy,ayz,azz);
     J = A * J;
@@ -1298,7 +1295,7 @@ void RotSym(// Input parameters
             const double ayy,
             const double ayz,
             const double azz,
-            const double33& A,
+            const double33Mat& A,
             // Output parameters 
             double& bxx,
             double& bxy,
@@ -1486,7 +1483,7 @@ double MaxRelAbsError(const double a, const double b, const double tol)
 
 //! Return the maximum absolute value of the relative errors of each component.
 //! Use a tolerance to avoid division by zero.
-double MaxRelAbsError(const double3& a, const double3& b, const double tol)
+double MaxRelAbsError(const double3Vec& a, const double3Vec& b, const double tol)
 {
     double rel = MaxRelAbsError(a.XX, b.XX, tol);
     rel = Max(rel, MaxRelAbsError(a.YY, b.YY, tol));
@@ -1497,7 +1494,7 @@ double MaxRelAbsError(const double3& a, const double3& b, const double tol)
 
 //! Return the maximum absolute value of the relative errors of each component.
 //! Use a tolerance to avoid division by zero.
-double MaxRelAbsError(const double33& a, const double33& b, const double tol)
+double MaxRelAbsError(const double33Mat& a, const double33Mat& b, const double tol)
 {
     double rel = 0.0;
     for (int i=0; i<9; i++) {
@@ -1507,14 +1504,4 @@ double MaxRelAbsError(const double33& a, const double33& b, const double tol)
     return rel;
 }
 
-
-
-
-
-
-
-
-
-
-
-
+}

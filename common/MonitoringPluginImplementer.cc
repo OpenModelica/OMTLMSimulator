@@ -1,6 +1,9 @@
 #include "MonitoringPluginImplementer.h"
 #include "TLMCommUtil.h"
 
+#include <string>
+using namespace std;
+
 MonitoringPluginImplementer::MonitoringPluginImplementer()
 {
 }

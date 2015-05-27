@@ -1,5 +1,6 @@
 #include "TLMCommUtil.h"
 #include "TLMErrorLog.h"
+#include "strConv.h"
 
 #include <string>
 
@@ -32,8 +33,8 @@ void TLMCommUtil::SendMessage( TLMMessage& mess){
 
     if (doDetailedLogging) {
         TLMErrorLog::Log("SendMessage: wants to send "+
-            Int2Str(sizeof(TLMMessageHeader))+"+"+
-            Int2Str(DataSize)+ " bytes ");
+            tlmMisc::Int2Str(sizeof(TLMMessageHeader))+"+"+
+            tlmMisc::Int2Str(DataSize)+ " bytes ");
     }
 
     if(TLMMessageHeader::IsBigEndianSystem != mess.Header.SourceIsBigEndianSystem) {
@@ -61,7 +62,7 @@ void TLMCommUtil::SendMessage( TLMMessage& mess){
 #endif
 
     if (doDetailedLogging) {
-        TLMErrorLog::Log("SendMessage:send() sent "+Int2Str(sendBytes)+ " bytes ");
+        TLMErrorLog::Log("SendMessage:send() sent "+tlmMisc::Int2Str(sendBytes)+ " bytes ");
     }
 
     if(DataSize > 0) {
@@ -78,7 +79,7 @@ void TLMCommUtil::SendMessage( TLMMessage& mess){
 #endif
 
         if (doDetailedLogging) {
-            TLMErrorLog::Log("SendMessage:send()(part 2) sent "+Int2Str(sendBytes)+ " bytes ");
+            TLMErrorLog::Log("SendMessage:send()(part 2) sent "+tlmMisc::Int2Str(sendBytes)+ " bytes ");
         }
 
     }
@@ -121,7 +122,7 @@ bool TLMCommUtil::ReceiveMessage( TLMMessage& mess){
         return false;
     }
     if (doDetailedLogging) {
-        TLMErrorLog::Log("ReceiveMessage:recv() returned "+Int2Str(bcount)+ " bytes ");
+        TLMErrorLog::Log("ReceiveMessage:recv() returned "+tlmMisc::Int2Str(bcount)+ " bytes ");
     }
 
     if(strncmp(mess.Header.Signature, TLMMessageHeader::TLMSignature, TLMMessageHeader::TLM_SIGNATURE_LENGTH) != 0) {
@@ -169,7 +170,7 @@ bool TLMCommUtil::ReceiveMessage( TLMMessage& mess){
             return false;
         }
         if (doDetailedLogging) {
-            TLMErrorLog::Log("ReceiveMessage:recv()(part 2) returned "+Int2Str(bcount)+ " bytes ");
+            TLMErrorLog::Log("ReceiveMessage:recv()(part 2) returned "+tlmMisc::Int2Str(bcount)+ " bytes ");
         }
         if(bcount != mess.Header.DataSize) {
             TLMErrorLog::FatalError("Error receiving message data");
