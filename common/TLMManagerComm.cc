@@ -6,6 +6,7 @@
 #include "TLMManagerComm.h"
 #include "TLMErrorLog.h"
 #include <cassert>
+#include <cstring>
 #include <vector>
 #include <algorithm>
 #include <iostream>
@@ -53,7 +54,7 @@ int TLMManagerComm::CreateServerSocket()
     hp = gethostbyname((const char*) myname);
 
     if (hp==NULL){
-        TLMErrorLog::FatalError("Create server socket - failed to get my hostname, check that name resolves, e.g. /etc/hosts has "+Bstring(myname)) ;
+        TLMErrorLog::FatalError("Create server socket - failed to get my hostname, check that name resolves, e.g. /etc/hosts has "+std::string(myname)) ;
         // See BZ2161.
 
         // Adding this line to /etc/hosts resolves (for me) the problem with

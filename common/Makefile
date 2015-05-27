@@ -11,7 +11,7 @@ else
 endif
 
 include $(MAKEFILEHEADHOME)/Makefile.head
-
+MISCHOME = ../extralibs/misc
 
 SRCCLT= PluginImplementer.cc \
 	MonitoringPluginImplementer.cc \
@@ -59,10 +59,9 @@ INCLUDES= -I. \
 LIBS = 	-L$(MISCHOME)/lib/$(ABI) \
 	-L$(THREADRUNHOME)/lib/$(ABI) \
 	-L$(TIMEHOME)/lib/$(ABI) \
-        -lmisc -lrtime
+	-ltlmmisc -lrtime
 
 INCXTR=
-
 LIBXTR=
 
 default: help all

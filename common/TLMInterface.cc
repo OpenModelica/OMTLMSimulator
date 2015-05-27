@@ -8,7 +8,8 @@
 #include "TLMCommUtil.h"
 #include "TLMPlugin.h"
 #include <deque>
-#include "lightmat.h"
+#include <string>
+#include "double33Mat.h"
 using std::deque;
 using std::vector;
 
@@ -17,6 +18,8 @@ using std::cout;
 
 #include <fstream>
 using std::ofstream;
+using namespace tlmMisc;
+
 
 static const double TLM_DAMP_DELAY = 1.5; 
 
@@ -38,7 +41,7 @@ TLMInterface::TLMInterface(TLMClientComm& theComm, std::string& aName, double St
     TLMCommUtil::ReceiveMessage(Message);
     InterfaceID =  Message.Header.TLMInterfaceID;
 
-    TLMErrorLog::Log(string("Interface ") + GetName() + " got ID " + TLMErrorLog::ToStdStr(InterfaceID));
+    TLMErrorLog::Log(std::string("Interface ") + GetName() + " got ID " + TLMErrorLog::ToStdStr(InterfaceID));
 
     Comm.UnpackRegInterfaceMessage(Message, Params);
 
@@ -47,7 +50,7 @@ TLMInterface::TLMInterface(TLMClientComm& theComm, std::string& aName, double St
 
 TLMInterface::~TLMInterface() {
     if(DataToSend.size() != 0) {
-        TLMErrorLog::Log(string("Interface ") + GetName() + " sends rest of data for time= " +
+        TLMErrorLog::Log(std::string("Interface ") + GetName() + " sends rest of data for time= " +
                          TLMErrorLog::ToStdStr(DataToSend.back().time));
 
         Comm.PackTimeDataMessage(InterfaceID, DataToSend, Message);
@@ -58,7 +61,7 @@ TLMInterface::~TLMInterface() {
 
 void TLMInterface::UnpackTimeData(TLMMessage& mess)
 {
-    TLMErrorLog::Log(string("Interface ") + GetName());
+    TLMErrorLog::Log(std::string("Interface ") + GetName());
     Comm.UnpackTimeDataMessage(mess, TimeData);
     
     NextRecvTime =  TimeData.back().time + Params.Delay;
@@ -117,9 +120,9 @@ void TLMInterface::hermite_interpolate(TLMTimeData& Instance, deque<TLMTimeData>
     // the points relative the first one. That angles are then interpolated
     // and finally the interpolated rotation matrix is constructed.
     // lightmat structures & functions  are used
-    double3 phi[4];
+    double3Vec phi[4];
 
-    double33 A[4];  // first convert the matrices into double33 format
+    double33Mat A[4];  // first convert the matrices into double33 format
     i = 4;
     while(i-- > 0) {
         double* a = p[i]->RotMatrix;
@@ -136,7 +139,7 @@ void TLMInterface::hermite_interpolate(TLMTimeData& Instance, deque<TLMTimeData>
     phi[3] = ATophi321(A[3]);
     
     // interpolate angles
-    double3 phi_out;
+    double3Vec phi_out;
     j = 4;
     while(--j > 0) {
         i = 4;
@@ -197,14 +200,14 @@ void TLMInterface::linear_interpolate(TLMTimeData& Instance, TLMTimeData& p0, TL
     // first convert the matrices into double33 format
 
     double* a = p0.RotMatrix;
-    double33 A0(a[0],a[1],a[2],a[3],a[4],a[5],a[6],a[7],a[8]);
+    double33Mat A0(a[0],a[1],a[2],a[3],a[4],a[5],a[6],a[7],a[8]);
     a = p1.RotMatrix;
-    double33 A1(a[0],a[1],a[2],a[3],a[4],a[5],a[6],a[7],a[8]);
+    double33Mat A1(a[0],a[1],a[2],a[3],a[4],a[5],a[6],a[7],a[8]);
 
     // construct relative rotation matrix, hopefully representing
     // small angles, convert to angles:
     A1 = A0.T() * A1;
-    double3 phi = ATophi321(A1);
+    double3Vec phi = ATophi321(A1);
 
     j = 4;
     while(--j > 0) {
@@ -281,18 +284,18 @@ void TLMInterface::GetTimeData(TLMTimeData& Instance, std::deque<TLMTimeData>& D
             Instance.GenForce[i++] = 0.0;
         }
 
-        double3 ci_R_cX_cX(Params.Nom_cI_R_cX_cX[0], Params.Nom_cI_R_cX_cX[1], Params.Nom_cI_R_cX_cX[2]);
-        double33 ci_A_cX(Params.Nom_cI_A_cX[0], Params.Nom_cI_A_cX[1], Params.Nom_cI_A_cX[2],
+        double3Vec ci_R_cX_cX(Params.Nom_cI_R_cX_cX[0], Params.Nom_cI_R_cX_cX[1], Params.Nom_cI_R_cX_cX[2]);
+        double33Mat ci_A_cX(Params.Nom_cI_A_cX[0], Params.Nom_cI_A_cX[1], Params.Nom_cI_A_cX[2],
                 Params.Nom_cI_A_cX[3], Params.Nom_cI_A_cX[4], Params.Nom_cI_A_cX[5],
                 Params.Nom_cI_A_cX[6], Params.Nom_cI_A_cX[7], Params.Nom_cI_A_cX[8]);
 
-        double3 cX_R_cG_cG(Params.cX_R_cG_cG[0], Params.cX_R_cG_cG[1], Params.cX_R_cG_cG[2]);
-        double33 cX_A_cG(Params.cX_A_cG[0], Params.cX_A_cG[1], Params.cX_A_cG[2],
+        double3Vec cX_R_cG_cG(Params.cX_R_cG_cG[0], Params.cX_R_cG_cG[1], Params.cX_R_cG_cG[2]);
+        double33Mat cX_A_cG(Params.cX_A_cG[0], Params.cX_A_cG[1], Params.cX_A_cG[2],
                 Params.cX_A_cG[3], Params.cX_A_cG[4], Params.cX_A_cG[5],
                 Params.cX_A_cG[6], Params.cX_A_cG[7], Params.cX_A_cG[8]);
 
-        double33 ci_A_cG =  ci_A_cX*cX_A_cG;
-        double3 ci_R_cG_cG = cX_R_cG_cG + ci_R_cX_cX*cX_A_cG;
+        double33Mat ci_A_cG =  ci_A_cX*cX_A_cG;
+        double3Vec ci_R_cG_cG = cX_R_cG_cG + ci_R_cX_cX*cX_A_cG;
 
         i = 0;
         while(i < 3) {
@@ -340,7 +343,7 @@ void TLMInterface::GetTimeData(TLMTimeData& Instance, std::deque<TLMTimeData>& D
     }
     else {
         if (time <= Data[0].time) {
-            TLMErrorLog::Warning(string("Interface ") + GetName() + " needs to extrapolate back time= " +
+            TLMErrorLog::Warning(std::string("Interface ") + GetName() + " needs to extrapolate back time= " +
                                  TLMErrorLog::ToStdStr(time));
             Instance = Data[0];
         }
@@ -349,7 +352,7 @@ void TLMInterface::GetTimeData(TLMTimeData& Instance, std::deque<TLMTimeData>& D
                 Instance = Data[size-1];
             }
             else {
-                TLMErrorLog::Warning(string("Interface ") + GetName() + " needs to extrapolate forward time= " +
+                TLMErrorLog::Warning(std::string("Interface ") + GetName() + " needs to extrapolate forward time= " +
                                      TLMErrorLog::ToStdStr(time));
                 if(size > 1) {
                     // linear extrapolation
@@ -427,7 +430,7 @@ void TLMInterface::SetTimeData(double time,
         item.GenForce[i+3] = -item.GenForce[i+3] +  Params.Zfr * ang_speed[i];
     }
 
-    TLMErrorLog::Log(string("Interface ") + GetName() +
+    TLMErrorLog::Log(std::string("Interface ") + GetName() +
                      " SET for time= " + TLMErrorLog::ToStdStr(time)
                      //  		     + " force:"
                      //  		     + TLMErrorLog::ToStdStr(item.GenForce[0])+ ", "
@@ -457,7 +460,7 @@ void TLMInterface::SetTimeData(double time,
 void TLMInterface::SendAllData() {
     LastSendTime = DataToSend.back().time;
 
-    TLMErrorLog::Log(string("Interface ") + GetName() + " sends data for time= " +
+    TLMErrorLog::Log(std::string("Interface ") + GetName() + " sends data for time= " +
                      TLMErrorLog::ToStdStr(LastSendTime));
 
     // Transform to global inertial system cG ans send
@@ -484,28 +487,28 @@ void TLMInterface::TransformTimeDataToCG(std::vector<TLMTimeData>& timeData, TLM
     for( iter=timeData.begin() ; iter!=timeData.end() ; iter++ ){
         TLMTimeData& data = *iter;
 
-        double3 ci_R_cX_cX(data.Position[0], data.Position[1], data.Position[2]);
-        double33 ci_A_cX(data.RotMatrix[0], data.RotMatrix[1], data.RotMatrix[2],
+        double3Vec ci_R_cX_cX(data.Position[0], data.Position[1], data.Position[2]);
+        double33Mat ci_A_cX(data.RotMatrix[0], data.RotMatrix[1], data.RotMatrix[2],
                 data.RotMatrix[3], data.RotMatrix[4], data.RotMatrix[5],
                 data.RotMatrix[6], data.RotMatrix[7], data.RotMatrix[8]);
         
-        double3 cX_R_cG_cG(params.cX_R_cG_cG[0], params.cX_R_cG_cG[1], params.cX_R_cG_cG[2]);
-        double33 cX_A_cG(params.cX_A_cG[0], params.cX_A_cG[1], params.cX_A_cG[2],
+        double3Vec cX_R_cG_cG(params.cX_R_cG_cG[0], params.cX_R_cG_cG[1], params.cX_R_cG_cG[2]);
+        double33Mat cX_A_cG(params.cX_A_cG[0], params.cX_A_cG[1], params.cX_A_cG[2],
                 params.cX_A_cG[3], params.cX_A_cG[4], params.cX_A_cG[5],
                 params.cX_A_cG[6], params.cX_A_cG[7], params.cX_A_cG[8]);
         
-        double33 ci_A_cG =  ci_A_cX*cX_A_cG;
-        double3 ci_R_cG_cG = cX_R_cG_cG + ci_R_cX_cX*cX_A_cG;
+        double33Mat ci_A_cG =  ci_A_cX*cX_A_cG;
+        double3Vec ci_R_cG_cG = cX_R_cG_cG + ci_R_cX_cX*cX_A_cG;
         
         // Transform force and moment
-        double3 F_cG(data.GenForce[0], data.GenForce[1], data.GenForce[2]);
-        double3 M_cG(data.GenForce[3], data.GenForce[4], data.GenForce[5]);
+        double3Vec F_cG(data.GenForce[0], data.GenForce[1], data.GenForce[2]);
+        double3Vec M_cG(data.GenForce[3], data.GenForce[4], data.GenForce[5]);
         F_cG = F_cG*cX_A_cG;
         M_cG = M_cG*cX_A_cG;
 
         // Transform velocity and angular-velocity
-        double3 vR_cG(data.Velocity[0], data.Velocity[1], data.Velocity[2]);
-        double3 Omega_cG(data.Velocity[3], data.Velocity[4], data.Velocity[5]);
+        double3Vec vR_cG(data.Velocity[0], data.Velocity[1], data.Velocity[2]);
+        double3Vec Omega_cG(data.Velocity[3], data.Velocity[4], data.Velocity[5]);
         vR_cG = vR_cG*cX_A_cG;
         Omega_cG = Omega_cG*cX_A_cG;
         

@@ -13,7 +13,7 @@
 
 #include "TLMPlugin.h"
 #include "TLMErrorLog.h"
-#include "tostr.h"
+#include "strConv.h"
 
 #include <iostream>
 #include <fstream>
