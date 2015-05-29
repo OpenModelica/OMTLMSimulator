@@ -6,7 +6,8 @@
 
 #include "MetaModelReader.h"
 #include "TLMErrorLog.h"
-#include "lightmat.h"
+#include "double3.h"
+#include "double33.h"
 #include <string>
 using std::string;
 

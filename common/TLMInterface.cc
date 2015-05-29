@@ -8,7 +8,9 @@
 #include "TLMCommUtil.h"
 #include "TLMPlugin.h"
 #include <deque>
-#include "lightmat.h"
+#include "double3.h"
+#include "double33.h"
+
 using std::deque;
 using std::vector;
 

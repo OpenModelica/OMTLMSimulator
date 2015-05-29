@@ -13,11 +13,9 @@ UP=../../../src
 B_INCLUDES = -I../include
 MINCLUDE= $(B_INCLUDES)
 
-CCSRC= double3.cc float2.cc double2.cc float3.cc double33.cc coordTransform.cc doubleN.cc doubleN3.cc doubleN33.cc intN.cc tostr.cc ErrorLog.cc portability.cc Bstring.cc Btokenizer.cc \
+CCSRC= double3.cc float2.cc double2.cc float3.cc double33.cc coordTransform.cc doubleN.cc doubleN3.cc doubleN33.cc intN.cc tostr.cc ErrorLog.cc portability.cc Bstring.cc \
         double33s.cc doubleN33s.cc float33s.cc dsyevv3.cc  dsyevq3.cc dsyevc3.cc dsytrd3.cc 
 # PrivPack.cc MathUtilityFunc.cc
-
-CSRC=g2c_w32.c  
 
 OBJS=$(CCSRC:%.cc=$(ABI)/%.o)
 OBJS+=$(CSRC:%.c=$(ABI)/%.o)

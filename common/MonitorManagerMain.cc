@@ -13,7 +13,8 @@
 #include "MetaModelReader.h"
 #include "ManagerCommHandler.h"
 #include "MonitoringPluginImplementer.h"
-#include "lightmat.h"
+#include "double3.h"
+#include "double33.h"
 #include "timing.h"
 
 #ifdef MSC_VER

@@ -17,7 +17,7 @@ ifeq ($(ABI),WINDOWS64)
 else
     CC=g++
     cc=gcc
-    LINK=g++ 
+    LINK=g++
     AR=ar
     CP=cp
 endif
