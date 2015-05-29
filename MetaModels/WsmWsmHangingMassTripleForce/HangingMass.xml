@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<!-- The root node is the meta-model -->
+<Model Name="HangingMass">
+
+    <!-- List of connected sub-models -->
+    <SubModels>	
+
+        <SubModel Name="HangingMass1"
+                StartCommand="StartTLMWSM" 
+                ExactStep="1"
+                ModelFile="HangingMass1TLM.mo">
+
+                <!-- TLM interface points for SubModel A -->
+                <InterfacePoint Name="tlm"/>
+        </SubModel>
+
+        <SubModel Name="HangingMass2" 
+                StartCommand="StartTLMWSM" 
+                ExactStep="1"
+                ModelFile="HangingMass2TLM.mo">
+
+                <!-- TLM interface points for SubModel C -->
+                <InterfacePoint Name="tlm"/>
+        </SubModel>
+
+    </SubModels>
+
+    <!-- List of TLM connections -->
+    <Connections>
+	<!-- Some more physical values: Delay="1e-5" Zf="8e4" Zfr="400" alpha="0.2" -->
+        <Connection From="HangingMass1.tlm" To="HangingMass2.tlm" 
+		Delay="2e-4" Zf="1000" Zfr="100" alpha="0.9"/>
+    </Connections>
+
+    <!-- Parameters for the simulation -->
+    <SimulationParams ManagerPort="11113" 
+                StartTime="0" 
+                StopTime="100"/>
+
+</Model>

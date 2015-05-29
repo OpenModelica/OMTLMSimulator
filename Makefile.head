@@ -1,0 +1,58 @@
+# Default Makefile.head
+# This file typically sets up the compiler and includes for the specific platform
+# Here we simply assume gcc and some GNU/Linux environment
+
+ifeq ($(ABI),)
+  # We need some machine environment 
+  $(error Please set the ABI environment variable, typical choices are: WINDOWS32, WINDOWS64, or LINUX64)
+endif
+
+ifeq ($(ABI),WINDOWS64)
+    CC=mycl cl64 /DMSC_VER /DWIN32 /D_WIN32 /EHsc /DNOMINMAX /GR
+    cc=mycl cl64
+    LINK=mycl link64
+    AR=ar
+    CP=cp
+    FEXT=.exe
+else
+    CC=g++
+    cc=gcc
+    LINK=g++
+    AR=ar
+    CP=cp
+endif
+
+MISCHOME=$(UP)/extralibs/misc
+THREADRUNHOME=$(UP)/extralibs/threadrun
+TIMEHOME=$(UP)/extralibs/rtime
+
+DEFINES= -DUSE_THREADS
+OPTFLAGS4=-O2
+
+INCLXML-WINDOWS64=-I$(UP)/extralibs/libxml2/include
+LIBXML-WINDOWS64=-L$(UP)/extralibs/libxml2/$(ABI)/lib libxml2.lib
+XTRLIBS-WINDOWS64=user32.lib shell32.lib ws2_32.lib Gdi32.lib pthreadVC2.lib
+INCLPTHREAD-WINDOWS64=-I$(UP)/extralibs/pthread/include
+LIBPTHREAD-WINDOWS64=-L$(UP)/extralibs/pthread/$(ABI)/lib pthreadVC2.lib
+
+INCLXML-WINDOWS32=-I$(UP)/extralibs/libxml2/include
+LIBXML-WINDOWS32=-L$(UP)/extralibs/libxml2/$(ABI)/lib -lxml2
+INCLPTHREAD-WINDOWS32=-I$(UP)/extralibs/pthread/include
+LIBPTHREAD-WINDOWS32=-L$(UP)/extralibs/pthread/$(ABI)/lib -lpthread
+XTRLIBS-WINDOWS32=-lws2_32
+
+INCLXML-LINUX64=-I/usr/include/libxml2
+LIBXML-LINUX64=-lxml2
+XTRLIBS-LINUX64=-lrt
+
+INCLXML-MINGW64=-I/usr/include/libxml2
+LIBXML-MINGW64=-lxml2
+XTRLIBS-MINGW6464=-lrt -lws2_32 -lwsock32
+
+INCLXML=$(INCLXML-$(ABI))
+LIBXML=$(LIBXML-$(ABI))
+XTRLIBS=$(XTRLIBS-$(ABI))
+INCLPTHREAD=$(INCLPTHREAD-$(ABI))
+LIBPTHREAD=$(LIBPTHREAD-$(ABI))
+
+MEX=mex

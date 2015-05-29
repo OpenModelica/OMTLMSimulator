@@ -1,0 +1,363 @@
+#ifndef _DOUBLE2_ICC
+#define _DOUBLE2_ICC
+
+#include <cassert>
+
+
+
+// For repetive division it can be more efficient to create a intermediate variable
+// and to do multiplication instead. Some low level tests indicate a factor 4.
+// On other hand, we loose some precision. Which is most important, tests will tell.
+// To activate, define these. DF 2011-04-04
+#define FASTDIV          // Was activated in the past.
+//#define FASTDIVX       // Was not activated in the past. 
+	                 // Tried 2011-04-13, was a bit slower on test cases! Needs more investigation. DF
+
+
+////////////////////////////////////////////////////////////////////////////////
+//
+// Definitions of member functions and global methods to class double2
+//
+
+inline double2::double2(const double val)
+: XX(val), YY(val)
+{}
+
+inline double2::double2(const double xval,
+            const double yval)
+: XX(xval), YY(yval)
+{}
+
+inline double2::double2(const double2& val)
+: XX(val.XX), YY(val.YY)
+{}
+
+inline double double2::norm2() const
+{
+    return sqrt(XX * XX + YY * YY);
+}
+
+
+inline double2& double2::normalize()
+{
+    double mag = this->norm2();
+    if (mag != 0.0) {
+#ifdef FASTDIV
+	mag = 1.0 / mag;
+	XX *= mag;
+	YY *= mag;
+
+#else
+	XX /= mag;
+	YY /= mag;
+
+#endif
+    } 
+
+    return *this;
+}
+
+inline double2& double2::normalizeSafe()
+{
+    double mag = this->norm2();
+    if (mag != 0.0) {
+#ifdef FASTDIV
+	mag = 1.0 / mag;
+	XX *= mag;
+	YY *= mag;
+
+#else
+	XX /= mag;
+	YY /= mag;
+
+#endif
+    } else {
+	XX = 1.0;
+	YY = 0.0;
+
+    }	
+
+    return *this;
+}
+
+inline double& double2::operator()(const int i)
+{
+    double *x;	
+#ifdef DEBUGFLG
+    assert(i > 0 && i <= 2);
+#endif
+
+    switch(i) {
+    case 1:
+      x = &XX;
+      break;	
+    default:
+      x = &YY;
+      break;
+
+    }
+
+//    if (i==1) x = &XX;
+//    else if (i==2) x = &YY;
+//    else x = &ZZ;
+
+    return *x; 
+}
+
+
+inline double double2::operator()(const int i) const
+{
+    double x;
+#ifdef DEBUGFLG
+    assert(i > 0 && i <= 2);
+#endif
+    switch(i) {
+    case 1:
+      x = XX;
+      break;	
+    default:
+      x = YY;
+      break;
+
+    }
+
+//    if (i==1) x = XX;
+//    else if (i==2) x = YY;
+//    else x = ZZ;
+
+    return x; 
+}
+
+inline double2& double2::operator=(const double a)
+{
+    XX = a;
+    YY = a;
+
+    return *this;
+}
+
+inline double2& double2::operator=(const double2& v)
+{
+    if (this != &v) {	
+       XX = v.XX;
+       YY = v.YY;
+
+    }
+    return *this;
+}
+
+inline double2& double2::operator+=(const double2& v)
+{
+    XX += v.XX;
+    YY += v.YY;
+
+    return *this;
+}
+
+inline double2& double2::operator-=(const double2& v)
+{
+    XX -= v.XX;
+    YY -= v.YY;
+
+    return *this;
+}
+
+inline double2& double2::operator*=(const double s)
+{
+    XX *= s;
+    YY *= s;
+
+    return *this;
+}
+
+inline double2& double2::operator/=(const double s)
+{
+#ifdef FASTDIVX
+    double tmp = 1.0 / s;
+    XX *= tmp;
+    YY *= tmp;
+
+#else
+    XX /= s;
+    YY /= s;
+
+#endif
+    return *this;
+}
+
+
+
+
+inline void double2::Set(const double a1, const double a2)
+{
+    XX = a1;
+    YY = a2;
+
+}
+
+
+inline void double2::Get(double& a1, double& a2) const
+{
+    a1 = XX;
+    a2 = YY;
+
+}
+
+
+inline bool double2::isZero() const
+{
+    return (XX==0.0)&&(YY==0.0);
+}
+
+inline bool double2::isNonZero() const
+{
+    return (XX!=0.0)||(YY!=0.0);
+}
+
+
+#ifdef USE_IMPLICIT_CONV
+inline double2::double2  (const float2& conv_in){
+        XX= conv_in.XX;
+        YY= conv_in.YY;
+
+}
+#endif
+
+
+
+
+////////////////////////////////////////////////////////////////////////
+//
+// Definition of global functions related to double2
+//
+
+// -V
+inline const double2 operator-(const double2& v)
+{
+    return double2(-v.XX, -v.YY);
+}
+
+// s * V
+inline const double2 operator*(const double s, const double2& v)
+{
+    return double2(s * v.XX, s * v.YY);
+}
+
+// V * s
+inline const double2 operator*(const double2& v, const double s)
+{
+    return double2(s * v.XX, s * v.YY);
+}
+
+
+// V * V
+inline double operator*(const double2& a, const double2& b)
+{
+    return (a.XX*b.XX + a.YY*b.YY );
+}
+
+
+// V / s
+inline const double2 operator/(const double2& v, const double s)
+{
+#ifdef FASTDIV
+    double recip = 1.0 / s;
+    return double2(v.XX * recip, v.YY * recip);
+#else
+    return double2(v.XX / s, v.YY / s);
+#endif
+}
+
+
+// V / V
+inline const double2 operator/(const double2& v, const double2& w)
+{
+    return double2(v.XX / w.XX, v.YY / w.YY);
+}
+
+// V + V
+inline const double2 operator+(const double2& a, const double2& b)
+{
+    return double2(a.XX + b.XX, a.YY + b.YY);
+}
+
+// V + s
+inline const double2 operator+(const double2& a, const double s)
+{
+    return double2(a.XX + s, a.YY + s);
+}
+
+// s + V
+inline const double2 operator+(const double s, const double2& a)
+{
+    return double2(a.XX + s, a.YY + s);
+}
+
+// V - V
+inline const double2 operator-(const double2& a, const double2& b)
+{
+    return double2(a.XX - b.XX, a.YY - b.YY);
+}
+
+// V - s
+inline const double2 operator-(const double2& a, const double s)
+{
+    return double2(a.XX - s, a.YY - s);
+}
+
+// s - V
+inline const double2 operator-(const double s, const double2& a)
+{
+    return double2(s - a.XX, s - a.YY);
+}
+
+// V == V (no fuzz for comparison)
+inline bool operator==(const double2& a, const double2& b)
+{
+    return a.XX == b.XX && a.YY == b.YY ;
+}
+
+// V == s (no fuzz for comparison)
+inline bool operator==(const double2& a, const double b)
+{
+    return a.XX == b && a.YY == b ;
+}
+
+// s == V (no fuzz for comparison)
+inline bool operator==(const double a, const double2& b)
+{
+    return a == b.XX && a == b.YY ;
+}
+
+// V != V (no fuzz for comparison)
+inline bool operator!=(const double2& a, const double2& b)
+{
+    return !(a == b);
+}
+
+
+
+
+
+inline const double2 sin(const double2& v)
+{
+    return double2(sin(v.XX), sin(v.YY));
+}
+
+inline const double2 cos(const double2& v)
+{
+    return double2(cos(v.XX), cos(v.YY));
+}
+
+
+
+
+#endif
+
+
+
+
+
+
+
+
