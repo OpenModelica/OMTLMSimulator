@@ -136,8 +136,8 @@ void double33Mat::SetExpMatrix(const double3Vec& w, const double t)
                    -w2,   w1,   0.0);
 
         // Intermediate variables to avoid multiple matrix divisions.
-        double a = norm / sin(norm*t);
-        double b = (norm *norm) / (1.0 - cos(norm*t));
+        double a = norm / ::sin(norm*t);
+        double b = (norm *norm) / (1.0 - ::cos(norm*t));
         R += W/a;
         R += (W*W)/b;
     }    

@@ -215,7 +215,7 @@ const double33Mat invU123(const double3Vec& phi)
 const double33Mat invH321(const double3Vec& phi) 
 { 
     // Temp. variables for cos and sin etc.
-    double c2 = cos(phi.YY);
+    double c2 = ::cos(phi.YY);
     c2 += Sign(c2)*1.0e-50;
     double s2 = ::sin(phi.YY);
     double c3 = ::cos(phi.ZZ);
@@ -306,12 +306,12 @@ const double33Mat vH123(const double3Vec& phi,
 
 
 const double33Mat vH321(const double3Vec& phi,
-		     const double3Vec& vphi) 
+			const double3Vec& vphi) 
 { 
     // Temp. variables for cos and sin etc.
-    double c2 = cos(phi.YY);
+    double c2 = ::cos(phi.YY);
     double s2 = ::sin(phi.YY);
-    double c3 = cos(phi.ZZ);
+    double c3 = ::cos(phi.ZZ);
     double s3 = ::sin(phi.ZZ);
 
     return double33Mat(-c3*vphi.YY*s2 - c2*vphi.ZZ*s3,  -c3*vphi.ZZ,  0.0, 
@@ -324,9 +324,9 @@ const double33Mat vU321(const double3Vec& phi,
 		     const double3Vec& vphi) 
 { 
     // Temp. variables for cos and sin etc.
-    double c2 = cos(phi.YY);
+    double c2 = ::cos(phi.YY);
     double s2 = ::sin(phi.YY);
-    double c1 = cos(phi.XX);
+    double c1 = ::cos(phi.XX);
     double s1 = ::sin(phi.XX);
 
     return double33Mat(0.0,    0.0,         -c2*vphi.YY,
@@ -343,9 +343,9 @@ const double3Vec Omega_U123(const double3Vec& phi,
     // return (U123(phi) * vphi);
 
     // Temp. variables for cos and sin etc.
-    double c2 = cos(phi.YY);
+    double c2 = ::cos(phi.YY);
     double s2 = ::sin(phi.YY);
-    double c3 = cos(phi.ZZ);
+    double c3 = ::cos(phi.ZZ);
     double s3 = ::sin(phi.ZZ);
 
     // Transformation matrix U We use 1,2,3 rotation
@@ -374,9 +374,9 @@ const double3Vec Omega_H321(const double3Vec& phi,
     // Omega[cBase][cBase] = H[cBase] . vphi[cBase]
 
     // Temp. variables for cos and sin etc.
-    double c2 = cos(phi.YY);
+    double c2 = ::cos(phi.YY);
     double s2 = ::sin(phi.YY);
-    double c3 = cos(phi.ZZ);
+    double c3 = ::cos(phi.ZZ);
     double s3 = ::sin(phi.ZZ);
 
     return double3Vec(c2*c3*vphi.XX - s3*vphi.YY,
@@ -393,9 +393,9 @@ const double3Vec Omega_U321(const double3Vec& phi,
     // return (U321(phi) * vphi);
 
     // Temp. variables for cos and sin etc.
-    double c1 = cos(phi.XX);
+    double c1 = ::cos(phi.XX);
     double s1 = ::sin(phi.XX);
-    double c2 = cos(phi.YY);
+    double c2 = ::cos(phi.YY);
     double s2 = ::sin(phi.YY);
 
     // Transformation matrix U We use 3,2,1 rotation
@@ -410,7 +410,7 @@ const double3Vec aRC2aR(const double3Vec& RC,
                      const double3Vec& vRC,
                      const double3Vec& aRC)
 {
-    double c = cos(RC.YY);
+    double c = ::cos(RC.YY);
     double s = ::sin(RC.YY);
 
     double x = c * RC.XX;
@@ -429,7 +429,7 @@ const double3Vec aR2aRC(const double3Vec& aR,
 		     const double3Vec& RC, 
 		     const double3Vec& vRC) 
 {
-    double c = cos(RC.YY);
+    double c = ::cos(RC.YY);
     double s = ::sin(RC.YY);
 
     double aR_cmp_1 =  c*aR.XX + s*aR.YY;
@@ -584,7 +584,7 @@ const double3Vec EulerTophi321(const double q1,
     double phi2 = (a13 == 0.0)? 0.0 : asin((a13<-1.0) ? 1.0 : ((a13>1.0) ? -1.0 : -a13 )); // Safe
     //double phi2 = asin(-a13); 
     
-    double tmp = cos(phi2) ;
+    double tmp = ::cos(phi2) ;
     double cosphi2 = tmp+Sign(tmp)*1.0e-50 ;
   
     // This implementation limits ph1 and phi3 to +/-pi so we use it.
@@ -611,7 +611,7 @@ const double3Vec ATophi321(const double33Mat& A)
     //double phi2 =  asin(-a13) ;
     double phi2 = (fabs(a13) < DBL_MIN)? 0.0 : asin((a13<-1.0) ? 1.0 : ((a13>1.0) ? -1.0 : -a13 )); // Safe
 
-    double tmp = cos(phi2) ;
+    double tmp = ::cos(phi2) ;
     double cosphi2 = tmp+Sign(tmp)*1.0e-50 ;
   
     // This implementation limits ph1 and phi3 to +/-pi so we use it.
@@ -640,7 +640,7 @@ const double3Vec ATophi123(const double33Mat& A)
     double phi2 = (fabs(a31)<DBL_MIN)? 0.0 : asin((a31<-1.0) ? -1.0 : ((a31>1.0) ? 1.0 : a31 )); // Safe
     //double phi2 =  asin(a31) ;
     
-    double tmp = cos(phi2) ;
+    double tmp = ::cos(phi2) ;
     double cosphi2 = tmp+Sign(tmp)*1.0e-50 ;
   
     // This implementation limits ph1 and phi3 to +/-pi so we use it.
@@ -675,11 +675,11 @@ void phi321ToEuler(const double3Vec& phi,
 		   double& q3,
 		   double& q4)
 {
-    double c1 = cos(phi.XX/2.0);
+    double c1 = ::cos(phi.XX/2.0);
     double s1 = ::sin(phi.XX/2.0);
-    double c2 = cos(phi.YY/2.0);
+    double c2 = ::cos(phi.YY/2.0);
     double s2 = ::sin(phi.YY/2.0);
-    double c3 = cos(phi.ZZ/2.0);
+    double c3 = ::cos(phi.ZZ/2.0);
     double s3 = ::sin(phi.ZZ/2.0);
     
     q1 =  s1*c2*c3 - c1*s2*s3 ;
@@ -698,11 +698,11 @@ void phi321ToEulerDer(const double3Vec& phi,
                       double3Vec& dq3_dphi,
                       double3Vec& dq4_dphi)
 {
-    const double c1 = cos(phi.XX/2.0);
+    const double c1 = ::cos(phi.XX/2.0);
     const double s1 = ::sin(phi.XX/2.0);
-    const double c2 = cos(phi.YY/2.0);
+    const double c2 = ::cos(phi.YY/2.0);
     const double s2 = ::sin(phi.YY/2.0);
-    const double c3 = cos(phi.ZZ/2.0);
+    const double c3 = ::cos(phi.ZZ/2.0);
     const double s3 = ::sin(phi.ZZ/2.0);
 
     // q1 = s1*c2*c3 - c1*s2*s3;
@@ -730,11 +730,11 @@ void phi123ToEuler(const double3Vec& phi,
 		   double& q4)
 {
     
-    double c1 = cos(phi.XX/2.0);
+    double c1 = ::cos(phi.XX/2.0);
     double s1 = ::sin(phi.XX/2.0);
-    double c2 = cos(phi.YY/2.0);
+    double c2 = ::cos(phi.YY/2.0);
     double s2 = ::sin(phi.YY/2.0);
-    double c3 = cos(phi.ZZ/2.0);
+    double c3 = ::cos(phi.ZZ/2.0);
     double s3 = ::sin(phi.ZZ/2.0);
     
     q1 =  s1*c2*c3 + c1*s2*s3 ;
@@ -754,11 +754,11 @@ void phi123ToEulerDer(const double3Vec& phi,
                       double3Vec& dq4_dphi)
 {
 
-    const double c1 = cos(phi.XX/2.0);
+    const double c1 = ::cos(phi.XX/2.0);
     const double s1 = ::sin(phi.XX/2.0);
-    const double c2 = cos(phi.YY/2.0);
+    const double c2 = ::cos(phi.YY/2.0);
     const double s2 = ::sin(phi.YY/2.0);
-    const double c3 = cos(phi.ZZ/2.0);
+    const double c3 = ::cos(phi.ZZ/2.0);
     const double s3 = ::sin(phi.ZZ/2.0);
 
     // q1 = s1*c2*c3 + c1*s2*s3;

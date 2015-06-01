@@ -33,8 +33,8 @@ inline const double33Mat Asym(const double axx,
 
 inline const double33Mat Acyl(const double& RC_2)
 { 
-    double tmpc = cos(RC_2);
-    double tmps = sin(RC_2);
+    double tmpc = ::cos(RC_2);
+    double tmps = ::sin(RC_2);
 
     // Transformation matrix from system cBase to system this system.
     // We use cylindrical rotation.
@@ -46,8 +46,8 @@ inline const double33Mat Acyl(const double& RC_2)
 
 inline const double33Mat Acyl(const double3Vec& RC)
 { 
-    double tmpc = cos(RC.YY);
-    double tmps = sin(RC.YY);
+    double tmpc = ::cos(RC.YY);
+    double tmps = ::sin(RC.YY);
 
     // Transformation matrix from system cBase to system this system.
     // We use cylindrical rotation.
@@ -60,15 +60,15 @@ inline const double33Mat Acyl(const double3Vec& RC)
 
 inline const double3Vec RC2R(const double3Vec& RC)
 {
-    return double3Vec( cos(RC.YY)*RC.XX, sin(RC.YY)*RC.XX, RC.ZZ);
+    return double3Vec( ::cos(RC.YY)*RC.XX, ::sin(RC.YY)*RC.XX, RC.ZZ);
 }
 
 
 inline const double3Vec vRC2vR(const double3Vec& RC,
                 const double3Vec& vRC)
 {
-    double tmpc = cos(RC.YY);
-    double tmps = sin(RC.YY);
+    double tmpc = ::cos(RC.YY);
+    double tmps = ::sin(RC.YY);
 
     return double3Vec(tmpc*vRC.XX - tmps*RC.XX*vRC.YY,
                       tmps*vRC.XX + tmpc*RC.XX*vRC.YY,
