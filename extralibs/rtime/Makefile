@@ -87,5 +87,5 @@ tar: distclean
 	dir=`basename $$PWD`; \
 	tar cvFFf - -C .. $$dir | gzip > ../$$dir.tar.gz
 
-include $(ABI)/makedepend.tail
+-include $(ABI)/makedepend.tail
 

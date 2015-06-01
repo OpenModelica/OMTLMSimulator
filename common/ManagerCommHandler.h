@@ -17,7 +17,7 @@
 #include "TLMMessageQueue.h"
 #include "MetaModel.h"
 
-#include "ThreadSynch.h"
+#include "TLMThreadSynch.h"
 
 
 
@@ -31,6 +31,9 @@ private:
 
     //! Communication object
     TLMManagerComm Comm;
+
+    //! Communication object for monitoring.
+    TLMManagerComm* mComm;
 
     //! Meta-model
     MetaModel& TheModel;        
@@ -68,6 +71,7 @@ public:
     ManagerCommHandler(MetaModel& Model):
         MessageQueue(),
         Comm(Model.GetComponentsNum(), Model.GetSimParams().GetPort()),
+        mComm(0),
         TheModel(Model),
         CommMode(CoSimulationMode),
         monitorInterfaceMap(),
@@ -157,7 +161,7 @@ public:
             con->threadException("Manager monitor thread caught exception");
         }
 
-	return NULL;
+        return NULL;
     };
 
     //! Initialize and run the monitoring thread.

@@ -1,0 +1,125 @@
+# FORMAT-12.0
+# BEAST_VERSION: [12.0 - May 28 2015 07:09:40] Linked [Thu May 28 08:07:25 2015] in [/home/Beast/alex_devRep/src/Beast] Revision date=[Fri May 08 17:20:51 2015 +0200]  Tag=32364:a14356b67c9f
+
+environment type=Environment
+  def time=0 unit="s";
+  def StartWriteTime=0 unit="s";
+  def timeEnd=10 unit="s";
+  def SimulateWhat=1;
+  def StartStateWhat=1;
+  def WriteThisOften=10;
+  def WriteTimeStep=0.001 unit="s";
+  def AnimFreq_WriteThisOften=0;
+  def AnimFreq_WriteTimeStep=1;
+  def ModelID="UnnamedModelID";
+  def MaxTimeStep=5e-5 unit="s";
+  def Solver="CVODE";
+  def JacWhat=0;
+  def SolverPrecisionPreset=2;
+  def NondimRelErrTol=1e-7;
+  def NondimAbsErrTol=1e-7;
+  def NondimNewtonErrTol=0;
+  def MaxOrderBDF=3;
+  def L0=0.005 unit="m";
+  def QuasiStaticFlg=0;
+  def postProcessingDirective.file(@)="Empty";
+  def OperationTime=1.e+8 unit="s";
+  def CO2EnergyEmission=2.3e-9 unit="kg/J";
+  def ThermalMode=0;
+  def Gravity[cG]={0 , 0 , 0 }  unit="m/s^2";
+  def EHLMode=0;
+  def EHLPressureMomentMode=0;
+  def EHLInletShearHeatingFlg=0;
+  implicit_coordinate_system type=ImplicitCoordSystem name=cG;
+  implicit_coordinate_system type=ImplicitCoordSystem name=cB
+    def R_Func[cG][cG].DefinedFlg=0;
+    def phi_Func[cG].DefinedFlg=0;
+    def phiSequence[cG]=1;
+  end implicit_coordinate_system; /* cB:ImplicitCoordSystem */ 
+  model type=SModel name=""
+    def Description="";
+    def DrawingName="";
+    lubrication type=LubricationNode name=lubricant
+      def FluidSimulationMode=0;
+      def Lubricant="Shell_Turbo_T68";
+      def WearMode=1;
+      def AbrasiveParticleHardness=1.e+10 unit="Pa";
+      def AverageAbrasiveParticleSize=5e-6 unit="m";
+      def RelativeParticleSizeDistributionFactor=0.5;
+      def AbrasiveParticleShapeFactor=0.64;
+      def ContaminationFactor=0.6;
+    end lubrication; /* lubricant:LubricationNode */ 
+    coordinate_system type=FixedCtlPoint name=cc autocreate=true
+      def Description="";
+      def TLMEnabledFlg=0;
+      def R[ccB]={0 , 0 , 0 }  unit="m";
+      def phiSequence[ccB]=1;
+      def phi[ccB]={0 , 0 , 0 }  unit="rad";
+    end coordinate_system; /* cc:FixedCtlPoint */ 
+    xmodel type=XModel name=xmShaft1 geometrySegments=1
+      def Description="";
+      def SimulationTool="";
+      def StartCommand="StartTLMBeast";
+      def ModelFile="Shaft1TLM.in";
+      def ModelRelatedFiles="Empty";
+      def ExactStepFlg=0;
+      def ExplodePos=0;
+      def cGx`scale=1;
+      def cGx`R_nom[cG][cG]={0 , 0 , 0 }  unit="m";
+      def cGx`phi_nom[cG]={0 , 0 , 0 }  unit="rad";
+      def cGx`phiSequence_nom[cG]=1;
+      implicit_coordinate_system type=ImplicitCoordSystem name=cGx;
+      coordinate_system type=XCtlPoint name=cxbS_csRight
+        def Description="";
+        def TLMPortName="bS`csRight";
+        def R_nom[cGx][cGx]={0 , 0 , 0.02 }  unit="m";
+        def phi_nom[cGx]={0 , 0 , 0 }  unit="rad";
+        def phiSequence_nom[cGx]=0;
+      end coordinate_system; /* xmShaft1`cxbS_csRight:XCtlPoint */ 
+      xgeometry type=XGeometry name=xs1
+        def GeometryFile="Shaft.stl";
+      end xgeometry; /* xmShaft1`xs1:XGeometry */ 
+    end xmodel; /* xmShaft1:XModel */ 
+    xmodel type=XModel name=xmShaft2 geometrySegments=1
+      def Description="";
+      def SimulationTool="";
+      def StartCommand="StartTLMBeast";
+      def ModelFile="Shaft2TLM.in";
+      def ModelRelatedFiles="Empty";
+      def ExactStepFlg=0;
+      def ExplodePos=0;
+      def cGx`scale=1;
+      def cGx`R_nom[cG][cG]={-9.8607613152626476e-32 , 3.6082323586244641e-50 , 0.04 }  unit="m";
+      def cGx`phi_nom[cG]={-8.9765974174581579e-49 , -1.3635247419861438e-30 , -9.7590219527869824e-47 }  unit="rad";
+      def cGx`phiSequence_nom[cG]=0;
+      implicit_coordinate_system type=ImplicitCoordSystem name=cGx;
+      coordinate_system type=XCtlPoint name=cxbS_csLeft
+        def Description="";
+        def TLMPortName="bS`csLeft";
+        def R_nom[cGx][cGx]={0 , 0 , -0.02 }  unit="m";
+        def phi_nom[cGx]={0 , 0 , 0 }  unit="rad";
+        def phiSequence_nom[cGx]=0;
+      end coordinate_system; /* xmShaft2`cxbS_csLeft:XCtlPoint */ 
+      coordinate_system type=XCtlPoint name=cxbS_csRight
+        def Description="";
+        def TLMPortName="bS`csRight";
+        def R_nom[cGx][cGx]={0 , 0 , 0.02 }  unit="m";
+        def phi_nom[cGx]={0 , 0 , 0 }  unit="rad";
+        def phiSequence_nom[cGx]=0;
+      end coordinate_system; /* xmShaft2`cxbS_csRight:XCtlPoint */ 
+      xgeometry type=XGeometry name=xs1
+        def GeometryFile="Shaft.stl";
+      end xgeometry; /* xmShaft2`xs1:XGeometry */ 
+    end xmodel; /* xmShaft2:XModel */ 
+    connection type=XModelXModelConnection name=xmShaft2:xmShaft1 from=xmShaft2 to=xmShaft1
+      def Description="";
+      tie type=TLMTie name=cxbS_csLeft:cxbS_csRight_TLM from=cxbS_csLeft to=cxbS_csRight shortname=""
+        def Description="";
+        def delay=1e-4;
+        def Zf=1.e+4;
+        def Zfr=1.e+2;
+        def alpha=0.2;
+      end tie; /* xmShaft2:xmShaft1`cxbS_csLeft:cxbS_csRight_TLM:TLMTie */ 
+    end connection; /* xmShaft2:xmShaft1:XModelXModelConnection */ 
+  end model; /* "":SModel */ 
+end environment; /* "":Environment */ 

@@ -11,7 +11,7 @@ else
 endif
 
 include $(MAKEFILEHEADHOME)/Makefile.head
-
+MISCHOME = ../extralibs/misc
 
 SRCCLT= PluginImplementer.cc \
 	MonitoringPluginImplementer.cc \
@@ -53,16 +53,14 @@ OBJS = $(SRC:%.cc=$(ABI)/%.o)
 
 INCLUDES= -I. \
 	-I$(MISCHOME)/include \
-	-I$(THREADRUNHOME)/include \
-	-I$(TIMEHOME) 
+	-I$(TIMEHOME) \
+	$(INCLPTHREAD)
 
 LIBS = 	-L$(MISCHOME)/lib/$(ABI) \
-	-L$(THREADRUNHOME)/lib/$(ABI) \
 	-L$(TIMEHOME)/lib/$(ABI) \
-        -lmisc -lrtime
+	-ltlmmisc -lrtime
 
 INCXTR=
-
 LIBXTR=
 
 default: help all
@@ -124,7 +122,7 @@ $(ABI)/tlmmonitor$(FEXT): $(OBJS)
 	$(CP) $(ABI)/tlmmonitor$(FEXT) $(BINDIR)/tlmmonitor$(FEXT)
 
 $(ABI)/testapp$(FEXT): $(ABI)/TLMTestApp.o
-	$(LINK) $(ABI)/TLMTestApp.o -o $(ABI)/testapp$(FEXT) -L$(ABI) -lTLM $(LIBS) $(XTRLIBS)
+	$(LINK) $(ABI)/TLMTestApp.o -o $(ABI)/testapp$(FEXT) -L$(ABI) -lTLM $(LIBS) $(XTRLIBS) $(LIBPTHREAD)
 
 $(ABI)/%.o: %.cc
 	$(CC) $(DEFINES) $(CCFLAGS) $(OPTFLAGS4) $(INCLUDES) $(INCLXML) -c $< -o $@

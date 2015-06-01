@@ -13,8 +13,8 @@
 #include "MetaModelReader.h"
 #include "ManagerCommHandler.h"
 #include "MonitoringPluginImplementer.h"
-#include "double3.h"
-#include "double33.h"
+#include "double3Vec.h"
+#include "double33Mat.h"
 #include "timing.h"
 
 #ifdef MSC_VER
@@ -24,6 +24,7 @@
 #endif
 
 using std::string;
+using namespace tlmMisc;
 
 void usage(){
     string usageStr = "Usage: tlmmonitor [-d] [-n num-seps | -t time-step-size] <server:port> <metamodel>, where metamodel is an XML file.";
@@ -148,19 +149,19 @@ void printData(MetaModel& model, std::ofstream& dataFile, std::map<int, TLMTimeD
             // Convert orientation matrix to angles
 
             // first convert the matrices into double33 format
-            double33 A(timeData.RotMatrix[0], timeData.RotMatrix[1], timeData.RotMatrix[2],
+            double33Mat A(timeData.RotMatrix[0], timeData.RotMatrix[1], timeData.RotMatrix[2],
                     timeData.RotMatrix[3], timeData.RotMatrix[4], timeData.RotMatrix[5],
                     timeData.RotMatrix[6], timeData.RotMatrix[7], timeData.RotMatrix[8]);
 
             // Then convert to angles
-            double3 phi = ATophi321(A);
+            double3Vec phi = ATophi321(A);
 
             // Backward calculation of force from TLM wave.
             // This is done because the actual force send is the delayed force.
             // The wave is: C = - Force + Impedance * Velocity -> F = -(C - Imp*Vel)
-            double3 force(0.0);
-            double3 torque(0.0);
-            TLMConnection& connection = model.GetTLMConnection(interfaceProxy.GetConnectionID());
+            double3Vec force(0.0);
+            double3Vec torque(0.0);
+//            TLMConnection& connection = model.GetTLMConnection(interfaceProxy.GetConnectionID());
             for(int i = 0; i < 3; i++) {
 #if 0
                 force(i+1) =  -timeData.GenForce[i] + connection.GetParams().Zf * timeData.Velocity[i];
