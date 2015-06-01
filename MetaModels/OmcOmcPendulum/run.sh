@@ -26,6 +26,6 @@ else
 fi
 
 # Start tlmmanager and monitor.
-tlmmanager -p 8678 -m 8689 pendulum.xml&
+tlmmanager -d -p 8667 -m 8668 pendulum.xml&
 sleep 1;
-tlmmonitor -n 1000 localhost:8689 pendulum.xml
+tlmmonitor -d -n 1000 localhost:8668 pendulum.xml

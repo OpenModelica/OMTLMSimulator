@@ -35,8 +35,7 @@ cc += -DYY_NEVER_INTERACTIVE -fPIC
 BNAME=libtlmmodelica.a
 INSTDIR=$(BINDIR)/Modelica
 RESOURCESDIR=$(INSTDIR)/Resources
-MHOME=../extralibs/misc
-#MHOME=$(MISCHOME)
+MISCHOME=../extralibs/misc
 
 INCLUDES=  -I. \
 	-I../common \
@@ -54,7 +53,7 @@ $(ABI)/%.o: ../common/%.cc
 $(ABI)/%.o: $(MISCHOME)/src/%.cc
 	$(CC) $(INCLUDES) -c $< -o $@ 
 
-$(ABI)/%.o: $(MHOME)/src/%.cc
+$(ABI)/%.o: $(MISCHOME)/src/%.cc
 	$(CC) $(INCLUDES) -c $< -o $@
 
 OBJS=  tlmforce.o 
@@ -64,25 +63,15 @@ EXT_OBJS = PluginImplementer.o \
 	TLMCommUtil.o \
 	TLMInterface.o \
 	TLMErrorLog.o \
-	TLMPlugin.o \
-	double3.o \
-	double33.o \
-	double33s.o \
-	coordTransform.o \
-	ErrorLog.o \
-	tostr.o \
-	Bstring.o \
-	dsyevq3.o \
-	dsyevv3.o \
-	dsytrd3.o \
-	dsyevc3.o
+	TLMPlugin.o
 
+EXT_LIBS = $(MISCHOME)/lib/$(ABI)/libtlmmisc.a
 
 ABIOBJS=$(OBJS:%.o= $(ABI)/%.o) $(EXT_OBJS:%.o= $(ABI)/%.o)
 
 
 default: dirs $(ABIOBJS)
-	$(AR) ruv $(ABI)/$(BNAME) $(ABIOBJS)
+	$(AR) ruv $(ABI)/$(BNAME) $(ABIOBJS) $(EXT_LIBS)
 
 install: default
 	cp $(ABI)/$(BNAME) $(RESOURCESDIR)/Library
