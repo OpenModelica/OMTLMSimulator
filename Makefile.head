@@ -44,9 +44,19 @@ INCLXML-LINUX64=-I/usr/include/libxml2
 LIBXML-LINUX64=-lxml2
 XTRLIBS-LINUX64=-lrt
 
-INCLXML-MINGW64=-I/usr/include/libxml2 
-LIBXML-MINGW64=-lxml2
-XTRLIBS-MINGW6464=-lrt -lws2_32 -lwsock32
+#INCLXML-MINGW64=-I/usr/include/libxml2 
+#LIBXML-MINGW64=-lxml2
+INCLXML-MINGW64=-I$(UP)/extralibs/libxml2/include 
+LIBXML-MINGW64=-L$(UP)/extralibs/libxml2/WINDOWS64/lib -lxml2
+LIBPTHREAD-MINGW64=-L$(UP)/extralibs/pthread/WINDOWS64/lib -lpthread
+XTRLIBS-MINGW64=-lws2_32
+
+#INCLXML-MINGW32=-I/usr/include/libxml2 
+#LIBXML-MINGW32=-lxml2
+INCLXML-MINGW32=-I$(UP)/extralibs/libxml2/include 
+LIBXML-MINGW32=-L$(UP)/extralibs/libxml2/WINDOWS32/lib -lxml2
+LIBPTHREAD-MINGW32=-L$(UP)/extralibs/pthread/WINDOWS32/lib -lpthread
+XTRLIBS-MINGW32=-lws2_32
 
 INCLXML=$(INCLXML-$(ABI))
 LIBXML=$(LIBXML-$(ABI))
