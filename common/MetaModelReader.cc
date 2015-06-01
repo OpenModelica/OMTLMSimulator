@@ -6,10 +6,11 @@
 
 #include "MetaModelReader.h"
 #include "TLMErrorLog.h"
-#include "double3.h"
-#include "double33.h"
+#include "double3Vec.h"
+#include "double33Mat.h"
 #include <string>
 using std::string;
+using namespace tlmMisc;
 
 // ReadComponents method reads in Components (SubModels) definition from
 // the XML file starting from the given xml node that should be "SubModels".
@@ -96,7 +97,7 @@ void MetaModelReader::ReadTLMInterfaceNodes(xmlNode* node, int ComponentID) {
 
 
 // ReadDoubleAttribute method reads a double value attribute, if applicable.
-double MetaModelReader::ReadDoubleAttribute(xmlNode* node, char* attribute ) {
+double MetaModelReader::ReadDoubleAttribute(xmlNode* node, const char* attribute ) {
     xmlNode* curAttrVal = FindAttributeByName(node, attribute, false);
 
     if(curAttrVal){
@@ -108,13 +109,13 @@ double MetaModelReader::ReadDoubleAttribute(xmlNode* node, char* attribute ) {
 
 // ReadVectorAttribute method reads a nodes 3D vector attribute if applicable.
 // For instance, reads a position vector "x,y,z", that is, Position="0.0,1.0,-0.3"
-void MetaModelReader::ReadVectorAttribute(xmlNode* node, char *attribute, double val[3]) {
+void MetaModelReader::ReadVectorAttribute(xmlNode* node, const char *attribute, double val[3]) {
     xmlNode* curAttrVal = FindAttributeByName(node, attribute, false);
 
     if( curAttrVal ){
         const std::string strContent = (const char*)curAttrVal->content;
-        int c1 = strContent.find(',');
-        int c2 = strContent.rfind(',');
+        size_t c1 = strContent.find(',');
+        size_t c2 = strContent.rfind(',');
         if( c1 != std::string::npos && c1 != std::string::npos && c1 != c2 && c1 > 0){
             std::string strXPos = strContent.substr(0, c1);
             std::string strYPos = strContent.substr(c1+1, c2-c1-1);
@@ -140,7 +141,7 @@ void MetaModelReader::ReadPositionAndOrientation(xmlNode* node, double R[3], dou
     ReadVectorAttribute(node, "Position", R);
     ReadVectorAttribute(node, "Angle321", phi);
 
-    double33 A33 = A321(double3(phi[0],phi[1],phi[2]));
+    double33Mat A33 = A321(double3Vec(phi[0],phi[1],phi[2]));
 
     for( int i=0; i<9 ; i++){
         A[i] = A33(i/3+1, i%3+1);
@@ -227,71 +228,74 @@ xmlNode* MetaModelReader::FindAttributeByName(xmlNode* node, const char* name, b
 void MetaModelReader::ReadTLMConnectionNode(xmlNode* node) {
 
     TLMErrorLog::Log(string("Reading definition for Connections "));
+    if( node != 0 ){
+        for(xmlNode* curNode = node->children; curNode; curNode = curNode->next) {
+            if(    (XML_ELEMENT_NODE == curNode->type)
+                   && (strcmp("Connection", (const char*)curNode->name)  == 0)  ) {
 
-    for(xmlNode* curNode = node->children; curNode; curNode = curNode->next) {
-        if(    (XML_ELEMENT_NODE == curNode->type)
-               && (strcmp("Connection", (const char*)curNode->name)  == 0)  ) {
+                TLMErrorLog::Log(string("Processing Connection: "));
 
-            TLMErrorLog::Log(string("Processing Connection: "));
+                // Read connection attributes:
+                xmlNode* curAttr = FindAttributeByName(curNode, "From");
+                string AttrData((const char*)curAttr->content);
+                TLMErrorLog::Log(string("From:") + AttrData);
 
-            // Read connection attributes:
-            xmlNode* curAttr = FindAttributeByName(curNode, "From");
-            string AttrData((const char*)curAttr->content);
-            TLMErrorLog::Log(string("From:") + AttrData);
+                int fromID, toID;
+                TLMConnectionParams conParam;
 
-            int fromID, toID;
-            TLMConnectionParams conParam;
+                fromID = TheModel.GetTLMInterfaceID( AttrData );
+                if(fromID < 0) {
+                    TLMErrorLog::FatalError(string("Could not find definition for interface ")
+                                            + AttrData);
+                }
 
-            fromID = TheModel.GetTLMInterfaceID( AttrData );
-            if(fromID < 0) {
-                TLMErrorLog::FatalError(string("Could not find definition for interface ")
-                                        + AttrData);
+                curAttr = FindAttributeByName(curNode, "To");
+
+                AttrData = (const char*)curAttr->content;
+                TLMErrorLog::Log(string("To:") + AttrData);
+                toID = TheModel.GetTLMInterfaceID( AttrData );
+                if(toID < 0) {
+                    TLMErrorLog::FatalError(string("Could not find definition for interface ")
+                                            + AttrData);
+                }
+
+                curAttr = FindAttributeByName(curNode, "Delay");
+                conParam.Delay = atof((const char*)curAttr->content);
+
+                curAttr = FindAttributeByName(curNode, "Zf");
+                conParam.Zf = atof((const char*)curAttr->content);
+
+                curAttr = FindAttributeByName(curNode, "Zfr",false);
+                if(curAttr) {
+                    conParam.Zfr = atof((const char*)curAttr->content);
+                }
+                else {
+                    TLMErrorLog::Warning(string("No impedance for rotation (Zfr) is defined, Zf will be used"));
+                    conParam.Zfr = conParam.Zf;
+                }
+
+
+                curAttr = FindAttributeByName(curNode, "alpha",false);
+                if(curAttr) {
+                    conParam.alpha =  atof((const char*)curAttr->content);
+                }
+                else {
+                    TLMErrorLog::Warning(string("No damping coefficient (alpha) is defined, assume no damping"));
+                    conParam.alpha = 0.0;
+                }
+
+                TLMInterfaceProxy& fromIfc = TheModel.GetTLMInterfaceProxy(fromID);
+                TLMInterfaceProxy& toIfc = TheModel.GetTLMInterfaceProxy(toID);
+                int conID = TheModel.RegisterTLMConnection(fromID, toID, conParam);
+                TLMConnection& con = TheModel.GetTLMConnection(conID);
+
+                fromIfc.SetConnection(con);
+                toIfc.SetConnection(con);
             }
-
-            curAttr = FindAttributeByName(curNode, "To");
-
-            AttrData = (const char*)curAttr->content;
-            TLMErrorLog::Log(string("To:") + AttrData);
-            toID = TheModel.GetTLMInterfaceID( AttrData );
-            if(toID < 0) {
-                TLMErrorLog::FatalError(string("Could not find definition for interface ")
-                                        + AttrData);
-            }
-
-            curAttr = FindAttributeByName(curNode, "Delay");
-            conParam.Delay = atof((const char*)curAttr->content);
-
-            curAttr = FindAttributeByName(curNode, "Zf");
-            conParam.Zf = atof((const char*)curAttr->content);
-
-            curAttr = FindAttributeByName(curNode, "Zfr",false);
-            if(curAttr) {
-                conParam.Zfr = atof((const char*)curAttr->content);
-            }
-            else {
-                TLMErrorLog::Warning(string("No impedance for rotation (Zfr) is defined, Zf will be used"));
-                conParam.Zfr = conParam.Zf;
-            }
-
-
-            curAttr = FindAttributeByName(curNode, "alpha",false);
-            if(curAttr) {
-                conParam.alpha =  atof((const char*)curAttr->content);
-            }
-            else {
-                TLMErrorLog::Warning(string("No damping coefficient (alpha) is defined, assume no damping"));
-                conParam.alpha = 0.0;
-            }
-
-            TLMInterfaceProxy& fromIfc = TheModel.GetTLMInterfaceProxy(fromID);
-            TLMInterfaceProxy& toIfc = TheModel.GetTLMInterfaceProxy(toID);
-            int conID = TheModel.RegisterTLMConnection(fromID, toID, conParam);
-            TLMConnection& con = TheModel.GetTLMConnection(conID);
-
-            fromIfc.SetConnection(con);
-            toIfc.SetConnection(con);
         }
-
+    }
+    else {
+        TLMErrorLog::Log(string("No connections found, continue anyway."));
     }
 
 } // ReadTLMConnectionNode(xmlNode* node)
@@ -316,7 +320,7 @@ void MetaModelReader::ReadModel(string& InputFile) {
 
     ReadComponents(components);
 
-    xmlNode *connections = FindChildByName(model_element, "Connections");
+    xmlNode *connections = FindChildByName(model_element, "Connections", false); // We allow models without connections for interface request mode.
 
     ReadTLMConnectionNode(connections);
 

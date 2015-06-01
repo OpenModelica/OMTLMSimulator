@@ -23,8 +23,7 @@ INCLUDES=  -I. \
 	-I../common \
 	-I$(MISCHOME)/include
 
-#MHOME=`$(MISCHOME)`
-MHOME=../extralibs/misc
+MISCHOME=../extralibs/misc
 MEX_DEBUGFLG=
 CC += -fPIC
 
@@ -37,12 +36,6 @@ $(ABI)/%.o: %.cc
 $(ABI)/%.o: ../common/%.cc
 	$(CC) $(DEFINES) $(CCFLAGS) $(OPTFLAGS4) $(INCLUDES) -c $< -o $@ 
 
-$(ABI)/%.o: $(MHOME)/src/%.cc
-	$(CC) $(DEFINES) $(CCFLAGS) $(OPTFLAGS4) $(INCLUDES) -c $< -o $@ 
-
-$(ABI)/%.o: $(MISCHOME)/src/%.cc
-	$(CC) $(DEFINES) $(CCFLAGS) $(OPTFLAGS4) $(INCLUDES) -c $< -o $@
-
 OBJS=   
 
 EXT_OBJS = PluginImplementer.o \
@@ -50,24 +43,15 @@ EXT_OBJS = PluginImplementer.o \
 	TLMCommUtil.o \
 	TLMInterface.o \
 	TLMErrorLog.o \
-	TLMPlugin.o \
-	double3.o \
-	double33.o \
-	double33s.o \
-	coordTransform.o \
-	ErrorLog.o \
-	tostr.o \
-	Bstring.o \
-	dsyevq3.o \
-	dsyevv3.o \
-	dsytrd3.o \
-	dsyevc3.o
+	TLMPlugin.o
 
-ABIOBJS=$(OBJS:%.o= $(ABI)/%.o) $(EXT_OBJS:%.o= $(ABI)/%.o)
+EXT_LIBS = $(MISCHOME)/lib/$(ABI)/libtlmmisc.a
+
+ABIOBJS=$(OBJS:%.o= $(ABI)/%.o) $(EXT_OBJS:%.o= $(ABI)/%.o) $(EXT_LIBS)
 
 
 default:  dirs $(ABIOBJS)
-	$(MEX) $(MEX_DEBUGFLG) $(INCLUDES) tlmforce.cc $(ABIOBJS) 
+	$(MEX) $(MEX_DEBUGFLG) $(INCLUDES) tlmforce.cc $(ABIOBJS)
 
 install: default
 	cp tlmforce.mex* $(INSTDIR)

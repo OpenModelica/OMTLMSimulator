@@ -15,16 +15,6 @@
 #include <fstream>
 #include <iostream>
 
-// to use Error/Log file as well for reporting 
-#define USE_ERRLOG
-#ifdef  USE_ERRLOG
-#include "ErrorLog.h"
-#include "tostr.h"
-
-#endif
-
-
-
 //! Error handling is implemented in the most simple way
 //! with the functions that write messages to standard error output (cerr).
 //! In addition FatalError calls abort() to terminate the application.

@@ -9,8 +9,14 @@
 # 6 model-file 
 
 # The following lines need to be adjusted for each system!
-OpenModelicaPath=/home/alex/bin/OpenModelica
+OpenModelicaPath=$OPENMODELICAHOME
 OMC_Cmd="${OpenModelicaPath}/bin/omc"
+
+if [ -z "$OpenModelicaPath" ] ; then
+    echo "$0 : No OpenModelicaPath or OPENMODELICAHOME set, give up."
+    exit 1
+fi
+
 
 LD_LIBRARY_PATH=${OpenModelicaPath}/lib
 
