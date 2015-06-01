@@ -18,6 +18,7 @@
 #include <sys/types.h>
 #include <sys/wait.h>
 #else
+#include <process.h>
 #include <winsock2.h>
 #endif
 
