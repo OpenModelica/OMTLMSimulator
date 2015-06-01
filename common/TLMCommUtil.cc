@@ -58,7 +58,7 @@ void TLMCommUtil::SendMessage( TLMMessage& mess){
 
 #ifdef  WIN32
     int errcode = WSAGetLastError();
-    if(errcode) TLMErrorLog::Warning("send() SOCKET_ERROR received, error code ="+Int2Str(errcode));
+    if(errcode) TLMErrorLog::Warning("send() SOCKET_ERROR received, error code ="+tlmMisc::Int2Str(errcode));
 #endif
 
     if (doDetailedLogging) {
@@ -75,7 +75,7 @@ void TLMCommUtil::SendMessage( TLMMessage& mess){
 
 #ifdef  WIN32
         int errcode = WSAGetLastError();
-        if(errcode) TLMErrorLog::Warning("send() SOCKET_ERROR received, error code ="+Int2Str(errcode));
+        if(errcode) TLMErrorLog::Warning("send() SOCKET_ERROR received, error code ="+tlmMisc::Int2Str(errcode));
 #endif
 
         if (doDetailedLogging) {
@@ -115,9 +115,9 @@ bool TLMCommUtil::ReceiveMessage( TLMMessage& mess){
         int errcode=WSAGetLastError();
         if (errcode==WSAECONNRESET)
             // This is called by normal termination of BEAST
-            TLMErrorLog::Log("SOCKET_ERROR received, error code ="+Int2Str(errcode));
+            TLMErrorLog::Log("SOCKET_ERROR received, error code ="+tlmMisc::Int2Str(errcode));
         else
-            TLMErrorLog::Warning("SOCKET_ERROR received, error code ="+Int2Str(errcode));
+            TLMErrorLog::Warning("SOCKET_ERROR received, error code ="+tlmMisc::Int2Str(errcode));
 #endif
         return false;
     }
@@ -164,7 +164,7 @@ bool TLMCommUtil::ReceiveMessage( TLMMessage& mess){
 
 #ifdef  WIN32
             int errcode=WSAGetLastError();
-            TLMErrorLog::Warning("SOCKET_ERROR received(part 2), error code ="+Int2Str(errcode));
+            TLMErrorLog::Warning("SOCKET_ERROR received(part 2), error code ="+tlmMisc::Int2Str(errcode));
 #endif
 
             return false;
