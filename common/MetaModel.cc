@@ -246,20 +246,28 @@ void MetaModel::StartComponents() {
 	    // check that the interface belongs to this component
 	    if((unsigned)Interfaces[j]->GetComponentID() != i) continue;
 	    // check that interface is connected 
-	    int conID = Interfaces[j]->GetConnectionID();
-	    if(conID < 0) continue;
+        int conID = Interfaces[j]->GetConnectionID();
+        if(conID < 0) continue;
 
-	    TLMConnection& conn = GetTLMConnection(conID);
+        TLMConnection& conn = GetTLMConnection(conID);
 	    
-	    if(maxStep > conn.GetParams().Delay) {
-		maxStep = conn.GetParams().Delay;
+        if(maxStep > conn.GetParams().Delay) {
+            maxStep = conn.GetParams().Delay;
 	    }
 	}
-	if(1e150 == maxStep) maxStep = 0;
-	if(!Components[i]->GetSolverMode()) maxStep /= 2;
+    if(1e150 == maxStep) maxStep = 0;
+    if(maxStep <= 0){
+        maxStep = 1e-4;
+        TLMErrorLog::Warning(string("Too smal max time step for ") +
+                             Components[i]->GetName() + ", set default " +
+                             TLMErrorLog::ToStdStr(maxStep) );
+    }
+    if(!Components[i]->GetSolverMode()) maxStep /= 2;
 
-	TLMErrorLog::Log(string("Choosing the max time step for ")+
-			 Components[i]->GetName() + " " + TLMErrorLog::ToStdStr(maxStep) );
+
+    TLMErrorLog::Log(string("Choosing the max time step for ")+
+                     Components[i]->GetName() + " " +
+                     TLMErrorLog::ToStdStr(maxStep) );
 	
 	Components[i]->StartComponent(SimParams, maxStep);
     }

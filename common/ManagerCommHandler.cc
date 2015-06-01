@@ -344,18 +344,18 @@ void ManagerCommHandler::ReaderThreadRun() {
     
     // Send the status result to all components
     for(int iSock =  TheModel.GetComponentsNum() - 1; iSock >= 0 ; --iSock) {
-	int hdl = TheModel.GetTLMComponentProxy(iSock).GetSocketHandle();
-	TLMMessage* message = MessageQueue.GetReadSlot();
-	message->SocketHandle = hdl;
-	message->Header.MessageType = TLMMessageTypeConst::TLM_CHECK_MODEL;
-	message->Header.DataSize = 0;
-	message->Header.TLMInterfaceID = StartupOK;
-	MessageQueue.PutWriteSlot(message);
+        int hdl = TheModel.GetTLMComponentProxy(iSock).GetSocketHandle();
+        TLMMessage* message = MessageQueue.GetReadSlot();
+        message->SocketHandle = hdl;
+        message->Header.MessageType = TLMMessageTypeConst::TLM_CHECK_MODEL;
+        message->Header.DataSize = 0;
+        message->Header.TLMInterfaceID = StartupOK;
+        MessageQueue.PutWriteSlot(message);
     }
 
     if(!StartupOK) {
-	MessageQueue.Terminate();
-	return;
+        MessageQueue.Terminate();
+        return;
     }
 
     TLMErrorLog::Log("------------------  Starting time data exchange   ------------------");
@@ -366,17 +366,17 @@ void ManagerCommHandler::ReaderThreadRun() {
     int nClosedSock = 0;
 
     while(nClosedSock != TheModel.GetComponentsNum()) {
-	Comm.SelectReadSocket(); // wait for a change
+        Comm.SelectReadSocket(); // wait for a change
 
-	for(int iSock =  TheModel.GetComponentsNum() - 1; iSock >= 0 ; --iSock) {
-	    TLMComponentProxy& comp = TheModel.GetTLMComponentProxy(iSock);    
-	    int hdl = comp.GetSocketHandle();
+        for(int iSock =  TheModel.GetComponentsNum() - 1; iSock >= 0 ; --iSock) {
+            TLMComponentProxy& comp = TheModel.GetTLMComponentProxy(iSock);
+            int hdl = comp.GetSocketHandle();
 
-	    if((hdl != -1 ) && Comm.HasData(hdl)) { // there is data to be received on the socket
+            if((hdl != -1 ) && Comm.HasData(hdl)) { // there is data to be received on the socket
 
-		TLMMessage* message = MessageQueue.GetReadSlot();
-		message->SocketHandle = hdl;
-		if(TLMCommUtil::ReceiveMessage(*message)) {
+                TLMMessage* message = MessageQueue.GetReadSlot();
+                message->SocketHandle = hdl;
+                if(TLMCommUtil::ReceiveMessage(*message)) {
                     if( CommMode == CoSimulationMode ){
                         MarshalMessage(*message);
                         
@@ -387,18 +387,18 @@ void ManagerCommHandler::ReaderThreadRun() {
                         MessageQueue.PutWriteSlot(message);
                     }
                     else {
-		        // CommMode == InterfaceRequestMode
-                        UnpackAndStoreTimeData(*message); 
+                        // CommMode == InterfaceRequestMode
+                        UnpackAndStoreTimeData(*message);
                     }
-		}
-		else {
-		    TLMErrorLog::Log(string("Connection to component ") + comp.GetName() + " is closed");
-		    Comm.DropActiveSocket(hdl);
-		    comp.SetSocketHandle(-1);
-		    nClosedSock ++;
-		}
-	    }
-	}
+                }
+                else {
+                    TLMErrorLog::Log(string("Connection to component ") + comp.GetName() + " is closed");
+                    Comm.DropActiveSocket(hdl);
+                    comp.SetSocketHandle(-1);
+                    nClosedSock ++;
+                }
+            }
+        }
     }
 
     TLMErrorLog::Log("All sockets are closed - exiting");
@@ -406,6 +406,7 @@ void ManagerCommHandler::ReaderThreadRun() {
     MessageQueue.Terminate();
 
     Comm.closeAll();
+    if(mComm) mComm->closeAll();
 }
 
 void ManagerCommHandler::WriterThreadRun() {
@@ -532,7 +533,7 @@ void ManagerCommHandler::ForwardToMonitor(TLMMessage& message){
     if( monitorInterfaceMap.count(TLMInterfaceID) > 0 ){
         
         if(message.Header.MessageType != TLMMessageTypeConst::TLM_TIME_DATA) {
-	    TLMErrorLog::FatalError("Unexpected message received in forward to monitor");
+            TLMErrorLog::FatalError("Unexpected message received in forward to monitor");
         };
 
         // Forward to all connected monitoring ports
@@ -588,7 +589,9 @@ void ManagerCommHandler::MonitorThreadRun()
     TLMErrorLog::Log("Initialize monitoring port");
 
     // Create a connection for max. 10 clients.
-    TLMManagerComm monComm(10, TheModel.GetSimParams().GetMonitorPort());
+    //TLMManagerComm monComm(10, TheModel.GetSimParams().GetMonitorPort());
+    mComm = new TLMManagerComm(10, TheModel.GetSimParams().GetMonitorPort());
+    TLMManagerComm& monComm = *mComm;
 
     // Server socket is used to accept connections
     int acceptSocket = monComm.CreateServerSocket();
@@ -640,6 +643,9 @@ void ManagerCommHandler::MonitorThreadRun()
                 }
             }
         }
+
+        // Just check if we are in shutdown mode
+        if( runningMode == ShutdownMode ) break;
 
         if( hdl >= 0 ){
             TLMMessage* message = MessageQueue.GetReadSlot();

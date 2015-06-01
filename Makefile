@@ -21,7 +21,7 @@ lib:
 	cd extralibs; $(MAKE) 
 	cd common; $(MAKE) lib
 
-install:
+install: lib
 	cd common ; $(MAKE) install
 	for i in ${plugins} ; do \
 		( cd $$i ; $(MAKE) install ) \

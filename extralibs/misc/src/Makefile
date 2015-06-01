@@ -19,6 +19,7 @@ include $(MAKEFILEHEADHOME)/Makefile.head
 #################################################################################
 
 INCLUDES = -I../include
+SPECFLAGS = -fPIC
 
 CCSRC= double3Vec.cc double33Mat.cc coordTrans.cc strConv.cc
 
