@@ -1,0 +1,224 @@
+# FORMAT-12.0
+# BEAST_VERSION: [12.0 - May 28 2015 07:09:40] Linked [Thu May 28 08:07:25 2015] in [/home/Beast/alex_devRep/src/Beast] Revision date=[Fri May 08 17:20:51 2015 +0200]  Tag=32364:a14356b67c9f
+
+environment type=Environment
+  def time=0 unit="s";
+  def StartWriteTime=0 unit="s";
+  def timeEnd=5e-5 unit="s";
+  def SimulateWhat=1;
+  def StartStateWhat=1;
+  def WriteThisOften=10;
+  def WriteTimeStep=0.001 unit="s";
+  def AnimFreq_WriteThisOften=0;
+  def AnimFreq_WriteTimeStep=1;
+  def ModelID="UnnamedModelID";
+  def MaxTimeStep=5e-5 unit="s";
+  def Solver="CVODE";
+  def JacWhat=0;
+  def SolverPrecisionPreset=2;
+  def NondimRelErrTol=1e-7;
+  def NondimAbsErrTol=1e-7;
+  def NondimNewtonErrTol=0;
+  def MaxOrderBDF=3;
+  def L0=0.005 unit="m";
+  def QuasiStaticFlg=0;
+  def postProcessingDirective.file(@)="Empty";
+  def OperationTime=1.e+8 unit="s";
+  def CO2EnergyEmission=2.3e-9 unit="kg/J";
+  def ThermalMode=0;
+  def Gravity[cG]={-9.81 , 0 , 0 }  unit="m/s^2";
+  def EHLMode=0;
+  def EHLPressureMomentMode=0;
+  def EHLInletShearHeatingFlg=0;
+  implicit_coordinate_system type=ImplicitCoordSystem name=cG;
+  implicit_coordinate_system type=ImplicitCoordSystem name=cB
+    def R_Func[cG][cG].DefinedFlg=0;
+    def phi_Func[cG].DefinedFlg=0;
+    def phiSequence[cG]=1;
+  end implicit_coordinate_system; /* cB:ImplicitCoordSystem */ 
+  model type=SModel name=""
+    def Description="";
+    def DrawingName="";
+    lubrication type=LubricationNode name=lubricant
+      def FluidSimulationMode=0;
+      def Lubricant="Shell_Turbo_T68";
+      def WearMode=1;
+      def AbrasiveParticleHardness=1.e+10 unit="Pa";
+      def AverageAbrasiveParticleSize=5e-6 unit="m";
+      def RelativeParticleSizeDistributionFactor=0.5;
+      def AbrasiveParticleShapeFactor=0.64;
+      def ContaminationFactor=0.6;
+    end lubrication; /* lubricant:LubricationNode */ 
+    coordinate_system type=FixedCtlPoint name=cc autocreate=true
+      def Description="";
+      def TLMEnabledFlg=0;
+      def R[ccB]={0 , 0 , 0 }  unit="m";
+      def phiSequence[ccB]=1;
+      def phi[ccB]={0 , 0 , 0 }  unit="rad";
+    end coordinate_system; /* cc:FixedCtlPoint */ 
+    body type=Disk name=bS numRotSegs=3 cornerMode=true
+      def Description="Simple shaft";
+      def DrawingName="";
+      def ExplodePos=0;
+      def Material="SKF3";
+      def Edit_sigma_lim=0;
+      def MaterialCost=1 unit="Unit/kg";
+      def CO2MaterialEmission=2.5 unit="kg/kg";
+      def cg`R_nom[cc][cc]={0 , 0 , 0 }  unit="m";
+      def cg`phi_nom[cc]={0 , 0 , 0 }  unit="rad";
+      def cg`phiSequence_nom[cc]=1;
+      def cg`phiSequence[cB]=1;
+      def Dr_phi.DefinedFlg=0;
+      def dDrdz_phi.DefinedFlg=0;
+      def Dz_phi.DefinedFlg=0;
+      def dDzdr_phi.DefinedFlg=0;
+      def ThermalDeformationFlg=0;
+      def T_init=20 unit="C";
+      def T_bulk=20 unit="C";
+      def FlexThermalType=0;
+      def MeshResolutionControl=1;
+      def cm`R[cg][cg]={0 , 0 , 0 }  unit="m";
+      implicit_coordinate_system type=ImplicitCoordSystem name=cg;
+      implicit_coordinate_system type=ImplicitCoordSystem name=cm;
+      coordinate_system type=FixedCtlPoint name=csLeft
+        def Description="";
+        def TLMEnabledFlg=1;
+        def R[cg]={0 , 0 , -0.02 }  unit="m";
+        def phiSequence[cg]=1;
+        def phi[cg]={0 , 0 , 0 }  unit="rad";
+      end coordinate_system; /* bS`csLeft:FixedCtlPoint */ 
+      coordinate_system type=FixedCtlPoint name=csRight
+        def Description="";
+        def TLMEnabledFlg=1;
+        def R[cg]={0 , 0 , 0.02 }  unit="m";
+        def phiSequence[cg]=1;
+        def phi[cg]={0 , 0 , 0 }  unit="rad";
+      end coordinate_system; /* bS`csRight:FixedCtlPoint */ 
+      surface type=RotSeg name=s1
+        def Description="";
+        def Label="";
+        def UseStaticDeformationModeShapes=0;
+        def UseStaticLoadModeShapes=0;
+        def UseStaticTemperatureModeShapes=0;
+        def UseStaticHeatFluxModeShapes=0;
+        def SData`Gap.DefinedFlg=0;
+        def SData`hc.DefinedFlg=0;
+        def SData`MassFlow.DefinedFlg=0;
+        def SData`V_slip.DefinedFlg=0;
+        def SData`V_squeeze_n.DefinedFlg=0;
+        def SData`p.DefinedFlg=0;
+        def SData`tau.DefinedFlg=0;
+        def SData`P_totloss.DefinedFlg=0;
+        def SData`P_slip.DefinedFlg=0;
+        def SData`E_slip.DefinedFlg=0;
+        def SData`T_lub.DefinedFlg=0;
+        def SData`FrettingFatigueRisk_max.DefinedFlg=0;
+        def SData`T.DefinedFlg=0;
+        def SData`HeatFlux.DefinedFlg=0;
+        def SData`h_wear.DefinedFlg=0;
+        def SData`dh_wear.DefinedFlg=0;
+        def SData`h_a.DefinedFlg=0;
+        def SData`sigma.DefinedFlg=0;
+        def SData`sigma_vMises_struct.DefinedFlg=0;
+        def SData`Deflection_abs.DefinedFlg=0;
+        def T_ext=20 unit="C";
+        def SurfaceHeatFlux=0 unit="W/m^2";
+        def HeatTransferCoeff_convection=75 unit="W/(m^2*C)";
+        def SurfaceCost=0 unit="Unit/m^2";
+        def CO2SurfaceEmission=0 unit="kg/m^2";
+        def h_nom=0 unit="m";
+        def Roughness=1e-7 unit="m";
+        def sigma_res=0 unit="Pa";
+        def SegmentResolutionFactor_u=1;
+        def SegmentResolutionFactor_v=1;
+        def cp`x=0 unit="m";
+        def cp`z=0.02 unit="m";
+        def kappa_u=0 unit="1/m";
+      end surface; /* bS`s1:RotSeg */ 
+      surface type=RotSeg name=s2
+        def Description="";
+        def Label="";
+        def UseStaticDeformationModeShapes=0;
+        def UseStaticLoadModeShapes=0;
+        def UseStaticTemperatureModeShapes=0;
+        def UseStaticHeatFluxModeShapes=0;
+        def SData`Gap.DefinedFlg=0;
+        def SData`hc.DefinedFlg=0;
+        def SData`MassFlow.DefinedFlg=0;
+        def SData`V_slip.DefinedFlg=0;
+        def SData`V_squeeze_n.DefinedFlg=0;
+        def SData`p.DefinedFlg=0;
+        def SData`tau.DefinedFlg=0;
+        def SData`P_totloss.DefinedFlg=0;
+        def SData`P_slip.DefinedFlg=0;
+        def SData`E_slip.DefinedFlg=0;
+        def SData`T_lub.DefinedFlg=0;
+        def SData`FrettingFatigueRisk_max.DefinedFlg=0;
+        def SData`T.DefinedFlg=0;
+        def SData`HeatFlux.DefinedFlg=0;
+        def SData`h_wear.DefinedFlg=0;
+        def SData`dh_wear.DefinedFlg=0;
+        def SData`h_a.DefinedFlg=0;
+        def SData`sigma.DefinedFlg=0;
+        def SData`sigma_vMises_struct.DefinedFlg=0;
+        def SData`Deflection_abs.DefinedFlg=0;
+        def T_ext=20 unit="C";
+        def SurfaceHeatFlux=0 unit="W/m^2";
+        def HeatTransferCoeff_convection=75 unit="W/(m^2*C)";
+        def SurfaceCost=0 unit="Unit/m^2";
+        def CO2SurfaceEmission=0 unit="kg/m^2";
+        def h_nom=0 unit="m";
+        def Roughness=1e-7 unit="m";
+        def sigma_res=0 unit="Pa";
+        def SegmentResolutionFactor_u=1;
+        def SegmentResolutionFactor_v=1;
+        def cp`x=0.005000000000000001 unit="m";
+        def cp`z=0.020000000000000004 unit="m";
+        def kappa_u=0 unit="1/m";
+      end surface; /* bS`s2:RotSeg */ 
+      surface type=RotSeg name=s3
+        def Description="";
+        def Label="";
+        def UseStaticDeformationModeShapes=0;
+        def UseStaticLoadModeShapes=0;
+        def UseStaticTemperatureModeShapes=0;
+        def UseStaticHeatFluxModeShapes=0;
+        def SData`Gap.DefinedFlg=0;
+        def SData`hc.DefinedFlg=0;
+        def SData`MassFlow.DefinedFlg=0;
+        def SData`V_slip.DefinedFlg=0;
+        def SData`V_squeeze_n.DefinedFlg=0;
+        def SData`p.DefinedFlg=0;
+        def SData`tau.DefinedFlg=0;
+        def SData`P_totloss.DefinedFlg=0;
+        def SData`P_slip.DefinedFlg=0;
+        def SData`E_slip.DefinedFlg=0;
+        def SData`T_lub.DefinedFlg=0;
+        def SData`FrettingFatigueRisk_max.DefinedFlg=0;
+        def SData`T.DefinedFlg=0;
+        def SData`HeatFlux.DefinedFlg=0;
+        def SData`h_wear.DefinedFlg=0;
+        def SData`dh_wear.DefinedFlg=0;
+        def SData`h_a.DefinedFlg=0;
+        def SData`sigma.DefinedFlg=0;
+        def SData`sigma_vMises_struct.DefinedFlg=0;
+        def SData`Deflection_abs.DefinedFlg=0;
+        def T_ext=20 unit="C";
+        def SurfaceHeatFlux=0 unit="W/m^2";
+        def HeatTransferCoeff_convection=75 unit="W/(m^2*C)";
+        def SurfaceCost=0 unit="Unit/m^2";
+        def CO2SurfaceEmission=0 unit="kg/m^2";
+        def h_nom=0 unit="m";
+        def Roughness=1e-7 unit="m";
+        def sigma_res=0 unit="Pa";
+        def SegmentResolutionFactor_u=1;
+        def SegmentResolutionFactor_v=1;
+        def cp`x=0.005000000000000001 unit="m";
+        def cp2`x=0 unit="m";
+        def cp`z=-0.020000000000000004 unit="m";
+        def cp2`z=-0.020000000000000004 unit="m";
+        def kappa_u=0 unit="1/m";
+      end surface; /* bS`s3:RotSeg */ 
+    end body; /* bS:Disk */ 
+  end model; /* "":SModel */ 
+end environment; /* "":Environment */ 
