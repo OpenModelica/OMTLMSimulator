@@ -1,0 +1,46 @@
+2014-12-04
+
+This is a adjusted version of the general TLMPlugin/Modelica
+implementation that is adapted to work specifically with the
+OpenModelica dassl solver. It makes use of the RHSFinalFlag that is
+defined in dassl.c for improved co-simulation performance and
+accuracy.
+
+It requires thus the dassl solver. If you need to run another solver
+you should run the general Modelica TLM plugin instead. 
+
+
+Supplied in this version are:
+-----------------------------
+OM_TLM.mo - An adjusted version of TLMPlugin/Modelica/TLM.mo that skips the "when" statement and tlm_setmotion(...) 
+
+libtlmopenmodelica.a (or .lib) - the library used by external functions in OM_TLM.mo, based on:
+ - tlmforce.h
+ - tlmforce.c 
+
+StartTLMOpenModelica(.bat) - Sample startup script for OpenModelica co-simulation components (external models)
+
+
+How to install:
+---------------
+A Unix style makefile is supplied, simply type:
+> make install
+
+You also need to compile the tlmmanager. To do this "cd" into TLMPlugin main directory and type:
+> make install 
+
+
+How to run:
+-----------
+You probably need to adjust the path settings in bin/StartTLMOpenModelica(.bat) to reflect your system settings.
+
+Then you should be able to run:
+> tlmmanager 
+
+
+Test example:
+-------------
+The simple pendulum MetaModel pendulum.xml in TLMPlugin/MetaModels/OmcOmcPendulum has been adjusted to 
+work with the OpenModelica TLM plugin. Go to this directory and run the co-simulation this way:
+> tlmmanager pendulum.xml
+
