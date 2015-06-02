@@ -16,7 +16,7 @@
 
         </SubModel>
 
-        <!-- external model "shaft2" positioned at (0,0,0.5) inside meta-model
+        <!-- external model "shaft2" positioned at (0,0,0.5) inside meta-model -->
         <SubModel Name="shaft2" 
                   StartCommand="StartTLMOpenModelica" 
                   ExactStep="0"
@@ -25,7 +25,7 @@
 		  Angle321="0.0,0.0,0.0">
 
         </SubModel>
-        -->
+
     </SubModels>
 
     <!-- Parameters for the simulation -->
