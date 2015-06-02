@@ -35,8 +35,8 @@ $(ABI)/%.o: %.c
 lib: dirs ../lib/$(ABI)/libtlmmisc.a
 
 clean:
-	-rm -f $(ABI)/*
-	-rm -f ../lib/$(ABI)/*.a
+	-rm -rf $(ABI)
+	-rm -rf ../lib
 
 
 dirs : $(ABI) ../lib/$(ABI)

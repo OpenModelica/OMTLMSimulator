@@ -89,5 +89,6 @@ dirs:
 
 clean:
 	rm -rf $(ABI)
+	rm -rf $(INSTDIR) $(BINDIR)/StartTLMOpenModelica*
 
 # DO NOT DELETE

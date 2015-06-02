@@ -96,5 +96,6 @@ dirs_unix:
 
 clean:
 	rm -rf $(ABI)
+	rm -rf $(INSTDIR)
 
 # DO NOT DELETE
