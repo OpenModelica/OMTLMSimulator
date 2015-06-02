@@ -36,6 +36,9 @@ $(ABI)/%.o: %.cc
 $(ABI)/%.o: ../common/%.cc
 	$(CC) $(DEFINES) $(CCFLAGS) $(OPTFLAGS4) $(INCLUDES) -c $< -o $@ 
 
+$(ABI)/%.o: $(MISCHOME)/src/%.cc
+	$(CC) $(DEFINES) $(CCFLAGS) $(OPTFLAGS4) $(INCLUDES) -c $< -o $@
+
 OBJS=   
 
 EXT_OBJS = PluginImplementer.o \
@@ -43,11 +46,13 @@ EXT_OBJS = PluginImplementer.o \
 	TLMCommUtil.o \
 	TLMInterface.o \
 	TLMErrorLog.o \
-	TLMPlugin.o
+	TLMPlugin.o \
+	coordTrans.o \
+	double3Vec.o \
+	double33Mat.o \
+	strConv.o
 
-EXT_LIBS = $(MISCHOME)/lib/$(ABI)/libtlmmisc.a
-
-ABIOBJS=$(OBJS:%.o= $(ABI)/%.o) $(EXT_OBJS:%.o= $(ABI)/%.o) $(EXT_LIBS)
+ABIOBJS=$(OBJS:%.o= $(ABI)/%.o) $(EXT_OBJS:%.o= $(ABI)/%.o)
 
 
 default:  dirs $(ABIOBJS)
