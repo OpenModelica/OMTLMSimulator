@@ -12,11 +12,13 @@ endif
 include $(MAKEFILEHEADHOME)/Makefile.head
 
 all:
+	$(CP-LIBXML)
 	for i in ${buildlibs} ; do \
 		( cd $$i ; $(MAKE) UP=$(UP) MAKEFILEHEADHOME=$(MAKEFILEHEADHOME) lib ) \
 	done
 
 clean:
+	rm -rf $(UP)/bin/libxml2*
 	for i in ${buildlibs} ; do \
 		( cd $$i ; $(MAKE) UP=$(UP) MAKEFILEHEADHOME=$(MAKEFILEHEADHOME) clean ) \
 	done
