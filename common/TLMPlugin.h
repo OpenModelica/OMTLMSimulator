@@ -12,7 +12,7 @@
 
 #include <string>
 
-#ifndef MSC_VER
+#ifndef _MSC_VER
 // This is because there are too many virtual functions that have trivial body
 // and we wanted their parameters be nicely displayed.
 #pragma GCC diagnostic ignored "-Wunused-parameter"
