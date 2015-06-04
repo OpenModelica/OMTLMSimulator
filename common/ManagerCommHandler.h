@@ -32,9 +32,6 @@ private:
     //! Communication object
     TLMManagerComm Comm;
 
-    //! Communication object for monitoring.
-    TLMManagerComm* mComm;
-
     //! Meta-model
     MetaModel& TheModel;        
 
@@ -71,7 +68,6 @@ public:
     ManagerCommHandler(MetaModel& Model):
         MessageQueue(),
         Comm(Model.GetComponentsNum(), Model.GetSimParams().GetPort()),
-        mComm(0),
         TheModel(Model),
         CommMode(CoSimulationMode),
         monitorInterfaceMap(),

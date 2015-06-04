@@ -10,7 +10,6 @@
 #include <cstring>
 
 
-
 //#define USE_ERRORLOG
 // to use Error/Log file as well for reporting, also with time stamps 
 // Due to BZ306 we had to add detailed logging on Windows.
@@ -45,13 +44,14 @@ bool  TLMErrorLog::LoggingOn = false;
 bool  TLMErrorLog::WarningOn = false;
 bool  TLMErrorLog::ExceptionOn = false;
 bool  TLMErrorLog::NormalErrorLogOn = false;
+bool  TLMErrorLog::LogTimeOn = false;
 std::ostream* TLMErrorLog::outStream = NULL;
 
 
 void TLMErrorLog::open(){
     if(TLMErrorLog::outStream==NULL){
         TLMErrorLog::outStream=new std::ofstream("TLMlogfile.log");
-        *outStream << "Starting log" << std::endl;
+        *outStream << timeStr() << " Starting log" << std::endl;
     }
 }
 
@@ -65,7 +65,7 @@ void TLMErrorLog::SetDebugOut(bool Enable) {
 // then terminates the program abnormally.
 void TLMErrorLog::FatalError(const std::string& mess) {
     open();
-    *outStream << "Fatal error: " << mess << std::endl;
+    *outStream << timeStr() << " Fatal error: " << mess << std::endl;
     if( NormalErrorLogOn) {
         _strtime( tmpbuf );
 #ifdef USE_ERRORLOG
@@ -91,7 +91,7 @@ void  TLMErrorLog::Warning(const std::string& mess) {
 
     if( WarningOn ) {
         open();
-        *outStream << "Warning: " << mess << std::endl;
+        *outStream << timeStr() << " Warning: " << mess << std::endl;
 
         if( NormalErrorLogOn) {
             _strtime( tmpbuf );
@@ -108,7 +108,7 @@ void  TLMErrorLog::Log(const std::string& mess) {
 
     if(!LoggingOn ) return; 
     open();
-    *outStream << "Log: " << mess << std::endl;
+    *outStream << timeStr() << " Log: " << mess << std::endl;
     if( NormalErrorLogOn) {
         _strtime( tmpbuf );
 #ifdef USE_ERRORLOG
@@ -127,3 +127,16 @@ std::string  TLMErrorLog::ToStdStr(double val) {
     return std::string(buf);
 }
 
+std::string  TLMErrorLog::timeStr()
+{
+    if( LogTimeOn ){
+        time_t rawtime;
+        struct tm * timeinfo;
+
+        time (&rawtime);
+        timeinfo = localtime (&rawtime);
+        return std::string(asctime(timeinfo));
+    }
+    else
+        return std::string("");
+}

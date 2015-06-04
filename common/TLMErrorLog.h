@@ -65,6 +65,8 @@ public:
     //! Returns the state of the error exception mode. 
     static bool ExceptionEnabled(){ return ExceptionOn; }
 
+    //! Return current time as string.
+    static std::string timeStr();
 private:
 
     //! LoggingOn flags tells if logging is enabled.
@@ -80,6 +82,10 @@ private:
     //! All logs are duplicated to the normal *.log file as well.
     //! It is ON by default.
     static bool NormalErrorLogOn;
+
+    //! All log entries start with a time stamp.
+    //! It is OFF by default.
+    static bool LogTimeOn;
 
     //! The used output stream for all log, warning, and error messages.
     static std::ostream* outStream;

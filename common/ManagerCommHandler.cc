@@ -400,13 +400,11 @@ void ManagerCommHandler::ReaderThreadRun() {
             }
         }
     }
-
     TLMErrorLog::Log("All sockets are closed - exiting");
     runningMode = ShutdownMode;
     MessageQueue.Terminate();
 
     Comm.closeAll();
-    if(mComm) mComm->closeAll();
 }
 
 void ManagerCommHandler::WriterThreadRun() {
@@ -589,9 +587,7 @@ void ManagerCommHandler::MonitorThreadRun()
     TLMErrorLog::Log("Initialize monitoring port");
 
     // Create a connection for max. 10 clients.
-    //TLMManagerComm monComm(10, TheModel.GetSimParams().GetMonitorPort());
-    mComm = new TLMManagerComm(10, TheModel.GetSimParams().GetMonitorPort());
-    TLMManagerComm& monComm = *mComm;
+    TLMManagerComm monComm(10, TheModel.GetSimParams().GetMonitorPort());
 
     // Server socket is used to accept connections
     int acceptSocket = monComm.CreateServerSocket();
@@ -623,7 +619,10 @@ void ManagerCommHandler::MonitorThreadRun()
 
         monComm.SelectReadSocket();
         
-        if(monComm.HasData(acceptSocket)) {            
+        // Just check if we are in shutdown mode
+        if( runningMode == ShutdownMode ) break;
+
+        if(monComm.HasData(acceptSocket)) {
             TLMErrorLog::Log("Got new monitoring connection");
             hdl = monComm.AcceptComponentConnections();
             if( hdl < 0 ){

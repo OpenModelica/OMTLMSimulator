@@ -133,7 +133,7 @@ void TLMManagerComm::SelectReadSocket( ) {
         }
     }
 
-    assert(maxFD > 0); // assert that at list one socket needs to be checked
+    assert(maxFD > 0); // assert that at least one socket needs to be checked
 
     struct timeval tv;
 
