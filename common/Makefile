@@ -131,6 +131,7 @@ $(ABI)/%.o: %.cc
 
 clean:
 	rm -rf $(ABI)
+	rm -rf $(BINDIR)/tlmmanager$(FEXT) $(BINDIR)/tlmmonitor$(FEXT)
 
 # Change 080701: $ABI is used for *.o files and .tail files
 
