@@ -2,19 +2,16 @@
 #include "TLMPlugin.h"
 #include "TLMErrorLog.h"
 #include <string>
-#include <strstream>
 #include <fstream>
 #include <iostream>
 #include <cstdlib>
 #include <cassert>
 #include <string.h>
-#include <cmath>
 #include <map>
 
 using std::map;
 using std::ifstream;
 using std::string;
-using std::strstream;
 using std::endl;
 using std::cerr;
 
