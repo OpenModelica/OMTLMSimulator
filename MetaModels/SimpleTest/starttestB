@@ -1,0 +1,4 @@
+#!/bin/csh -f 
+echo Starting testapp for \$ABI = $ABI, parameters:
+echo 0 0 $*
+../../src/$ABI/testapp 0 0 $* >& $1.log
