@@ -14,7 +14,7 @@
 #include "double3Vec.h"
 #include "double33Mat.h"
 
-#ifdef MSC_VER
+#ifdef _MSC_VER
 #include "mygetopt.h"
 #else
 #include <getopt.h>
