@@ -255,9 +255,9 @@ int main(int argc, char* argv[]) {
 
     // Enable debug?
     std::ofstream logfile;
+    logfile.open("monitor.log");
+    TLMErrorLog::SetOutStream(logfile);
     if(debugFlg) {
-        logfile.open("monitor.log");
-        TLMErrorLog::SetOutStream(logfile);
         TLMErrorLog::SetDebugOut(true);
     }
 
