@@ -39,11 +39,38 @@ void usage(){
 // Print all interfaces position and orientation
 void print_interface_information(MetaModel& theModel)
 {
+  std::ofstream interfacefile ("interfaceData.xml");
+  if (interfacefile.is_open()) {
+    interfacefile << "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n";
+    interfacefile << "<Interfaces>\n";
+    if( theModel.GetInterfacesNum() > 0 ) {
+      for(size_t idx=0 ; idx<theModel.GetInterfacesNum() ; idx++ ){
+        TLMInterfaceProxy& intProx = theModel.GetTLMInterfaceProxy(idx);
+        TLMComponentProxy& comProx = theModel.GetTLMComponentProxy(intProx.GetComponentID());
+        TLMTimeData& tlmData = intProx.getTime0Data();
+
+        double3Vec R(tlmData.Position[0], tlmData.Position[1], tlmData.Position[2]);
+        double33Mat A( tlmData.RotMatrix[0], tlmData.RotMatrix[1], tlmData.RotMatrix[2],
+                    tlmData.RotMatrix[3], tlmData.RotMatrix[4], tlmData.RotMatrix[5],
+                    tlmData.RotMatrix[6], tlmData.RotMatrix[7], tlmData.RotMatrix[8]);
+        double3Vec phi = ATophi321(A);
+        
+        interfacefile << "\t<Interface model=\"" + comProx.GetName() + "\" name=\"" + intProx.GetName() + "\">\n";
+        interfacefile << "\t\t<Position x=\"" << R(1) << "\" y=\"" << R(2) << "\" z=\"" << R(3) << "\">\n";
+        interfacefile << "\t\t<Angle321 x=\"" << phi(1) << "\" y=\"" << phi(2) << "\" z=\"" << phi(3) << "\">\n";
+        interfacefile << "\t<\\Interface>\n";
+      }
+    }
+    interfacefile << "<\\Interfaces>\n";
+    interfacefile.close();
+  } else {
+    std::cout << "Error opening interfaceData.xml file." << std::endl;
+    
     if( theModel.GetInterfacesNum() == 0 ){
         std::cout << "No TLM interfaces found." << std::endl;
         return;
     }
-
+    
     std::cout << "Positions and orientations:" << std::endl;
 
     for(size_t idx=0 ; idx<theModel.GetInterfacesNum() ; idx++ ){
@@ -60,8 +87,8 @@ void print_interface_information(MetaModel& theModel)
         std::cout << "R  : " << R << std::endl;
         std::cout << "phi: " << ATophi321(A) << std::endl;
     }
+  }
 }
-
 
 int main(int argc, char* argv[]) {
 #ifndef USE_THREADS
