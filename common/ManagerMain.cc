@@ -55,13 +55,12 @@ void print_interface_information(MetaModel& theModel)
                     tlmData.RotMatrix[6], tlmData.RotMatrix[7], tlmData.RotMatrix[8]);
         double3Vec phi = ATophi321(A);
         
-        interfacefile << "\t<Interface model=\"" + comProx.GetName() + "\" name=\"" + intProx.GetName() + "\">\n";
-        interfacefile << "\t\t<Position x=\"" << R(1) << "\" y=\"" << R(2) << "\" z=\"" << R(3) << "\">\n";
-        interfacefile << "\t\t<Angle321 x=\"" << phi(1) << "\" y=\"" << phi(2) << "\" z=\"" << phi(3) << "\">\n";
-        interfacefile << "\t<\\Interface>\n";
+        interfacefile << "\t<Interface model=\"" + comProx.GetName() + "\" name=\"" + intProx.GetName() + "\"\n";
+        interfacefile << "\t\tPosition=\"" << R(1) << "," << R(2) << "," << R(3) << "\"\n";
+        interfacefile << "\t\tAngle321=\"" << phi(1) << "," << phi(2) << "," << phi(3) << "\"/>\n"; 
       }
     }
-    interfacefile << "<\\Interfaces>\n";
+    interfacefile << "</Interfaces>\n";
     interfacefile.close();
   } else {
     std::cout << "Error opening interfaceData.xml file." << std::endl;
