@@ -15,16 +15,18 @@ endif
 
 cd $1
 
-echo Starting a Beast simulation with input file: $6.in
+set xname=`basename $6 .in`
+
+echo Starting a Beast simulation with input file: ${xname}.in
 echo Make sure that:
 echo time = $2
 echo timeEnd = $3
 echo MaxTimeStep "<"= $4
-echo Writing component name $1 and server name $5 to file $6.tlm
-echo $1 $5 > $6.tlm
-echo $2 $3 $4 >> $6.tlm
+echo Writing component name $1 and server name $5 to file ${xname}.tlm
+echo $1 $5 > ${xname}.tlm
+echo $2 $3 $4 >> ${xname}.tlm
 
 echo Starting beast
-echo $BeastCmd $6.in
+echo $BeastCmd ${xname}.in
 
-$BeastCmd $6.in > ${6}.simlog
+$BeastCmd ${xname}.in > ${xname}.simlog
