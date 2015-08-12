@@ -24,14 +24,14 @@
 	 Position and orientation is defined with respect to the meta
 	 models global inertial system. -->
   <SubModel ExactStep="0" Name="brg1" Position="0,0,0" Angle321="1,5708,0,0" ModelFile="dgbb" StartCommand="StartTLMBeast">
-   <Annotation Origin="{-8,30}" Extent="{-10,-10,10,10}" Rotation="0" Visible="true"/>
+   <Annotation Origin="{0,30}" Extent="{-10,-10,10,10}" Rotation="0" Visible="true"/>
    <!-- TLM interface points for SubModel brg1 -->
    <InterfacePoint Name="bIR`cs1"/>
    <InterfacePoint Name="bER`cs1"/>
   </SubModel>
   <!-- SubModel shaft2. This is another Modelica model. -->
   <SubModel ExactStep="0" Name="shaft2" ModelFile="shaft2.mo" StartCommand="StartTLMOpenModelica">
-   <Annotation Origin="{50,30}" Extent="{-10,-10,10,10}" Rotation="0" Visible="true"/>
+   <Annotation Origin="{76,28}" Extent="{-10,-10,10,10}" Rotation="0" Visible="true"/>
    <!-- TLM interface points for SubModel C -->
    <InterfacePoint Name="tlm"/>
   </SubModel>
@@ -42,11 +42,15 @@
 	 Note, that the maximum step size must be smaller than the
 	 shortest delay of all TLM connections for a single simulation
 	 tool. This is taken care of by the tlmmanager. -->
-  <Connection Zfr="1e2" From="shaft1.tlm" alpha="0.2" To="brg1.bER`cs1" Zf="1e4" Delay="1e-3"/>
   <!-- Each connections defines which interface of which models are 
          connected.
 	 In these interfaces forces are exchanged, see TLM definition. -->
-  <Connection Zfr="1e2" From="shaft2.tlm" alpha="0.2" To="brg1.bIR`cs1" Zf="1e4" Delay="1e-3"/>
+  <Connection Zfr="1e3" From="shaft1.tlm" alpha="0.2" To="brg1.bER`cs1" Zf="1e4" Delay="1e-4">
+   <Annotation Points="{{-70,30},{0,30}}"/>
+  </Connection>
+  <Connection Zfr="1e3" From="brg1.bIR`cs1" alpha="0.2" To="shaft2.tlm" Zf="1e4" Delay="1e-4">
+   <Annotation Points="{{0,30},{76,30},{76,28}}"/>
+  </Connection>
  </Connections>
  <!-- "Global" parameters for the co-simulation. 
        Typically the overall simulation time is defined here.
