@@ -7,7 +7,7 @@
     <SubModels>	
 
         <SubModel Name="shaft1"
-                StartCommand="StartTLMModelica" 
+                StartCommand="StartTLMOpenModelica" 
                 ExactStep="0"
                 ModelFile="shaft1.mo">
 
@@ -26,7 +26,7 @@
         </SubModel>
 
         <SubModel Name="shaft2" 
-                StartCommand="StartTLMModelica" 
+                StartCommand="StartTLMOpenModelica" 
                 ExactStep="0"
                 ModelFile="shaft2.mo">
 
@@ -48,7 +48,7 @@
     <!-- Parameters for the simulation -->
     <SimulationParams ManagerPort="11112" 
                 StartTime="0" 
-                StopTime="100"
+                StopTime="10"
                 NetworkTimeout="600"/>
 
 </Model>
