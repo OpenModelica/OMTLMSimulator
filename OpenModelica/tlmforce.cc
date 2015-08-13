@@ -141,7 +141,7 @@ double get_tlm_delay()
 }
 
 void set_tlm_motion(const char* markerID,   // The calling marker ID
-                    double time,    // Current simulation time
+                    double simTime,    // Current simulation time
                     double position[], // Marker position data
                     double orientation[], // Marker rotation matrix
                     double speed[],      // Marker translational velocity
@@ -152,7 +152,7 @@ void set_tlm_motion(const char* markerID,   // The calling marker ID
 
         if( interfaceID >= 0 ){
             Plugin->SetMotion(interfaceID,          // Send data to the Plugin
-                              time,
+                              simTime,
                               position,
                               orientation,
                               speed,
@@ -168,7 +168,7 @@ void set_tlm_motion(const char* markerID,   // The calling marker ID
 // The calc_tlm_force function is called directly from the Modelica interface function
 // It needs special declaration
 void calc_tlm_force(const char* markerID,   // The calling marker ID
-                    double time,    // Current simulation time
+                    double simTime,    // Current simulation time
                     //double lastConvergedTime, // Last converged time
                     double position[], // Marker position data
                     double orientation[], // Marker rotation matrix
@@ -185,7 +185,7 @@ void calc_tlm_force(const char* markerID,   // The calling marker ID
     
     if( RHSFinalFlag ){
       debugOutFile << "Calc TLM force, this is a RHS final call and we send data to manager." << endl;
-      set_tlm_motion(markerID, time, position, orientation, speed, ang_speed);
+      set_tlm_motion(markerID, simTime, position, orientation, speed, ang_speed);
     }
 
     // Check if interface is registered. If it's not, register it
@@ -203,7 +203,7 @@ void calc_tlm_force(const char* markerID,   // The calling marker ID
     if( interfaceID >= 0 ){
         // Call the plugin to get reaction force
         Plugin->GetForce(interfaceID,
-                         time,
+                         simTime,
                          position,
                          orientation,
                          speed,

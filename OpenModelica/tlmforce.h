@@ -30,7 +30,7 @@ double get_tlm_delay();
 //! \param ang_speed   The angular velocity vector (rotational speed around x,y,z) of the interface at this point in time.
 //!                    Three component vector/array.
 void set_tlm_motion(const char* interfaceID, // The TLM interface (frame) ID
-                    double time,             // Current simulation time
+                    double simTime,          // Current simulation time
                     double position[],       // Interface position data
                     double orientation[],    // Interface rotation matrix
                     double speed[],          // Interface translational velocity
@@ -54,7 +54,7 @@ void set_tlm_motion(const char* interfaceID, // The TLM interface (frame) ID
 //! \retval force      The resulting force (x,y,z) acting in the interface. Three component vector/array.
 //! \retval torque     The resulting torque (x,y,z) acting in the interface. Three component vector/array.
 void calc_tlm_force(const char* interfaceID, // The calling TLM interface (frame) ID
-                    double time,             // Current simulation time
+                    double simTime,          // Current simulation time
                     double position[],       // Interface position data
                     double orientation[],    // Interface rotation matrix
                     double speed[],          // Interface translational velocity
