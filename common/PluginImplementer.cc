@@ -5,6 +5,7 @@
 #include "PluginImplementer.h"
 #include <cassert>
 #include <iostream>
+#include <csignal>
 
 using std::string;
 using std::vector;
@@ -13,9 +14,23 @@ using std::map;
 #include <fstream>
 using std::ofstream;
 
-
+PluginImplementer* PluginImplementerInstance = 0;
 TLMPlugin* TLMPlugin::CreateInstance() {
-    return new PluginImplementer;
+    PluginImplementerInstance = new PluginImplementer;
+    return PluginImplementerInstance;
+}
+
+void signalHandler_( int signum )
+{
+    // Install default signal handler
+    signal(signum, SIG_DFL);
+
+    if( PluginImplementerInstance != 0){
+        PluginImplementerInstance->signalHandler(signum);
+    }
+
+    // Call default handler.
+    raise(signum);
 }
 
 PluginImplementer::PluginImplementer():
@@ -29,6 +44,13 @@ PluginImplementer::PluginImplementer():
     EndTime(0.0),
     MaxStep(0.0)
 {    
+    // Install out own signal handler.
+    signal(SIGABRT, signalHandler_);
+    signal(SIGFPE, signalHandler_);
+    signal(SIGILL, signalHandler_);
+    signal(SIGINT, signalHandler_);
+    signal(SIGSEGV, signalHandler_);
+    signal(SIGTERM, signalHandler_);
 }
 
 
@@ -40,6 +62,15 @@ PluginImplementer::~PluginImplementer() {
     }
 }
 
+void PluginImplementer::signalHandler( int signum )
+{
+    if(Connected) {
+        Message.Header.MessageType = TLMMessageTypeConst::TLM_ABORT;
+        TLMCommUtil::SendMessage(Message);
+    }
+
+    TLMErrorLog::Log("Got signal " + TLMErrorLog::ToStdStr(signum));
+}
 
 void PluginImplementer::CheckModel() {
 
