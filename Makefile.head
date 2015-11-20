@@ -44,7 +44,7 @@ LIBPTHREAD-WINDOWS64=-L$(UP)/extralibs/pthread/$(ABI)/lib pthreadVC2.lib
 
 INCLXML-WINDOWS32=-I$(UP)/extralibs/libxml2/include
 LIBXML-WINDOWS32=-L$(UP)/extralibs/libxml2/$(ABI)/lib -lxml2
-CP-LIBXML-WINDOWS32=cp $(UP)/extralibs/libxml2/$(ABI)/lib/libxml2.dll $(UP)/bin
+CP-LIBXML-WINDOWS32=cp $(UP)/extralibs/libxml2/$(ABI)/lib/libxml2.dll $(UP)/extralibs/libxml2/$(ABI)/lib/iconv.dll $(UP)/extralibs/libxml2/$(ABI)/lib/zlib1.dll $(UP)/bin
 INCLPTHREAD-WINDOWS32=-I$(UP)/extralibs/pthread/include
 LIBPTHREAD-WINDOWS32=-L$(UP)/extralibs/pthread/$(ABI)/lib -lpthread
 XTRLIBS-WINDOWS32=-lws2_32

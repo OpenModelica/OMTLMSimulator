@@ -33,6 +33,6 @@ else
 fi
 
 # Start tlmmanager and monitor.
-tlmmanager $DEBUGFLG -p 8667 -m 8668 pendulum.xml&
+tlmmanager $DEBUGFLG -p 137 -m 138 pendulum.xml&
 sleep 1;
-tlmmonitor $DEBUGFLG -n 1000 localhost:8668 pendulum.xml
+tlmmonitor $DEBUGFLG -n 1000 192.168.56.1:138 pendulum.xml
