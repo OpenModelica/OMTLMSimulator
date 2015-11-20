@@ -15,6 +15,9 @@ void set_debug_mode(int debugFlgIn);
 //! Get the TLM delay for the interface.
 double get_tlm_delay();
 
+//! Register an interface within the TLMPlugin 
+//! \param interfaceID The interface identifier as specified in the simulation and meta model.
+void register_tlm_interface(const char* interfaceID);
 
 //! Send/store motion in the TLM interface.
 //! This function is typically called for each completed/converged/final solver step.

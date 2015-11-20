@@ -44,6 +44,9 @@ extern "C" {
 
 void initialize_TLM()
 {
+    // Enable/diable debugging.
+    set_debug_mode(debugFlg);
+
     // Avoid reinitialization!
     assert( Plugin == 0 );
 
@@ -66,18 +69,8 @@ void initialize_TLM()
     tlmConfigFile >> timeEnd;
     tlmConfigFile >> maxStep;
 
-    if(debugFlg && !debugOutFile.is_open() ){
-        debugOutFile.open(TLM_DEBUG_FILE_NAME);
-
-        if( debugOutFile.good()){
-            TLMErrorLog::SetOutStream(debugOutFile);
-        }
-
-        TLMErrorLog::SetDebugOut(true);
-    }
-
     if(!tlmConfigFile.good()) {
-        debugOutFile << "Error reading TLM configuration data from tlm.config" << endl;
+        TLMErrorLog::FatalError("Error reading TLM configuration data from tlm.config, exiting...");
         exit(1);
     }
 
@@ -86,7 +79,7 @@ void initialize_TLM()
                        timeEnd,
                        maxStep,
                        serverName)) {
-        debugOutFile << "Error initializing the TLM plugin" << endl;
+        TLMErrorLog::FatalError("Error initializing the TLM plugin, exiting...");
         exit(1);
     }
 }
@@ -95,25 +88,27 @@ void set_debug_mode(int debugFlgIn)
 {
     debugFlg = debugFlgIn;
 
+    TLMErrorLog::SetDebugOut(debugFlg);
+
     if( debugFlg ){
-        debugOutFile.open(TLM_DEBUG_FILE_NAME);
-        if(debugOutFile.good()){
-            cerr << "Debug on" << endl;
-            TLMErrorLog::SetOutStream(debugOutFile);
-        }
-        else{
-            cerr << "Unable to open debug log " << TLM_DEBUG_FILE_NAME << endl;
-            cerr << "Debug off" << endl;
-            debugOutFile.close();
-            debugFlg = false;
-        }
+        if( !debugOutFile.is_open() ){
+	    debugOutFile.open(TLM_DEBUG_FILE_NAME);
+	    if( !debugOutFile.good() ){
+	      TLMErrorLog::SetOutStream(debugOutFile);
+	      TLMErrorLog::Log("Debug on");
+	    }
+	    else{
+	      TLMErrorLog::Warning(std::string("Unable to open debug log ") + TLM_DEBUG_FILE_NAME );
+	      TLMErrorLog::Warning("Debug off");
+	      debugOutFile.close();
+	      debugFlg = false;
+	    }
+	}
     }
     else {
+        TLMErrorLog::Log("Debug off");
         debugOutFile.close();
-        cerr << "Debug off" << endl;
     }
-
-    TLMErrorLog::SetDebugOut(debugFlg);
 }
 
 double get_tlm_delay()
@@ -135,23 +130,23 @@ double get_tlm_delay()
     double res = maxStep;
     tlmConfigFile.close();
 
-    debugOutFile << model << ": get_tlm_delay (" << res << ")" << endl;
+    TLMErrorLog::Log(model + ": get_tlm_delay (" + TLMErrorLog::ToStdStr(res) + ")");
 
     return res;
 }
 
-void set_tlm_motion(const char* markerID,   // The calling marker ID
+void set_tlm_motion(const char* interfaceID,   // The calling marker ID
                     double simTime,    // Current simulation time
                     double position[], // Marker position data
                     double orientation[], // Marker rotation matrix
                     double speed[],      // Marker translational velocity
                     double ang_speed[])
 {
-    if( MarkerIDmap.find(markerID) != MarkerIDmap.end() ){
-        int interfaceID = MarkerIDmap[markerID];
+    if( MarkerIDmap.find(interfaceID) != MarkerIDmap.end() ){
+        int id = MarkerIDmap[interfaceID];
 
-        if( interfaceID >= 0 ){
-            Plugin->SetMotion(interfaceID,          // Send data to the Plugin
+        if( id >= 0 ){
+            Plugin->SetMotion(id,          // Send data to the Plugin
                               simTime,
                               position,
                               orientation,
@@ -161,13 +156,28 @@ void set_tlm_motion(const char* markerID,   // The calling marker ID
 
     }
     else {
-        debugOutFile << "set_tlm_motion(...), called for non initialized interface " << markerID << endl;
+        TLMErrorLog::Warning( "set_tlm_motion(...), called for non initialized interface " + std::string(interfaceID));
+    }
+}
+
+// Register an TLM interface by name.
+void register_tlm_interface(const char* interfaceID)
+{
+    // Check if interface is registered. If it's not, register it
+    if( interfaceID != 0 && MarkerIDmap.find(interfaceID) == MarkerIDmap.end() ){
+        if( Plugin == 0 ){
+            initialize_TLM();
+        }
+
+	TLMErrorLog::Log( "register_tlm_interface (" + std::string(interfaceID) + ")" );
+    
+        MarkerIDmap[interfaceID] = Plugin->RegisteTLMInterface(interfaceID);
     }
 }
 
 // The calc_tlm_force function is called directly from the Modelica interface function
 // It needs special declaration
-void calc_tlm_force(const char* markerID,   // The calling marker ID
+void calc_tlm_force(const char* interfaceID,   // The calling marker ID
                     double simTime,    // Current simulation time
                     //double lastConvergedTime, // Last converged time
                     double position[], // Marker position data
@@ -182,27 +192,27 @@ void calc_tlm_force(const char* markerID,   // The calling marker ID
 
     // defined in OpenModelica dassl.c
     extern int RHSFinalFlag;
+    static bool firstFinalStepReached = false;
     
     if( RHSFinalFlag ){
-      debugOutFile << "Calc TLM force, this is a RHS final call and we send data to manager." << endl;
-      set_tlm_motion(markerID, simTime, position, orientation, speed, ang_speed);
+      set_tlm_motion(interfaceID, simTime, position, orientation, speed, ang_speed);
+      firstFinalStepReached = true;
     }
 
     // Check if interface is registered. If it's not, register it
-    if( MarkerIDmap.find(markerID) == MarkerIDmap.end() ){
-        if( Plugin == 0 ){
-            initialize_TLM();
-        }
-
-        MarkerIDmap[markerID] = Plugin->RegisteTLMInterface(markerID);
+    if( MarkerIDmap.find(interfaceID) == MarkerIDmap.end() ){
+        register_tlm_interface(interfaceID);  
     }
 
     // Interface force ID in TLM manager
-    int interfaceID = MarkerIDmap[markerID];
+    int id = MarkerIDmap[interfaceID];
 
-    if( interfaceID >= 0 ){
+    // Note, we make sure that we do not use the interface before the first final RHS
+    // so that all interfaces are registered before we start exchanging data. Also
+    // This gives a well defined start condition where all forces and moments are 0.0
+    if( id >= 0 && firstFinalStepReached ){
         // Call the plugin to get reaction force
-        Plugin->GetForce(interfaceID,
+        Plugin->GetForce(id,
                          simTime,
                          position,
                          orientation,
@@ -213,7 +223,7 @@ void calc_tlm_force(const char* markerID,   // The calling marker ID
     else {
         /* Not connected */
         for( int i=0 ; i<6 ; i++ ) {
-            force[i] = 0.0;
+            forceOut[i] = 0.0;
         }
     }
 
@@ -223,7 +233,6 @@ void calc_tlm_force(const char* markerID,   // The calling marker ID
     //      (This might be a bug in the Modelica TLM implementation as well)
     for( f=0 ; f<3 ; f++ ) force[f] = -forceOut[f];
     for( t=0 ; t<3 ; t++ ) torque[t] = -forceOut[t+3];
-    
 }
 #ifdef __cplusplus
 }
