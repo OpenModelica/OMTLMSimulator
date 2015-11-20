@@ -23,11 +23,13 @@ LD_LIBRARY_PATH=${OpenModelicaPath}/lib
 TLMCONFIGFILE=tlm.config
 
 if [ ! -f "$1/$6" ] ; then 
-    echo Usage: 
-    echo $0 XModelName start-time end-time max-time-step server-name:port model-file 
-    echo $6
-    pwd
-    exit 1
+    if [ ! -f "$1/$6.mo" ] ; then 
+	echo Usage: 
+	echo $0 XModelName start-time end-time max-time-step server-name:port model-file 
+	echo $6
+	pwd
+	exit 1
+    fi
 fi
 
 echo execution directory is $1
@@ -62,7 +64,7 @@ echo "loadModel(Modelica);" >> $MOSFILE
 echo "getErrorString();" >> $MOSFILE
 echo "loadFile(\"${TLMPluginPath}/OpenModelica/OM_TLM.mo\");" >> $MOSFILE
 echo "getErrorString();" >> $MOSFILE
-echo "loadFile(\"$6\");" >> $MOSFILE
+echo "loadFile(\"$MODELNAME.mo\");" >> $MOSFILE
 echo "getErrorString();" >> $MOSFILE
 echo "simulate($MODELNAME, startTime=$2, stopTime=$3, method=\"dassl\", outputFormat=\"mat\", simflags=\"-noEquidistantTimeGrid -maxStepSize=$4\");" >> $MOSFILE
 echo "getErrorString();" >> $MOSFILE
