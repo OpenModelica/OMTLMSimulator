@@ -1,0 +1,24 @@
+This is a library (librtime.a) consisting of two parts:
+
+	rtime:	A high-resolution clock.
+
+	timing: Functions to measure time accurate.
+
+This package is ported to PARIX, Solaris 2, AIX, and OSF/1.
+
+In PARIX the resolution of the clock is 128 nS and wraps around after
+2^32 seconds (~136 years).
+
+Note: The PARIX version works only on computer based on PowerPC 601!
+
+Read INSTALL for information about building and installing this library.
+
+For more information about the functionality of this library consult
+the man pages!
+
+
+1995-08-03
+------------------------------------------------------------------------
+Niclas Andersson                                E-mail: nican@ida.liu.se
+Department of Computer and Information Science      Phone: +46 13 281464
+Linkoping University, S-581 83 Linkoping, Sweden      Fax: +46 13 282666

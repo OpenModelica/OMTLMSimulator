@@ -1,0 +1,495 @@
+\chapter{Co-Simulation Framework}
+\label{framework}
+A general framework for meta-model based co-simulations has previously
+been designed~\cite{Siemers+Nakhimovski+Fritzson-05}. The design goals
+for the simulation part of the framework were portability, simplicity
+to incorporate new simulation tools, and computational efficiency.
+These goals were realized by defining the following concepts and
+interfaces:
+
+\textbf{External interface.} A named point on a mechanical object
+where position and velocity can be evaluated and reaction load (force
+and moment) applied. To guarantee numerical stability when utilising
+different numerical solvers in the co-simulation, only interfaces based
+on the {\em transmission line modelling} method, see Section~\ref{secTLMtheory}, are
+currently supported.
+
+%\item
+\textbf{Simulation manager.} The central simulation engine. It is a stand alone
+program that reads an XML definition of the coupled simulation.  It
+then starts \emph{external model simulations} and provides the
+communication bridge between the running simulations. The external
+models only communicate with the simulation manager which acts as a
+broker marshalling information between the external models. Simulation
+manager sees every external model as a black box having one or several
+external interfaces. The information is then forwarded between
+external interfaces belonging to different external
+models. Additionally the simulation manager opens a network port for
+monitoring all communicated data.
+
+%\item
+\textbf{Interface plug-in.} A small C++ library having a single
+abstract class representing external interface for a specific
+simulation tool. The interface plug-in can be seen by an external
+model simulator as an external load that depends on position, velocity
+and time. The implementation of the plug-in handles the necessary
+communications with the simulation manager. It also handles necessary
+coordinate system transformations into the global meta-model inertial
+system. All positions and velocities are transformed from the
+external-model (simulation-tool specific) inertial system to the
+global meta-model inertial system. All reaction loads are translated
+back into the local inertial system. This constant transformation is
+stored in the meta-model and sent to the corresponding interface
+plug-in on simulation start up.
+%\item
+
+\textbf{External model simulator.} Any simulation program that has incorporated
+the interface plug-in as a part of its model. A small script that
+takes the general parameters as input and starts the specific
+simulation tool is an additional requirement. This intermediate step
+is necessary since the simulation manager needs a common way
+to start all the components and each tool might have some specific
+start procedures.
+%\end{itemize}
+
+\section{Requirements on External Model Simulators}
+\label{sec:requirements}
+External models are associated with specialised simulation tools. Even
+though many simulation tools have interfaces to external functions, the
+interfaces differ between tools. Therefore it is first necessary that
+a software developer who is familiar with the particular tool
+architecture, designs and implements the {\em external interface} for
+each tool. That is, to create a tool specific wrapper for the {\em
+interface plug-in} of the simulation framework.
+
+The following functionality is required from all simulation
+tools that implement the interface plug-in and want to participate in
+co-simulation:
+\begin{itemize}
+\item Possibility to start simulation externally or in batch mode.
+  The developer of the tool specific interface must provide a start up
+  program. This is used by the simulation manager to set-up global
+  simulation parameters, that is, start time, end time, and max time
+  step for each co-simulation participant. Regarding the maximum time
+  step length: The current co-simulation communication protocol is
+  based on the {\em transmission line modelling} method, see
+  Section~\ref{secTLMtheory} for details. This method requires a
+  certain communication time control, i.e., time steps need to be
+  within a physically motivated limit.
+
+\item Possibility to integrate the {\em interface plug-in} into the tool specific
+	adaptor. Note that the tool independent part of the plug-in is
+	implemented in C++. Some tools require external functions to
+	be implemented in, e.g., C or Fortran. In such cases the C++
+	code can be invoked from a C or Fortran function.
+
+\item Ability to deliver position, orientation and velocity of a
+	point to the {\em interface plug-in} and receive the reaction
+	load (force and moment) to be applied at this point.
+
+\item Ability to send information about the taken solver steps to the
+  interface. This is important for variable time step solvers. Data is
+  send from one co-simulation party to the other when a time step is
+  completed, that is, if the solver, after many iterations, decided
+  what step it will take next. This information needs to be send to
+  the TLMPlugin.
+
+\item Correct handling of shutdown signals coming from the tool specific
+	wrapper. In some cases the {\em simulation manager} needs to
+	take down the simulation tool in a controlled way. This can be
+	achieved by a tool specific API ({\em Application Programming
+	Interface}) call or simply handling of exit signals.
+
+\end{itemize}
+
+Additionally it is desirable that the simulation tool can export
+surface geometry (graphics) for visualisation in the meta-model
+environment. Surface geometry is not required for correct
+meta-modelling but beneficial for visual model verification.
+
+%These requirements are met by all the simulation tools investigated in
+%this work, see Table~\ref{tab:SimTools}
+
+Most of the commonly used simulation tools offer some kind of external
+connection either through inter process communication (IPC), e.g.,
+network sockets or remote procedure calls, or an application
+programming interface (API). Both options are acceptable for
+implementation of the interface plug-in as long as they fulfil the
+requirements above. The main focus of this work is on transient
+simulations of mechanical systems. Simulation tools that are of
+interest for this work are pure mechanical system and multi physics
+tools. All of the tools that have been considered for integration into
+the co-simulation framework comply with the requirements, some of the
+tools are shown in Table~\ref{tab:SimTools}. Interface plug-ins for
+SKF's BEAST, SKF's Orpheus, MSC.ADAMS, Matlab/Simulink, and Modelica
+have successfully been implemented and tested.
+
+\begin{table}
+\begin{center}
+\caption{\em List of potential simulators considered for TLM
+co-simulation. Possible implementation and type of the interface
+plug-in are also shown. }
+\vspace*{1mm}
+\begin{tabular}{||c|c|c|c||}
+
+\hline
+Simulator & Implementation  & Interface \\
+\hline
+\hline
+BEAST   & C++     &  TLM enabled control points \\
+(SKF in-house)	& implementation & (coordinate-systems)\\
+\hline
+%Orpheus         & C++            &   \\
+%(SKF in-house)	& implementation &   \\
+%\hline
+MSC.ADAMS  & C wrapper DLL	    &  General force with \\
+	   & (dynamic link library) &  sub-routine call  \\
+\hline
+Matlab/Simulink  & C wrapper & S-function interface \\
+\hline
+Modelica  & C or Fortran wrapper & External function interface\\
+\hline
+Simpack  & Fortran wrapper & SIMPACK User routine  \\
+\hline
+%Ansys  &  &  & No\\
+
+\end{tabular}
+\label{tab:SimTools}
+\end{center}
+\end{table}
+
+\section{External Model startup}
+\label{xmodel-startup}
+The requirements on the external model simulators, that is, the
+simulation tools that are supposed to participate in a meta-model
+simulation are defined above, see Section~\ref{sec:requirements}. One
+requirement specifies that the simulation tool should be executable in
+batch mode, this is, the simulation manager should be able to start
+the simulation tool and pass certain parameters to the program.
+
+The developer of the simulation tool specific adapter (TLMPlugin)
+should provide a start-up program/script that accepts the following
+command line parameters:
+\begin{itemize}
+\item \emph{Model} - the name of the sub-model as presented in the
+meta-model definition. This name typically corresponds to the
+component specific input file name.
+\item {FromTime} - start time for the simulation.
+\item {ToTime} - end time for the simulation.
+\item {Step} - maximum time step allowed for the simulation. This depends on
+the minimum TLM delay associated with one of the TLM links connected to the sub-model.
+\item {Server:port} - name of the host machine running TLM manager application and
+the TCP/IP port where TLM server is listening. This information is required for
+TLM-plugin initialization. It is provided by the TLM manager as the last
+argument to the start script.
+\end{itemize}
+
+A sample OpenModelica Linux start-up script could look like this:
+{\scriptsize
+\begin{verbatim}
+#!/bin/sh
+# OpenModelica TLM start-up script
+# Start with 6 arguments:
+# 1 XModelName (XModel directory)
+# 2 start-time
+# 3 end-time
+# 4 max-time-step
+# 5 server-name:port
+# 6 model-file
+
+OpenModelicaPath=/opt/OpenModelica
+TLMModelicaPath=/opt/OpenModelica/TLMPlugin/Modelica
+OMC_Cmd="${OpenModelicaPath}/bin/omc"
+TLMCONFIGFILE=tlm.config
+LD_LIBRARY_PATH=${OpenModelicaLibPath}/lib
+
+echo Writing caseID $1 and server name $5 to file $TLMCONFIGFILE
+echo $1 > $TLMCONFIGFILE
+echo $5 >> $TLMCONFIGFILE
+echo $2 >> $TLMCONFIGFILE
+echo $3 >> $TLMCONFIGFILE
+echo $4 >> $TLMCONFIGFILE
+
+MOSFILE=$1.mos
+MODELNAME=`basename $6 .mo`
+INTERVAL_STR="($3-$2)/($4)"
+INTERVAL_STR="scale=8;${INTERVAL_STR/e/*10^}"
+INTERVALS=`echo $INTERVAL_STR | bc`
+
+echo Writing $MOSFILE
+echo // Autogenerated modelica script for TLM cosimulation > $MOSFILE
+echo "setEnvironmentVar( \"MODELICAUSERCFLAGS\", \\
+                         \"-I${TLMModelicaPath} \\
+                         -L${TLMModelicaPath}/${ABI}\");" >> $MOSFILE
+echo "loadModel(Modelica);" >> $MOSFILE
+echo "loadFile(\"${TLMModelicaPath}/TLM.mo\");" >> $MOSFILE
+echo "loadFile(\"$6\");" >> $MOSFILE
+echo "getErrorString();" >> $MOSFILE
+echo "checkModel($MODELNAME);" >> $MOSFILE
+echo "getErrorString();" >> $MOSFILE
+echo "translateModel($MODELNAME);" >> $MOSFILE
+echo "getErrorString();" >> $MOSFILE
+echo "simulate($MODELNAME, startTime=$2, \\
+                           stopTime=$3, \\
+                           numberOfIntervals=$INTERVALS, \\
+                           method=\"dassl\", \\
+                           outputFormat=\"plt\");" >> $MOSFILE
+echo "getErrorString();" >> $MOSFILE
+
+echo Starting OpenModelica with: $OMC_Cmd $MOSFILE
+$OMC_Cmd $1.mos > $1.simlog
+
+\end{verbatim}
+}
+
+A sample OpenModelica Windows batch start-up script could look like this:
+{\scriptsize
+\begin{verbatim}
+echo off
+REM OpenModelica TLM start-up script
+REM Start with 6 arguments:
+REM 1 XModelName (XModel directory)
+REM 2 start-time
+REM 3 end-time
+REM 4 max-time-step
+REM 5 server-name:port
+REM 6 model-file
+
+set OpenModelicaPath=C:/OpenModelica1.8.1
+set OMC_Cmd=%OpenModelicaPath%/bin/omc.exe
+set TLMCONFIGFILE=tlm.config
+
+cd %1
+
+echo Writing caseID %1 and server name %5 to file %TLMCONFIGFILE%
+echo %1 > %TLMCONFIGFILE%
+echo %5 >> %TLMCONFIGFILE%
+echo %2 >> %TLMCONFIGFILE%
+echo %3 >> %TLMCONFIGFILE%
+echo %4 >> %TLMCONFIGFILE%
+
+set MOSFILE=%1.mos
+for /F %%I in ("%6") do set MODELNAME=%%~nI
+for /F %%I in ("%Mofile%") do set MODELNAME_WITH_MO=%%I
+calc (%3-%2)/%4
+call result.bat
+set INTERVALS=%res%
+
+echo Writing %MOSFILE%
+echo // Autogenerated modelica script for TLM cosimulation > %MOSFILE%
+echo setEnvironmentVar("MODELICAUSERLFLAGS", \\
+                       "-L/c/OpenModelica/sources/TLMPlugin/Modelica/WINDOWS32"); >> %MOSFILE%
+echo loadModel(Modelica); >> %MOSFILE%
+echo loadFile("%6"); >> %MOSFILE%
+echo checkModel(%MODELNAME%); >> %MOSFILE%
+echo simulate(%MODELNAME%, startTime=%2, stopTime=%3, \\
+              numberOfIntervals=%INTERVALS%, \\
+              tolerance=0.000001, \\
+              method="euler", \\
+              outputFormat="plt", \\
+              variableFilter="x"); >> %MOSFILE%
+
+echo Starting OpenModelica with: %OMC_Cmd% %MOSFILE%
+%OMC_Cmd% %1.mos > %1.simlog
+\end{verbatim}
+}
+
+NOTE, that the above approach requires that the Modelica TLMPlugin
+reads the file ``\$TLMCONFIGFILE'' in order to get the TLM parameters.
+
+\section{Meta-Model Simulation}
+A meta-model simulation environment has been created that is based on
+the previously defined co-simulation framework. The system design of
+the environment is shown in Figure~\ref{fig:SystemDesign}. The
+environment provides:
+\begin{itemize}
+\item Generality, due to the general framework
+	that allows for integration of many different simulation
+	tools.
+\item A generic method of co-simulation based on a meta-model.
+\item A general method of external model execution, i.e., all
+	simulation tools involved are executed. Generality is achieved
+	by a platform independent start up command that takes care of
+	possible actions, i.e., remote login, file transfer, or set up
+	of a parallel simulation environment.
+\item Communication and data transfer between the different external
+	models.
+\item Data monitoring for analysis and post processing.
+\item Controlled simulation termination where all external models are
+	taken down in a correct way. This includes error handling due
+	to external model failure or network problems.
+\end{itemize}
+
+\begin{figure}[ht]\begin{center}
+    %\epsfig{file=MetaModelSysDesign2.eps, width=10cm}
+   {\includegraphics[width=9cm]{figs/MetaModelSysDesign2.pdf}}
+    \caption{The system design for the meta-model simulation
+    environment. } \label{fig:SystemDesign}
+\end{center}\end{figure}
+
+In addition to the {\em simulation manager} a meta-model {\em
+  simulator} is included in the design that can start and monitor the
+meta-model simulation.
+%It creates its own internal meta-model
+%structure for best simulation control and storage of meta-model
+%simulation results.
+The simulation manager has been designed to act as a network server
+that allows several clients to connect and monitor the data flow
+between the interconnected external model simulators. The {\em
+  simulator} can connect to this port. All data received by the
+simulation manager from the external model simulators is passed on to
+the simulator that stores results in the meta-model output file.  This
+client server architecture has some advantages over an integrated
+solution where the simulation manager is part of the simulator:
+\begin{itemize}
+%\item Improved performance of the simulation manager because all file
+%	I/O is handled by the simulator.
+\item The simulator and simulation manager can run on different machines,
+	this is useful, for instance, if the simulation start up must
+	be performed on a machine other than the user's local machine.
+\item Other processes can connect to the simulation manager's
+	monitoring port. This allows, for instance, to visually
+	monitor the co-simulation.
+\end{itemize}
+
+The simulation-manager manages start up of the different
+simulation tools (external model simulators) and communication between
+these tools, as defined by the simulation framework, see
+Figure~\ref{fig:MMSystem}. Each simulation tool implements the
+interface plug-in that handles the necessary communication with the
+simulation manager. The manager keeps an internal interconnection
+table for all connected external interfaces and forwards all received
+packages accordingly.
+
+\begin{figure}[ht]\begin{center}
+%    \input{TLM_system.tex}
+   {\includegraphics[width=9cm]{figs/TLM_system.pdf}}
+    \caption{The simulation manager handles start up and communication
+	between the tool specific simulators.}
+    \label{fig:MMSystem}
+\end{center}\end{figure}
+
+Simulation results can be analysed in the post-processing
+applications, i.e., a two dimensional plotting program and a three
+dimensional visualisation tool, i.e., the meta-model editor
+(MME). Data animation of system dynamics is possible to a limited
+extent based on the data that is exchanged in the external interfaces.
+
+\section{Meta-Model XML Files}
+\label{meta}
+The TLM default implementation contains a XML meta-model reader, that
+can be used by the simulation manager to read the meta-model from an
+XML file.
+
+A Meta-Model contains the following XML nodes:
+\begin{description}
+\item[Model] is the top Meta-Model node that contains a list of {\tt SubModels} and {\tt Connections}.
+\item[SubModels] is the node that contains the list of all {\tt SubModel} nodes.
+\item[SubModel] is used for the external models. There is a {\tt
+  SubModel} node for each external model that participates in the
+  co-simulation. It defines a sub-model name used in the meta-model
+  and the start method and the simulation tool specific model files
+  that needed to run the simulation. Each {\tt SubModel} node also
+  contains a list of {\tt InterfacePoint} nodes.
+\item[InterfacePoint] nodes are used to specify the TLM interfaces of
+  each external model, that is, each {\tt SubModel}. It defines the
+  name of a certain interface in the external model.
+\item[Connections] is the node that contains the list of all {\tt Connection} nodes.
+\item[Connection] nodes define connections between two connected {\tt
+  InterfacePoint}s, that is, a connection between two TLM
+  interfaces. TLM parameters are specified for each connection.
+\item[SimulationParams] node defines global meta-model simulation
+  parameters. Total simulation start time, end time, and network port
+  are defined in this node.
+\end{description}
+
+
+Here a sample meta-model XML file for a Modelica with Beast co-simulation:
+{\scriptsize
+\begin{verbatim}
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<!-- The root node is the meta-model -->
+<Model Name="Pendulum">
+
+  <!-- List of connected sub-models -->
+  <SubModels>	
+    
+    <!-- Each sub-model defines an external simulation model, 
+         the following is an Modelica model that is started with
+         the StartTLMModelica command and the model file shaft1.mo -->
+    <SubModel Name="shaft1"
+              StartCommand="StartTLMModelica" 
+              ExactStep="0"
+              ModelFile="shaft1.mo">
+      
+      <!-- TLM interface points for SubModel shaft1. 
+	   For each interface one can define position and 
+           orientation vectors. These are mainly useful for
+           3D modeling. Orientation is defined as three angles
+           aroung x, y, and z axis "x,y,z" in radians. Angle321
+           defines rotation order 321 (z,y,x) of the three angles. 
+	   Position and orientation is defined with respect to the 
+	   external models inertial system. -->
+      <InterfacePoint Name="tlm"
+		      Position="0,-0.1,0"
+		      Angle321="0,0,0"/>
+    </SubModel>
+    
+    <!-- SubModel brg1. This is a BEAST model. Also for sub-models
+	 one can define position and orientation vectors. These are
+	 useful for translations between the different models.
+	 Position and orientation is defined with respect to the meta
+	 models global inertial system. -->
+    <SubModel Name="brg1" 
+              StartCommand="StartTLMBeast" 
+              ExactStep="0"
+              ModelFile="dgbb"
+              Position="0,0,0"
+              Angle321="1.5708,0,0">
+      
+      <!-- TLM interface points for SubModel brg1 -->
+      <InterfacePoint Name="bIR`cs1"/>
+      <InterfacePoint Name="bER`cs1"/>
+    </SubModel>
+    
+    <!-- SubModel shaft2. This is another Modelica model. -->
+    <SubModel Name="shaft2" 
+              StartCommand="StartTLMModelica" 
+              ExactStep="0"
+              ModelFile="shaft2.mo">
+      
+      <!-- TLM interface points for SubModel C -->
+      <InterfacePoint Name="tlm"/>
+    </SubModel>    
+  </SubModels>
+
+  <!-- List of TLM connections -->
+  <Connections>
+    <!-- For each connections individual TLM parameters are defined.
+	 Note, that the maximum step size must be smaller than the
+	 shortest delay of all TLM connections for a single simulation
+	 tool. This is taken care of by the tlmmanager. --> 
+    <Connection From="shaft1.tlm" To="brg1.bER`cs1"
+	 Delay="1e-3" Zf="1e4" Zfr="1e2" alpha="0.2"/>
+    <!-- Each connections defines which interface of which models are 
+         connected.
+	 In these interfaces forces are exchanged, see TLM definition. -->
+    <Connection From="shaft2.tlm" To="brg1.bIR`cs1" 
+		Delay="1e-3" Zf="1e4" Zfr="1e2" alpha="0.2"/>
+  </Connections>
+  
+  <!-- "Global" parameters for the co-simulation. 
+       Typically the overall simulation time is defined here.
+       This information is propageted to all simulation tools. 
+       Note, some additional parameters for network port and 
+       timeout can be defined here as well. But it is recommended 
+       to not define this "system dependent settings" here.
+       Use some system setup instead that can be given or read by 
+       the tlmmanager.  -->
+  <SimulationParams StartTime="0.0" 
+                    StopTime="1.0"/>
+  
+</Model>
+\end{verbatim}
+}
