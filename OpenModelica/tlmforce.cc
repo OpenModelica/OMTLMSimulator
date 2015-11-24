@@ -18,7 +18,10 @@ using std::cerr;
 
 typedef struct {
   TLMPlugin* Plugin;
+  int referenceCount;
 } TLMPluginStruct;
+
+TLMPluginStruct* TLMPluginStructObj = 0;
 
 // The wrapper expect TLM parameters in this file.
 // Alternative implementation might use .acf file to set
@@ -46,11 +49,16 @@ extern "C" {
 
 void* initialize_TLM()
 {
-    TLMPluginStruct* TLMPluginStructObj = (TLMPluginStruct*)malloc(sizeof(TLMPluginStruct));
+    if (TLMPluginStructObj) {
+	TLMPluginStructObj->referenceCount += 1;
+	return (void*)TLMPluginStructObj;
+    }
     set_debug_mode(debugFlg);
 
+    TLMPluginStructObj = (TLMPluginStruct*)malloc(sizeof(TLMPluginStruct));
     // Create the plugin
     TLMPluginStructObj->Plugin = TLMPlugin::CreateInstance();
+    TLMPluginStructObj->referenceCount = 1;
 
     // Read parameters from a file
     ifstream tlmConfigFile(TLM_CONFIG_FILE_NAME);
@@ -87,7 +95,12 @@ void* initialize_TLM()
 void deinitialize_TLM(void* in_TLMPluginStructObj)
 {
   TLMPluginStruct* TLMPluginStructObj = (TLMPluginStruct*)in_TLMPluginStructObj;
-  free(TLMPluginStructObj);
+  if (TLMPluginStructObj->referenceCount == 1) {
+      free(TLMPluginStructObj);
+      TLMPluginStructObj = 0;
+  } else {
+      TLMPluginStructObj->referenceCount -= 1;
+  }
 }
 
 void set_debug_mode(int debugFlgIn)
