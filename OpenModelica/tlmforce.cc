@@ -168,21 +168,6 @@ void set_tlm_motion(void* in_TLMPluginStructObj,
     }
 }
 
-// Register an TLM interface by name.
-void register_tlm_interface(const char* interfaceID)
-{
-    // Check if interface is registered. If it's not, register it
-    if( interfaceID != 0 && MarkerIDmap.find(interfaceID) == MarkerIDmap.end() ){
-        if( Plugin == 0 ){
-            initialize_TLM();
-        }
-
-	TLMErrorLog::Log( "register_tlm_interface (" + std::string(interfaceID) + ")" );
-    
-        MarkerIDmap[interfaceID] = Plugin->RegisteTLMInterface(interfaceID);
-    }
-}
-
 // The calc_tlm_force function is called directly from the Modelica interface function
 // It needs special declaration
 void calc_tlm_force(void* in_TLMPluginStructObj,
@@ -211,7 +196,7 @@ void calc_tlm_force(void* in_TLMPluginStructObj,
 
     // Check if interface is registered. If it's not, register it
     if( MarkerIDmap.find(interfaceID) == MarkerIDmap.end() ){
-        MarkerIDmap[markerID] = TLMPluginStructObj->Plugin->RegisteTLMInterface(markerID);
+        MarkerIDmap[interfaceID] = TLMPluginStructObj->Plugin->RegisteTLMInterface(interfaceID);
     }
 
     // Interface force ID in TLM manager
