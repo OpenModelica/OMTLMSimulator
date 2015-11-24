@@ -46,6 +46,8 @@ struct TLMMessageTypeConst {
     static const char TLM_REG_INTERFACE = 4;
     //! Component is done with registration, ready for simulation run.
     static const char TLM_CHECK_MODEL = 8;
+    //! Error detected, abort simulation
+    static const char TLM_ABORT = 16;
 };
 
 //! Message header used in all the messages sent between
