@@ -1,5 +1,5 @@
-# FORMAT-12.0
-# BEAST_VERSION: [12.0 - Jun 26 2015 09:49:24] Linked [Fri Jun 26 11:38:06 2015] in [/home/Beast/alex_devRep/src/Beast] Revision date=[Mon Jun 22 15:58:51 2015 +0200]  Tag=32511:75ffbfbadb36
+# FORMAT-12.1
+# BEAST_VERSION: [12.1 - Nov 20 2015 14:47:14] Linked [Fri Nov 20 15:32:06 2015] in [/home/Beast/alex_devRep/src/Beast] Revision date=[Fri Nov 20 15:15:36 2015 +0100]  Tag=33788:e80b869f08b8
 
 environment type=Environment
   uservar_section type=UserVariableSection name=General
@@ -12,6 +12,7 @@ environment type=Environment
   end uservar_section; /* General:UserVariableSection */ 
   def time=0 unit="s";
   def StartWriteTime=0 unit="s";
+  def StartThermalTime=0 unit="s";
   def timeEnd=1 unit="s";
   def SimulateWhat=1;
   def StartStateWhat=1;
@@ -29,7 +30,24 @@ environment type=Environment
   def NondimNewtonErrTol=0;
   def MaxOrderBDF=3;
   def L0=L00 unit="m";
+  def contactMaxGap=(L00)/2 unit="m";
+  def contactMaxAngle=0.78539816339744828 unit="rad";
   def QuasiStaticFlg=0;
+  def h_wear_perf_defined=1;
+  def FrettingFatigueRisk_Acc_perf_defined=1;
+  def E_slip_perf_defined=1;
+  def P_slip_min_perf_defined=1;
+  def V_slip_perf_defined=1;
+  def P_totloss_perf_defined=1;
+  def P_squeeze_perf_defined=1;
+  def P_roll_perf_defined=1;
+  def P_slip_perf_defined=1;
+  def Lambda_perf_defined=1;
+  def p_perf_defined=1;
+  def phi_skew_perf_defined=1;
+  def Cost_perf_defined=1;
+  def CO2_mfg_perf_defined=1;
+  def CO2_use_defined=1;
   def postProcessingDirective.file(@)="Empty";
   def OperationTime=1.e+8 unit="s";
   def CO2EnergyEmission=2.3e-9 unit="kg/J";
@@ -114,6 +132,10 @@ environment type=Environment
     end uservar_section; /* General:UserVariableSection */ 
     def Description="DGBB";
     def DrawingName="";
+    def ProductDesignation_Z50="";
+    def ProductType_Z11="";
+    def ComponentType_Z12="";
+    def DesignVariant_Z14="";
     lubrication type=LubricationNode name=lubricant
       def FluidSimulationMode=0;
       def Lubricant="Shell_Turbo_T68";
@@ -133,6 +155,9 @@ environment type=Environment
       end uservar_section; /* bW`General:UserVariableSection */ 
       def Description="";
       def DrawingName="";
+      def ProductType_Z11="";
+      def ComponentType_Z12="";
+      def DesignVariant_Z14="";
       def size=3;
       def cgp`RC_nom[cc]={(ORD20+IRD20)/4 , 0 , 0 }  unit="m,rad,m";
       def cgp`DRC_incr_nom[cc]={0 , 0 , 0 }  unit="m,rad,m";
@@ -160,6 +185,9 @@ environment type=Environment
         surface type=BallSeg name=sC
           def Description="";
           def Label="";
+          def allowContact=1;
+          def connect_from="";
+          def connect_to="";
           def UseStaticDeformationModeShapes=0;
           def UseStaticLoadModeShapes=0;
           def UseStaticTemperatureModeShapes=0;
@@ -201,6 +229,9 @@ environment type=Environment
     body type=Ring name=bIR numRotSegs=6
       def Description="";
       def DrawingName="";
+      def ProductType_Z11="";
+      def ComponentType_Z12="";
+      def DesignVariant_Z14="";
       def ExplodePos=-0.75;
       def Material="SKF3";
       def Edit_sigma_lim=0;
@@ -227,11 +258,14 @@ environment type=Environment
         def TLMEnabledFlg=1;
         def R[cg]={0 , 0 , 0 }  unit="m";
         def phiSequence[cg]=0;
-        def phi[cg]={pi/2 , 0 , 0 }  unit="rad";
+        def phi[cg]={0 , 0 , 0 }  unit="rad";
       end coordinate_system; /* bIR`cs1:FixedCtlPoint */ 
       surface type=RotSeg name=s1
         def Description="";
         def Label="";
+        def allowContact=1;
+        def connect_from="";
+        def connect_to="";
         def UseStaticDeformationModeShapes=0;
         def UseStaticLoadModeShapes=0;
         def UseStaticTemperatureModeShapes=0;
@@ -266,6 +300,7 @@ environment type=Environment
         def sigma_res=0 unit="Pa";
         def SegmentResolutionFactor_u=1;
         def SegmentResolutionFactor_v=1;
+        def UseSegmentMeshParameters=0;
         def cr`x=IRD20/2 unit="m";
         def cr`Dx.DefinedFlg=0;
         def cr`z=0 unit="m";
@@ -278,6 +313,9 @@ environment type=Environment
       surface type=RotSeg name=s2
         def Description="";
         def Label="";
+        def allowContact=1;
+        def connect_from="";
+        def connect_to="";
         def UseStaticDeformationModeShapes=0;
         def UseStaticLoadModeShapes=0;
         def UseStaticTemperatureModeShapes=0;
@@ -312,6 +350,7 @@ environment type=Environment
         def sigma_res=0 unit="Pa";
         def SegmentResolutionFactor_u=1;
         def SegmentResolutionFactor_v=1;
+        def UseSegmentMeshParameters=0;
         def cr`x=IRD30/2 unit="m";
         def cr`Dx.DefinedFlg=0;
         def cr`z=-IRL01/2 unit="m";
@@ -324,6 +363,7 @@ environment type=Environment
       surface type=RotSeg name=s3
         def Description="";
         def Label="6208";
+        def allowContact=0;
         def UseStaticDeformationModeShapes=0;
         def UseStaticLoadModeShapes=0;
         def UseStaticTemperatureModeShapes=0;
@@ -358,6 +398,7 @@ environment type=Environment
         def sigma_res=0 unit="Pa";
         def SegmentResolutionFactor_u=1;
         def SegmentResolutionFactor_v=1;
+        def UseSegmentMeshParameters=0;
         def cr`x=(IRD30+IRD01)/4 unit="m";
         def cr`Dx.DefinedFlg=0;
         def cr`z=-IRL01/2 unit="m";
@@ -370,6 +411,7 @@ environment type=Environment
       surface type=RotSeg name=s4
         def Description="";
         def Label="";
+        def allowContact=0;
         def UseStaticDeformationModeShapes=0;
         def UseStaticLoadModeShapes=0;
         def UseStaticTemperatureModeShapes=0;
@@ -404,6 +446,7 @@ environment type=Environment
         def sigma_res=0 unit="Pa";
         def SegmentResolutionFactor_u=1;
         def SegmentResolutionFactor_v=1;
+        def UseSegmentMeshParameters=0;
         def cr`x=IRD01/2 unit="m";
         def cr`Dx.DefinedFlg=0;
         def cr`z=0 unit="m";
@@ -416,6 +459,7 @@ environment type=Environment
       surface type=RotSeg name=s5
         def Description="";
         def Label="6208";
+        def allowContact=0;
         def UseStaticDeformationModeShapes=0;
         def UseStaticLoadModeShapes=0;
         def UseStaticTemperatureModeShapes=0;
@@ -450,6 +494,7 @@ environment type=Environment
         def sigma_res=0 unit="Pa";
         def SegmentResolutionFactor_u=1;
         def SegmentResolutionFactor_v=1;
+        def UseSegmentMeshParameters=0;
         def cr`x=(IRD30+IRD01)/4 unit="m";
         def cr`Dx.DefinedFlg=0;
         def cr`z=IRL01/2 unit="m";
@@ -462,6 +507,9 @@ environment type=Environment
       surface type=RotSeg name=s6
         def Description="";
         def Label="";
+        def allowContact=1;
+        def connect_from="";
+        def connect_to="";
         def UseStaticDeformationModeShapes=0;
         def UseStaticLoadModeShapes=0;
         def UseStaticTemperatureModeShapes=0;
@@ -496,6 +544,7 @@ environment type=Environment
         def sigma_res=0 unit="Pa";
         def SegmentResolutionFactor_u=1;
         def SegmentResolutionFactor_v=1;
+        def UseSegmentMeshParameters=0;
         def cr`x=IRD30/2 unit="m";
         def cr`Dx.DefinedFlg=0;
         def cr`z=IRL01/2 unit="m";
@@ -509,6 +558,9 @@ environment type=Environment
     body type=Ring name=bER numRotSegs=6
       def Description="";
       def DrawingName="";
+      def ProductType_Z11="";
+      def ComponentType_Z12="";
+      def DesignVariant_Z14="";
       def ExplodePos=1.5;
       def Material="SKF3";
       def Edit_sigma_lim=0;
@@ -535,11 +587,14 @@ environment type=Environment
         def TLMEnabledFlg=1;
         def R[cg]={0 , 0 , 0 }  unit="m";
         def phiSequence[cg]=0;
-        def phi[cg]={pi/2 , 0 , 0 }  unit="rad";
+        def phi[cg]={0 , 0 , 0 }  unit="rad";
       end coordinate_system; /* bER`cs1:FixedCtlPoint */ 
       surface type=RotSeg name=s1
         def Description="";
         def Label="";
+        def allowContact=1;
+        def connect_from="";
+        def connect_to="";
         def UseStaticDeformationModeShapes=0;
         def UseStaticLoadModeShapes=0;
         def UseStaticTemperatureModeShapes=0;
@@ -574,6 +629,7 @@ environment type=Environment
         def sigma_res=0 unit="Pa";
         def SegmentResolutionFactor_u=1;
         def SegmentResolutionFactor_v=1;
+        def UseSegmentMeshParameters=0;
         def cr`x=ORD20/2 unit="m";
         def cr`Dx.DefinedFlg=0;
         def cr`z=0 unit="m";
@@ -586,6 +642,9 @@ environment type=Environment
       surface type=RotSeg name=s2
         def Description="";
         def Label="";
+        def allowContact=1;
+        def connect_from="";
+        def connect_to="";
         def UseStaticDeformationModeShapes=0;
         def UseStaticLoadModeShapes=0;
         def UseStaticTemperatureModeShapes=0;
@@ -620,6 +679,7 @@ environment type=Environment
         def sigma_res=0 unit="Pa";
         def SegmentResolutionFactor_u=1;
         def SegmentResolutionFactor_v=1;
+        def UseSegmentMeshParameters=0;
         def cr`x=ORD30/2 unit="m";
         def cr`Dx.DefinedFlg=0;
         def cr`z=ORL01/2 unit="m";
@@ -632,6 +692,7 @@ environment type=Environment
       surface type=RotSeg name=s3
         def Description="";
         def Label="";
+        def allowContact=0;
         def UseStaticDeformationModeShapes=0;
         def UseStaticLoadModeShapes=0;
         def UseStaticTemperatureModeShapes=0;
@@ -666,6 +727,7 @@ environment type=Environment
         def sigma_res=0 unit="Pa";
         def SegmentResolutionFactor_u=1;
         def SegmentResolutionFactor_v=1;
+        def UseSegmentMeshParameters=0;
         def cr`x=(ORD30+ORD10)/4 unit="m";
         def cr`Dx.DefinedFlg=0;
         def cr`z=ORL01/2 unit="m";
@@ -678,6 +740,7 @@ environment type=Environment
       surface type=RotSeg name=s4
         def Description="";
         def Label="";
+        def allowContact=0;
         def UseStaticDeformationModeShapes=0;
         def UseStaticLoadModeShapes=0;
         def UseStaticTemperatureModeShapes=0;
@@ -712,6 +775,7 @@ environment type=Environment
         def sigma_res=0 unit="Pa";
         def SegmentResolutionFactor_u=1;
         def SegmentResolutionFactor_v=1;
+        def UseSegmentMeshParameters=0;
         def cr`x=ORD10/2 unit="m";
         def cr`Dx.DefinedFlg=0;
         def cr`z=0 unit="m";
@@ -724,6 +788,7 @@ environment type=Environment
       surface type=RotSeg name=s5
         def Description="";
         def Label="";
+        def allowContact=0;
         def UseStaticDeformationModeShapes=0;
         def UseStaticLoadModeShapes=0;
         def UseStaticTemperatureModeShapes=0;
@@ -758,6 +823,7 @@ environment type=Environment
         def sigma_res=0 unit="Pa";
         def SegmentResolutionFactor_u=1;
         def SegmentResolutionFactor_v=1;
+        def UseSegmentMeshParameters=0;
         def cr`x=(ORD30+ORD10)/4 unit="m";
         def cr`Dx.DefinedFlg=0;
         def cr`z=-ORL01/2 unit="m";
@@ -770,6 +836,9 @@ environment type=Environment
       surface type=RotSeg name=s6
         def Description="";
         def Label="";
+        def allowContact=1;
+        def connect_from="";
+        def connect_to="";
         def UseStaticDeformationModeShapes=0;
         def UseStaticLoadModeShapes=0;
         def UseStaticTemperatureModeShapes=0;
@@ -804,6 +873,7 @@ environment type=Environment
         def sigma_res=0 unit="Pa";
         def SegmentResolutionFactor_u=1;
         def SegmentResolutionFactor_v=1;
+        def UseSegmentMeshParameters=0;
         def cr`x=ORD30/2 unit="m";
         def cr`Dx.DefinedFlg=0;
         def cr`z=-ORL01/2 unit="m";
@@ -817,6 +887,9 @@ environment type=Environment
     body type=DGBB_TN9_Cage name=bC leftCageFlg=true
       def Description="";
       def DrawingName="";
+      def ProductType_Z11="";
+      def ComponentType_Z12="";
+      def DesignVariant_Z14="";
       def ExplodePos=0.75;
       def Material="PA66_25GF";
       def Edit_sigma_lim=0;
@@ -860,6 +933,9 @@ environment type=Environment
       surface type=RotSeg name=s1
         def Description="";
         def Label="";
+        def allowContact=1;
+        def connect_from="";
+        def connect_to="";
         def UseStaticDeformationModeShapes=0;
         def UseStaticLoadModeShapes=0;
         def UseStaticTemperatureModeShapes=0;
@@ -894,6 +970,7 @@ environment type=Environment
         def sigma_res=0 unit="Pa";
         def SegmentResolutionFactor_u=1;
         def SegmentResolutionFactor_v=1;
+        def UseSegmentMeshParameters=0;
         def cr`x=CJD10/2 unit="m";
         def cr`Dx.DefinedFlg=0;
         def cr`z=0 unit="m";
@@ -906,6 +983,7 @@ environment type=Environment
       surface type=RotSeg name=s2
         def Description="";
         def Label="";
+        def allowContact=0;
         def UseStaticDeformationModeShapes=0;
         def UseStaticLoadModeShapes=0;
         def UseStaticTemperatureModeShapes=0;
@@ -940,6 +1018,7 @@ environment type=Environment
         def sigma_res=0 unit="Pa";
         def SegmentResolutionFactor_u=1;
         def SegmentResolutionFactor_v=1;
+        def UseSegmentMeshParameters=0;
         def cr`x=CJD10/2-0.1*mm unit="m";
         def cr`Dx.DefinedFlg=0;
         def cr`z=-CJL63 unit="m";
@@ -952,6 +1031,7 @@ environment type=Environment
       surface type=RotSeg name=s3
         def Description="";
         def Label="";
+        def allowContact=0;
         def UseStaticDeformationModeShapes=0;
         def UseStaticLoadModeShapes=0;
         def UseStaticTemperatureModeShapes=0;
@@ -986,6 +1066,7 @@ environment type=Environment
         def sigma_res=0 unit="Pa";
         def SegmentResolutionFactor_u=1;
         def SegmentResolutionFactor_v=1;
+        def UseSegmentMeshParameters=0;
         def cr`x=CJD40/2 unit="m";
         def cr`Dx.DefinedFlg=0;
         def cr`z=-CJL63 unit="m";
@@ -998,6 +1079,7 @@ environment type=Environment
       surface type=RotSeg name=s4
         def Description="";
         def Label="";
+        def allowContact=0;
         def UseStaticDeformationModeShapes=0;
         def UseStaticLoadModeShapes=0;
         def UseStaticTemperatureModeShapes=0;
@@ -1032,6 +1114,7 @@ environment type=Environment
         def sigma_res=0 unit="Pa";
         def SegmentResolutionFactor_u=1;
         def SegmentResolutionFactor_v=1;
+        def UseSegmentMeshParameters=0;
         def cr`x=CJD40/2 unit="m";
         def cr`Dx.DefinedFlg=0;
         def cr`z=-CJL63 unit="m";
@@ -1044,6 +1127,7 @@ environment type=Environment
       surface type=RotSeg name=s5
         def Description="";
         def Label="";
+        def allowContact=0;
         def UseStaticDeformationModeShapes=0;
         def UseStaticLoadModeShapes=0;
         def UseStaticTemperatureModeShapes=0;
@@ -1078,6 +1162,7 @@ environment type=Environment
         def sigma_res=0 unit="Pa";
         def SegmentResolutionFactor_u=1;
         def SegmentResolutionFactor_v=1;
+        def UseSegmentMeshParameters=0;
         def cr`x=CJD50/2 unit="m";
         def cr`Dx.DefinedFlg=0;
         def cr`z=CJL62-CJL63 unit="m";
@@ -1090,6 +1175,7 @@ environment type=Environment
       surface type=RotSeg name=s6
         def Description="";
         def Label="";
+        def allowContact=0;
         def UseStaticDeformationModeShapes=0;
         def UseStaticLoadModeShapes=0;
         def UseStaticTemperatureModeShapes=0;
@@ -1124,6 +1210,7 @@ environment type=Environment
         def sigma_res=0 unit="Pa";
         def SegmentResolutionFactor_u=1;
         def SegmentResolutionFactor_v=1;
+        def UseSegmentMeshParameters=0;
         def cr`x=CJD41/2 unit="m";
         def cr`Dx.DefinedFlg=0;
         def cr`z=-CJL63 unit="m";
@@ -1136,6 +1223,7 @@ environment type=Environment
       surface type=RotSeg name=s7
         def Description="";
         def Label="";
+        def allowContact=0;
         def UseStaticDeformationModeShapes=0;
         def UseStaticLoadModeShapes=0;
         def UseStaticTemperatureModeShapes=0;
@@ -1170,6 +1258,7 @@ environment type=Environment
         def sigma_res=0 unit="Pa";
         def SegmentResolutionFactor_u=1;
         def SegmentResolutionFactor_v=1;
+        def UseSegmentMeshParameters=0;
         def cr`x=CJD41/2 unit="m";
         def cr`Dx.DefinedFlg=0;
         def cr`z=-CJL63 unit="m";
@@ -1182,6 +1271,7 @@ environment type=Environment
       surface type=RotSeg name=s8
         def Description="";
         def Label="";
+        def allowContact=0;
         def UseStaticDeformationModeShapes=0;
         def UseStaticLoadModeShapes=0;
         def UseStaticTemperatureModeShapes=0;
@@ -1216,6 +1306,7 @@ environment type=Environment
         def sigma_res=0 unit="Pa";
         def SegmentResolutionFactor_u=1;
         def SegmentResolutionFactor_v=1;
+        def UseSegmentMeshParameters=0;
         def cr`x=CJD01/2 unit="m";
         def cr`Dx.DefinedFlg=0;
         def cr`z=-CJL63+CJL24 unit="m";
@@ -1228,6 +1319,9 @@ environment type=Environment
       surface type=RotSeg name=s9
         def Description="";
         def Label="";
+        def allowContact=1;
+        def connect_from="";
+        def connect_to="";
         def UseStaticDeformationModeShapes=0;
         def UseStaticLoadModeShapes=0;
         def UseStaticTemperatureModeShapes=0;
@@ -1262,6 +1356,7 @@ environment type=Environment
         def sigma_res=0 unit="Pa";
         def SegmentResolutionFactor_u=1;
         def SegmentResolutionFactor_v=1;
+        def UseSegmentMeshParameters=0;
         def cr`x=CJD01/2 unit="m";
         def cr`Dx.DefinedFlg=0;
         def cr`z=0 unit="m";
@@ -1274,6 +1369,7 @@ environment type=Environment
       surface type=RotSeg name=s10
         def Description="";
         def Label="";
+        def allowContact=0;
         def UseStaticDeformationModeShapes=0;
         def UseStaticLoadModeShapes=0;
         def UseStaticTemperatureModeShapes=0;
@@ -1308,6 +1404,7 @@ environment type=Environment
         def sigma_res=0 unit="Pa";
         def SegmentResolutionFactor_u=1;
         def SegmentResolutionFactor_v=1;
+        def UseSegmentMeshParameters=0;
         def cr`x=CJD50/2 unit="m";
         def cr`Dx.DefinedFlg=0;
         def cr`z=CJL61-CJL63 unit="m";
@@ -1321,6 +1418,9 @@ environment type=Environment
         def Description="";
         surface type=C2Seg index=1
           def Label="";
+          def allowContact=1;
+          def connect_from="";
+          def connect_to="";
           def UseStaticDeformationModeShapes=0;
           def UseStaticLoadModeShapes=0;
           def UseStaticTemperatureModeShapes=0;
@@ -1355,6 +1455,7 @@ environment type=Environment
           def sigma_res=0 unit="Pa";
           def SegmentResolutionFactor_u=1;
           def SegmentResolutionFactor_v=1;
+          def UseSegmentMeshParameters=0;
           def cr`R[cI][cI]={0*CJD50/2 , 0.0 , -CJD30/2 }  unit="m";
           def cr`phi[cI]={0 , 0 , -pi/2 }  unit="rad";
           def cr`phiSequence[cI]=0;
@@ -1368,6 +1469,7 @@ environment type=Environment
         def Description="";
         surface type=C2Seg index=1
           def Label="";
+          def allowContact=0;
           def UseStaticDeformationModeShapes=0;
           def UseStaticLoadModeShapes=0;
           def UseStaticTemperatureModeShapes=0;
@@ -1402,6 +1504,7 @@ environment type=Environment
           def sigma_res=0 unit="Pa";
           def SegmentResolutionFactor_u=1;
           def SegmentResolutionFactor_v=1;
+          def UseSegmentMeshParameters=0;
           def cr`R[cI][cI]={0*CJD50/2 , CJD30*sin(CJA39)/2 , CJD30*cos(CJA39)/2 }  unit="m";
           def cr`phi[cI]={0 , (pi/2-CJA39) , -pi/2 }  unit="rad";
           def cr`phiSequence[cI]=0;
@@ -1415,6 +1518,7 @@ environment type=Environment
         def Description="";
         surface type=C2Seg index=1
           def Label="";
+          def allowContact=0;
           def UseStaticDeformationModeShapes=0;
           def UseStaticLoadModeShapes=0;
           def UseStaticTemperatureModeShapes=0;
@@ -1449,6 +1553,7 @@ environment type=Environment
           def sigma_res=0 unit="Pa";
           def SegmentResolutionFactor_u=1;
           def SegmentResolutionFactor_v=1;
+          def UseSegmentMeshParameters=0;
           def cr`R[cI][cI]={0*CJD50/2 , CJR32*sin(pi/4) , CJR32*cos(pi/4)-CJL52 }  unit="m";
           def cr`phi[cI]={0 , -CJA39 , -pi/2 }  unit="rad";
           def cr`phiSequence[cI]=0;
@@ -1462,6 +1567,7 @@ environment type=Environment
         def Description="";
         surface type=C2Seg index=1
           def Label="";
+          def allowContact=0;
           def UseStaticDeformationModeShapes=0;
           def UseStaticLoadModeShapes=0;
           def UseStaticTemperatureModeShapes=0;
@@ -1496,6 +1602,7 @@ environment type=Environment
           def sigma_res=0 unit="Pa";
           def SegmentResolutionFactor_u=1;
           def SegmentResolutionFactor_v=1;
+          def UseSegmentMeshParameters=0;
           def cr`R[cI][cI]={0*CJD50/2 , -CJD30*sin(CJA39)/2 , CJD30*cos(CJA39)/2 }  unit="m";
           def cr`phi[cI]={0 , -(pi/2-CJA39) , -pi/2 }  unit="rad";
           def cr`phiSequence[cI]=0;
@@ -1509,6 +1616,7 @@ environment type=Environment
         def Description="";
         surface type=C2Seg index=1
           def Label="";
+          def allowContact=0;
           def UseStaticDeformationModeShapes=0;
           def UseStaticLoadModeShapes=0;
           def UseStaticTemperatureModeShapes=0;
@@ -1543,6 +1651,7 @@ environment type=Environment
           def sigma_res=0 unit="Pa";
           def SegmentResolutionFactor_u=1;
           def SegmentResolutionFactor_v=1;
+          def UseSegmentMeshParameters=0;
           def cr`R[cI][cI]={0*CJD50/2 , -CJR32*sin(pi/4) , CJR32*cos(pi/4)-CJL52 }  unit="m";
           def cr`phi[cI]={0 , CJA39 , -pi/2 }  unit="rad";
           def cr`phiSequence[cI]=0;
@@ -1556,6 +1665,7 @@ environment type=Environment
         def Description="";
         surface type=C2Seg index=1
           def Label="";
+          def allowContact=0;
           def UseStaticDeformationModeShapes=0;
           def UseStaticLoadModeShapes=0;
           def UseStaticTemperatureModeShapes=0;
@@ -1590,6 +1700,7 @@ environment type=Environment
           def sigma_res=0 unit="Pa";
           def SegmentResolutionFactor_u=1;
           def SegmentResolutionFactor_v=1;
+          def UseSegmentMeshParameters=0;
           def cr`R[cI][cI]={0*CJD50/2 , 0 , -CJR31 }  unit="m";
           def cr`phi[cI]={pi , 0 , 0 }  unit="rad";
           def cr`phiSequence[cI]=0;
