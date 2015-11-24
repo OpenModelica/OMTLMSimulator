@@ -23,7 +23,7 @@
 	 useful for translations between the different models.
 	 Position and orientation is defined with respect to the meta
 	 models global inertial system. -->
-  <SubModel ExactStep="0" Name="brg1" Position="0,0,0" Angle321="1,5708,0,0" ModelFile="dgbb" StartCommand="StartTLMBeast">
+  <SubModel ExactStep="0" Name="brg1" Position="0,-0.1,0" Angle321="0,0,0" ModelFile="dgbb" StartCommand="StartTLMBeast">
    <Annotation Origin="{0,30}" Extent="{-10,-10,10,10}" Rotation="0" Visible="true"/>
    <!-- TLM interface points for SubModel brg1 -->
    <InterfacePoint Name="bIR`cs1"/>
