@@ -2,19 +2,22 @@ package TLM
   package TLM_Functions
     class TLMPlugin
       extends ExternalObject;
-        function constructor
-          output TLMPlugin tlmPlugin;
-          external "C" tlmPlugin = initialize_TLM() annotation(Include = "#include<tlmforce.h>", Library = "tlmopenmodelica", IncludeDirectory = "modelica://TLM/Resources/Include", LibraryDirectory = "modelica://TLM/Resources/Library");
-        end constructor;
 
-        function destructor
-          input TLMPlugin tlmPlugin;
-          external "C" deinitialize_TLM(tlmPlugin) annotation(Include = "#include<tlmforce.h>", Library = "tlmopenmodelica", IncludeDirectory = "modelica://TLM/Resources/Include", LibraryDirectory = "modelica://TLM/Resources/Library");
-        end destructor;
+      function constructor
+        output TLMPlugin tlmPlugin;
+      
+        external "C" tlmPlugin = initialize_TLM() annotation(Include = "#include<tlmforce.h>", Library = "tlmopenmodelica", IncludeDirectory = "modelica://TLM/Resources/Include", LibraryDirectory = "modelica://TLM/Resources/Library");
+      end constructor;
+
+      function destructor
+        input TLMPlugin tlmPlugin;
+      
+        external "C" deinitialize_TLM(tlmPlugin) annotation(Include = "#include<tlmforce.h>", Library = "tlmopenmodelica", IncludeDirectory = "modelica://TLM/Resources/Include", LibraryDirectory = "modelica://TLM/Resources/Library");
+      end destructor;
     end TLMPlugin;
-    
+
     function TLMSetMotion
-      input TLMPlugin tlmPlugin; 
+      input TLMPlugin tlmPlugin;
       input String name "Name of the interface";
       input Real time_in "Simulation time";
       input Real R[3] "Position vector - can be neglected (set {0,0,0}) if you do not use 3D modeling and verification";
@@ -46,13 +49,13 @@ package TLM
       output Real TLMdelay "The TLM delay for the secific interface";
     
       external "C" TLMdelay = get_tlm_delay(name) annotation(Include = "#include<tlmforce.h>", Library = "tlmopenmodelica", IncludeDirectory = "modelica://TLM/Resources/Include", LibraryDirectory = "modelica://TLM/Resources/Library");
-      annotation(Icon(coordinateSystem(extent = {{-100, -100}, {100, 100}}, preserveAspectRatio = true, initialScale = 0.1, grid = {10, 10}), graphics = {Rectangle(visible = true, fillColor = {255, 85, 0}, fillPattern = FillPattern.Solid, extent = {{-100, -100}, {100, 100}}, radius = 20), Text(visible = true, origin = {3.13, 5}, textColor = {255, 255, 255}, extent = {{-66.87, -65}, {66.87, 65}}, textString = "F")}), __OpenModelica_Impure=true);
+      annotation(Icon(coordinateSystem(extent = {{-100, -100}, {100, 100}}, preserveAspectRatio = true, initialScale = 0.1, grid = {10, 10}), graphics = {Rectangle(visible = true, fillColor = {255, 85, 0}, fillPattern = FillPattern.Solid, extent = {{-100, -100}, {100, 100}}, radius = 20), Text(visible = true, origin = {3.13, 5}, textColor = {255, 255, 255}, extent = {{-66.87, -65}, {66.87, 65}}, textString = "F")}), __OpenModelica_Impure = true);
     end TLMGetDelay;
 
     function TLMSetDebugMode
       input Boolean DebugFlg "The TLM debug flag, enable or disable debug mode";
     
-      external "C" set_debug_mode(DebugFlg) annotation(Include = "#include<tlmforce.h>", Library = "tlmopenmodelica", IncludeDirectory = "modelica://TLM/Resources/Include", LibraryDirectory = "modelica://TLM/Resources/Library", __OpenModelica_Impure=true);
+      external "C" set_debug_mode(DebugFlg) annotation(Include = "#include<tlmforce.h>", Library = "tlmopenmodelica", IncludeDirectory = "modelica://TLM/Resources/Include", LibraryDirectory = "modelica://TLM/Resources/Library", __OpenModelica_Impure = true);
       annotation(Icon(coordinateSystem(extent = {{-100, -100}, {100, 100}}, preserveAspectRatio = true, initialScale = 0.1, grid = {10, 10}), graphics = {Rectangle(visible = true, fillColor = {255, 85, 0}, fillPattern = FillPattern.Solid, extent = {{-100, -100}, {100, 100}}, radius = 20), Text(visible = true, origin = {3.13, 5}, textColor = {255, 255, 255}, extent = {{-66.87, -65}, {66.87, 65}}, textString = "F")}));
     end TLMSetDebugMode;
     annotation(Icon(coordinateSystem(extent = {{-100, -100}, {100, 100}}, preserveAspectRatio = true, initialScale = 0.1, grid = {10, 10}), graphics = {Rectangle(visible = true, fillColor = {255, 85, 0}, fillPattern = FillPattern.Solid, extent = {{-100, -100}, {100, 100}}, radius = 20), Text(visible = true, origin = {3.13, 5}, textColor = {255, 255, 255}, extent = {{-66.87, -65}, {66.87, 65}}, textString = "F")}), Diagram(coordinateSystem(extent = {{-148.5, -105}, {148.5, 105}}, preserveAspectRatio = true, initialScale = 0.1, grid = {5, 5})));
@@ -142,11 +145,10 @@ package TLM
       r = frame_a.r_0;
       v = der(frame_a.r_0);
       w = M.resolve2(AT, frame_a.R.w);
-      // w = frame_a.R.w;
       //
       // Transform force and moment into local system
       frame_a.f = M.resolve2(A, f);
-      frame_a.t = M.resolve2(A, t - cross(r, f));
+      frame_a.t = M.resolve2(A, t);
     algorithm
       (f, t) := TLM_Functions.TLMGetForce(tlmPlugin, interfaceName, time, r, A, v, w);
       annotation(Diagram, Icon(coordinateSystem(extent = {{-100, -100}, {100, 100}}, preserveAspectRatio = false, initialScale = 0.1, grid = {10, 10}), graphics = {Rectangle(origin = {10, 0}, fillColor = {0, 170, 0}, fillPattern = FillPattern.Sphere, extent = {{-80, 70}, {70, -80}}), Text(origin = {15, -5}, extent = {{-65, 65}, {65, -65}}, textString = "TLM")}));
