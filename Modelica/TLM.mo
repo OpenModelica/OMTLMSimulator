@@ -136,7 +136,7 @@ package TLM
       //
       // Transform force and moment into local system
       frame_a.f = M.resolve2(A, f);
-      frame_a.t = M.resolve2(A, t - cross(r, f));
+      frame_a.t = M.resolve2(A, t);
     algorithm
       (f, t) := TLM_Functions.TLMGetForce(interfaceName, time, r, A, v, w);
     algorithm
