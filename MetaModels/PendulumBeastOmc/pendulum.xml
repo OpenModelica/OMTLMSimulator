@@ -60,5 +60,5 @@
        to not define this "system dependent settings" here.
        Use some system setup instead that can be given or read by 
        the tlmmanager.  -->
- <SimulationParams StartTime="0.0" StopTime="1.0"/>
+ <SimulationParams StartTime="0.0" StopTime="10.0"/>
 </Model>

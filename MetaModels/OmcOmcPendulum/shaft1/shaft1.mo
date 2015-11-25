@@ -1,5 +1,5 @@
 model shaft1
-  inner Modelica.Mechanics.MultiBody.World world(enableAnimation = false, animateWorld = false, animateGravity = false) annotation(Placement(visible = true, transformation(origin = {-71.9212, 77.3399}, extent = {{-12, -12}, {12, 12}}, rotation = 0)));
+  inner Modelica.Mechanics.MultiBody.World world(enableAnimation = false, animateWorld = false, animateGravity = false, n = {-1, 0, 0}) annotation(Placement(visible = true, transformation(origin = {-71.9212, 77.3399}, extent = {{-12, -12}, {12, 12}}, rotation = 0)));
   Modelica.Mechanics.MultiBody.Joints.Spherical spherical1 annotation(Placement(visible = true, transformation(origin = {-6.89655, 77.3399}, extent = {{-12, -12}, {12, 12}}, rotation = 0)));
   TLM.TLM_Interface_3D.TLMInterface3D tlminterface3domc1 annotation(Placement(visible = true, transformation(origin = {26, -4}, extent = {{-19, -19}, {19, 19}}, rotation = 0)));
   Modelica.Mechanics.MultiBody.Parts.BodyCylinder bodycylinder1(r_shape = {0, 0, 0}, r = {0, 0, 0.5}) annotation(Placement(visible = true, transformation(origin = {48, 78}, extent = {{-12, -12}, {12, 12}}, rotation = 0)));
