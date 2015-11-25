@@ -78,11 +78,12 @@ void MonitorTimeStep(TLMPlugin* TLMlink, MetaModel& model, double SimTime, std::
 
         for( int i=0 ; i<nTLMInterfaces ; i++ ){
             TLMInterfaceProxy& interfaceProxy = model.GetTLMInterfaceProxy(i);
-
-            TLMErrorLog::Log("Data request for " + interfaceProxy.GetName() + " for time " + ToStr(SimTime) );
-
             int interfaceID = interfaceProxy.GetID();
-            if( interfaceID >= 0 ){
+            int connectionID = interfaceProxy.GetConnectionID();
+
+            TLMErrorLog::Log("Data request for " + interfaceProxy.GetName() + " for time " + ToStr(SimTime) + ", id: " + ToStr(interfaceID));
+
+            if( connectionID >= 0 ){
                 TLMTimeData& CurTimeData = dataStorage[interfaceID];
                 TLMlink->GetTimeData(interfaceID, SimTime, CurTimeData);
             }
@@ -102,7 +103,7 @@ void printHeader(MetaModel& model, std::ofstream& dataFile)
     for( int i=0 ; i<nTLMInterfaces ; i++ ){
         TLMInterfaceProxy& interfaceProxy = model.GetTLMInterfaceProxy(i);
         TLMComponentProxy& component = model.GetTLMComponentProxy(interfaceProxy.GetComponentID());
-        if( interfaceProxy.GetID() >= 0 ){
+        if( interfaceProxy.GetConnectionID() >= 0 ){
 
             // Comma between interfaces
             if(nActiveInterfaces > 0) dataFile << ",";
@@ -133,7 +134,7 @@ void printData(MetaModel& model, std::ofstream& dataFile, std::map<int, TLMTimeD
 
     for( int i=0 ; i<nTLMInterfaces ; i++ ){
         TLMInterfaceProxy& interfaceProxy = model.GetTLMInterfaceProxy(i);
-        if( interfaceProxy.GetID() >= 0 ){
+        if( interfaceProxy.GetConnectionID() >= 0 ){
 
             TLMTimeData& timeData = dataStorage.at(interfaceProxy.GetID());
 
