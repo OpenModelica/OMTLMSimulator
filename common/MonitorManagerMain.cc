@@ -110,12 +110,12 @@ void printHeader(MetaModel& model, std::ofstream& dataFile)
 
             // Add all TLM variable names for all active interfaces
             std::string name = component.GetName() + "." + interfaceProxy.GetName();
-            dataFile << name << ".rx," << name << ".ry," << name << ".rz,"; // Position vector
-            dataFile << name << ".ax," << name << ".ay," << name << ".az,"; // Orientation vector (three angles)
-            dataFile << name << ".vx," << name << ".vy," << name << ".vz,"; // velocity
-            dataFile << name << ".wx," << name << ".wy," << name << ".wz,"; // angular velocity
-            dataFile << name << ".fx," << name << ".fy," << name << ".fz,"; // force vector
-            dataFile << name << ".tx," << name << ".ty," << name << ".tz"; // torque vector
+            dataFile << name << ".R[cG][cG](1)," << name << ".R[cG][cG](2)," << name << ".R[cG][cG](3),"; // Position vector
+            dataFile << name << ".phi[cG](1)," << name << ".phi[cG](2)," << name << ".phi[cG](3),"; // Orientation vector (three angles)
+            dataFile << "\"" << name << ".vR[cG][cG,cG](1)\",\"" << name << ".vR[cG][cG,cG](2)\",\"" << name << ".vR[cG][cG,cG](3)\","; // velocity
+            dataFile << name << ".Omega[cG][cG](1)," << name << ".Omega[cG][cG](2)," << name << ".Omega[cG][cG](3),"; // angular velocity
+            dataFile << name << ".F_tie[cG](1)," << name << ".F_tie[cG](2)," << name << ".F_tie[cG](3),"; // force vector
+            dataFile << name << ".M_tie[cG][cG](1)," << name << ".M_tie[cG][cG](2)," << name << ".M_tie[cG][cG](3)"; // torque vector
 
             nActiveInterfaces++;
         }
