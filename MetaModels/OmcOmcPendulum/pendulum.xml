@@ -13,6 +13,7 @@
                   ModelFile="shaft1.mo"
                   Position="0.0,0.0,0.0"
 		  Angle321="0.0,0.0,0.0">
+        <Annotation Origin="{30,10}" Extent="{-10,-10,10,10}" Rotation="0" Visible="true"/>
 
                 <!-- TLM interface points for external-model shaft1 -->
                 <!-- positioned (0,0,0.5) inside external-model -->
@@ -28,6 +29,7 @@
                   ModelFile="shaft2.mo"
 		  Position="0.0,0.0,0.5"
 		  Angle321="0.0,0.0,0.0">
+        <Annotation Origin="{-30,30}" Extent="{-10,-10,10,10}" Rotation="0" Visible="true"/>
 
                 <!-- TLM interface points for external-model shaft2 -->
                 <!-- positioned (0,0,0) inside external-model -->
@@ -42,7 +44,9 @@
     <Connections>
 	<!-- Some more physical values: Delay="1e-5" Zf="8e4" Zfr="400" alpha="0.2" -->
         <Connection From="shaft1.tlm" To="shaft2.tlm" 
-		Delay="1e-4" Zf="1e4" Zfr="1e2" alpha="0.2"/>
+		Delay="1e-4" Zf="1e4" Zfr="1e2" alpha="0.2">
+          <Annotation Points="{{30,10},{5,10},{5,30},{-30,30}}"/>
+        </Connection>
     </Connections>
 
     <!-- Parameters for the simulation -->
