@@ -53,7 +53,7 @@ INCLXML-LINUX64=-I/usr/include/libxml2
 LIBXML-LINUX64=-lxml2
 CP-LIBXML-LINUX64=
 XTRLIBS-LINUX64=-lrt
-LIBPTHREAD-LINUX64=-L$(UP)/extralibs/pthread/$(ABI)/lib -lpthread
+LIBPTHREAD-LINUX64=-L$(UP)/extralibs/pthread/$(ABI)/lib -lpthread 
 
 #INCLXML-MINGW64=-I/usr/include/libxml2 
 #LIBXML-MINGW64=-lxml2
