@@ -1,0 +1,89 @@
+#################################################################################
+#
+#   @(#)Makefile	05/01
+#
+# Iakov Nakhimovski. Makefile for the tlmmodelica dynamic library
+
+#include $(MAKEFILEHEADHOME)/Makefile.head
+UP=../..
+
+# For microsoft and Dymola 
+#CC=mycl cl -DWIN32 -D_WIN32 -DXMSTATIC -DYY_NEVER_INTERACTIVE  /EHsc
+#cc=mycl cl -DWIN32 -D_WIN32 -DXMSTATIC -DYY_NEVER_INTERACTIVE  /EHsc
+
+CC=g++ -DYY_NEVER_INTERACTIVE -fPIC
+cc=g++ -DYY_NEVER_INTERACTIVE -fPIC
+
+#include $(UP)/Versions/Format.mak
+
+BINDIR=$(UP)/../bin/$(ABI)
+
+#################################################################################
+#
+# includes, try to do it good this time. previously everything
+# included everything. even though the slave doesn't need the solver
+# it needs the definition of the matrix, hence the slaves includes the
+# solver. 
+
+
+BNAME=libtlmmodelica.a
+MISCHOME=misc
+INCLUDES=  -I. \
+	-I../common \
+	-I$(MISCHOME)/include
+
+#CC=c:\Data\Dymola5.2\egcs\bin\g++.exe
+#cc=c:\Data\Dymola5.2\egcs\bin\gcc.exe
+
+$(ABI)/%.o: %.c
+	$(cc) $(INCLUDES) -c $< -o $@
+
+$(ABI)/%.o: %.cc
+	$(CC) $(INCLUDES) -c $< -o $@ 
+
+$(ABI)/%.o: ../common/%.cc
+	$(CC) $(INCLUDES) -c $< -o $@ 
+
+$(ABI)/%.o: misc/src/%.cc
+	$(CC) $(INCLUDES) -c $< -o $@ 
+
+$(ABI)/%.o: misc/src/%.cc
+	$(CC) $(INCLUDES) -c $< -o $@ 
+
+OBJS=  tlmforce.o 
+
+EXT_OBJS = PluginImplementer.o \
+	TLMClientComm.o \
+	TLMCommUtil.o \
+	TLMInterface.o \
+	TLMErrorLog.o \
+	TLMPlugin.o \
+	lightmat.o \
+	ErrorLog.o \
+	tostr.o \
+	Bstring.o \
+	double33s.o \
+	dsyevc3.o \
+	dsyevq3.o \
+	dsyevv3.o \
+	dsytrd3.o
+
+ABIOBJS=$(OBJS:%.o= $(ABI)/%.o) $(EXT_OBJS:%.o= $(ABI)/%.o)
+
+
+default: dirs $(ABIOBJS)
+	$(AR) ruv $(ABI)/$(BNAME) $(ABIOBJS)
+
+.PHONY: dirs clean
+
+dirs:
+	-mkdir $(ABI)
+# Problem that MingW contains no shell to perform the "if" command.	
+dirs_unix:	
+	-if [ ! -d $(ABI) ] ; then \
+	mkdir $(ABI) ; fi ;
+
+clean:
+	rm -fr $(ABI)/*
+
+# DO NOT DELETE
