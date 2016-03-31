@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 # OpenModelica TLM start-up script
 # Start with 6 arguments:
 # 1 XModelName (XModel directory) 
@@ -66,6 +66,7 @@ echo "loadFile(\"${TLMPluginPath}/OpenModelica/OM_TLM.mo\");" >> $MOSFILE
 echo "getErrorString();" >> $MOSFILE
 echo "loadFile(\"$MODELNAME.mo\");" >> $MOSFILE
 echo "getErrorString();" >> $MOSFILE
+echo "setLinkerFlags(\"-L/usr/lib64 -lstdc++\");" >> $MOSFILE
 echo "simulate($MODELNAME, startTime=$2, stopTime=$3, method=\"dassl\", outputFormat=\"mat\", simflags=\"-noEquidistantTimeGrid -maxStepSize=$4\");" >> $MOSFILE
 echo "getErrorString();" >> $MOSFILE
 
