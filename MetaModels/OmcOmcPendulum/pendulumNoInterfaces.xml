@@ -13,6 +13,7 @@
                   ModelFile="shaft1.mo"
                   Position="0.0,0.0,0.0"
 		  Angle321="0.0,0.0,0.0">
+        <Annotation Origin="{30,10}" Extent="{-10,-10,10,10}" Rotation="0" Visible="true"/>
 
         </SubModel>
 
@@ -23,10 +24,13 @@
                   ModelFile="shaft2.mo"
 		  Position="0.0,0.0,0.5"
 		  Angle321="0.0,0.0,0.0">
+        <Annotation Origin="{-30,30}" Extent="{-10,-10,10,10}" Rotation="0" Visible="true"/>
 
         </SubModel>
 
     </SubModels>
+    
+    <Connections/>
 
     <!-- Parameters for the simulation -->
     <SimulationParams  
