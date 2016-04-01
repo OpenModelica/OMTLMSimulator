@@ -45,7 +45,7 @@
 	<!-- Some more physical values: Delay="1e-5" Zf="8e4" Zfr="400" alpha="0.2" -->
         <Connection From="shaft1.tlm" To="shaft2.tlm" 
 		Delay="1e-4" Zf="1e4" Zfr="1e2" alpha="0.2">
-          <Annotation Points="{{30,10},{5,10},{5,30},{-30,30}}"/>
+          <Annotation Points="{{41,18},{50,18},{50,38},{-19,38}}"/>
         </Connection>
     </Connections>
 
