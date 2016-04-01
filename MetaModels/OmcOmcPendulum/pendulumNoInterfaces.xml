@@ -1,0 +1,17 @@
+<?xml version='1.0' encoding='ISO-8859-1'?>
+<!-- The root node is the meta-model -->
+<Model Name="Pendulum">
+  <!-- List of connected external-models -->
+  <SubModels>
+    <!-- external model "shaft1" positioned at (0,0,0) inside meta-model  -->
+    <SubModel ExactStep="0" Name="shaft1" Position="0.0,0.0,0.0" Angle321="0.0,0.0,0.0" ModelFile="shaft1.mo" StartCommand="/home/robbr48/Documents/Mercurial/TLMPlugin/bin/StartTLMOpenModelica">
+      <Annotation Origin="{-20,0}" Extent="{-10,-10,10,10}" Rotation="0" Visible="true"/>
+    </SubModel>
+    <!-- external model "shaft2" positioned at (0,0,0.5) inside meta-model -->
+    <SubModel ExactStep="0" Name="shaft2" Position="0.0,0.0,0.5" Angle321="0.0,0.0,0.0" ModelFile="shaft2.mo" StartCommand="/home/robbr48/Documents/Mercurial/TLMPlugin/bin/StartTLMOpenModelica">
+      <Annotation Origin="{18,0}" Extent="{-10,-10,10,10}" Rotation="0" Visible="true"/>
+    </SubModel>
+  </SubModels>
+  <!-- Parameters for the simulation -->
+  <SimulationParams StartTime="0" StopTime="5"/>
+</Model>
