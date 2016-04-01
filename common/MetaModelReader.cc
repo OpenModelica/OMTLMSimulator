@@ -34,6 +34,10 @@ void MetaModelReader::ReadComponents(xmlNode *node) {
             curAttrVal = FindAttributeByName(curNode, "ModelFile");
             string ModelFile((const char*)curAttrVal->content);
 
+            // ExactStep means synchronous communication.
+            // This means that the step size in the submodel is limited to the full
+            // TLM time delay instead of half, since no interpolation is required.
+            // It does not seem to work properly for some reason.
             curAttrVal = FindAttributeByName(curNode, "ExactStep");
             bool SolverMode = (curAttrVal->content[0] == '1');
 
