@@ -1,0 +1,27 @@
+<?xml version='1.0' encoding='ISO-8859-1'?>
+<!-- The root node is the meta-model -->
+<Model Name="Pendulum">
+  <!-- List of connected external-models -->
+  <SubModels>
+    <!-- external model "shaft1" positioned at (0,0,0) inside meta-model  -->
+    <SubModel ExactStep="0" Name="xmShaft1" Position="0,5,0" Angle321="1,2,3" ModelFile="Shaft1TLM" StartCommand="StartTLMBeast">
+      <!-- TLM interface points for external-model shaft1 -->
+      <!-- positioned (0,0,0.5) inside external-model -->
+      <InterfacePoint Name="bS`csRight" Position="0.0,0.0,0.02" Angle321="1.0,0.0,0.0"/>
+    </SubModel>
+    <!-- external model "shaft2" positioned at (0,0,0.5) inside meta-model  -->
+    <SubModel ExactStep="0" Name="xmShaft2" Position="0,0,0.4" Angle321="0,3,2" ModelFile="Shaft2TLM" StartCommand="StartTLMBeast">
+      <!-- TLM interface points for external-model shaft2 -->
+      <!-- positioned (0,0,0) inside external-model -->
+      <InterfacePoint Name="bS`csLeft" Position="0.0,0.0,-0.02" Angle321="0.0,1.0,0.0"/>
+    </SubModel>
+  </SubModels>
+  <!-- List of TLM connections -->
+  <Connections>
+    <!-- Some more physical values: Delay="1e-5" Zf="8e4" Zfr="400" alpha="0.2" -->
+    <Connection Zfr="1e2" From="xmShaft1.bS`csRight" alpha="0.2" To="xmShaft2.bS`csLeft" Zf="1e4" Delay="1e-4"/>
+  </Connections>
+  <!-- Parameters for the simulation -->
+  <SimulationParams StartTime="0" StopTime="10"/>
+</Model>
+
