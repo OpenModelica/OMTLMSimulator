@@ -254,7 +254,7 @@ double TLMInterface::hermite_interpolate(double time, double t[4], double f[4]){
 // the other field by interpolating/extrapolating the available data.
 void TLMInterface::GetTimeData(TLMTimeData& Instance) {
     GetTimeData(Instance, TimeData, false);
-    if( (Params.alpha > 0) && (Instance.time != TLMPlugin::TIME_WITHOUT_DATA)) {
+    if( (Params.alpha > 0) && (Instance.time != TLMPlugin::TIME_WITHOUT_DATA) && (DampedTimeData.size() > 0)) {
         TLMTimeData Buf;
 
         Buf.time = Instance.time - Params.Delay * TLM_DAMP_DELAY;

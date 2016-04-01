@@ -8,6 +8,7 @@
 #include <cstdlib>
 #include <cstring>
 #include <map>
+#include <sstream>
 #include "TLMErrorLog.h"
 #include "MetaModel.h"
 #include "MetaModelReader.h"
@@ -84,8 +85,21 @@ void MonitorTimeStep(TLMPlugin* TLMlink, MetaModel& model, double SimTime, std::
             TLMErrorLog::Log("Data request for " + interfaceProxy.GetName() + " for time " + ToStr(SimTime) + ", id: " + ToStr(interfaceID));
 
             if( connectionID >= 0 ){
+                TLMTimeData& PrevTimeData = dataStorage[interfaceID];
                 TLMTimeData& CurTimeData = dataStorage[interfaceID];
+
                 TLMlink->GetTimeData(interfaceID, SimTime, CurTimeData);
+
+                double delay = model.GetTLMConnection(interfaceProxy.GetConnectionID()).GetParams().Delay;
+                double alpha = model.GetTLMConnection(interfaceProxy.GetConnectionID()).GetParams().alpha;
+                TLMlink->GetTimeData(interfaceID, SimTime-delay, PrevTimeData);
+
+                //Apply damping factor, since this can not be done in GetTimeData (DampedTimeData is not available for monitor)
+                for(int i = 0; i < 6; i++) {
+                    CurTimeData.GenForce[i] =
+                            CurTimeData.GenForce[i] * (1 - alpha)
+                            + PrevTimeData.GenForce[i] * alpha;
+                }
             }
         }
     }
@@ -162,9 +176,9 @@ void printData(MetaModel& model, std::ofstream& dataFile, std::map<int, TLMTimeD
             // The wave is: C = - Force + Impedance * Velocity -> F = -(C - Imp*Vel)
             double3Vec force(0.0);
             double3Vec torque(0.0);
-//            TLMConnection& connection = model.GetTLMConnection(interfaceProxy.GetConnectionID());
+            TLMConnection& connection = model.GetTLMConnection(interfaceProxy.GetConnectionID());
             for(int i = 0; i < 3; i++) {
-#if 0
+#if 1
                 force(i+1) =  -timeData.GenForce[i] + connection.GetParams().Zf * timeData.Velocity[i];
                 torque(i+1) = -timeData.GenForce[i+3] + connection.GetParams().Zfr * timeData.Velocity[i+3];
 #else
