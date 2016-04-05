@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<fmiModelDescription fmiVersion="2.0" modelName="TLMPlugin" variableNamingConvention="structured" description="" generationDateAndTime="2016-04-05_10_01" guid="{fc4ea6b4-1496-4127-bb33-bda364eb5e85}" numberOfEventIndicators="0" generationTool="TLMPlugin">
+    <CoSimulation modelIdentifier="TLMPlugin" canHandleVariableCommunicationStepSize="true"/>
+    <ModelVariables>
+        <ScalarVariable valueReference="0" description="" name="tlm_velocity" causality="input">
+            <Real start="0"/>
+        </ScalarVariable>
+        <ScalarVariable valueReference="1"  initial="exact" description="" name="tlm_force" causality="output">
+            <Real start="0"/>
+        </ScalarVariable>
+    </ModelVariables>
+    <ModelStructure/>
+</fmiModelDescription>
