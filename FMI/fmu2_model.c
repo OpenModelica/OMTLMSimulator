@@ -16,8 +16,7 @@ along with this program. If not, contact Modelon AB <http://www.modelon.com>.
 
 #include <stdio.h>
 #include <string.h>
-
-#include "fmu2_model.h"
+#include "fmi_wrapper.h"
 
 /* Model calculation functions */
 static int calc_initialize(component_ptr_t comp)
@@ -223,10 +222,7 @@ fmi2Component fmi_instantiate(fmi2String instanceName, fmi2Type fmuType,
   const fmi2CallbackFunctions *functions, fmi2Boolean visible,
   fmi2Boolean loggingOn)
 {
-
-  char str[80];
-  sprintf(str, "Instantiate!");
-      //hopsan_instantiate();
+  tlm_instantiate();
 
 	component_ptr_t comp;
 	int k, p;

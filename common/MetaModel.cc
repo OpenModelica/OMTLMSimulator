@@ -328,6 +328,8 @@ void TLMComponentProxy::StartComponent(SimulationParams& SimParams, double MaxSt
         string strMaxStep = TLMErrorLog::ToStdStr(MaxStep);
         string serverName = SimParams.GetServerName();
 
+
+
 #if defined(WIN32)
 	_spawnlp(_P_NOWAIT, StartCommand.c_str(), StartCommand.c_str(),
 		 Name.c_str(),
@@ -350,6 +352,14 @@ void TLMComponentProxy::StartComponent(SimulationParams& SimParams, double MaxSt
 		ModelName.c_str(),
 		NULL );
 #else
+
+#if 1
+        TLMErrorLog::Log("Running start command.");
+        TLMErrorLog::Log(getenv("PATH"));
+        TLMErrorLog::Log(StartCommand+" "+Name+" "+startTime+" "+endTime+" "+strMaxStep+" "+serverName+" "+ModelName);
+#endif
+
+
         // We create a child that runs the simulation program.
         pid_t child;
         switch (child = fork()) {
