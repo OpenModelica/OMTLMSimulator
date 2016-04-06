@@ -15,12 +15,65 @@ endif
 
 include $(MAKEFILEHEADHOME)/Makefile.head
 
-CC=gcc
-CFLAGS=-I. -Iinclude
+RESOURCESDIR=$(INSTDIR)/Resources
+MISCHOME=../extralibs/misc
 
-fmu2_tlmplugin_cs: fmu2_tlmplugin_cs.o
-	$(CC) -fPIC -c fmu2_tlmplugin_cs.c -I. -Iinclude
-	$(CC) -fPIC -w -shared -static-libgcc fmu2_tlmplugin_cs.o -o TLMPlugin.so
+INCLUDES=  -I. \
+	-I../common \
+	-I$(MISCHOME)/include \
+  -I../extralibs/libxml2/include
+
+
+
+CFLAGS=-fPIC -Iinclude $(INCLUDES)
+LFLAGS=-w -shared -static-libgcc -static-libstdc++ -Wl,--rpath,'$ORIGIN/.'
+
+
+
+
+
+
+#todo: Archdir should not be hard coded to linux64
+BNAME=TLMPlugin.a
+INSTDIR=$(BINDIR)/OpenModelica
+BINARIESDIR=$(INSTDIR)/binaries
+ARCHDIR=$BINARIESDIR/linux64
+RESOURCESDIR=$(INSTDIR)/Resources
+
+
+CPP_FILES = fmi_wrapper.cc \
+	../common/PluginImplementer.cc \
+	../common/TLMClientComm.cc\
+	../common/TLMCommUtil.cc\
+	../common/TLMInterface.cc\
+	../common/TLMErrorLog.cc\
+	../common/TLMPlugin.cc\
+	../extralibs/misc/src/coordTrans.cc\
+	../extralibs/misc/src/double3Vec.cc\
+	../extralibs/misc/src/double33Mat.cc\
+	../extralibs/misc/src/strConv.cc
+
+C_FILES = fmu2_tlmplugin_cs.c
+
+OBJ_FILES = fmi_wrapper.o\
+	fmu2_tlmplugin_cs.o \
+	PluginImplementer.o \
+	TLMClientComm.o \
+	TLMCommUtil.o \
+	TLMInterface.o \
+	TLMErrorLog.o \
+	TLMPlugin.o \
+	coordTrans.o \
+	double3Vec.o \
+	double33Mat.o \
+	strConv.o
+
+
+
+fmu2_tlmplugin_cs: 
+	$(CC) -c $(CPP_FILES) $(CFLAGS)
+	$(cc) -c $(C_FILES) $(CFLAGS)
+	$(CC) $(LFLAGS) $(OBJ_FILES) -o TLMPlugin.so $(CFLAGS)
 	mkdir -p $(BINDIR)/FMU
 	mkdir -p $(BINDIR)/FMU/binaries
 	mkdir -p $(BINDIR)/FMU/binaries/linux64
@@ -28,6 +81,6 @@ fmu2_tlmplugin_cs: fmu2_tlmplugin_cs.o
 	cp -f modelDescription.xml $(BINDIR)/FMU
 
 clean :
-	rm fmu2_tlmplugin_cs.o TLMPlugin.so $(BINDIR)/FMU/modelDescription.xml $(BINDIR)/FMU/binaries/linux64/TLMPlugin.so
+	rm -f *.o *.so $(BINDIR)/FMU/modelDescription.xml $(BINDIR)/FMU/binaries/linux64/*.so
 
 # DO NOT DELETE
