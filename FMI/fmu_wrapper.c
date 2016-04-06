@@ -16,7 +16,7 @@ along with this program. If not, contact Modelon AB <http://www.modelon.com>.
 
 #include <stdio.h>
 #include <string.h>
-#include "fmi_wrapper.h"
+#include "tlmforce.h"
 
 /* Model calculation functions */
 static int calc_initialize(component_ptr_t comp)
