@@ -1,5 +1,5 @@
-#ifndef FMI_WRAPPER_H
-#define FMI_WRAPPER_H
+#ifndef FMI_TLMFORCE_H
+#define FMI_TLMFORCE_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -12,5 +12,5 @@ void tlm_instantiate();
 #endif
 
 
-#endif // FMI_WRAPPER_H
+#endif // FMI_TLMFORCE_H
 

@@ -26,11 +26,11 @@ along with this program. If not, contact Modelon AB <http://www.modelon.com>.
 /* Standard FMI 2.0 ME and CS types */
 #include <FMI2/fmi2Functions.h>
 
-#include "fmu2_model.h"
+#include "fmu_wrapper.h"
 
 /* #define MODEL_IDENTIFIER FMU_DUMMY_CS_MODEL_IDENTIFIER */
 
-#include "fmu2_model.c"
+#include "fmu_wrapper.c"
 
 
 

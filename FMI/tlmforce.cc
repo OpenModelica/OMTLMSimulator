@@ -6,8 +6,7 @@
 
 #include "TLMPlugin.h"
 #include "TLMErrorLog.h"
-#include "fmu2_model.h"
-#include "fmi_wrapper.h"
+#include "tlmforce.h"
 
 
 // The wrapper expect TLM parameters in this file.

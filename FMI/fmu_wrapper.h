@@ -15,11 +15,11 @@ You should have received a copy of the FMILIB_License.txt file
 along with this program. If not, contact Modelon AB <http://www.modelon.com>.
 */
 
-#ifndef FMU2_MODEL_H_
-#define FMU2_MODEL_H_
+#ifndef FMU_WRAPPER_H_
+#define FMU_WRAPPER_H_
 #include <FMI2/fmi2Functions.h>
 
-#include "fmu2_model_defines.h"
+#include "fmu_model_defines.h"
 #ifndef FMI2_Export
 	#define FMI2_Export DllExport
 #endif
@@ -246,4 +246,4 @@ fmi2Status		fmi_get_string_status(
 													fmi2String*  value);
 
 #endif /* End of fmi2Functions_h */
-#endif /* End of header FMU2_MODEL_H_ */
+#endif /* End of header FMU_WRAPPER_H_ */

@@ -1,6 +1,25 @@
-#################################################################################
-#
-# Robert Braun. Makefile for the generic FMU in TLMPlugin library
+################################################
+#                                              #
+# Robert Braun. Makefile for a generic FMU     #
+# for co-simualtion in TLMPlugin library.      #
+#                                              #
+# FMI requires a plain C interface. Hence,     #
+# the compilation is divided into a C++ part   #
+# and a C part. Objective files are linked     #
+# together at the end.                         #
+#                                              #
+# C++ files:                                   #
+#   tlmforce.cc - TLMPlugin interface          #
+# C files:                                     #
+#   fmu_cs.c - Main FMU file                   #
+#   fmu_wrapper.c - C wrapper for tlmforce.cc  #
+#                                              #
+# (fmu_wrapper.c is included from cmu_cs.c)    #
+#                                              #
+# After compilation, files must be compressed  #
+# to a zip-file with file extension "fmu".		 #
+#                                              #
+################################################
 
 # The following is need for BEAST compatibility
 ifeq ($(MAKEFILEHEADHOME),)
@@ -41,7 +60,7 @@ ARCHDIR=$BINARIESDIR/linux64
 RESOURCESDIR=$(INSTDIR)/Resources
 
 
-CPP_FILES = fmi_wrapper.cc \
+CPP_FILES = tlmforce.cc \
 	../common/PluginImplementer.cc \
 	../common/TLMClientComm.cc\
 	../common/TLMCommUtil.cc\
@@ -53,10 +72,10 @@ CPP_FILES = fmi_wrapper.cc \
 	../extralibs/misc/src/double33Mat.cc\
 	../extralibs/misc/src/strConv.cc
 
-C_FILES = fmu2_tlmplugin_cs.c
+C_FILES = fmu_cs.c
 
-OBJ_FILES = fmi_wrapper.o\
-	fmu2_tlmplugin_cs.o \
+OBJ_FILES = tlmforce.o \
+	fmu_cs.o \
 	PluginImplementer.o \
 	TLMClientComm.o \
 	TLMCommUtil.o \
@@ -68,7 +87,8 @@ OBJ_FILES = fmi_wrapper.o\
 	double33Mat.o \
 	strConv.o
 
-
+cc=clang
+CC=clang++
 
 fmu2_tlmplugin_cs: 
 	$(CC) -c $(CPP_FILES) $(CFLAGS)
