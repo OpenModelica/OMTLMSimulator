@@ -7,6 +7,10 @@ ifeq ($(ABI),)
   $(error Please set the ABI environment variable, typical choices are: WINDOWS32, WINDOWS64, or LINUX64)
 endif
 
+ifeq ($(OMDEV),)
+  OMDEV = $(OPENMODELICAHOME)
+endif
+
 ifeq ($(ABI),WINDOWS64)
   ifeq (MINGW64,$(findstring MINGW64,$(shell uname)))
     CC=g++
