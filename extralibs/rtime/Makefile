@@ -16,9 +16,6 @@ INSTALLDIR = ./lib/$(ABI)
 LIBNAME = lib/$(ABI)/librtime.a 
 LDLIBS = $(LIBS) $(LIBNAME)
 
-# Pthread include is needed for WINDOWS 
-INCLUDES=-I../pthread/include
-
 OFILES  = rtime.o timing.o $(HOST_OFILES)
 CFILES  = $(OFILES:%.o=%.c) 
 ABIOBJS = $(OFILES:%.o= $(ABI)/%.o)
