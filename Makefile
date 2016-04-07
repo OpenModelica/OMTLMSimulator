@@ -4,9 +4,11 @@
 ifeq ($(MAKEFILEHEADHOME),)
   UP=$(PWD)
   MAKEFILEHEADHOME=$(UP)
+  BINDIR=$(UP)/bin
 else
   # This is for BEAST
   UP=$(MAKEFILEHEADHOME)/src
+  BINDIR=$(UP)/../bin/$(ABI)
 endif
 
 
@@ -32,6 +34,7 @@ depend:
 	cd common; $(MAKE) depend
 
 clean:
+	rm -rf $(BINDIR)/*.dll 
 	cd common; $(MAKE) clean
 	cd extralibs; $(MAKE) clean
 	for i in ${allplugins} ; do \
