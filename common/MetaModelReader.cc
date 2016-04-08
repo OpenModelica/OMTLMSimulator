@@ -17,7 +17,7 @@ using namespace tlmMisc;
 // Input: node - pointer to the "SubModels" element node 
 //   - parent to all the SubModels
 // Input/Output: TheModel - structure is updated in the model representation
-void MetaModelReader::ReadComponents(xmlNode *node) {
+void MetaModelReader::ReadComponents(xmlNode *node, bool skipInterfaces=false) {
     for(xmlNode* curNode = node->children; curNode; curNode = curNode->next) {
         if(    (XML_ELEMENT_NODE == curNode->type)
                // A SubModel Node found, read parameters
@@ -69,7 +69,9 @@ void MetaModelReader::ReadComponents(xmlNode *node) {
             //if( scale == 0.0 ) scale = 1.0;
 
             // Read the interface definitions (should be in the children nodes)
-            ReadTLMInterfaceNodes(curNode, compID);
+            if(!skipInterfaces) {
+              ReadTLMInterfaceNodes(curNode, compID);
+            }
         }
     }
 }
@@ -308,7 +310,7 @@ void MetaModelReader::ReadTLMConnectionNode(xmlNode* node) {
 // ReadModel method processes input XML file and creates MetaModel definition.
 // Input: InputFile - input XML file name
 // Input/Output: TheModel - model structure to be build.
-void MetaModelReader::ReadModel(string& InputFile) {
+void MetaModelReader::ReadModel(std::string &InputFile, bool InterfaceRequestMode) {
 
     xmlDoc* doc = xmlParseFile(InputFile.c_str()); // open XML & parse it
 
@@ -320,13 +322,16 @@ void MetaModelReader::ReadModel(string& InputFile) {
 
     TLMErrorLog::Log("XML file is parsed OK. Creating model.");
 
-    xmlNode *components = FindChildByName(model_element, "SubModels");
+    xmlNode *components = FindChildByName(model_element, "SubModels");  //Don't load interfaces in interface request mode
 
-    ReadComponents(components);
+    ReadComponents(components, InterfaceRequestMode);
 
     xmlNode *connections = FindChildByName(model_element, "Connections", false); // We allow models without connections for interface request mode.
 
-    ReadTLMConnectionNode(connections);
+    //Don't load connections if interface request mode
+    if(!InterfaceRequestMode) {
+       ReadTLMConnectionNode(connections);
+    }
 
     xmlNode *sim_params = FindChildByName(model_element, "SimulationParams");
 
