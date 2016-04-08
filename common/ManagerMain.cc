@@ -141,7 +141,8 @@ int main(int argc, char* argv[]) {
         std::string inFile(argv[optind]);
 
         // read the XML file and build the model
-        modelReader.ReadModel(inFile);
+        // Note: Skip loading connections in interface request mode in case an interface no longer exists
+        modelReader.ReadModel(inFile,comMode == ManagerCommHandler::InterfaceRequestMode);
     }
     
     // Set preferred network port
@@ -163,6 +164,7 @@ int main(int argc, char* argv[]) {
     // Print interface information if needed.
     if( comMode == ManagerCommHandler::InterfaceRequestMode ){
         print_interface_information(theModel);
+        return 0;
     }
 
     return 0;
