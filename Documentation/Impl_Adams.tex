@@ -1,0 +1,267 @@
+\chapter{MSC.Adams TLM Plugin}
+
+{\bf Important note:}\\ The current version of the meta-model
+simulation environment does not propagate delay time (max. time step)
+from the meta-model to the MSC.ADAMS models automatically. Instead
+these values must be set in the Adams Command File (.acf). See
+Section~\ref{adams:startup-script} for details.
+
+
+MSC.Adams supports a C subroutine application programming interface
+(API) that can be integrated with your C/C++ code. It it is based
+on some C header files, for instance:
+
+{
+\scriptsize
+\begin{verbatim}
+// portability header from ADAMS
+#include "userPortName.h"
+
+// C-callable subroutines from ADAMS
+#include "utilCcallable.h"
+\end{verbatim}
+}
+
+
+The MSC.Adams TLMplugin implementation is based on the Adams {\em
+  GFOSUB} subroutine. This subroutine can be called from a general
+force element in Adams.
+
+{
+\scriptsize
+\begin{verbatim}
+// File gfo_wrapper.c
+//
+// GFOSUB ADAMS/Solver user subroutine interface implementation
+//
+
+// GFOSUB - is an interfacec function for general 6-component force tensor
+// that is 3-component force & 3-component torque.
+//
+// id -  id of this external function
+// time - current time. Note that adaptive step solver is used in ADAMS
+//    Unsuccessful steps are possible. TIMGET function can be used to check
+//    is the last call was a final RHS call.
+// par - parameters to the function - for GFOSUB expected:
+//    a marker, i.e. one parameter
+// nPar - number of parameters - should be 1 or 2. If second parameter exists, there will be debug output.
+// dflag - true if Jacobian calculation is in progress, i.e. small change of inputs
+//      For TLM purposes such calls can be made much faster since TLM force
+//       is dependent only on time and not on the states.
+// iflag - (init flag) true if solver is only after dependencies between vars
+//      We need to make sysary calls to the motion variables that TLM is dependent on.
+// result - array of 6 elements with the resulting force
+VOID_FUNCTION GFOSUB(int *id, REAL *time, REAL *par, int *nPar, BOOL *dflag, BOOL *iflag, REAL *result){
+
+...
+
+}
+\end{verbatim}
+}
+
+The {\em c\_sysary} function lets a user-written subroutine read
+information from ADAMS. Here we need it to get the displacement and
+velocity.
+
+{
+\scriptsize
+\begin{verbatim}
+    //  c_sysary(char *fncnam, int *ipar, int nsize, REAL *states, int *nstate,
+    //      BOOL *errflg);
+    // Input:
+    //  fncnam - name of the function, "DISP" for displacement
+    //  ipar, nsize - list of markers and the number of markers
+    //    DISP requires 1 to 3 markers where the distance is measured
+    //    to marker 1 origin from marker 2 (reference)
+    //    in coordinate system of marker 3 (basis) Setting markers
+    //     2 and 3 to "0" gives global inertia system as reference.
+    //     Markers 2 & 3 are optional.
+    //    For our case we use the marker submitted to GFOSUB in parameters
+    //    and ground.
+    // Output:
+    //   states, nstate - variable values and the number of variable returned
+    //   For "DISP" 6 variables giving position and orientation are returned
+    //   The orientation is given by Psi, Theta, Phi (ADAMS/Solver Euler angles)
+    //   c_rcnvrt(char *sys1, REAL *coord1, char *sys2, REAL *coord2, int *istat);
+    //   can be used to convert those to Euler parameters by specifying
+    //   sys1 = 'EULER' and sys2 = 'EULPAR' or directly to rotation matrix
+    //   (columnwise) by specifying sys2 = 'COSINES'.
+    //   errflg - returns TRUE on error.
+
+    // Get displacement
+    c_sysary ("DISP", markers, 3, disp, &ns, &errflg);
+
+    // Convert the angles from ADAMS "standard" Euler to rotation matrix (9-components)
+    c_rcnvrt("EULER",disp+3,"COSINES",rot,&errflg);
+
+    // Get velocity
+    c_sysary ("VEL",markers,4,vel,&ns,&errflg);
+\end{verbatim}
+}
+
+Adams also supports unit scales. This is useful since we assume SI
+units in the TLM interface, thus we can convert into the correct unit.
+
+{
+\scriptsize
+\begin{verbatim}
+    // Units scaling. See gtunts in ADAMS manual
+    BOOL existsUnits;
+    double scales[4];
+#define UNIT_SCALE_TIME 0
+#define UNIT_SCALE_LENGTH 1
+#define UNIT_SCALE_FORCE 2
+#define UNIT_SCALE_MASS 3
+    char units[3 * 4];
+
+    // gtunts retunes the unit scales to MKS as used in the model
+    c_gtunts(&existsUnits, scales, units);
+
+    if(existsUnits ) {	
+        // Scale transitional measures with length units + speeds with time units
+        if(scales[UNIT_SCALE_LENGTH] != 1.0) {
+            disp[0] *= scales[UNIT_SCALE_LENGTH];
+            disp[1] *= scales[UNIT_SCALE_LENGTH];
+            disp[2] *= scales[UNIT_SCALE_LENGTH];
+
+            vel[0] *= scales[UNIT_SCALE_LENGTH];
+            vel[1] *= scales[UNIT_SCALE_LENGTH];
+            vel[2] *= scales[UNIT_SCALE_LENGTH];	
+        }
+        if(scales[UNIT_SCALE_TIME] != 1.0) {
+            for( i = 0; i < 6; ++i) {
+               vel[i] /= scales[UNIT_SCALE_TIME];
+            }
+        }
+    }
+\end{verbatim}
+}
+
+Finally we can call {\em calc\_tlm\_force(...)} that invokes both, {\em
+  SetMotion(...)} and {\em GetForce(...)} in the TLM interface. In
+order to handle ``final'' or ``converged'' solver steps we invoke the
+Adams function {\em c\_timget(...)} that returns the last converged
+time step. This information is passed on to the TLM interface for the
+correct TLM parameter communication with the connected simulation
+tools, that is, data is send for converged steps only.
+
+{
+\scriptsize
+\begin{verbatim}
+    // TIMGET returns simulation time at the end of the last successful step
+    c_timget(&lastConvergedTime);
+
+    calc_tlm_force(*iflag,  // init flag. No result is needed.
+                   *dflag,  // If set, it is derivatives calculation.
+                            // Time stands still.
+                   dbgOut,     // should we print debug messages?
+                   markers[0], // The calling marker ID
+                   *time,      // Current simulation time
+                   lastConvergedTime, // Last converged time
+                   disp,    // Marker position data
+                   rot,     // Marker rotation matrix
+                   vel,     // Marker translational velocity
+                   vel + 3, // Marker angular velocity
+                   result);  // Output 6-component force
+\end{verbatim}
+}
+
+The calculated load (force and moment) response needs to be converted
+back to Adams units.
+
+{
+\scriptsize
+\begin{verbatim}
+    if(existsUnits ) {
+        // Scale force & torque
+        if(scales[UNIT_SCALE_FORCE] != 1.0) {
+            for( i = 0; i < 6; ++i) {
+                result[i] /= scales[UNIT_SCALE_FORCE];
+            }
+            if(scales[UNIT_SCALE_LENGTH] != 1.0) {
+                result[3] /= scales[UNIT_SCALE_LENGTH];
+                result[4] /= scales[UNIT_SCALE_LENGTH];
+                result[5] /= scales[UNIT_SCALE_LENGTH];
+            }
+        }
+    }
+};
+\end{verbatim}
+}
+
+
+In the ADAMS TLM plugin implementation we keep track of the last
+converged time step in order to send data only if needed, that is,
+when we have a converged step. This is implemented in the
+{\em TLM\_force::GetForce(...)} function that is invoked by {\em
+  calc\_tlm\_force(...)}, see File~{\em tlmforce.c} in the TLMPlugin/ADAMS
+directory.
+
+What happens is that we always store the motion data of the last time
+step that ADAMS invoked {\em calc\_tlm\_force(...)} for. For each step
+we check if the last step was a converged step (based on the
+information we got from the ADAMS solver and the data that we stored).
+If it was a converged step we send the data that we have cached, that
+is, the last time step.
+
+{
+\scriptsize
+\begin{verbatim}
+void TLM_force::GetForce(bool derCalc,
+                         int markerID,
+                         double lastConvergedTime,
+                         MarkerMotionData& param,
+                         double* force) {
+    if(getMode() == 0) {
+        // init has been called for all
+        setMode();
+        SwitchToRunMode();
+    }
+
+    MarkerID& mID = MarkerIDmap[markerID];
+
+    int interfaceID = mID.ID; // interface force ID in TLM manager
+
+    MarkerMotionData& lastParam = LastMarkerMotion[mID.index];
+
+    if(!derCalc) { // if it's a normal call (not Jacobian)
+        if( (lastParam.Time >= 0 ) // there's data
+            && (lastParam.Time != param.Time ) //not a repeated call
+            ) {
+	
+            if(lastConvergedTime == lastParam.Time) { // that was a converged step
+                map<int, MarkerID>::iterator it;
+                for(it = MarkerIDmap.begin(); it != MarkerIDmap.end();++it) {
+                    int curID = it->second.ID;
+                    int index = it->second.index;
+                    MarkerMotionData& toSend = LastMarkerMotion[index];
+                    Plugin->SetMotion(curID,          // Send data to the Plugin
+                                  toSend.Time,
+                                  toSend.Position,
+                                  toSend.Orientation,
+                                  toSend.Speed,
+                                  toSend.Ang_speed);
+                    // invalidate time to avoid resend
+                    toSend.Time = param.Time;
+                }
+            }
+       }
+
+       lastParam = param; // store the current motion data
+    }
+
+    // Call the plugin to get reaction force
+    Plugin->GetForce(interfaceID,
+                     param.Time,
+                     param.Position,
+                     param.Orientation,
+                     param.Speed,
+                     param.Ang_speed,
+                     force);
+}
+
+\end{verbatim}
+}
+
+
+

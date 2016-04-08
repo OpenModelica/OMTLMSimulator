@@ -1,0 +1,173 @@
+.TH rtime 3x "3 Jul 1995" " "
+.SH NAME
+clock_settime, clock_gettime, clock_getres \- high-resolution clock
+.SH SYNOPSIS
+.LP
+.ti -2n
+PARIX:
+.br
+.B px ancc
+.B \-I@prefix@/include
+.RI "[ " "flag" " \|.\|.\|. ] " "file" " \|.\|.\|."
+.B "\-L@prefix@/lib \-lrtime"
+.RI "[ " "library" " \|.\|.\|. ]"
+.LP
+.ti -2n
+Solaris:
+.br
+.B cc 
+.B \-I@prefix@/include
+.RI "[ " "flag" " \|.\|.\|. ] " "file" " \|.\|.\|."
+.B "\-lposix4 \-L@prefix@/lib \-lrtime"
+.RI "[ " "library" " \|.\|.\|. ]"
+.LP
+.ti -2n
+AIX:
+.br
+.B xlc
+.B \-I@prefix@/include
+.RI "[ " "flag" " \|.\|.\|. ] " "file" " \|.\|.\|."
+.B "\-L@prefix@/lib \-lrtime"
+.RI "[ " "library" " \|.\|.\|. ]"
+.LP
+.ti -2n
+OSF/1:
+.br
+.B cc 
+.B \-I@prefix@/include
+.RI "[ " "flag" " \|.\|.\|. ] " "file" " \|.\|.\|."
+.B "\-lrt \-L@prefix@/lib \-lrtime"
+.RI "[ " "library" " \|.\|.\|. ]"
+.LP
+.ti -2n
+---
+.br
+.B
+#include "rtime.h"
+.LP
+.BI "int clock_settime(clockid_t " "clock_id, "
+.if n .ti +5n
+.BI "const struct timespec *" "tp" ");"
+.LP
+.BI "int clock_gettime(clockid_t " "clock_id" ", struct timespec *" "tp" ");"
+.LP
+.BI "int clock_getres(clockid_t " "clock_id" ", struct timespec *" "res" ");"
+.LP
+.ta +5n +14n +16n
+.B
+struct  timespec {
+.br
+.B
+	time_t	tv_sec;	\f1/* seconds */\fP
+.br
+.B
+	long	tv_nsec;	\f1/* and nanoseconds */\fP
+.br
+.B
+};
+
+.SH DESCRIPTION
+.IX "clock_settime" "" "\fLclock_settime\fP \(em high-resolution clock operations" ""
+.IX "clock_gettime" "" "\fLclock_gettime\fP \(em high-resolution clock operations" ""
+.IX "clock_getres" "" "\fLclock_getres\fP \(em high-resolution clock operations" ""
+.B clock_settime(\|)
+sets the specified clock,
+.I clock_id,
+to the value specified by
+.I tp.
+.LP
+.B clock_gettime(\|)
+returns the current value
+.I tp
+for the specified clock,
+.I clock_id.
+.LP
+The resolution of any clock can be obtained by calling
+.B clock_getres(\|).
+If
+.I res
+is not NULL,
+the resolution of the specified clock is stored
+in
+.I res.
+.LP
+The
+.I clock_id
+for the real-time clock for the system is \f4CLOCK_REALTIME\fP.
+If 
+.B clock_settime(\|)
+has not been invoked, 
+.B clock_gettime(\|)
+returns the amount of time (in seconds and nanoseconds) since the
+application started.
+.SH "RETURN VALUES"
+.B clock_settime(\|), clock_gettime(\|),
+and
+.B clock_getres(\|)
+return
+.B 0
+upon success, otherwise they return
+.B -1
+and set 
+.B errno
+to indicate the error condition.
+.SH ERRORS
+.TP 12
+.B EINVAL
+.I clock_id
+does not specify a known clock.
+.br
+- 
+The 
+.I tp
+argument to
+.B clock_settime(\|)
+is outside the range for the given clock id.
+.br
+-
+The
+.I tp
+argument to 
+.B clock_settime(\|)
+specified a nanosecond
+value less than zero or greater than or equal to 1,000,000,000.
+.TP
+.B ENOSYS
+.B clock_settime(\|),
+.B clock_gettime(\|),
+or
+.B clock_getres(\|)
+is not supported by this implementation.
+.TP
+.B EPERM
+The requesting process does not have the appropriate privilege
+to set the specified clock.
+.SH NOTES
+Clock resolutions are implementation defined and are not
+settable.
+Time values that are between two consecutive non-negative integer
+multiples of the resolution of the specified clock are truncated
+down to the smaller multiple of the resolution.
+
+\f4CLOCK_REALTIME\fP is the only implemented clock so far \|.\|.\|.
+
+This library works currently on 
+.B PARIX 1.3(.1) 
+(only PowerPC601),
+.B Solaris 2.4, 
+.B AIX 3.2, 
+and 
+.B OSF/1 V3.2.
+
+In
+.B PARIX,
+any user can set the clock with
+.B clock_settime(\|)
+and is only valid as long as current application run.
+
+.SH AUTHOR
+Niclas Andersson <nican@ida.liu.se>
+.br 
+Department of Computer and Information Science
+.br 
+Linkoping University, Sweden

@@ -1,0 +1,20 @@
+dnl Process this file with autoconf to produce a configure script.
+AC_REVISION($Revision$)
+
+AC_INIT(rtime.c)
+
+AC_CANONICAL_HOST
+
+dnl Checks for programs.
+dnl Checks for libraries.
+dnl Checks for header files.
+dnl Checks for typedefs, structures, and compiler characteristics.
+dnl Checks for library functions.
+
+
+dnl Makefile fragment
+
+AC_SUBST_FILE(host_frag)
+host_frag=config/h-$host_os
+
+AC_OUTPUT(Makefile rtime.man timing.man)
