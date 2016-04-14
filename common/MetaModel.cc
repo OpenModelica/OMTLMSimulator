@@ -366,9 +366,14 @@ void TLMComponentProxy::StartComponent(SimulationParams& SimParams, double MaxSt
         si.cb = sizeof(si);
         ZeroMemory( &pi, sizeof(pi) );
 
+        const char* comspec = std::getenv("COMSPEC");
+        if (strcmp(comspec, "") == 0) {
+            comspec = "cmd";
+        }
+
         // Start the child process.
         std::stringstream command;
-        command << "cmd /c " << StartCommand.c_str() << ".bat";
+        command << comspec << " /c " << StartCommand.c_str() << ".bat";
         command << " " << Name.c_str();
         command << " " << startTime.c_str();
         command << " " << endTime.c_str();
