@@ -1,0 +1,103 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Setup front- and back matter and info-pages about the project
+%
+
+
+
+\newcommand{\makefrontpage}
+{\begin{titlepage}%
+    \begin{pspicture}(0cm,0cm)(15cm,20.5cm)
+      %\psgrid
+       %\rput[bl](-1.7,-3.9){\includegraphics[width=0.4\textwidth]{figs/mathcore}}
+      \rput[tr](15.8cm,23cm){\includegraphics[width=0.25\textwidth]{figs/skf_logo}}
+      \rput[tl](0.75,17.2){
+        \begin{minipage}[t]{14cm}
+
+          \textit{\textsf{\Large{
+                \begingroup
+                \tabcolsep -2mm
+                \begin{tabular}{l}
+                \end{tabular}
+                \endgroup }}}
+
+
+           \vspace*{2cm}
+
+          \begin{flushleft}
+            \Huge{\textsf{\textbf{Transmission Line Modeling and Simulation}}}
+          \end{flushleft}
+
+          \vspace*{0.5cm}
+
+          \begin{flushleft}
+            \LARGE{\textsf{\textbf{Co-simulation for multiple modeling and simulation software}}}
+          \end{flushleft}
+
+          \vspace*{1.0cm}
+          \textsf{\Large{January 2014}}
+        \end{minipage}}
+    \end{pspicture}
+   \end{titlepage}%
+  \setcounter{footnote}{0}
+  %
+  \newpage\thispagestyle{empty}
+ }
+
+
+\newcommand{\makefrontpageempty}
+{\begin{titlepage}%
+    \setcounter{page}{3}%circumvent warning from hyperref about duplicate
+                        %pagenumbering
+    \begin{pspicture}(0cm,0cm)(15cm,20.5cm)
+      %\psgrid
+
+      \rput[tl](0.75,17.2){
+        \begin{minipage}[t]{14cm}
+          \textit{\textsf{\Large{
+                \begingroup
+                \tabcolsep -2mm
+                \begin{tabular}{l}
+                  \ThesisAuthor
+                \end{tabular}
+                \endgroup }}}
+
+          \vspace*{3.8cm}
+
+          \begin{flushleft}
+            \Huge{\textsf{\textbf{\ThesisTitle}} }
+          \end{flushleft}
+
+          \vspace*{0.5cm}
+
+          \begin{flushleft}
+            \LARGE{\textsf{\textbf{\Subtitle}}}
+          \end{flushleft}
+
+          \vspace*{1.0cm}
+          \textsf{\Large{\projecttype}}
+        \end{minipage}}
+    \end{pspicture}
+   \end{titlepage}%
+  \setcounter{footnote}{0}%
+  \newpage\thispagestyle{empty}
+}
+
+
+
+
+\newcommand{\emptypage}
+{\begin{titlepage}%
+    \begin{pspicture}(0cm,0cm)(15cm,22cm)
+    \end{pspicture}
+   \end{titlepage}%
+  \setcounter{footnote}{0}%
+ }
+
+
+% END - Setup front- and back matter and info-pages about the project
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "master"
+%%% End:

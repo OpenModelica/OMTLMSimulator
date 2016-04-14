@@ -1,0 +1,210 @@
+\chapter{BEAST TLM Plugin}
+
+BEAST integrates the TLM plugin directly into the source code. Any
+coordinate system in BEAST has an TLM-enable flag to turn this
+coordinate system into a TLM interface.
+
+{\scriptsize
+\begin{verbatim}
+class CtlPoint : public NamedCoordSystem , public MBSTreeComponent {
+
+...
+
+    //! The TLM activation flag.
+    int tlmEnabledFlg;
+
+public:
+
+    // Check for tlmEnabled CtlPoint
+    bool isTLMEnaled(){ return tlmEnabledFlg != 0; }
+
+...
+
+};
+\end{verbatim}
+}
+
+The BEAST TLM co-simulation part is based on two C++ classes, these
+are:
+\begin{description}
+\item[TLMInterfaceHandler] takes care of creating and initializing all
+  additional components for the TLM co-simulation, this is, a global
+  (cB) coordinate system, necessary connection instances, and the
+  necessary TLMTies.
+\item[TLMTie] A TLMTie is created for each TLM interface, that is, for
+  each TLM enabled coordinate system. It ties the interface to a
+  global coordinate system for correct motion computation. The {\em
+    TLMTie} functions as the communication port between the actual TLM
+  interface in the co-simulation manager.
+\end{description}
+
+
+\section{The TLMInterfaceHandler}
+
+The {\em TLMInterfaceHander} stores a list of all TLM enabled coordinate
+systems in the Beast model. In the initial phase of the co-simulation
+it creates all necessary {\em TLMTies} for the communication with the
+TLM manager. This includes creation of a global control point that is
+needed for the {\em TLMTie} and creation of all necessary {\em
+  cBBodyConnections}.
+
+{\scriptsize
+\begin{verbatim}
+void TLMInterfaceHandler::EnableTLMCtlPoint(CtlPoint* ctl)
+{
+    TLMTie* tie=0;
+    ModelcBBodyConnection* connection=0;
+
+    // Now, everything seems fine.
+    // Let's create the global ctl-point needed for the tie
+    if( globalCtl == 0 ){
+        assert(topModel!=0);
+
+        doRegister = false;
+
+        globalCtl = new FixedCtlPoint(topModel, "ctTLMglobal" );
+        assert(globalCtl!=0);
+
+        doRegister = true;
+    }
+
+    // Create the connection if needed
+    Connection* tlmConn = 0;
+    if( topModel->ConnectionExistQ("cB:"+body->get_FName()) ){
+        tlmConn = topModel->GetConnectionPtr("cB:"+body->get_FName());
+    }
+    else {
+        connection = new ModelcBBodyConnection(topModel, body);
+        assert(connection!=0);
+        tlmConn = connection;
+    }
+
+    int idx = tlmConn->Get_ListSize(TIE_category)+1;
+    // Now create the TLM tie
+    tie = new TLMTie(tlmConn,
+                     "TLM" + ToStr(idx),
+                     globalCtl,
+                     ctl,
+		     0, 0,
+		     true);
+}
+\end{verbatim}
+}
+
+\section{The TLMTie}
+
+During the co-simulation the {\em TLMTie} is responsible for the
+communication with the TLM co-simulation manager and takes care of
+force evaluation and motion propagation in the TLM interface. There
+are three phases. First phase is the preparation of the force
+evaluation. This is done in {\em TLMTie::ComputeMasterBefore()}:
+
+{\scriptsize
+\begin{verbatim}
+// Evaluate the data needed for the current time step.
+void TLMTie::ComputeMasterBefore()
+{
+    if (!NonZeroFlg) return;
+    assert(ModelMode != SlaveMode);
+
+    // Get the time data for the specified time
+    TLMlink->GetTimeData(ForceID, SimTime, CurTimeData);
+}
+\end{verbatim}
+}
+
+{\em TLMlink->GetTimeData(...)} makes sure that force and moment data
+for the current time step is available in the interface. If it is not
+yet available it waits until the data has been received though the TLM
+manager from the connected simulation tool.
+
+Second phase is to evaluate force and moment and update the internal
+states of the coordinate system. This happens in {\em
+  TLMTie::calcChildForceMoment(...)}:
+
+
+{\scriptsize
+\begin{verbatim}
+void TLMTie::calcChildForceMoment(const MotionVar& ctl2_M_ctl1_ctl1)
+{
+    if (!NonZeroFlg) return;
+
+    // Get the motion.
+    ctl2_M_ctl1_ctl1.Get(ctl2_R_ctl1_ctl1,
+			 ctl2_A_ctl1,
+			 ctl2_vR_ctl1_ctl1_ctl1,
+			 ctl2_Omega_ctl1_ctl1);
+
+    if(RHSFinalFlg) {
+	ctl2_M_ctl1_ctl1_Final =  ctl2_M_ctl1_ctl1;
+    }
+
+    double forceOut[6];
+
+    // Note that the static function is used here.
+    // This is necessary since the force might be
+    // evaluated several times and on a slave.
+    TLMPlugin::GetForce(&ctl2_R_ctl1_ctl1(1),
+			&ctl2_A_ctl1(1,1),
+			&ctl2_vR_ctl1_ctl1_ctl1(1),
+			&ctl2_Omega_ctl1_ctl1(1),
+			CurTimeData,
+			Params,
+			forceOut);
+
+    // pc is equal ctl2 for now, i.e. ConLoc12 =1.0
+    pc_ctl1_ctl1 = ctl2_R_ctl1_ctl1;;
+
+    double3 F_pc_ctl1_tmp(forceOut[0], forceOut[1],forceOut[2]);
+    double3 M_pc_ctl1_tmp(forceOut[3], forceOut[4],forceOut[5]);
+
+    // Transform to system ctl1.
+    M2_pc_ctl1 = M_pc_ctl1_tmp;
+    M2_ctl1_ctl1 = M_pc_ctl1_tmp + Cross(pc_ctl1_ctl1, F_pc_ctl1_tmp);
+    F2_ctl1 = F_pc_ctl1_tmp;
+
+
+    ctl2_P_ctl1 = F2_ctl1*ctl2_vR_ctl1_ctl1_ctl1 + M2_ctl1_ctl1*ctl2_Omega_ctl1_ctl1;
+}
+\end{verbatim}
+}
+
+Note, that in a parallel BEAST simulation {\em
+  TLMTie::calcChildForceMoment(...)} is invoked on the slaves. Slaves
+do not have a TLMPlugin instance but use the static {\em
+  TLMPlugin::GetForce(...)}  instead that requires the TLM parameters
+as input. Time-data and TLM parameters are therefore send to all the
+slaves using the standard packing mechanism.
+
+
+The third phase is to send the necessary response to the TLM
+interface. This is done for final/converged solver steps only. In
+BEAST we can check this the {\em RHSFinal} flag:
+
+{\scriptsize
+\begin{verbatim}
+void TLMTie::ComputeMasterAfter()
+    // Set the data - send out the force used in this Evaluate the data needed for the current time step.
+{
+    if (!NonZeroFlg) return;
+
+    if(RHSFinalFlg) {
+	// Get the motion.
+	ctl2_M_ctl1_ctl1_Final.Get(ctl2_R_ctl1_ctl1,
+				   ctl2_A_ctl1,
+				   ctl2_vR_ctl1_ctl1_ctl1,
+				   ctl2_Omega_ctl1_ctl1);
+
+	// Set it in TLM Plugin, socket communication might happen
+	TLMlink->SetMotion(ForceID,
+			   SimTime,
+			   &ctl2_R_ctl1_ctl1(1),
+			   &ctl2_A_ctl1(1,1),
+			   &ctl2_vR_ctl1_ctl1_ctl1(1),
+			   &ctl2_Omega_ctl1_ctl1(1));
+    }
+}
+\end{verbatim}
+}
+
+
