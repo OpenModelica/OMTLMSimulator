@@ -20,6 +20,7 @@
 #else
 #include <process.h>
 #include <winsock2.h>
+#include <sstream>
 #endif
 
 using std::string;
@@ -316,6 +317,35 @@ void MetaModel::Print(std::ostream &os )
 }
 
 
+// Create a string with last error message
+std::string GetLastErrorStdStr()
+{
+  DWORD error = GetLastError();
+  if (error)
+  {
+    LPVOID lpMsgBuf;
+    DWORD bufLen = FormatMessage(
+        FORMAT_MESSAGE_ALLOCATE_BUFFER |
+        FORMAT_MESSAGE_FROM_SYSTEM |
+        FORMAT_MESSAGE_IGNORE_INSERTS,
+        NULL,
+        error,
+        MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
+        (LPTSTR) &lpMsgBuf,
+        0, NULL );
+    if (bufLen)
+    {
+      LPCSTR lpMsgStr = (LPCSTR)lpMsgBuf;
+      std::string result(lpMsgStr, lpMsgStr+bufLen);
+
+      LocalFree(lpMsgBuf);
+
+      return result;
+    }
+  }
+  return std::string();
+}
+
 // Start the component executable
 void TLMComponentProxy::StartComponent(SimulationParams& SimParams, double MaxStep) {
     TLMErrorLog::Log(string("Starting ") + StartCommand );
@@ -329,15 +359,43 @@ void TLMComponentProxy::StartComponent(SimulationParams& SimParams, double MaxSt
         string serverName = SimParams.GetServerName();
 
 #if defined(WIN32)
-	_spawnlp(_P_NOWAIT, StartCommand.c_str(), StartCommand.c_str(),
-		 Name.c_str(),
-		 startTime.c_str(),
-		 endTime.c_str(),
-		 strMaxStep.c_str(),
-		 serverName.c_str(),
-		 ModelName.c_str(),
-		 NULL
-		 );
+        STARTUPINFO si;
+        PROCESS_INFORMATION pi;
+
+        ZeroMemory( &si, sizeof(si) );
+        si.cb = sizeof(si);
+        ZeroMemory( &pi, sizeof(pi) );
+
+        // Start the child process.
+        std::stringstream command;
+        command << "cmd /c " << StartCommand.c_str() << ".bat";
+        command << " " << Name.c_str();
+        command << " " << startTime.c_str();
+        command << " " << endTime.c_str();
+        command << " " << strMaxStep.c_str();
+        command << " " << serverName.c_str();
+        command << " " << ModelName.c_str();
+        TLMErrorLog::Log(string("Starting ") + command.str());
+        if (!CreateProcessA(NULL, (char *)command.str().c_str(), NULL, NULL, FALSE, CREATE_NO_WINDOW, NULL, NULL, &si, &pi)) {
+            TLMErrorLog::FatalError("StartComponent: Failed to start the component " + Name + " with command " + StartCommand + "."
+				    "Error is " + GetLastErrorStdStr());
+            exit(-1);
+        } else {
+            TLMErrorLog::Log(string("CreateProcessA Success"));
+        }
+
+        // Close process and thread handles.
+        CloseHandle( pi.hProcess );
+        CloseHandle( pi.hThread );
+//	_spawnlp(_P_NOWAIT, StartCommand.c_str(), StartCommand.c_str(),
+//		 Name.c_str(),
+//		 startTime.c_str(),
+//		 endTime.c_str(),
+//		 strMaxStep.c_str(),
+//		 serverName.c_str(),
+//		 ModelName.c_str(),
+//		 NULL
+//		 );
 
 
 #elif defined(__CYGWIN__)
