@@ -376,7 +376,7 @@ void TLMComponentProxy::StartComponent(SimulationParams& SimParams, double MaxSt
         command << " " << serverName.c_str();
         command << " " << ModelName.c_str();
         TLMErrorLog::Log(string("Starting ") + command.str());
-        if (!CreateProcessA(NULL, (char *)command.str().c_str(), NULL, NULL, FALSE, NULL, NULL, NULL, &si, &pi)) {
+        if (!CreateProcessA(NULL, (char *)command.str().c_str(), NULL, NULL, FALSE, 0, NULL, NULL, &si, &pi)) {
             TLMErrorLog::FatalError("StartComponent: Failed to start the component " + Name + " with command " + StartCommand + "."
 				    "Error is " + GetLastErrorStdStr());
             exit(-1);
