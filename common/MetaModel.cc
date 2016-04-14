@@ -376,7 +376,7 @@ void TLMComponentProxy::StartComponent(SimulationParams& SimParams, double MaxSt
         command << " " << serverName.c_str();
         command << " " << ModelName.c_str();
         TLMErrorLog::Log(string("Starting ") + command.str());
-        if (!CreateProcessA(NULL, (char *)command.str().c_str(), NULL, NULL, FALSE, CREATE_NO_WINDOW, NULL, NULL, &si, &pi)) {
+        if (!CreateProcessA(NULL, (char *)command.str().c_str(), NULL, NULL, FALSE, NULL, NULL, NULL, &si, &pi)) {
             TLMErrorLog::FatalError("StartComponent: Failed to start the component " + Name + " with command " + StartCommand + "."
 				    "Error is " + GetLastErrorStdStr());
             exit(-1);
@@ -387,6 +387,7 @@ void TLMComponentProxy::StartComponent(SimulationParams& SimParams, double MaxSt
         // Close process and thread handles.
         CloseHandle( pi.hProcess );
         CloseHandle( pi.hThread );
+
 //	_spawnlp(_P_NOWAIT, StartCommand.c_str(), StartCommand.c_str(),
 //		 Name.c_str(),
 //		 startTime.c_str(),
