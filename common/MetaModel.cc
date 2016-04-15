@@ -389,6 +389,8 @@ void TLMComponentProxy::StartComponent(SimulationParams& SimParams, double MaxSt
             TLMErrorLog::Log(string("CreateProcessA Success"));
         }
 
+        DWORD processId = pi.dwProcessId;
+
         // Close process and thread handles.
         CloseHandle( pi.hProcess );
         CloseHandle( pi.hThread );
