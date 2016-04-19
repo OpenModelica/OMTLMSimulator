@@ -1,5 +1,5 @@
 //! \file: MetaModelReader.h
-//! 
+//!
 //! Defines the MetaModelReader class which provides an interface
 //! for reading in the meta-model information from xml file
 //!
@@ -24,10 +24,10 @@ class MetaModelReader {
 
     //! ReadComponents method reads in Components (SubModels) definition from
     //! the XML file starting from the given xml node that should be "SubModels".
-    //! Input: \param node - pointer to the "SubModels" element node 
+    //! Input: \param node - pointer to the "SubModels" element node
     //!   - parent to all the SubModels
     //! Input/Output: TheModel - structure is updated in the model representation
-    void ReadComponents(xmlNode *node);
+    void ReadComponents(xmlNode *node, bool skipInterfaces);
 
     //! ReadTLMInterfaceNodes method reads in TLM interface definitions for a
     //! given SubModel XML node and its ID (ComponentID).
@@ -74,12 +74,12 @@ class MetaModelReader {
 
 
     //! ReadTLMConnectionNode method processes an TLM connection definition in XML file.
-    //! The definition is submitted as xmlNode* and is registered in TheModel as a 
+    //! The definition is submitted as xmlNode* and is registered in TheModel as a
     //! result of the method.
     void ReadTLMConnectionNode(xmlNode* node);
 
  public:
-    
+
     //! Constructor
     MetaModelReader(MetaModel& model) : TheModel(model) {};
 
@@ -87,8 +87,8 @@ class MetaModelReader {
     //! ReadModel method processes input XML file and creates MetaModel definition.
     //! Input: InputFile - input XML file name
     //! Input/Output: TheModel - model structure to be build.
-    void ReadModel(std::string& InputFile);
- 
+    void ReadModel(std::string& InputFile, bool SkipConnections=false);
+
 };
 
 
