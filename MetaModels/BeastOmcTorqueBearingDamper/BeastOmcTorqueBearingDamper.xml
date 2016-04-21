@@ -1,0 +1,31 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!-- The root node is the meta-model -->
+<Model Name="BeastOmcTorqueBearingDamper">
+  <!-- List of connected sub-models -->
+  <SubModels>
+    <SubModel ExactStep="false" Name="damper" Position="0,0,0" Angle321="0,0,0" ModelFile="damper.mo" StartCommand="StartTLMOpenModelica">
+      <Annotation Origin="{-66,-6}" Extent="{-10,-10,10,10}" Rotation="0" Visible="true"/>
+      <InterfacePoint Name="tlm" Position="0.0,0,0" Angle321="0,0,0"/>
+    </SubModel>
+    <SubModel ExactStep="false" Name="bearing" Position="0.0,0,0" Angle321="0,0,0" ModelFile="dgbb.in" StartCommand="StartTLMBeast">
+      <Annotation Origin="{-8,-14}" Extent="{-10,-10,10,10}" Rotation="0" Visible="true"/>
+      <InterfacePoint Name="bShaft`cs1" Position="0,0,0" Angle321="0,0,0"/>
+      <InterfacePoint Name="bIR`cs1" Position="0,0,0" Angle321="0,0,0"/>
+    </SubModel>
+    <SubModel ExactStep="false" Name="torque" Position="0,0,0" Angle321="0,0,0" ModelFile="torque.mo" StartCommand="StartTLMOpenModelica">
+      <Annotation Origin="{44,-22}" Extent="{-10,-10,10,10}" Rotation="0" Visible="true"/>
+      <InterfacePoint Name="tlm" Position="0,0,0" Angle321="0,0,0"/>
+    </SubModel>
+  </SubModels>
+  <!-- List of TLM connections -->
+  <Connections>
+    <Connection Zfr="100" From="damper.tlm" alpha="0.2" To="bearing.bIR`cs1" Zf="10000" Delay="1e-4">
+      <Annotation Points="{{-55,2},{10,2},{10,-10},{3,-10}}"/>
+    </Connection>
+    <Connection Zfr="100" From="bearing.bShaft`cs1" alpha="0.2" To="torque.tlm" Zf="10000" Delay="1e-4">
+      <Annotation Points="{{3,-6},{61,-6},{61,-14},{55,-14}}"/>
+    </Connection>
+  </Connections>
+  <!-- Parameters for the simulation -->
+  <SimulationParams StartTime="0" StopTime="1"/>
+</Model>
