@@ -388,7 +388,19 @@ void ManagerCommHandler::ReaderThreadRun() {
                     }
                     else {
                         // CommMode == InterfaceRequestMode
-                        UnpackAndStoreTimeData(*message);
+
+                        //First check if a late register interface message is received and take care of it
+                        if(message->Header.MessageType == TLMMessageTypeConst::TLM_REG_INTERFACE) {
+                            TLMErrorLog::Log(string("Component ") + comp.GetName() + " registers interface");;
+
+                            Comm.AddActiveSocket(hdl); // expect more messages
+                            ProcessRegInterfaceMessage(iSock, *message);
+                            MessageQueue.PutWriteSlot(message);
+                        }
+                        else {
+                            //Not a register interface, assume time data
+                            UnpackAndStoreTimeData(*message);
+                        }
                     }
                 }
                 else {
