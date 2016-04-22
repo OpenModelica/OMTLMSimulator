@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<!-- The root node is the meta-model -->
+<Model Name="doublePendulum">
+
+    <!-- List of connected sub-models -->
+    <SubModels>	
+
+        <SubModel Name="doublePendulum1"
+                StartCommand="StartTLMDym" 
+                ExactStep="1"
+                ModelFile="doublePendulum1TLM">
+
+                <!-- TLM interface points for SubModel A -->
+                <InterfacePoint Name="tlm"/>
+        </SubModel>
+
+        <SubModel Name="doublePendulum2" 
+                StartCommand="StartTLMModelica" 
+                ExactStep="1"
+                ModelFile="doublePendulum2.mo">
+
+                <!-- TLM interface points for SubModel C -->
+                <InterfacePoint Name="tlm"/>
+        </SubModel>
+
+    </SubModels>
+
+    <!-- List of TLM connections -->
+    <Connections>
+	<!-- Some more physical values: Delay="1e-5" Zf="8e4" Zfr="400" alpha="0.2" -->
+        <Connection From="doublePendulum1.tlm" To="doublePendulum2.tlm" 
+		Delay="2e-4" Zf="2000" Zfr="1" alpha="0.9"/>
+    </Connections>
+
+    <!-- Parameters for the simulation -->
+    <SimulationParams ManagerPort="11113" 
+                StartTime="0" 
+                StopTime="3"/>
+
+</Model>

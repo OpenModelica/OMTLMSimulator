@@ -1,0 +1,23 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!-- The root node is the meta-model -->
+<Model Name="OmcOmcWindPowerRotor">
+  <!-- List of connected sub-models -->
+  <SubModels>
+    <SubModel ExactStep="false" Name="Rotor" Position="0,0,0" Angle321="0,0,0" ModelFile="Rotor.mo" StartCommand="StartTLMDym">
+      <Annotation Origin="{-32,-2}" Extent="{-10,-10,10,10}" Rotation="0" Visible="true"/>
+      <InterfacePoint Name="tlm" Position="0,0,0" Angle321="0,0,0"/>
+    </SubModel>
+    <SubModel ExactStep="false" Name="Nacelle" Position="0,0,0" Angle321="0,0,0" ModelFile="Nacelle.mo" StartCommand="StartTLMOpenModelica">
+      <Annotation Origin="{44,2}" Extent="{-10,-10,10,10}" Rotation="0" Visible="true"/>
+      <InterfacePoint Name="tlm" Position="0,0,0" Angle321="0,0,0"/>
+    </SubModel>
+  </SubModels>
+  <!-- List of TLM connections -->
+  <Connections>
+    <Connection Zfr="100" From="Rotor.tlm" alpha="0.2" To="Nacelle.tlm" Zf="10000" Delay="1e-3">
+      <Annotation Points="{{-20,6},{8,6},{8,22},{56,22},{56,10},{56,10}}"/>
+    </Connection>
+  </Connections>
+  <!-- Parameters for the simulation -->
+  <SimulationParams StartTime="0" StopTime="1"/>
+</Model>
