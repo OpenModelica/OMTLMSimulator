@@ -85,6 +85,8 @@ void MonitorTimeStep(TLMPlugin* TLMlink, MetaModel& model, double SimTime, std::
             TLMErrorLog::Log("Data request for " + interfaceProxy.GetName() + " for time " + ToStr(SimTime) + ", id: " + ToStr(interfaceID));
 
             if( connectionID >= 0 ){
+#define LOGGEDFORCEFIX
+#ifdef  LOGGEDFORCEFIX
                 TLMTimeData& PrevTimeData = dataStorage[interfaceID];
                 TLMTimeData& CurTimeData = dataStorage[interfaceID];
 
@@ -100,6 +102,10 @@ void MonitorTimeStep(TLMPlugin* TLMlink, MetaModel& model, double SimTime, std::
                             CurTimeData.GenForce[i] * (1 - alpha)
                             + PrevTimeData.GenForce[i] * alpha;
                 }
+#else
+                TLMTimeData& CurTimeData = dataStorage[interfaceID];
+                TLMlink->GetTimeData(interfaceID, SimTime, CurTimeData);
+#endif
             }
         }
     }
