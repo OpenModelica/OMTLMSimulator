@@ -379,28 +379,16 @@ void ManagerCommHandler::ReaderThreadRun() {
                 if(TLMCommUtil::ReceiveMessage(*message)) {
                     if( CommMode == CoSimulationMode ){
                         MarshalMessage(*message);
-                        
+
                         // Forward message for monitoring.
                         ForwardToMonitor(*message);
-                        
+
                         // Place in send buffer
                         MessageQueue.PutWriteSlot(message);
                     }
                     else {
                         // CommMode == InterfaceRequestMode
-
-                        //First check if a late register interface message is received and take care of it
-                        if(message->Header.MessageType == TLMMessageTypeConst::TLM_REG_INTERFACE) {
-                            TLMErrorLog::Log(string("Component ") + comp.GetName() + " registers interface");;
-
-                            Comm.AddActiveSocket(hdl); // expect more messages
-                            ProcessRegInterfaceMessage(iSock, *message);
-                            MessageQueue.PutWriteSlot(message);
-                        }
-                        else {
-                            //Not a register interface, assume time data
-                            UnpackAndStoreTimeData(*message);
-                        }
+                        UnpackAndStoreTimeData(*message);
                     }
                 }
                 else {
