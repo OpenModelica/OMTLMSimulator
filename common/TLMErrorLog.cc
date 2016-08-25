@@ -122,7 +122,7 @@ void  TLMErrorLog::Log(const std::string& mess) {
 std::string  TLMErrorLog::ToStdStr(double val) {
     char buf[30];
 
-    sprintf(buf, "%g", val);
+    sprintf(buf, "%.10f", val);
 
     return std::string(buf);
 }
