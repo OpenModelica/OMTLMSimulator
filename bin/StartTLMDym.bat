@@ -1,4 +1,4 @@
-echo on
+echo off
 REM OpenModelica TLM start-up script
 REM Start with 6 arguments:
 REM 1 XModelName (XModel directory) 
