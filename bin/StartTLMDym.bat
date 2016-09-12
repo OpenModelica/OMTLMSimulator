@@ -1,4 +1,4 @@
-echo on
+@echo off
 REM OpenModelica TLM start-up script
 REM Start with 6 arguments:
 REM 1 XModelName (XModel directory) 
@@ -32,7 +32,6 @@ echo Make sure that:
 echo time = %2
 echo timeEnd = %3
 echo MaxTimeStep "<"= %4
-echo 
 
 echo Writing caseID %1 and server name %5 to file %TLMCONFIGFILE%
 echo %1 > %TLMCONFIGFILE% 
