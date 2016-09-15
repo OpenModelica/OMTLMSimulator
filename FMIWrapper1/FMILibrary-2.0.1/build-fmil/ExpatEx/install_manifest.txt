@@ -1,0 +1,4 @@
+/home/robbr48/h/Dependencies/FMILibrary-2.0.1/build-fmil/ExpatEx/install/lib/libexpat.a
+/home/robbr48/h/Dependencies/FMILibrary-2.0.1/build-fmil/ExpatEx/install/include/expat.h
+/home/robbr48/h/Dependencies/FMILibrary-2.0.1/build-fmil/ExpatEx/install/include/expat_external.h
+/home/robbr48/h/Dependencies/FMILibrary-2.0.1/build-fmil/ExpatEx/install/lib/pkgconfig/expat.pc

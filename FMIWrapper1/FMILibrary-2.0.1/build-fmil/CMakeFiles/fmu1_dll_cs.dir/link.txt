@@ -1,0 +1,1 @@
+/usr/bin/cc  -fPIC  -std=c89 -pedantic -Wall -Wno-unused-function -fvisibility=hidden -fPIC -DXML_STATIC -DFMI_XML_QUERY -DZLIB_STATIC -g  -shared -Wl,-soname,libfmu1_dll_cs.so -o libfmu1_dll_cs.so CMakeFiles/fmu1_dll_cs.dir/Test/FMI1/fmu_dummy/fmu1_model_cs.c.o 

@@ -1,0 +1,2 @@
+/usr/bin/ar cq libfmizip.a  CMakeFiles/fmizip.dir/src/ZIP/src/fmi_zip_unzip.c.o CMakeFiles/fmizip.dir/src/ZIP/src/fmi_zip_zip.c.o
+/usr/bin/ranlib libfmizip.a

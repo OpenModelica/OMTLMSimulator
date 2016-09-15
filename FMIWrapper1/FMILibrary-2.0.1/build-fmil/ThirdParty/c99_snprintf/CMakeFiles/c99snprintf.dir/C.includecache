@@ -1,0 +1,36 @@
+#IncludeRegexLine: ^[ 	]*#[ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/robbr48/h/Dependencies/FMILibrary-2.0.1/ThirdParty/c99_snprintf/c99-snprintf_1.1/snprintf.c
+config.h
+-
+math.h
+-
+string.h
+-
+stdio.h
+-
+stdarg.h
+-
+varargs.h
+-
+stdlib.h
+-
+errno.h
+-
+limits.h
+-
+inttypes.h
+-
+locale.h
+-
+stddef.h
+-
+stdint.h
+-
+

@@ -1,0 +1,1 @@
+/usr/bin/cc   -std=c89 -pedantic -Wall -Wno-unused-function -fvisibility=hidden -fPIC -DXML_STATIC -DFMI_XML_QUERY -DZLIB_STATIC -g   CMakeFiles/fmi_zip_unzip_test.dir/Test/FMI1/fmi_zip_unzip_test.c.o  -o fmi_zip_unzip_test -rdynamic libfmizip.a Config.cmake/Minizip/libminizip.a zlib/libz.a libjmutils.a ThirdParty/c99_snprintf/libc99snprintf.a -ldl 
