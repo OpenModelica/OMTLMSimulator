@@ -1,0 +1,44 @@
+#IncludeRegexLine: ^[ 	]*#[ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+../src/Util/include/JM/jm_callbacks.h
+stddef.h
+-
+stdarg.h
+-
+fmilib_config.h
+-
+jm_types.h
+../src/Util/include/JM/jm_types.h
+
+../src/Util/include/JM/jm_types.h
+fmilib_config.h
+-
+
+../src/ZIP/include/FMI/fmi_zip_zip.h
+JM/jm_types.h
+-
+
+/home/robbr48/h/Dependencies/FMILibrary-2.0.1/Test/FMI1/fmi_zip_zip_test.c
+stdio.h
+-
+stdlib.h
+-
+JM/jm_types.h
+-
+JM/jm_callbacks.h
+-
+FMI/fmi_zip_zip.h
+-
+config_test.h
+/home/robbr48/h/Dependencies/FMILibrary-2.0.1/Test/FMI1/config_test.h
+
+config_test.h
+
+fmilib_config.h
+

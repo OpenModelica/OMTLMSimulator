@@ -1,0 +1,38 @@
+Determining if the va_copy exist failed with the following output:
+Change Dir: /home/robbr48/h/Dependencies/FMILibrary-2.0.1/build-fmil/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTryCompileExec3075261022/fast"
+/usr/bin/make -f CMakeFiles/cmTryCompileExec3075261022.dir/build.make CMakeFiles/cmTryCompileExec3075261022.dir/build
+make[1]: Entering directory '/home/robbr48/Documents/Subversion/hopsan/Dependencies/FMILibrary-2.0.1/build-fmil/CMakeFiles/CMakeTmp'
+/usr/bin/cmake -E cmake_progress_report /home/robbr48/h/Dependencies/FMILibrary-2.0.1/build-fmil/CMakeFiles/CMakeTmp/CMakeFiles 1
+Building C object CMakeFiles/cmTryCompileExec3075261022.dir/CheckSymbolExists.c.o
+/usr/bin/cc   -std=c89 -pedantic -Wall -Wno-unused-function -fvisibility=hidden -fPIC    -o CMakeFiles/cmTryCompileExec3075261022.dir/CheckSymbolExists.c.o   -c /home/robbr48/h/Dependencies/FMILibrary-2.0.1/build-fmil/CMakeFiles/CMakeTmp/CheckSymbolExists.c
+/home/robbr48/h/Dependencies/FMILibrary-2.0.1/build-fmil/CMakeFiles/CMakeTmp/CheckSymbolExists.c: In function ‘main’:
+/home/robbr48/h/Dependencies/FMILibrary-2.0.1/build-fmil/CMakeFiles/CMakeTmp/CheckSymbolExists.c:8:19: error: ‘va_copy’ undeclared (first use in this function)
+   return ((int*)(&va_copy))[argc];
+                   ^
+/home/robbr48/h/Dependencies/FMILibrary-2.0.1/build-fmil/CMakeFiles/CMakeTmp/CheckSymbolExists.c:8:19: note: each undeclared identifier is reported only once for each function it appears in
+/home/robbr48/h/Dependencies/FMILibrary-2.0.1/build-fmil/CMakeFiles/CMakeTmp/CheckSymbolExists.c:13:1: warning: control reaches end of non-void function [-Wreturn-type]
+ }
+ ^
+CMakeFiles/cmTryCompileExec3075261022.dir/build.make:57: recipe for target 'CMakeFiles/cmTryCompileExec3075261022.dir/CheckSymbolExists.c.o' failed
+make[1]: *** [CMakeFiles/cmTryCompileExec3075261022.dir/CheckSymbolExists.c.o] Error 1
+make[1]: Leaving directory '/home/robbr48/Documents/Subversion/hopsan/Dependencies/FMILibrary-2.0.1/build-fmil/CMakeFiles/CMakeTmp'
+Makefile:117: recipe for target 'cmTryCompileExec3075261022/fast' failed
+make: *** [cmTryCompileExec3075261022/fast] Error 2
+
+File /home/robbr48/h/Dependencies/FMILibrary-2.0.1/build-fmil/CMakeFiles/CMakeTmp/CheckSymbolExists.c:
+/* */
+#include <stdarg.h>
+
+int main(int argc, char** argv)
+{
+  (void)argv;
+#ifndef va_copy
+  return ((int*)(&va_copy))[argc];
+#else
+  (void)argc;
+  return 0;
+#endif
+}
+

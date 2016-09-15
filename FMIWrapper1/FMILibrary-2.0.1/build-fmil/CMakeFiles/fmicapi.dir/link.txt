@@ -1,0 +1,2 @@
+/usr/bin/ar cq libfmicapi.a  CMakeFiles/fmicapi.dir/src/CAPI/src/FMI1/fmi1_capi_cs.c.o CMakeFiles/fmicapi.dir/src/CAPI/src/FMI1/fmi1_capi_me.c.o CMakeFiles/fmicapi.dir/src/CAPI/src/FMI1/fmi1_capi.c.o CMakeFiles/fmicapi.dir/src/CAPI/src/FMI2/fmi2_capi_cs.c.o CMakeFiles/fmicapi.dir/src/CAPI/src/FMI2/fmi2_capi_me.c.o CMakeFiles/fmicapi.dir/src/CAPI/src/FMI2/fmi2_capi.c.o
+/usr/bin/ranlib libfmicapi.a

@@ -1,0 +1,1 @@
+const char* fmilib_sublibs="fmiimport;jmutils;fmixml;fmizip;fmicapi;expat;minizip;zlib;c99snprintf";

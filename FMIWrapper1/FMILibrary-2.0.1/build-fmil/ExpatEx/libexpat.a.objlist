@@ -1,0 +1,5 @@
+xmlparse.c.o
+xmlrole.c.o
+xmltok.c.o
+xmltok_impl.c.o
+xmltok_ns.c.o

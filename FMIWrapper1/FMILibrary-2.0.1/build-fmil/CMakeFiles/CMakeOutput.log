@@ -1,0 +1,1064 @@
+The system is: Linux - 4.2.0-25-generic - x86_64
+Compiling the C compiler identification source file "CMakeCCompilerId.c" succeeded.
+Compiler: /usr/bin/cc 
+Build flags: 
+Id flags: 
+
+The output was:
+0
+
+
+Compilation of the C compiler identification source "CMakeCCompilerId.c" produced "a.out"
+
+The C compiler identification is GNU, found in "/home/robbr48/h/Dependencies/FMILibrary-2.0.1/build-fmil/CMakeFiles/3.2.2/CompilerIdC/a.out"
+
+Compiling the CXX compiler identification source file "CMakeCXXCompilerId.cpp" succeeded.
+Compiler: /usr/bin/c++ 
+Build flags: 
+Id flags: 
+
+The output was:
+0
+
+
+Compilation of the CXX compiler identification source "CMakeCXXCompilerId.cpp" produced "a.out"
+
+The CXX compiler identification is GNU, found in "/home/robbr48/h/Dependencies/FMILibrary-2.0.1/build-fmil/CMakeFiles/3.2.2/CompilerIdCXX/a.out"
+
+Determining if the C compiler works passed with the following output:
+Change Dir: /home/robbr48/h/Dependencies/FMILibrary-2.0.1/build-fmil/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTryCompileExec2884299427/fast"
+/usr/bin/make -f CMakeFiles/cmTryCompileExec2884299427.dir/build.make CMakeFiles/cmTryCompileExec2884299427.dir/build
+make[1]: Entering directory '/home/robbr48/Documents/Subversion/hopsan/Dependencies/FMILibrary-2.0.1/build-fmil/CMakeFiles/CMakeTmp'
+/usr/bin/cmake -E cmake_progress_report /home/robbr48/h/Dependencies/FMILibrary-2.0.1/build-fmil/CMakeFiles/CMakeTmp/CMakeFiles 1
+Building C object CMakeFiles/cmTryCompileExec2884299427.dir/testCCompiler.c.o
+/usr/bin/cc    -o CMakeFiles/cmTryCompileExec2884299427.dir/testCCompiler.c.o   -c /home/robbr48/h/Dependencies/FMILibrary-2.0.1/build-fmil/CMakeFiles/CMakeTmp/testCCompiler.c
+Linking C executable cmTryCompileExec2884299427
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTryCompileExec2884299427.dir/link.txt --verbose=1
+/usr/bin/cc       CMakeFiles/cmTryCompileExec2884299427.dir/testCCompiler.c.o  -o cmTryCompileExec2884299427 -rdynamic 
+make[1]: Leaving directory '/home/robbr48/Documents/Subversion/hopsan/Dependencies/FMILibrary-2.0.1/build-fmil/CMakeFiles/CMakeTmp'
+
+
+Detecting C compiler ABI info compiled with the following output:
+Change Dir: /home/robbr48/h/Dependencies/FMILibrary-2.0.1/build-fmil/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTryCompileExec756860766/fast"
+/usr/bin/make -f CMakeFiles/cmTryCompileExec756860766.dir/build.make CMakeFiles/cmTryCompileExec756860766.dir/build
+make[1]: Entering directory '/home/robbr48/Documents/Subversion/hopsan/Dependencies/FMILibrary-2.0.1/build-fmil/CMakeFiles/CMakeTmp'
+/usr/bin/cmake -E cmake_progress_report /home/robbr48/h/Dependencies/FMILibrary-2.0.1/build-fmil/CMakeFiles/CMakeTmp/CMakeFiles 1
+Building C object CMakeFiles/cmTryCompileExec756860766.dir/CMakeCCompilerABI.c.o
+/usr/bin/cc    -o CMakeFiles/cmTryCompileExec756860766.dir/CMakeCCompilerABI.c.o   -c /usr/share/cmake-3.2/Modules/CMakeCCompilerABI.c
+Linking C executable cmTryCompileExec756860766
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTryCompileExec756860766.dir/link.txt --verbose=1
+/usr/bin/cc      -v CMakeFiles/cmTryCompileExec756860766.dir/CMakeCCompilerABI.c.o  -o cmTryCompileExec756860766 -rdynamic  
+Using built-in specs.
+COLLECT_GCC=/usr/bin/cc
+COLLECT_LTO_WRAPPER=/usr/lib/gcc/x86_64-linux-gnu/5/lto-wrapper
+Target: x86_64-linux-gnu
+Configured with: ../src/configure -v --with-pkgversion='Ubuntu 5.2.1-22ubuntu2' --with-bugurl=file:///usr/share/doc/gcc-5/README.Bugs --enable-languages=c,ada,c++,java,go,d,fortran,objc,obj-c++ --prefix=/usr --program-suffix=-5 --enable-shared --enable-linker-build-id --libexecdir=/usr/lib --without-included-gettext --enable-threads=posix --libdir=/usr/lib --enable-nls --with-sysroot=/ --enable-clocale=gnu --enable-libstdcxx-debug --enable-libstdcxx-time=yes --with-default-libstdcxx-abi=new --enable-gnu-unique-object --disable-vtable-verify --enable-libmpx --enable-plugin --with-system-zlib --disable-browser-plugin --enable-java-awt=gtk --enable-gtk-cairo --with-java-home=/usr/lib/jvm/java-1.5.0-gcj-5-amd64/jre --enable-java-home --with-jvm-root-dir=/usr/lib/jvm/java-1.5.0-gcj-5-amd64 --with-jvm-jar-dir=/usr/lib/jvm-exports/java-1.5.0-gcj-5-amd64 --with-arch-directory=amd64 --with-ecj-jar=/usr/share/java/eclipse-ecj.jar --enable-objc-gc --enable-multiarch --disable-werror --with-arch-32=i686 --with-abi=m64 --with-multilib-list=m32,m64,mx32 --enable-multilib --with-tune=generic --enable-checking=release --build=x86_64-linux-gnu --host=x86_64-linux-gnu --target=x86_64-linux-gnu
+Thread model: posix
+gcc version 5.2.1 20151010 (Ubuntu 5.2.1-22ubuntu2) 
+COMPILER_PATH=/usr/lib/gcc/x86_64-linux-gnu/5/:/usr/lib/gcc/x86_64-linux-gnu/5/:/usr/lib/gcc/x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/5/:/usr/lib/gcc/x86_64-linux-gnu/
+LIBRARY_PATH=/usr/lib/gcc/x86_64-linux-gnu/5/:/usr/lib/gcc/x86_64-linux-gnu/5/../../../x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/5/../../../../lib/:/lib/x86_64-linux-gnu/:/lib/../lib/:/usr/lib/x86_64-linux-gnu/:/usr/lib/../lib/:/usr/lib/gcc/x86_64-linux-gnu/5/../../../:/lib/:/usr/lib/
+COLLECT_GCC_OPTIONS='-v' '-o' 'cmTryCompileExec756860766' '-rdynamic' '-mtune=generic' '-march=x86-64'
+ /usr/lib/gcc/x86_64-linux-gnu/5/collect2 -plugin /usr/lib/gcc/x86_64-linux-gnu/5/liblto_plugin.so -plugin-opt=/usr/lib/gcc/x86_64-linux-gnu/5/lto-wrapper -plugin-opt=-fresolution=/tmp/ccvwnOgL.res -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lgcc_s --sysroot=/ --build-id --eh-frame-hdr -m elf_x86_64 --hash-style=gnu --as-needed -export-dynamic -dynamic-linker /lib64/ld-linux-x86-64.so.2 -z relro -o cmTryCompileExec756860766 /usr/lib/gcc/x86_64-linux-gnu/5/../../../x86_64-linux-gnu/crt1.o /usr/lib/gcc/x86_64-linux-gnu/5/../../../x86_64-linux-gnu/crti.o /usr/lib/gcc/x86_64-linux-gnu/5/crtbegin.o -L/usr/lib/gcc/x86_64-linux-gnu/5 -L/usr/lib/gcc/x86_64-linux-gnu/5/../../../x86_64-linux-gnu -L/usr/lib/gcc/x86_64-linux-gnu/5/../../../../lib -L/lib/x86_64-linux-gnu -L/lib/../lib -L/usr/lib/x86_64-linux-gnu -L/usr/lib/../lib -L/usr/lib/gcc/x86_64-linux-gnu/5/../../.. CMakeFiles/cmTryCompileExec756860766.dir/CMakeCCompilerABI.c.o -lgcc --as-needed -lgcc_s --no-as-needed -lc -lgcc --as-needed -lgcc_s --no-as-needed /usr/lib/gcc/x86_64-linux-gnu/5/crtend.o /usr/lib/gcc/x86_64-linux-gnu/5/../../../x86_64-linux-gnu/crtn.o
+make[1]: Leaving directory '/home/robbr48/Documents/Subversion/hopsan/Dependencies/FMILibrary-2.0.1/build-fmil/CMakeFiles/CMakeTmp'
+
+
+Parsed C implicit link information from above output:
+  link line regex: [^( *|.*[/\])(ld|([^/\]+-)?ld|collect2)[^/\]*( |$)]
+  ignore line: [Change Dir: /home/robbr48/h/Dependencies/FMILibrary-2.0.1/build-fmil/CMakeFiles/CMakeTmp]
+  ignore line: []
+  ignore line: [Run Build Command:"/usr/bin/make" "cmTryCompileExec756860766/fast"]
+  ignore line: [/usr/bin/make -f CMakeFiles/cmTryCompileExec756860766.dir/build.make CMakeFiles/cmTryCompileExec756860766.dir/build]
+  ignore line: [make[1]: Entering directory '/home/robbr48/Documents/Subversion/hopsan/Dependencies/FMILibrary-2.0.1/build-fmil/CMakeFiles/CMakeTmp']
+  ignore line: [/usr/bin/cmake -E cmake_progress_report /home/robbr48/h/Dependencies/FMILibrary-2.0.1/build-fmil/CMakeFiles/CMakeTmp/CMakeFiles 1]
+  ignore line: [Building C object CMakeFiles/cmTryCompileExec756860766.dir/CMakeCCompilerABI.c.o]
+  ignore line: [/usr/bin/cc    -o CMakeFiles/cmTryCompileExec756860766.dir/CMakeCCompilerABI.c.o   -c /usr/share/cmake-3.2/Modules/CMakeCCompilerABI.c]
+  ignore line: [Linking C executable cmTryCompileExec756860766]
+  ignore line: [/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTryCompileExec756860766.dir/link.txt --verbose=1]
+  ignore line: [/usr/bin/cc      -v CMakeFiles/cmTryCompileExec756860766.dir/CMakeCCompilerABI.c.o  -o cmTryCompileExec756860766 -rdynamic  ]
+  ignore line: [Using built-in specs.]
+  ignore line: [COLLECT_GCC=/usr/bin/cc]
+  ignore line: [COLLECT_LTO_WRAPPER=/usr/lib/gcc/x86_64-linux-gnu/5/lto-wrapper]
+  ignore line: [Target: x86_64-linux-gnu]
+  ignore line: [Configured with: ../src/configure -v --with-pkgversion='Ubuntu 5.2.1-22ubuntu2' --with-bugurl=file:///usr/share/doc/gcc-5/README.Bugs --enable-languages=c,ada,c++,java,go,d,fortran,objc,obj-c++ --prefix=/usr --program-suffix=-5 --enable-shared --enable-linker-build-id --libexecdir=/usr/lib --without-included-gettext --enable-threads=posix --libdir=/usr/lib --enable-nls --with-sysroot=/ --enable-clocale=gnu --enable-libstdcxx-debug --enable-libstdcxx-time=yes --with-default-libstdcxx-abi=new --enable-gnu-unique-object --disable-vtable-verify --enable-libmpx --enable-plugin --with-system-zlib --disable-browser-plugin --enable-java-awt=gtk --enable-gtk-cairo --with-java-home=/usr/lib/jvm/java-1.5.0-gcj-5-amd64/jre --enable-java-home --with-jvm-root-dir=/usr/lib/jvm/java-1.5.0-gcj-5-amd64 --with-jvm-jar-dir=/usr/lib/jvm-exports/java-1.5.0-gcj-5-amd64 --with-arch-directory=amd64 --with-ecj-jar=/usr/share/java/eclipse-ecj.jar --enable-objc-gc --enable-multiarch --disable-werror --with-arch-32=i686 --with-abi=m64 --with-multilib-list=m32,m64,mx32 --enable-multilib --with-tune=generic --enable-checking=release --build=x86_64-linux-gnu --host=x86_64-linux-gnu --target=x86_64-linux-gnu]
+  ignore line: [Thread model: posix]
+  ignore line: [gcc version 5.2.1 20151010 (Ubuntu 5.2.1-22ubuntu2) ]
+  ignore line: [COMPILER_PATH=/usr/lib/gcc/x86_64-linux-gnu/5/:/usr/lib/gcc/x86_64-linux-gnu/5/:/usr/lib/gcc/x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/5/:/usr/lib/gcc/x86_64-linux-gnu/]
+  ignore line: [LIBRARY_PATH=/usr/lib/gcc/x86_64-linux-gnu/5/:/usr/lib/gcc/x86_64-linux-gnu/5/../../../x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/5/../../../../lib/:/lib/x86_64-linux-gnu/:/lib/../lib/:/usr/lib/x86_64-linux-gnu/:/usr/lib/../lib/:/usr/lib/gcc/x86_64-linux-gnu/5/../../../:/lib/:/usr/lib/]
+  ignore line: [COLLECT_GCC_OPTIONS='-v' '-o' 'cmTryCompileExec756860766' '-rdynamic' '-mtune=generic' '-march=x86-64']
+  link line: [ /usr/lib/gcc/x86_64-linux-gnu/5/collect2 -plugin /usr/lib/gcc/x86_64-linux-gnu/5/liblto_plugin.so -plugin-opt=/usr/lib/gcc/x86_64-linux-gnu/5/lto-wrapper -plugin-opt=-fresolution=/tmp/ccvwnOgL.res -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lgcc_s --sysroot=/ --build-id --eh-frame-hdr -m elf_x86_64 --hash-style=gnu --as-needed -export-dynamic -dynamic-linker /lib64/ld-linux-x86-64.so.2 -z relro -o cmTryCompileExec756860766 /usr/lib/gcc/x86_64-linux-gnu/5/../../../x86_64-linux-gnu/crt1.o /usr/lib/gcc/x86_64-linux-gnu/5/../../../x86_64-linux-gnu/crti.o /usr/lib/gcc/x86_64-linux-gnu/5/crtbegin.o -L/usr/lib/gcc/x86_64-linux-gnu/5 -L/usr/lib/gcc/x86_64-linux-gnu/5/../../../x86_64-linux-gnu -L/usr/lib/gcc/x86_64-linux-gnu/5/../../../../lib -L/lib/x86_64-linux-gnu -L/lib/../lib -L/usr/lib/x86_64-linux-gnu -L/usr/lib/../lib -L/usr/lib/gcc/x86_64-linux-gnu/5/../../.. CMakeFiles/cmTryCompileExec756860766.dir/CMakeCCompilerABI.c.o -lgcc --as-needed -lgcc_s --no-as-needed -lc -lgcc --as-needed -lgcc_s --no-as-needed /usr/lib/gcc/x86_64-linux-gnu/5/crtend.o /usr/lib/gcc/x86_64-linux-gnu/5/../../../x86_64-linux-gnu/crtn.o]
+    arg [/usr/lib/gcc/x86_64-linux-gnu/5/collect2] ==> ignore
+    arg [-plugin] ==> ignore
+    arg [/usr/lib/gcc/x86_64-linux-gnu/5/liblto_plugin.so] ==> ignore
+    arg [-plugin-opt=/usr/lib/gcc/x86_64-linux-gnu/5/lto-wrapper] ==> ignore
+    arg [-plugin-opt=-fresolution=/tmp/ccvwnOgL.res] ==> ignore
+    arg [-plugin-opt=-pass-through=-lgcc] ==> ignore
+    arg [-plugin-opt=-pass-through=-lgcc_s] ==> ignore
+    arg [-plugin-opt=-pass-through=-lc] ==> ignore
+    arg [-plugin-opt=-pass-through=-lgcc] ==> ignore
+    arg [-plugin-opt=-pass-through=-lgcc_s] ==> ignore
+    arg [--sysroot=/] ==> ignore
+    arg [--build-id] ==> ignore
+    arg [--eh-frame-hdr] ==> ignore
+    arg [-m] ==> ignore
+    arg [elf_x86_64] ==> ignore
+    arg [--hash-style=gnu] ==> ignore
+    arg [--as-needed] ==> ignore
+    arg [-export-dynamic] ==> ignore
+    arg [-dynamic-linker] ==> ignore
+    arg [/lib64/ld-linux-x86-64.so.2] ==> ignore
+    arg [-zrelro] ==> ignore
+    arg [-o] ==> ignore
+    arg [cmTryCompileExec756860766] ==> ignore
+    arg [/usr/lib/gcc/x86_64-linux-gnu/5/../../../x86_64-linux-gnu/crt1.o] ==> ignore
+    arg [/usr/lib/gcc/x86_64-linux-gnu/5/../../../x86_64-linux-gnu/crti.o] ==> ignore
+    arg [/usr/lib/gcc/x86_64-linux-gnu/5/crtbegin.o] ==> ignore
+    arg [-L/usr/lib/gcc/x86_64-linux-gnu/5] ==> dir [/usr/lib/gcc/x86_64-linux-gnu/5]
+    arg [-L/usr/lib/gcc/x86_64-linux-gnu/5/../../../x86_64-linux-gnu] ==> dir [/usr/lib/gcc/x86_64-linux-gnu/5/../../../x86_64-linux-gnu]
+    arg [-L/usr/lib/gcc/x86_64-linux-gnu/5/../../../../lib] ==> dir [/usr/lib/gcc/x86_64-linux-gnu/5/../../../../lib]
+    arg [-L/lib/x86_64-linux-gnu] ==> dir [/lib/x86_64-linux-gnu]
+    arg [-L/lib/../lib] ==> dir [/lib/../lib]
+    arg [-L/usr/lib/x86_64-linux-gnu] ==> dir [/usr/lib/x86_64-linux-gnu]
+    arg [-L/usr/lib/../lib] ==> dir [/usr/lib/../lib]
+    arg [-L/usr/lib/gcc/x86_64-linux-gnu/5/../../..] ==> dir [/usr/lib/gcc/x86_64-linux-gnu/5/../../..]
+    arg [CMakeFiles/cmTryCompileExec756860766.dir/CMakeCCompilerABI.c.o] ==> ignore
+    arg [-lgcc] ==> lib [gcc]
+    arg [--as-needed] ==> ignore
+    arg [-lgcc_s] ==> lib [gcc_s]
+    arg [--no-as-needed] ==> ignore
+    arg [-lc] ==> lib [c]
+    arg [-lgcc] ==> lib [gcc]
+    arg [--as-needed] ==> ignore
+    arg [-lgcc_s] ==> lib [gcc_s]
+    arg [--no-as-needed] ==> ignore
+    arg [/usr/lib/gcc/x86_64-linux-gnu/5/crtend.o] ==> ignore
+    arg [/usr/lib/gcc/x86_64-linux-gnu/5/../../../x86_64-linux-gnu/crtn.o] ==> ignore
+  remove lib [gcc]
+  remove lib [gcc_s]
+  remove lib [gcc]
+  remove lib [gcc_s]
+  collapse library dir [/usr/lib/gcc/x86_64-linux-gnu/5] ==> [/usr/lib/gcc/x86_64-linux-gnu/5]
+  collapse library dir [/usr/lib/gcc/x86_64-linux-gnu/5/../../../x86_64-linux-gnu] ==> [/usr/lib/x86_64-linux-gnu]
+  collapse library dir [/usr/lib/gcc/x86_64-linux-gnu/5/../../../../lib] ==> [/usr/lib]
+  collapse library dir [/lib/x86_64-linux-gnu] ==> [/lib/x86_64-linux-gnu]
+  collapse library dir [/lib/../lib] ==> [/lib]
+  collapse library dir [/usr/lib/x86_64-linux-gnu] ==> [/usr/lib/x86_64-linux-gnu]
+  collapse library dir [/usr/lib/../lib] ==> [/usr/lib]
+  collapse library dir [/usr/lib/gcc/x86_64-linux-gnu/5/../../..] ==> [/usr/lib]
+  implicit libs: [c]
+  implicit dirs: [/usr/lib/gcc/x86_64-linux-gnu/5;/usr/lib/x86_64-linux-gnu;/usr/lib;/lib/x86_64-linux-gnu;/lib]
+  implicit fwks: []
+
+
+
+
+Detecting C [-std=c11] compiler features compiled with the following output:
+Change Dir: /home/robbr48/h/Dependencies/FMILibrary-2.0.1/build-fmil/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTryCompileExec901107461/fast"
+/usr/bin/make -f CMakeFiles/cmTryCompileExec901107461.dir/build.make CMakeFiles/cmTryCompileExec901107461.dir/build
+make[1]: Entering directory '/home/robbr48/Documents/Subversion/hopsan/Dependencies/FMILibrary-2.0.1/build-fmil/CMakeFiles/CMakeTmp'
+/usr/bin/cmake -E cmake_progress_report /home/robbr48/h/Dependencies/FMILibrary-2.0.1/build-fmil/CMakeFiles/CMakeTmp/CMakeFiles 1
+Building C object CMakeFiles/cmTryCompileExec901107461.dir/feature_tests.c.o
+/usr/bin/cc   -std=c11 -o CMakeFiles/cmTryCompileExec901107461.dir/feature_tests.c.o   -c /home/robbr48/h/Dependencies/FMILibrary-2.0.1/build-fmil/CMakeFiles/feature_tests.c
+Linking C executable cmTryCompileExec901107461
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTryCompileExec901107461.dir/link.txt --verbose=1
+/usr/bin/cc       CMakeFiles/cmTryCompileExec901107461.dir/feature_tests.c.o  -o cmTryCompileExec901107461 -rdynamic 
+make[1]: Leaving directory '/home/robbr48/Documents/Subversion/hopsan/Dependencies/FMILibrary-2.0.1/build-fmil/CMakeFiles/CMakeTmp'
+
+
+    Feature record: C_FEATURE:1c_function_prototypes
+    Feature record: C_FEATURE:1c_restrict
+    Feature record: C_FEATURE:1c_static_assert
+    Feature record: C_FEATURE:1c_variadic_macros
+
+
+Detecting C [-std=c99] compiler features compiled with the following output:
+Change Dir: /home/robbr48/h/Dependencies/FMILibrary-2.0.1/build-fmil/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTryCompileExec4281835007/fast"
+/usr/bin/make -f CMakeFiles/cmTryCompileExec4281835007.dir/build.make CMakeFiles/cmTryCompileExec4281835007.dir/build
+make[1]: Entering directory '/home/robbr48/Documents/Subversion/hopsan/Dependencies/FMILibrary-2.0.1/build-fmil/CMakeFiles/CMakeTmp'
+/usr/bin/cmake -E cmake_progress_report /home/robbr48/h/Dependencies/FMILibrary-2.0.1/build-fmil/CMakeFiles/CMakeTmp/CMakeFiles 1
+Building C object CMakeFiles/cmTryCompileExec4281835007.dir/feature_tests.c.o
+/usr/bin/cc   -std=c99 -o CMakeFiles/cmTryCompileExec4281835007.dir/feature_tests.c.o   -c /home/robbr48/h/Dependencies/FMILibrary-2.0.1/build-fmil/CMakeFiles/feature_tests.c
+Linking C executable cmTryCompileExec4281835007
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTryCompileExec4281835007.dir/link.txt --verbose=1
+/usr/bin/cc       CMakeFiles/cmTryCompileExec4281835007.dir/feature_tests.c.o  -o cmTryCompileExec4281835007 -rdynamic 
+make[1]: Leaving directory '/home/robbr48/Documents/Subversion/hopsan/Dependencies/FMILibrary-2.0.1/build-fmil/CMakeFiles/CMakeTmp'
+
+
+    Feature record: C_FEATURE:1c_function_prototypes
+    Feature record: C_FEATURE:1c_restrict
+    Feature record: C_FEATURE:0c_static_assert
+    Feature record: C_FEATURE:1c_variadic_macros
+
+
+Detecting C [-std=c90] compiler features compiled with the following output:
+Change Dir: /home/robbr48/h/Dependencies/FMILibrary-2.0.1/build-fmil/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTryCompileExec2423640294/fast"
+/usr/bin/make -f CMakeFiles/cmTryCompileExec2423640294.dir/build.make CMakeFiles/cmTryCompileExec2423640294.dir/build
+make[1]: Entering directory '/home/robbr48/Documents/Subversion/hopsan/Dependencies/FMILibrary-2.0.1/build-fmil/CMakeFiles/CMakeTmp'
+/usr/bin/cmake -E cmake_progress_report /home/robbr48/h/Dependencies/FMILibrary-2.0.1/build-fmil/CMakeFiles/CMakeTmp/CMakeFiles 1
+Building C object CMakeFiles/cmTryCompileExec2423640294.dir/feature_tests.c.o
+/usr/bin/cc   -std=c90 -o CMakeFiles/cmTryCompileExec2423640294.dir/feature_tests.c.o   -c /home/robbr48/h/Dependencies/FMILibrary-2.0.1/build-fmil/CMakeFiles/feature_tests.c
+Linking C executable cmTryCompileExec2423640294
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTryCompileExec2423640294.dir/link.txt --verbose=1
+/usr/bin/cc       CMakeFiles/cmTryCompileExec2423640294.dir/feature_tests.c.o  -o cmTryCompileExec2423640294 -rdynamic 
+make[1]: Leaving directory '/home/robbr48/Documents/Subversion/hopsan/Dependencies/FMILibrary-2.0.1/build-fmil/CMakeFiles/CMakeTmp'
+
+
+    Feature record: C_FEATURE:1c_function_prototypes
+    Feature record: C_FEATURE:0c_restrict
+    Feature record: C_FEATURE:0c_static_assert
+    Feature record: C_FEATURE:0c_variadic_macros
+Determining if the CXX compiler works passed with the following output:
+Change Dir: /home/robbr48/h/Dependencies/FMILibrary-2.0.1/build-fmil/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTryCompileExec3229088761/fast"
+/usr/bin/make -f CMakeFiles/cmTryCompileExec3229088761.dir/build.make CMakeFiles/cmTryCompileExec3229088761.dir/build
+make[1]: Entering directory '/home/robbr48/Documents/Subversion/hopsan/Dependencies/FMILibrary-2.0.1/build-fmil/CMakeFiles/CMakeTmp'
+/usr/bin/cmake -E cmake_progress_report /home/robbr48/h/Dependencies/FMILibrary-2.0.1/build-fmil/CMakeFiles/CMakeTmp/CMakeFiles 1
+Building CXX object CMakeFiles/cmTryCompileExec3229088761.dir/testCXXCompiler.cxx.o
+/usr/bin/c++     -o CMakeFiles/cmTryCompileExec3229088761.dir/testCXXCompiler.cxx.o -c /home/robbr48/h/Dependencies/FMILibrary-2.0.1/build-fmil/CMakeFiles/CMakeTmp/testCXXCompiler.cxx
+Linking CXX executable cmTryCompileExec3229088761
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTryCompileExec3229088761.dir/link.txt --verbose=1
+/usr/bin/c++        CMakeFiles/cmTryCompileExec3229088761.dir/testCXXCompiler.cxx.o  -o cmTryCompileExec3229088761 -rdynamic 
+make[1]: Leaving directory '/home/robbr48/Documents/Subversion/hopsan/Dependencies/FMILibrary-2.0.1/build-fmil/CMakeFiles/CMakeTmp'
+
+
+Detecting CXX compiler ABI info compiled with the following output:
+Change Dir: /home/robbr48/h/Dependencies/FMILibrary-2.0.1/build-fmil/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTryCompileExec2858225336/fast"
+/usr/bin/make -f CMakeFiles/cmTryCompileExec2858225336.dir/build.make CMakeFiles/cmTryCompileExec2858225336.dir/build
+make[1]: Entering directory '/home/robbr48/Documents/Subversion/hopsan/Dependencies/FMILibrary-2.0.1/build-fmil/CMakeFiles/CMakeTmp'
+/usr/bin/cmake -E cmake_progress_report /home/robbr48/h/Dependencies/FMILibrary-2.0.1/build-fmil/CMakeFiles/CMakeTmp/CMakeFiles 1
+Building CXX object CMakeFiles/cmTryCompileExec2858225336.dir/CMakeCXXCompilerABI.cpp.o
+/usr/bin/c++     -o CMakeFiles/cmTryCompileExec2858225336.dir/CMakeCXXCompilerABI.cpp.o -c /usr/share/cmake-3.2/Modules/CMakeCXXCompilerABI.cpp
+Linking CXX executable cmTryCompileExec2858225336
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTryCompileExec2858225336.dir/link.txt --verbose=1
+/usr/bin/c++       -v CMakeFiles/cmTryCompileExec2858225336.dir/CMakeCXXCompilerABI.cpp.o  -o cmTryCompileExec2858225336 -rdynamic  
+Using built-in specs.
+COLLECT_GCC=/usr/bin/c++
+COLLECT_LTO_WRAPPER=/usr/lib/gcc/x86_64-linux-gnu/5/lto-wrapper
+Target: x86_64-linux-gnu
+Configured with: ../src/configure -v --with-pkgversion='Ubuntu 5.2.1-22ubuntu2' --with-bugurl=file:///usr/share/doc/gcc-5/README.Bugs --enable-languages=c,ada,c++,java,go,d,fortran,objc,obj-c++ --prefix=/usr --program-suffix=-5 --enable-shared --enable-linker-build-id --libexecdir=/usr/lib --without-included-gettext --enable-threads=posix --libdir=/usr/lib --enable-nls --with-sysroot=/ --enable-clocale=gnu --enable-libstdcxx-debug --enable-libstdcxx-time=yes --with-default-libstdcxx-abi=new --enable-gnu-unique-object --disable-vtable-verify --enable-libmpx --enable-plugin --with-system-zlib --disable-browser-plugin --enable-java-awt=gtk --enable-gtk-cairo --with-java-home=/usr/lib/jvm/java-1.5.0-gcj-5-amd64/jre --enable-java-home --with-jvm-root-dir=/usr/lib/jvm/java-1.5.0-gcj-5-amd64 --with-jvm-jar-dir=/usr/lib/jvm-exports/java-1.5.0-gcj-5-amd64 --with-arch-directory=amd64 --with-ecj-jar=/usr/share/java/eclipse-ecj.jar --enable-objc-gc --enable-multiarch --disable-werror --with-arch-32=i686 --with-abi=m64 --with-multilib-list=m32,m64,mx32 --enable-multilib --with-tune=generic --enable-checking=release --build=x86_64-linux-gnu --host=x86_64-linux-gnu --target=x86_64-linux-gnu
+Thread model: posix
+gcc version 5.2.1 20151010 (Ubuntu 5.2.1-22ubuntu2) 
+COMPILER_PATH=/usr/lib/gcc/x86_64-linux-gnu/5/:/usr/lib/gcc/x86_64-linux-gnu/5/:/usr/lib/gcc/x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/5/:/usr/lib/gcc/x86_64-linux-gnu/
+LIBRARY_PATH=/usr/lib/gcc/x86_64-linux-gnu/5/:/usr/lib/gcc/x86_64-linux-gnu/5/../../../x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/5/../../../../lib/:/lib/x86_64-linux-gnu/:/lib/../lib/:/usr/lib/x86_64-linux-gnu/:/usr/lib/../lib/:/usr/lib/gcc/x86_64-linux-gnu/5/../../../:/lib/:/usr/lib/
+COLLECT_GCC_OPTIONS='-v' '-o' 'cmTryCompileExec2858225336' '-rdynamic' '-shared-libgcc' '-mtune=generic' '-march=x86-64'
+ /usr/lib/gcc/x86_64-linux-gnu/5/collect2 -plugin /usr/lib/gcc/x86_64-linux-gnu/5/liblto_plugin.so -plugin-opt=/usr/lib/gcc/x86_64-linux-gnu/5/lto-wrapper -plugin-opt=-fresolution=/tmp/cceGx2Yj.res -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc --sysroot=/ --build-id --eh-frame-hdr -m elf_x86_64 --hash-style=gnu --as-needed -export-dynamic -dynamic-linker /lib64/ld-linux-x86-64.so.2 -z relro -o cmTryCompileExec2858225336 /usr/lib/gcc/x86_64-linux-gnu/5/../../../x86_64-linux-gnu/crt1.o /usr/lib/gcc/x86_64-linux-gnu/5/../../../x86_64-linux-gnu/crti.o /usr/lib/gcc/x86_64-linux-gnu/5/crtbegin.o -L/usr/lib/gcc/x86_64-linux-gnu/5 -L/usr/lib/gcc/x86_64-linux-gnu/5/../../../x86_64-linux-gnu -L/usr/lib/gcc/x86_64-linux-gnu/5/../../../../lib -L/lib/x86_64-linux-gnu -L/lib/../lib -L/usr/lib/x86_64-linux-gnu -L/usr/lib/../lib -L/usr/lib/gcc/x86_64-linux-gnu/5/../../.. CMakeFiles/cmTryCompileExec2858225336.dir/CMakeCXXCompilerABI.cpp.o -lstdc++ -lm -lgcc_s -lgcc -lc -lgcc_s -lgcc /usr/lib/gcc/x86_64-linux-gnu/5/crtend.o /usr/lib/gcc/x86_64-linux-gnu/5/../../../x86_64-linux-gnu/crtn.o
+make[1]: Leaving directory '/home/robbr48/Documents/Subversion/hopsan/Dependencies/FMILibrary-2.0.1/build-fmil/CMakeFiles/CMakeTmp'
+
+
+Parsed CXX implicit link information from above output:
+  link line regex: [^( *|.*[/\])(ld|([^/\]+-)?ld|collect2)[^/\]*( |$)]
+  ignore line: [Change Dir: /home/robbr48/h/Dependencies/FMILibrary-2.0.1/build-fmil/CMakeFiles/CMakeTmp]
+  ignore line: []
+  ignore line: [Run Build Command:"/usr/bin/make" "cmTryCompileExec2858225336/fast"]
+  ignore line: [/usr/bin/make -f CMakeFiles/cmTryCompileExec2858225336.dir/build.make CMakeFiles/cmTryCompileExec2858225336.dir/build]
+  ignore line: [make[1]: Entering directory '/home/robbr48/Documents/Subversion/hopsan/Dependencies/FMILibrary-2.0.1/build-fmil/CMakeFiles/CMakeTmp']
+  ignore line: [/usr/bin/cmake -E cmake_progress_report /home/robbr48/h/Dependencies/FMILibrary-2.0.1/build-fmil/CMakeFiles/CMakeTmp/CMakeFiles 1]
+  ignore line: [Building CXX object CMakeFiles/cmTryCompileExec2858225336.dir/CMakeCXXCompilerABI.cpp.o]
+  ignore line: [/usr/bin/c++     -o CMakeFiles/cmTryCompileExec2858225336.dir/CMakeCXXCompilerABI.cpp.o -c /usr/share/cmake-3.2/Modules/CMakeCXXCompilerABI.cpp]
+  ignore line: [Linking CXX executable cmTryCompileExec2858225336]
+  ignore line: [/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTryCompileExec2858225336.dir/link.txt --verbose=1]
+  ignore line: [/usr/bin/c++       -v CMakeFiles/cmTryCompileExec2858225336.dir/CMakeCXXCompilerABI.cpp.o  -o cmTryCompileExec2858225336 -rdynamic  ]
+  ignore line: [Using built-in specs.]
+  ignore line: [COLLECT_GCC=/usr/bin/c++]
+  ignore line: [COLLECT_LTO_WRAPPER=/usr/lib/gcc/x86_64-linux-gnu/5/lto-wrapper]
+  ignore line: [Target: x86_64-linux-gnu]
+  ignore line: [Configured with: ../src/configure -v --with-pkgversion='Ubuntu 5.2.1-22ubuntu2' --with-bugurl=file:///usr/share/doc/gcc-5/README.Bugs --enable-languages=c,ada,c++,java,go,d,fortran,objc,obj-c++ --prefix=/usr --program-suffix=-5 --enable-shared --enable-linker-build-id --libexecdir=/usr/lib --without-included-gettext --enable-threads=posix --libdir=/usr/lib --enable-nls --with-sysroot=/ --enable-clocale=gnu --enable-libstdcxx-debug --enable-libstdcxx-time=yes --with-default-libstdcxx-abi=new --enable-gnu-unique-object --disable-vtable-verify --enable-libmpx --enable-plugin --with-system-zlib --disable-browser-plugin --enable-java-awt=gtk --enable-gtk-cairo --with-java-home=/usr/lib/jvm/java-1.5.0-gcj-5-amd64/jre --enable-java-home --with-jvm-root-dir=/usr/lib/jvm/java-1.5.0-gcj-5-amd64 --with-jvm-jar-dir=/usr/lib/jvm-exports/java-1.5.0-gcj-5-amd64 --with-arch-directory=amd64 --with-ecj-jar=/usr/share/java/eclipse-ecj.jar --enable-objc-gc --enable-multiarch --disable-werror --with-arch-32=i686 --with-abi=m64 --with-multilib-list=m32,m64,mx32 --enable-multilib --with-tune=generic --enable-checking=release --build=x86_64-linux-gnu --host=x86_64-linux-gnu --target=x86_64-linux-gnu]
+  ignore line: [Thread model: posix]
+  ignore line: [gcc version 5.2.1 20151010 (Ubuntu 5.2.1-22ubuntu2) ]
+  ignore line: [COMPILER_PATH=/usr/lib/gcc/x86_64-linux-gnu/5/:/usr/lib/gcc/x86_64-linux-gnu/5/:/usr/lib/gcc/x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/5/:/usr/lib/gcc/x86_64-linux-gnu/]
+  ignore line: [LIBRARY_PATH=/usr/lib/gcc/x86_64-linux-gnu/5/:/usr/lib/gcc/x86_64-linux-gnu/5/../../../x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/5/../../../../lib/:/lib/x86_64-linux-gnu/:/lib/../lib/:/usr/lib/x86_64-linux-gnu/:/usr/lib/../lib/:/usr/lib/gcc/x86_64-linux-gnu/5/../../../:/lib/:/usr/lib/]
+  ignore line: [COLLECT_GCC_OPTIONS='-v' '-o' 'cmTryCompileExec2858225336' '-rdynamic' '-shared-libgcc' '-mtune=generic' '-march=x86-64']
+  link line: [ /usr/lib/gcc/x86_64-linux-gnu/5/collect2 -plugin /usr/lib/gcc/x86_64-linux-gnu/5/liblto_plugin.so -plugin-opt=/usr/lib/gcc/x86_64-linux-gnu/5/lto-wrapper -plugin-opt=-fresolution=/tmp/cceGx2Yj.res -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc --sysroot=/ --build-id --eh-frame-hdr -m elf_x86_64 --hash-style=gnu --as-needed -export-dynamic -dynamic-linker /lib64/ld-linux-x86-64.so.2 -z relro -o cmTryCompileExec2858225336 /usr/lib/gcc/x86_64-linux-gnu/5/../../../x86_64-linux-gnu/crt1.o /usr/lib/gcc/x86_64-linux-gnu/5/../../../x86_64-linux-gnu/crti.o /usr/lib/gcc/x86_64-linux-gnu/5/crtbegin.o -L/usr/lib/gcc/x86_64-linux-gnu/5 -L/usr/lib/gcc/x86_64-linux-gnu/5/../../../x86_64-linux-gnu -L/usr/lib/gcc/x86_64-linux-gnu/5/../../../../lib -L/lib/x86_64-linux-gnu -L/lib/../lib -L/usr/lib/x86_64-linux-gnu -L/usr/lib/../lib -L/usr/lib/gcc/x86_64-linux-gnu/5/../../.. CMakeFiles/cmTryCompileExec2858225336.dir/CMakeCXXCompilerABI.cpp.o -lstdc++ -lm -lgcc_s -lgcc -lc -lgcc_s -lgcc /usr/lib/gcc/x86_64-linux-gnu/5/crtend.o /usr/lib/gcc/x86_64-linux-gnu/5/../../../x86_64-linux-gnu/crtn.o]
+    arg [/usr/lib/gcc/x86_64-linux-gnu/5/collect2] ==> ignore
+    arg [-plugin] ==> ignore
+    arg [/usr/lib/gcc/x86_64-linux-gnu/5/liblto_plugin.so] ==> ignore
+    arg [-plugin-opt=/usr/lib/gcc/x86_64-linux-gnu/5/lto-wrapper] ==> ignore
+    arg [-plugin-opt=-fresolution=/tmp/cceGx2Yj.res] ==> ignore
+    arg [-plugin-opt=-pass-through=-lgcc_s] ==> ignore
+    arg [-plugin-opt=-pass-through=-lgcc] ==> ignore
+    arg [-plugin-opt=-pass-through=-lc] ==> ignore
+    arg [-plugin-opt=-pass-through=-lgcc_s] ==> ignore
+    arg [-plugin-opt=-pass-through=-lgcc] ==> ignore
+    arg [--sysroot=/] ==> ignore
+    arg [--build-id] ==> ignore
+    arg [--eh-frame-hdr] ==> ignore
+    arg [-m] ==> ignore
+    arg [elf_x86_64] ==> ignore
+    arg [--hash-style=gnu] ==> ignore
+    arg [--as-needed] ==> ignore
+    arg [-export-dynamic] ==> ignore
+    arg [-dynamic-linker] ==> ignore
+    arg [/lib64/ld-linux-x86-64.so.2] ==> ignore
+    arg [-zrelro] ==> ignore
+    arg [-o] ==> ignore
+    arg [cmTryCompileExec2858225336] ==> ignore
+    arg [/usr/lib/gcc/x86_64-linux-gnu/5/../../../x86_64-linux-gnu/crt1.o] ==> ignore
+    arg [/usr/lib/gcc/x86_64-linux-gnu/5/../../../x86_64-linux-gnu/crti.o] ==> ignore
+    arg [/usr/lib/gcc/x86_64-linux-gnu/5/crtbegin.o] ==> ignore
+    arg [-L/usr/lib/gcc/x86_64-linux-gnu/5] ==> dir [/usr/lib/gcc/x86_64-linux-gnu/5]
+    arg [-L/usr/lib/gcc/x86_64-linux-gnu/5/../../../x86_64-linux-gnu] ==> dir [/usr/lib/gcc/x86_64-linux-gnu/5/../../../x86_64-linux-gnu]
+    arg [-L/usr/lib/gcc/x86_64-linux-gnu/5/../../../../lib] ==> dir [/usr/lib/gcc/x86_64-linux-gnu/5/../../../../lib]
+    arg [-L/lib/x86_64-linux-gnu] ==> dir [/lib/x86_64-linux-gnu]
+    arg [-L/lib/../lib] ==> dir [/lib/../lib]
+    arg [-L/usr/lib/x86_64-linux-gnu] ==> dir [/usr/lib/x86_64-linux-gnu]
+    arg [-L/usr/lib/../lib] ==> dir [/usr/lib/../lib]
+    arg [-L/usr/lib/gcc/x86_64-linux-gnu/5/../../..] ==> dir [/usr/lib/gcc/x86_64-linux-gnu/5/../../..]
+    arg [CMakeFiles/cmTryCompileExec2858225336.dir/CMakeCXXCompilerABI.cpp.o] ==> ignore
+    arg [-lstdc++] ==> lib [stdc++]
+    arg [-lm] ==> lib [m]
+    arg [-lgcc_s] ==> lib [gcc_s]
+    arg [-lgcc] ==> lib [gcc]
+    arg [-lc] ==> lib [c]
+    arg [-lgcc_s] ==> lib [gcc_s]
+    arg [-lgcc] ==> lib [gcc]
+    arg [/usr/lib/gcc/x86_64-linux-gnu/5/crtend.o] ==> ignore
+    arg [/usr/lib/gcc/x86_64-linux-gnu/5/../../../x86_64-linux-gnu/crtn.o] ==> ignore
+  remove lib [gcc_s]
+  remove lib [gcc]
+  remove lib [gcc_s]
+  remove lib [gcc]
+  collapse library dir [/usr/lib/gcc/x86_64-linux-gnu/5] ==> [/usr/lib/gcc/x86_64-linux-gnu/5]
+  collapse library dir [/usr/lib/gcc/x86_64-linux-gnu/5/../../../x86_64-linux-gnu] ==> [/usr/lib/x86_64-linux-gnu]
+  collapse library dir [/usr/lib/gcc/x86_64-linux-gnu/5/../../../../lib] ==> [/usr/lib]
+  collapse library dir [/lib/x86_64-linux-gnu] ==> [/lib/x86_64-linux-gnu]
+  collapse library dir [/lib/../lib] ==> [/lib]
+  collapse library dir [/usr/lib/x86_64-linux-gnu] ==> [/usr/lib/x86_64-linux-gnu]
+  collapse library dir [/usr/lib/../lib] ==> [/usr/lib]
+  collapse library dir [/usr/lib/gcc/x86_64-linux-gnu/5/../../..] ==> [/usr/lib]
+  implicit libs: [stdc++;m;c]
+  implicit dirs: [/usr/lib/gcc/x86_64-linux-gnu/5;/usr/lib/x86_64-linux-gnu;/usr/lib;/lib/x86_64-linux-gnu;/lib]
+  implicit fwks: []
+
+
+
+
+Detecting CXX [-std=c++14] compiler features compiled with the following output:
+Change Dir: /home/robbr48/h/Dependencies/FMILibrary-2.0.1/build-fmil/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTryCompileExec4065512687/fast"
+/usr/bin/make -f CMakeFiles/cmTryCompileExec4065512687.dir/build.make CMakeFiles/cmTryCompileExec4065512687.dir/build
+make[1]: Entering directory '/home/robbr48/Documents/Subversion/hopsan/Dependencies/FMILibrary-2.0.1/build-fmil/CMakeFiles/CMakeTmp'
+/usr/bin/cmake -E cmake_progress_report /home/robbr48/h/Dependencies/FMILibrary-2.0.1/build-fmil/CMakeFiles/CMakeTmp/CMakeFiles 1
+Building CXX object CMakeFiles/cmTryCompileExec4065512687.dir/feature_tests.cxx.o
+/usr/bin/c++    -std=c++14 -o CMakeFiles/cmTryCompileExec4065512687.dir/feature_tests.cxx.o -c /home/robbr48/h/Dependencies/FMILibrary-2.0.1/build-fmil/CMakeFiles/feature_tests.cxx
+Linking CXX executable cmTryCompileExec4065512687
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTryCompileExec4065512687.dir/link.txt --verbose=1
+/usr/bin/c++        CMakeFiles/cmTryCompileExec4065512687.dir/feature_tests.cxx.o  -o cmTryCompileExec4065512687 -rdynamic 
+make[1]: Leaving directory '/home/robbr48/Documents/Subversion/hopsan/Dependencies/FMILibrary-2.0.1/build-fmil/CMakeFiles/CMakeTmp'
+
+
+    Feature record: CXX_FEATURE:1cxx_aggregate_default_initializers
+    Feature record: CXX_FEATURE:1cxx_alias_templates
+    Feature record: CXX_FEATURE:1cxx_alignas
+    Feature record: CXX_FEATURE:1cxx_alignof
+    Feature record: CXX_FEATURE:1cxx_attributes
+    Feature record: CXX_FEATURE:1cxx_attribute_deprecated
+    Feature record: CXX_FEATURE:1cxx_auto_type
+    Feature record: CXX_FEATURE:1cxx_binary_literals
+    Feature record: CXX_FEATURE:1cxx_constexpr
+    Feature record: CXX_FEATURE:1cxx_contextual_conversions
+    Feature record: CXX_FEATURE:1cxx_decltype
+    Feature record: CXX_FEATURE:1cxx_decltype_auto
+    Feature record: CXX_FEATURE:1cxx_decltype_incomplete_return_types
+    Feature record: CXX_FEATURE:1cxx_default_function_template_args
+    Feature record: CXX_FEATURE:1cxx_defaulted_functions
+    Feature record: CXX_FEATURE:1cxx_defaulted_move_initializers
+    Feature record: CXX_FEATURE:1cxx_delegating_constructors
+    Feature record: CXX_FEATURE:1cxx_deleted_functions
+    Feature record: CXX_FEATURE:1cxx_digit_separators
+    Feature record: CXX_FEATURE:1cxx_enum_forward_declarations
+    Feature record: CXX_FEATURE:1cxx_explicit_conversions
+    Feature record: CXX_FEATURE:1cxx_extended_friend_declarations
+    Feature record: CXX_FEATURE:1cxx_extern_templates
+    Feature record: CXX_FEATURE:1cxx_final
+    Feature record: CXX_FEATURE:1cxx_func_identifier
+    Feature record: CXX_FEATURE:1cxx_generalized_initializers
+    Feature record: CXX_FEATURE:1cxx_generic_lambdas
+    Feature record: CXX_FEATURE:1cxx_inheriting_constructors
+    Feature record: CXX_FEATURE:1cxx_inline_namespaces
+    Feature record: CXX_FEATURE:1cxx_lambdas
+    Feature record: CXX_FEATURE:1cxx_lambda_init_captures
+    Feature record: CXX_FEATURE:1cxx_local_type_template_args
+    Feature record: CXX_FEATURE:1cxx_long_long_type
+    Feature record: CXX_FEATURE:1cxx_noexcept
+    Feature record: CXX_FEATURE:1cxx_nonstatic_member_init
+    Feature record: CXX_FEATURE:1cxx_nullptr
+    Feature record: CXX_FEATURE:1cxx_override
+    Feature record: CXX_FEATURE:1cxx_range_for
+    Feature record: CXX_FEATURE:1cxx_raw_string_literals
+    Feature record: CXX_FEATURE:1cxx_reference_qualified_functions
+    Feature record: CXX_FEATURE:1cxx_relaxed_constexpr
+    Feature record: CXX_FEATURE:1cxx_return_type_deduction
+    Feature record: CXX_FEATURE:1cxx_right_angle_brackets
+    Feature record: CXX_FEATURE:1cxx_rvalue_references
+    Feature record: CXX_FEATURE:1cxx_sizeof_member
+    Feature record: CXX_FEATURE:1cxx_static_assert
+    Feature record: CXX_FEATURE:1cxx_strong_enums
+    Feature record: CXX_FEATURE:1cxx_template_template_parameters
+    Feature record: CXX_FEATURE:1cxx_thread_local
+    Feature record: CXX_FEATURE:1cxx_trailing_return_types
+    Feature record: CXX_FEATURE:1cxx_unicode_literals
+    Feature record: CXX_FEATURE:1cxx_uniform_initialization
+    Feature record: CXX_FEATURE:1cxx_unrestricted_unions
+    Feature record: CXX_FEATURE:1cxx_user_literals
+    Feature record: CXX_FEATURE:1cxx_variable_templates
+    Feature record: CXX_FEATURE:1cxx_variadic_macros
+    Feature record: CXX_FEATURE:1cxx_variadic_templates
+
+
+Detecting CXX [-std=c++11] compiler features compiled with the following output:
+Change Dir: /home/robbr48/h/Dependencies/FMILibrary-2.0.1/build-fmil/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTryCompileExec4145787789/fast"
+/usr/bin/make -f CMakeFiles/cmTryCompileExec4145787789.dir/build.make CMakeFiles/cmTryCompileExec4145787789.dir/build
+make[1]: Entering directory '/home/robbr48/Documents/Subversion/hopsan/Dependencies/FMILibrary-2.0.1/build-fmil/CMakeFiles/CMakeTmp'
+/usr/bin/cmake -E cmake_progress_report /home/robbr48/h/Dependencies/FMILibrary-2.0.1/build-fmil/CMakeFiles/CMakeTmp/CMakeFiles 1
+Building CXX object CMakeFiles/cmTryCompileExec4145787789.dir/feature_tests.cxx.o
+/usr/bin/c++    -std=c++11 -o CMakeFiles/cmTryCompileExec4145787789.dir/feature_tests.cxx.o -c /home/robbr48/h/Dependencies/FMILibrary-2.0.1/build-fmil/CMakeFiles/feature_tests.cxx
+Linking CXX executable cmTryCompileExec4145787789
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTryCompileExec4145787789.dir/link.txt --verbose=1
+/usr/bin/c++        CMakeFiles/cmTryCompileExec4145787789.dir/feature_tests.cxx.o  -o cmTryCompileExec4145787789 -rdynamic 
+make[1]: Leaving directory '/home/robbr48/Documents/Subversion/hopsan/Dependencies/FMILibrary-2.0.1/build-fmil/CMakeFiles/CMakeTmp'
+
+
+    Feature record: CXX_FEATURE:0cxx_aggregate_default_initializers
+    Feature record: CXX_FEATURE:1cxx_alias_templates
+    Feature record: CXX_FEATURE:1cxx_alignas
+    Feature record: CXX_FEATURE:1cxx_alignof
+    Feature record: CXX_FEATURE:1cxx_attributes
+    Feature record: CXX_FEATURE:0cxx_attribute_deprecated
+    Feature record: CXX_FEATURE:1cxx_auto_type
+    Feature record: CXX_FEATURE:0cxx_binary_literals
+    Feature record: CXX_FEATURE:1cxx_constexpr
+    Feature record: CXX_FEATURE:0cxx_contextual_conversions
+    Feature record: CXX_FEATURE:1cxx_decltype
+    Feature record: CXX_FEATURE:0cxx_decltype_auto
+    Feature record: CXX_FEATURE:1cxx_decltype_incomplete_return_types
+    Feature record: CXX_FEATURE:1cxx_default_function_template_args
+    Feature record: CXX_FEATURE:1cxx_defaulted_functions
+    Feature record: CXX_FEATURE:1cxx_defaulted_move_initializers
+    Feature record: CXX_FEATURE:1cxx_delegating_constructors
+    Feature record: CXX_FEATURE:1cxx_deleted_functions
+    Feature record: CXX_FEATURE:0cxx_digit_separators
+    Feature record: CXX_FEATURE:1cxx_enum_forward_declarations
+    Feature record: CXX_FEATURE:1cxx_explicit_conversions
+    Feature record: CXX_FEATURE:1cxx_extended_friend_declarations
+    Feature record: CXX_FEATURE:1cxx_extern_templates
+    Feature record: CXX_FEATURE:1cxx_final
+    Feature record: CXX_FEATURE:1cxx_func_identifier
+    Feature record: CXX_FEATURE:1cxx_generalized_initializers
+    Feature record: CXX_FEATURE:0cxx_generic_lambdas
+    Feature record: CXX_FEATURE:1cxx_inheriting_constructors
+    Feature record: CXX_FEATURE:1cxx_inline_namespaces
+    Feature record: CXX_FEATURE:1cxx_lambdas
+    Feature record: CXX_FEATURE:0cxx_lambda_init_captures
+    Feature record: CXX_FEATURE:1cxx_local_type_template_args
+    Feature record: CXX_FEATURE:1cxx_long_long_type
+    Feature record: CXX_FEATURE:1cxx_noexcept
+    Feature record: CXX_FEATURE:1cxx_nonstatic_member_init
+    Feature record: CXX_FEATURE:1cxx_nullptr
+    Feature record: CXX_FEATURE:1cxx_override
+    Feature record: CXX_FEATURE:1cxx_range_for
+    Feature record: CXX_FEATURE:1cxx_raw_string_literals
+    Feature record: CXX_FEATURE:1cxx_reference_qualified_functions
+    Feature record: CXX_FEATURE:0cxx_relaxed_constexpr
+    Feature record: CXX_FEATURE:0cxx_return_type_deduction
+    Feature record: CXX_FEATURE:1cxx_right_angle_brackets
+    Feature record: CXX_FEATURE:1cxx_rvalue_references
+    Feature record: CXX_FEATURE:1cxx_sizeof_member
+    Feature record: CXX_FEATURE:1cxx_static_assert
+    Feature record: CXX_FEATURE:1cxx_strong_enums
+    Feature record: CXX_FEATURE:1cxx_template_template_parameters
+    Feature record: CXX_FEATURE:1cxx_thread_local
+    Feature record: CXX_FEATURE:1cxx_trailing_return_types
+    Feature record: CXX_FEATURE:1cxx_unicode_literals
+    Feature record: CXX_FEATURE:1cxx_uniform_initialization
+    Feature record: CXX_FEATURE:1cxx_unrestricted_unions
+    Feature record: CXX_FEATURE:1cxx_user_literals
+    Feature record: CXX_FEATURE:0cxx_variable_templates
+    Feature record: CXX_FEATURE:1cxx_variadic_macros
+    Feature record: CXX_FEATURE:1cxx_variadic_templates
+
+
+Detecting CXX [-std=c++98] compiler features compiled with the following output:
+Change Dir: /home/robbr48/h/Dependencies/FMILibrary-2.0.1/build-fmil/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTryCompileExec1254050041/fast"
+/usr/bin/make -f CMakeFiles/cmTryCompileExec1254050041.dir/build.make CMakeFiles/cmTryCompileExec1254050041.dir/build
+make[1]: Entering directory '/home/robbr48/Documents/Subversion/hopsan/Dependencies/FMILibrary-2.0.1/build-fmil/CMakeFiles/CMakeTmp'
+/usr/bin/cmake -E cmake_progress_report /home/robbr48/h/Dependencies/FMILibrary-2.0.1/build-fmil/CMakeFiles/CMakeTmp/CMakeFiles 1
+Building CXX object CMakeFiles/cmTryCompileExec1254050041.dir/feature_tests.cxx.o
+/usr/bin/c++    -std=c++98 -o CMakeFiles/cmTryCompileExec1254050041.dir/feature_tests.cxx.o -c /home/robbr48/h/Dependencies/FMILibrary-2.0.1/build-fmil/CMakeFiles/feature_tests.cxx
+Linking CXX executable cmTryCompileExec1254050041
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTryCompileExec1254050041.dir/link.txt --verbose=1
+/usr/bin/c++        CMakeFiles/cmTryCompileExec1254050041.dir/feature_tests.cxx.o  -o cmTryCompileExec1254050041 -rdynamic 
+make[1]: Leaving directory '/home/robbr48/Documents/Subversion/hopsan/Dependencies/FMILibrary-2.0.1/build-fmil/CMakeFiles/CMakeTmp'
+
+
+    Feature record: CXX_FEATURE:0cxx_aggregate_default_initializers
+    Feature record: CXX_FEATURE:0cxx_alias_templates
+    Feature record: CXX_FEATURE:0cxx_alignas
+    Feature record: CXX_FEATURE:0cxx_alignof
+    Feature record: CXX_FEATURE:0cxx_attributes
+    Feature record: CXX_FEATURE:0cxx_attribute_deprecated
+    Feature record: CXX_FEATURE:0cxx_auto_type
+    Feature record: CXX_FEATURE:0cxx_binary_literals
+    Feature record: CXX_FEATURE:0cxx_constexpr
+    Feature record: CXX_FEATURE:0cxx_contextual_conversions
+    Feature record: CXX_FEATURE:0cxx_decltype
+    Feature record: CXX_FEATURE:0cxx_decltype_auto
+    Feature record: CXX_FEATURE:0cxx_decltype_incomplete_return_types
+    Feature record: CXX_FEATURE:0cxx_default_function_template_args
+    Feature record: CXX_FEATURE:0cxx_defaulted_functions
+    Feature record: CXX_FEATURE:0cxx_defaulted_move_initializers
+    Feature record: CXX_FEATURE:0cxx_delegating_constructors
+    Feature record: CXX_FEATURE:0cxx_deleted_functions
+    Feature record: CXX_FEATURE:0cxx_digit_separators
+    Feature record: CXX_FEATURE:0cxx_enum_forward_declarations
+    Feature record: CXX_FEATURE:0cxx_explicit_conversions
+    Feature record: CXX_FEATURE:0cxx_extended_friend_declarations
+    Feature record: CXX_FEATURE:0cxx_extern_templates
+    Feature record: CXX_FEATURE:0cxx_final
+    Feature record: CXX_FEATURE:0cxx_func_identifier
+    Feature record: CXX_FEATURE:0cxx_generalized_initializers
+    Feature record: CXX_FEATURE:0cxx_generic_lambdas
+    Feature record: CXX_FEATURE:0cxx_inheriting_constructors
+    Feature record: CXX_FEATURE:0cxx_inline_namespaces
+    Feature record: CXX_FEATURE:0cxx_lambdas
+    Feature record: CXX_FEATURE:0cxx_lambda_init_captures
+    Feature record: CXX_FEATURE:0cxx_local_type_template_args
+    Feature record: CXX_FEATURE:0cxx_long_long_type
+    Feature record: CXX_FEATURE:0cxx_noexcept
+    Feature record: CXX_FEATURE:0cxx_nonstatic_member_init
+    Feature record: CXX_FEATURE:0cxx_nullptr
+    Feature record: CXX_FEATURE:0cxx_override
+    Feature record: CXX_FEATURE:0cxx_range_for
+    Feature record: CXX_FEATURE:0cxx_raw_string_literals
+    Feature record: CXX_FEATURE:0cxx_reference_qualified_functions
+    Feature record: CXX_FEATURE:0cxx_relaxed_constexpr
+    Feature record: CXX_FEATURE:0cxx_return_type_deduction
+    Feature record: CXX_FEATURE:0cxx_right_angle_brackets
+    Feature record: CXX_FEATURE:0cxx_rvalue_references
+    Feature record: CXX_FEATURE:0cxx_sizeof_member
+    Feature record: CXX_FEATURE:0cxx_static_assert
+    Feature record: CXX_FEATURE:0cxx_strong_enums
+    Feature record: CXX_FEATURE:1cxx_template_template_parameters
+    Feature record: CXX_FEATURE:0cxx_thread_local
+    Feature record: CXX_FEATURE:0cxx_trailing_return_types
+    Feature record: CXX_FEATURE:0cxx_unicode_literals
+    Feature record: CXX_FEATURE:0cxx_uniform_initialization
+    Feature record: CXX_FEATURE:0cxx_unrestricted_unions
+    Feature record: CXX_FEATURE:0cxx_user_literals
+    Feature record: CXX_FEATURE:0cxx_variable_templates
+    Feature record: CXX_FEATURE:0cxx_variadic_macros
+    Feature record: CXX_FEATURE:0cxx_variadic_templates
+Performing C SOURCE FILE Test SUPPORT_VISIBILITY succeded with the following output:
+Change Dir: /home/robbr48/h/Dependencies/FMILibrary-2.0.1/build-fmil/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTryCompileExec851646953/fast"
+/usr/bin/make -f CMakeFiles/cmTryCompileExec851646953.dir/build.make CMakeFiles/cmTryCompileExec851646953.dir/build
+make[1]: Entering directory '/home/robbr48/Documents/Subversion/hopsan/Dependencies/FMILibrary-2.0.1/build-fmil/CMakeFiles/CMakeTmp'
+/usr/bin/cmake -E cmake_progress_report /home/robbr48/h/Dependencies/FMILibrary-2.0.1/build-fmil/CMakeFiles/CMakeTmp/CMakeFiles 1
+Building C object CMakeFiles/cmTryCompileExec851646953.dir/src.c.o
+/usr/bin/cc   -std=c89 -pedantic -Wall -Wno-unused-function -DSUPPORT_VISIBILITY   -fvisibility=hidden -o CMakeFiles/cmTryCompileExec851646953.dir/src.c.o   -c /home/robbr48/h/Dependencies/FMILibrary-2.0.1/build-fmil/CMakeFiles/CMakeTmp/src.c
+Linking C executable cmTryCompileExec851646953
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTryCompileExec851646953.dir/link.txt --verbose=1
+/usr/bin/cc   -std=c89 -pedantic -Wall -Wno-unused-function -DSUPPORT_VISIBILITY    CMakeFiles/cmTryCompileExec851646953.dir/src.c.o  -o cmTryCompileExec851646953 -rdynamic 
+make[1]: Leaving directory '/home/robbr48/Documents/Subversion/hopsan/Dependencies/FMILibrary-2.0.1/build-fmil/CMakeFiles/CMakeTmp'
+
+Source file was:
+int main(void) { return 0; }
+Determining if files stdarg.h exist passed with the following output:
+Change Dir: /home/robbr48/h/Dependencies/FMILibrary-2.0.1/build-fmil/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTryCompileExec2081995022/fast"
+/usr/bin/make -f CMakeFiles/cmTryCompileExec2081995022.dir/build.make CMakeFiles/cmTryCompileExec2081995022.dir/build
+make[1]: Entering directory '/home/robbr48/Documents/Subversion/hopsan/Dependencies/FMILibrary-2.0.1/build-fmil/CMakeFiles/CMakeTmp'
+/usr/bin/cmake -E cmake_progress_report /home/robbr48/h/Dependencies/FMILibrary-2.0.1/build-fmil/CMakeFiles/CMakeTmp/CMakeFiles 1
+Building C object CMakeFiles/cmTryCompileExec2081995022.dir/CheckIncludeFiles.c.o
+/usr/bin/cc   -std=c89 -pedantic -Wall -Wno-unused-function -fvisibility=hidden -fPIC    -o CMakeFiles/cmTryCompileExec2081995022.dir/CheckIncludeFiles.c.o   -c /home/robbr48/h/Dependencies/FMILibrary-2.0.1/build-fmil/CMakeFiles/CMakeTmp/CheckIncludeFiles.c
+Linking C executable cmTryCompileExec2081995022
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTryCompileExec2081995022.dir/link.txt --verbose=1
+/usr/bin/cc   -std=c89 -pedantic -Wall -Wno-unused-function -fvisibility=hidden -fPIC     CMakeFiles/cmTryCompileExec2081995022.dir/CheckIncludeFiles.c.o  -o cmTryCompileExec2081995022 -rdynamic 
+make[1]: Leaving directory '/home/robbr48/Documents/Subversion/hopsan/Dependencies/FMILibrary-2.0.1/build-fmil/CMakeFiles/CMakeTmp'
+
+
+Determining if files stdlib.h exist passed with the following output:
+Change Dir: /home/robbr48/h/Dependencies/FMILibrary-2.0.1/build-fmil/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTryCompileExec1102903309/fast"
+/usr/bin/make -f CMakeFiles/cmTryCompileExec1102903309.dir/build.make CMakeFiles/cmTryCompileExec1102903309.dir/build
+make[1]: Entering directory '/home/robbr48/Documents/Subversion/hopsan/Dependencies/FMILibrary-2.0.1/build-fmil/CMakeFiles/CMakeTmp'
+/usr/bin/cmake -E cmake_progress_report /home/robbr48/h/Dependencies/FMILibrary-2.0.1/build-fmil/CMakeFiles/CMakeTmp/CMakeFiles 1
+Building C object CMakeFiles/cmTryCompileExec1102903309.dir/CheckIncludeFiles.c.o
+/usr/bin/cc   -std=c89 -pedantic -Wall -Wno-unused-function -fvisibility=hidden -fPIC    -o CMakeFiles/cmTryCompileExec1102903309.dir/CheckIncludeFiles.c.o   -c /home/robbr48/h/Dependencies/FMILibrary-2.0.1/build-fmil/CMakeFiles/CMakeTmp/CheckIncludeFiles.c
+Linking C executable cmTryCompileExec1102903309
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTryCompileExec1102903309.dir/link.txt --verbose=1
+/usr/bin/cc   -std=c89 -pedantic -Wall -Wno-unused-function -fvisibility=hidden -fPIC     CMakeFiles/cmTryCompileExec1102903309.dir/CheckIncludeFiles.c.o  -o cmTryCompileExec1102903309 -rdynamic 
+make[1]: Leaving directory '/home/robbr48/Documents/Subversion/hopsan/Dependencies/FMILibrary-2.0.1/build-fmil/CMakeFiles/CMakeTmp'
+
+
+Determining if files stddef.h exist passed with the following output:
+Change Dir: /home/robbr48/h/Dependencies/FMILibrary-2.0.1/build-fmil/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTryCompileExec1899381709/fast"
+/usr/bin/make -f CMakeFiles/cmTryCompileExec1899381709.dir/build.make CMakeFiles/cmTryCompileExec1899381709.dir/build
+make[1]: Entering directory '/home/robbr48/Documents/Subversion/hopsan/Dependencies/FMILibrary-2.0.1/build-fmil/CMakeFiles/CMakeTmp'
+/usr/bin/cmake -E cmake_progress_report /home/robbr48/h/Dependencies/FMILibrary-2.0.1/build-fmil/CMakeFiles/CMakeTmp/CMakeFiles 1
+Building C object CMakeFiles/cmTryCompileExec1899381709.dir/CheckIncludeFiles.c.o
+/usr/bin/cc   -std=c89 -pedantic -Wall -Wno-unused-function -fvisibility=hidden -fPIC    -o CMakeFiles/cmTryCompileExec1899381709.dir/CheckIncludeFiles.c.o   -c /home/robbr48/h/Dependencies/FMILibrary-2.0.1/build-fmil/CMakeFiles/CMakeTmp/CheckIncludeFiles.c
+Linking C executable cmTryCompileExec1899381709
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTryCompileExec1899381709.dir/link.txt --verbose=1
+/usr/bin/cc   -std=c89 -pedantic -Wall -Wno-unused-function -fvisibility=hidden -fPIC     CMakeFiles/cmTryCompileExec1899381709.dir/CheckIncludeFiles.c.o  -o cmTryCompileExec1899381709 -rdynamic 
+make[1]: Leaving directory '/home/robbr48/Documents/Subversion/hopsan/Dependencies/FMILibrary-2.0.1/build-fmil/CMakeFiles/CMakeTmp'
+
+
+Determining if files stdint.h exist passed with the following output:
+Change Dir: /home/robbr48/h/Dependencies/FMILibrary-2.0.1/build-fmil/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTryCompileExec2102382447/fast"
+/usr/bin/make -f CMakeFiles/cmTryCompileExec2102382447.dir/build.make CMakeFiles/cmTryCompileExec2102382447.dir/build
+make[1]: Entering directory '/home/robbr48/Documents/Subversion/hopsan/Dependencies/FMILibrary-2.0.1/build-fmil/CMakeFiles/CMakeTmp'
+/usr/bin/cmake -E cmake_progress_report /home/robbr48/h/Dependencies/FMILibrary-2.0.1/build-fmil/CMakeFiles/CMakeTmp/CMakeFiles 1
+Building C object CMakeFiles/cmTryCompileExec2102382447.dir/CheckIncludeFiles.c.o
+/usr/bin/cc   -std=c89 -pedantic -Wall -Wno-unused-function -fvisibility=hidden -fPIC    -o CMakeFiles/cmTryCompileExec2102382447.dir/CheckIncludeFiles.c.o   -c /home/robbr48/h/Dependencies/FMILibrary-2.0.1/build-fmil/CMakeFiles/CMakeTmp/CheckIncludeFiles.c
+Linking C executable cmTryCompileExec2102382447
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTryCompileExec2102382447.dir/link.txt --verbose=1
+/usr/bin/cc   -std=c89 -pedantic -Wall -Wno-unused-function -fvisibility=hidden -fPIC     CMakeFiles/cmTryCompileExec2102382447.dir/CheckIncludeFiles.c.o  -o cmTryCompileExec2102382447 -rdynamic 
+make[1]: Leaving directory '/home/robbr48/Documents/Subversion/hopsan/Dependencies/FMILibrary-2.0.1/build-fmil/CMakeFiles/CMakeTmp'
+
+
+Determining if files inttypes.h exist passed with the following output:
+Change Dir: /home/robbr48/h/Dependencies/FMILibrary-2.0.1/build-fmil/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTryCompileExec1599246215/fast"
+/usr/bin/make -f CMakeFiles/cmTryCompileExec1599246215.dir/build.make CMakeFiles/cmTryCompileExec1599246215.dir/build
+make[1]: Entering directory '/home/robbr48/Documents/Subversion/hopsan/Dependencies/FMILibrary-2.0.1/build-fmil/CMakeFiles/CMakeTmp'
+/usr/bin/cmake -E cmake_progress_report /home/robbr48/h/Dependencies/FMILibrary-2.0.1/build-fmil/CMakeFiles/CMakeTmp/CMakeFiles 1
+Building C object CMakeFiles/cmTryCompileExec1599246215.dir/CheckIncludeFiles.c.o
+/usr/bin/cc   -std=c89 -pedantic -Wall -Wno-unused-function -fvisibility=hidden -fPIC    -o CMakeFiles/cmTryCompileExec1599246215.dir/CheckIncludeFiles.c.o   -c /home/robbr48/h/Dependencies/FMILibrary-2.0.1/build-fmil/CMakeFiles/CMakeTmp/CheckIncludeFiles.c
+Linking C executable cmTryCompileExec1599246215
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTryCompileExec1599246215.dir/link.txt --verbose=1
+/usr/bin/cc   -std=c89 -pedantic -Wall -Wno-unused-function -fvisibility=hidden -fPIC     CMakeFiles/cmTryCompileExec1599246215.dir/CheckIncludeFiles.c.o  -o cmTryCompileExec1599246215 -rdynamic 
+make[1]: Leaving directory '/home/robbr48/Documents/Subversion/hopsan/Dependencies/FMILibrary-2.0.1/build-fmil/CMakeFiles/CMakeTmp'
+
+
+Determining if files locale.h exist passed with the following output:
+Change Dir: /home/robbr48/h/Dependencies/FMILibrary-2.0.1/build-fmil/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTryCompileExec1768947268/fast"
+/usr/bin/make -f CMakeFiles/cmTryCompileExec1768947268.dir/build.make CMakeFiles/cmTryCompileExec1768947268.dir/build
+make[1]: Entering directory '/home/robbr48/Documents/Subversion/hopsan/Dependencies/FMILibrary-2.0.1/build-fmil/CMakeFiles/CMakeTmp'
+/usr/bin/cmake -E cmake_progress_report /home/robbr48/h/Dependencies/FMILibrary-2.0.1/build-fmil/CMakeFiles/CMakeTmp/CMakeFiles 1
+Building C object CMakeFiles/cmTryCompileExec1768947268.dir/CheckIncludeFiles.c.o
+/usr/bin/cc   -std=c89 -pedantic -Wall -Wno-unused-function -fvisibility=hidden -fPIC    -o CMakeFiles/cmTryCompileExec1768947268.dir/CheckIncludeFiles.c.o   -c /home/robbr48/h/Dependencies/FMILibrary-2.0.1/build-fmil/CMakeFiles/CMakeTmp/CheckIncludeFiles.c
+Linking C executable cmTryCompileExec1768947268
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTryCompileExec1768947268.dir/link.txt --verbose=1
+/usr/bin/cc   -std=c89 -pedantic -Wall -Wno-unused-function -fvisibility=hidden -fPIC     CMakeFiles/cmTryCompileExec1768947268.dir/CheckIncludeFiles.c.o  -o cmTryCompileExec1768947268 -rdynamic 
+make[1]: Leaving directory '/home/robbr48/Documents/Subversion/hopsan/Dependencies/FMILibrary-2.0.1/build-fmil/CMakeFiles/CMakeTmp'
+
+
+Determining if the function vsnprintf exists passed with the following output:
+Change Dir: /home/robbr48/h/Dependencies/FMILibrary-2.0.1/build-fmil/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTryCompileExec3822470676/fast"
+/usr/bin/make -f CMakeFiles/cmTryCompileExec3822470676.dir/build.make CMakeFiles/cmTryCompileExec3822470676.dir/build
+make[1]: Entering directory '/home/robbr48/Documents/Subversion/hopsan/Dependencies/FMILibrary-2.0.1/build-fmil/CMakeFiles/CMakeTmp'
+/usr/bin/cmake -E cmake_progress_report /home/robbr48/h/Dependencies/FMILibrary-2.0.1/build-fmil/CMakeFiles/CMakeTmp/CMakeFiles 1
+Building C object CMakeFiles/cmTryCompileExec3822470676.dir/CheckFunctionExists.c.o
+/usr/bin/cc   -std=c89 -pedantic -Wall -Wno-unused-function -fvisibility=hidden -fPIC -DCHECK_FUNCTION_EXISTS=vsnprintf   -o CMakeFiles/cmTryCompileExec3822470676.dir/CheckFunctionExists.c.o   -c /usr/share/cmake-3.2/Modules/CheckFunctionExists.c
+Linking C executable cmTryCompileExec3822470676
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTryCompileExec3822470676.dir/link.txt --verbose=1
+/usr/bin/cc   -std=c89 -pedantic -Wall -Wno-unused-function -fvisibility=hidden -fPIC -DCHECK_FUNCTION_EXISTS=vsnprintf    CMakeFiles/cmTryCompileExec3822470676.dir/CheckFunctionExists.c.o  -o cmTryCompileExec3822470676 -rdynamic 
+make[1]: Leaving directory '/home/robbr48/Documents/Subversion/hopsan/Dependencies/FMILibrary-2.0.1/build-fmil/CMakeFiles/CMakeTmp'
+
+
+Determining if the function snprintf exists passed with the following output:
+Change Dir: /home/robbr48/h/Dependencies/FMILibrary-2.0.1/build-fmil/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTryCompileExec788709009/fast"
+/usr/bin/make -f CMakeFiles/cmTryCompileExec788709009.dir/build.make CMakeFiles/cmTryCompileExec788709009.dir/build
+make[1]: Entering directory '/home/robbr48/Documents/Subversion/hopsan/Dependencies/FMILibrary-2.0.1/build-fmil/CMakeFiles/CMakeTmp'
+/usr/bin/cmake -E cmake_progress_report /home/robbr48/h/Dependencies/FMILibrary-2.0.1/build-fmil/CMakeFiles/CMakeTmp/CMakeFiles 1
+Building C object CMakeFiles/cmTryCompileExec788709009.dir/CheckFunctionExists.c.o
+/usr/bin/cc   -std=c89 -pedantic -Wall -Wno-unused-function -fvisibility=hidden -fPIC -DCHECK_FUNCTION_EXISTS=snprintf   -o CMakeFiles/cmTryCompileExec788709009.dir/CheckFunctionExists.c.o   -c /usr/share/cmake-3.2/Modules/CheckFunctionExists.c
+Linking C executable cmTryCompileExec788709009
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTryCompileExec788709009.dir/link.txt --verbose=1
+/usr/bin/cc   -std=c89 -pedantic -Wall -Wno-unused-function -fvisibility=hidden -fPIC -DCHECK_FUNCTION_EXISTS=snprintf    CMakeFiles/cmTryCompileExec788709009.dir/CheckFunctionExists.c.o  -o cmTryCompileExec788709009 -rdynamic 
+make[1]: Leaving directory '/home/robbr48/Documents/Subversion/hopsan/Dependencies/FMILibrary-2.0.1/build-fmil/CMakeFiles/CMakeTmp'
+
+
+Determining if the function vasprintf exists passed with the following output:
+Change Dir: /home/robbr48/h/Dependencies/FMILibrary-2.0.1/build-fmil/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTryCompileExec4196595090/fast"
+/usr/bin/make -f CMakeFiles/cmTryCompileExec4196595090.dir/build.make CMakeFiles/cmTryCompileExec4196595090.dir/build
+make[1]: Entering directory '/home/robbr48/Documents/Subversion/hopsan/Dependencies/FMILibrary-2.0.1/build-fmil/CMakeFiles/CMakeTmp'
+/usr/bin/cmake -E cmake_progress_report /home/robbr48/h/Dependencies/FMILibrary-2.0.1/build-fmil/CMakeFiles/CMakeTmp/CMakeFiles 1
+Building C object CMakeFiles/cmTryCompileExec4196595090.dir/CheckFunctionExists.c.o
+/usr/bin/cc   -std=c89 -pedantic -Wall -Wno-unused-function -fvisibility=hidden -fPIC -DCHECK_FUNCTION_EXISTS=vasprintf   -o CMakeFiles/cmTryCompileExec4196595090.dir/CheckFunctionExists.c.o   -c /usr/share/cmake-3.2/Modules/CheckFunctionExists.c
+Linking C executable cmTryCompileExec4196595090
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTryCompileExec4196595090.dir/link.txt --verbose=1
+/usr/bin/cc   -std=c89 -pedantic -Wall -Wno-unused-function -fvisibility=hidden -fPIC -DCHECK_FUNCTION_EXISTS=vasprintf    CMakeFiles/cmTryCompileExec4196595090.dir/CheckFunctionExists.c.o  -o cmTryCompileExec4196595090 -rdynamic 
+make[1]: Leaving directory '/home/robbr48/Documents/Subversion/hopsan/Dependencies/FMILibrary-2.0.1/build-fmil/CMakeFiles/CMakeTmp'
+
+
+Determining if the function asprintf exists passed with the following output:
+Change Dir: /home/robbr48/h/Dependencies/FMILibrary-2.0.1/build-fmil/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTryCompileExec274917998/fast"
+/usr/bin/make -f CMakeFiles/cmTryCompileExec274917998.dir/build.make CMakeFiles/cmTryCompileExec274917998.dir/build
+make[1]: Entering directory '/home/robbr48/Documents/Subversion/hopsan/Dependencies/FMILibrary-2.0.1/build-fmil/CMakeFiles/CMakeTmp'
+/usr/bin/cmake -E cmake_progress_report /home/robbr48/h/Dependencies/FMILibrary-2.0.1/build-fmil/CMakeFiles/CMakeTmp/CMakeFiles 1
+Building C object CMakeFiles/cmTryCompileExec274917998.dir/CheckFunctionExists.c.o
+/usr/bin/cc   -std=c89 -pedantic -Wall -Wno-unused-function -fvisibility=hidden -fPIC -DCHECK_FUNCTION_EXISTS=asprintf   -o CMakeFiles/cmTryCompileExec274917998.dir/CheckFunctionExists.c.o   -c /usr/share/cmake-3.2/Modules/CheckFunctionExists.c
+Linking C executable cmTryCompileExec274917998
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTryCompileExec274917998.dir/link.txt --verbose=1
+/usr/bin/cc   -std=c89 -pedantic -Wall -Wno-unused-function -fvisibility=hidden -fPIC -DCHECK_FUNCTION_EXISTS=asprintf    CMakeFiles/cmTryCompileExec274917998.dir/CheckFunctionExists.c.o  -o cmTryCompileExec274917998 -rdynamic 
+make[1]: Leaving directory '/home/robbr48/Documents/Subversion/hopsan/Dependencies/FMILibrary-2.0.1/build-fmil/CMakeFiles/CMakeTmp'
+
+
+Determining if the function localeconv exists passed with the following output:
+Change Dir: /home/robbr48/h/Dependencies/FMILibrary-2.0.1/build-fmil/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTryCompileExec3143703523/fast"
+/usr/bin/make -f CMakeFiles/cmTryCompileExec3143703523.dir/build.make CMakeFiles/cmTryCompileExec3143703523.dir/build
+make[1]: Entering directory '/home/robbr48/Documents/Subversion/hopsan/Dependencies/FMILibrary-2.0.1/build-fmil/CMakeFiles/CMakeTmp'
+/usr/bin/cmake -E cmake_progress_report /home/robbr48/h/Dependencies/FMILibrary-2.0.1/build-fmil/CMakeFiles/CMakeTmp/CMakeFiles 1
+Building C object CMakeFiles/cmTryCompileExec3143703523.dir/CheckFunctionExists.c.o
+/usr/bin/cc   -std=c89 -pedantic -Wall -Wno-unused-function -fvisibility=hidden -fPIC -DCHECK_FUNCTION_EXISTS=localeconv   -o CMakeFiles/cmTryCompileExec3143703523.dir/CheckFunctionExists.c.o   -c /usr/share/cmake-3.2/Modules/CheckFunctionExists.c
+Linking C executable cmTryCompileExec3143703523
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTryCompileExec3143703523.dir/link.txt --verbose=1
+/usr/bin/cc   -std=c89 -pedantic -Wall -Wno-unused-function -fvisibility=hidden -fPIC -DCHECK_FUNCTION_EXISTS=localeconv    CMakeFiles/cmTryCompileExec3143703523.dir/CheckFunctionExists.c.o  -o cmTryCompileExec3143703523 -rdynamic 
+make[1]: Leaving directory '/home/robbr48/Documents/Subversion/hopsan/Dependencies/FMILibrary-2.0.1/build-fmil/CMakeFiles/CMakeTmp'
+
+
+Determining if the include file sys/types.h exists passed with the following output:
+Change Dir: /home/robbr48/h/Dependencies/FMILibrary-2.0.1/build-fmil/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTryCompileExec2291295699/fast"
+/usr/bin/make -f CMakeFiles/cmTryCompileExec2291295699.dir/build.make CMakeFiles/cmTryCompileExec2291295699.dir/build
+make[1]: Entering directory '/home/robbr48/Documents/Subversion/hopsan/Dependencies/FMILibrary-2.0.1/build-fmil/CMakeFiles/CMakeTmp'
+/usr/bin/cmake -E cmake_progress_report /home/robbr48/h/Dependencies/FMILibrary-2.0.1/build-fmil/CMakeFiles/CMakeTmp/CMakeFiles 1
+Building C object CMakeFiles/cmTryCompileExec2291295699.dir/CheckIncludeFile.c.o
+/usr/bin/cc   -std=c89 -pedantic -Wall -Wno-unused-function -fvisibility=hidden -fPIC    -o CMakeFiles/cmTryCompileExec2291295699.dir/CheckIncludeFile.c.o   -c /home/robbr48/h/Dependencies/FMILibrary-2.0.1/build-fmil/CMakeFiles/CMakeTmp/CheckIncludeFile.c
+Linking C executable cmTryCompileExec2291295699
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTryCompileExec2291295699.dir/link.txt --verbose=1
+/usr/bin/cc   -std=c89 -pedantic -Wall -Wno-unused-function -fvisibility=hidden -fPIC     CMakeFiles/cmTryCompileExec2291295699.dir/CheckIncludeFile.c.o  -o cmTryCompileExec2291295699 -rdynamic 
+make[1]: Leaving directory '/home/robbr48/Documents/Subversion/hopsan/Dependencies/FMILibrary-2.0.1/build-fmil/CMakeFiles/CMakeTmp'
+
+
+Determining size of long double passed with the following output:
+Change Dir: /home/robbr48/h/Dependencies/FMILibrary-2.0.1/build-fmil/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTryCompileExec2909331897/fast"
+/usr/bin/make -f CMakeFiles/cmTryCompileExec2909331897.dir/build.make CMakeFiles/cmTryCompileExec2909331897.dir/build
+make[1]: Entering directory '/home/robbr48/Documents/Subversion/hopsan/Dependencies/FMILibrary-2.0.1/build-fmil/CMakeFiles/CMakeTmp'
+/usr/bin/cmake -E cmake_progress_report /home/robbr48/h/Dependencies/FMILibrary-2.0.1/build-fmil/CMakeFiles/CMakeTmp/CMakeFiles 1
+Building C object CMakeFiles/cmTryCompileExec2909331897.dir/HAVE_LONG_DOUBLE.c.o
+/usr/bin/cc   -std=c89 -pedantic -Wall -Wno-unused-function -fvisibility=hidden -fPIC    -o CMakeFiles/cmTryCompileExec2909331897.dir/HAVE_LONG_DOUBLE.c.o   -c /home/robbr48/h/Dependencies/FMILibrary-2.0.1/build-fmil/CMakeFiles/CheckTypeSize/HAVE_LONG_DOUBLE.c
+Linking C executable cmTryCompileExec2909331897
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTryCompileExec2909331897.dir/link.txt --verbose=1
+/usr/bin/cc   -std=c89 -pedantic -Wall -Wno-unused-function -fvisibility=hidden -fPIC     CMakeFiles/cmTryCompileExec2909331897.dir/HAVE_LONG_DOUBLE.c.o  -o cmTryCompileExec2909331897 -rdynamic 
+make[1]: Leaving directory '/home/robbr48/Documents/Subversion/hopsan/Dependencies/FMILibrary-2.0.1/build-fmil/CMakeFiles/CMakeTmp'
+
+
+Determining size of long long int passed with the following output:
+Change Dir: /home/robbr48/h/Dependencies/FMILibrary-2.0.1/build-fmil/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTryCompileExec823164116/fast"
+/usr/bin/make -f CMakeFiles/cmTryCompileExec823164116.dir/build.make CMakeFiles/cmTryCompileExec823164116.dir/build
+make[1]: Entering directory '/home/robbr48/Documents/Subversion/hopsan/Dependencies/FMILibrary-2.0.1/build-fmil/CMakeFiles/CMakeTmp'
+/usr/bin/cmake -E cmake_progress_report /home/robbr48/h/Dependencies/FMILibrary-2.0.1/build-fmil/CMakeFiles/CMakeTmp/CMakeFiles 1
+Building C object CMakeFiles/cmTryCompileExec823164116.dir/HAVE_LONG_LONG_INT.c.o
+/usr/bin/cc   -std=c89 -pedantic -Wall -Wno-unused-function -fvisibility=hidden -fPIC    -o CMakeFiles/cmTryCompileExec823164116.dir/HAVE_LONG_LONG_INT.c.o   -c /home/robbr48/h/Dependencies/FMILibrary-2.0.1/build-fmil/CMakeFiles/CheckTypeSize/HAVE_LONG_LONG_INT.c
+/home/robbr48/h/Dependencies/FMILibrary-2.0.1/build-fmil/CMakeFiles/CheckTypeSize/HAVE_LONG_LONG_INT.c:17:27: warning: ISO C90 does not support ‘long long’ [-Wlong-long]
+ #define SIZE (sizeof(long long int))
+                           ^
+/home/robbr48/h/Dependencies/FMILibrary-2.0.1/build-fmil/CMakeFiles/CheckTypeSize/HAVE_LONG_LONG_INT.c:19:12: note: in expansion of macro ‘SIZE’
+   ('0' + ((SIZE / 10000)%10)),
+            ^
+/home/robbr48/h/Dependencies/FMILibrary-2.0.1/build-fmil/CMakeFiles/CheckTypeSize/HAVE_LONG_LONG_INT.c:17:27: warning: ISO C90 does not support ‘long long’ [-Wlong-long]
+ #define SIZE (sizeof(long long int))
+                           ^
+/home/robbr48/h/Dependencies/FMILibrary-2.0.1/build-fmil/CMakeFiles/CheckTypeSize/HAVE_LONG_LONG_INT.c:20:12: note: in expansion of macro ‘SIZE’
+   ('0' + ((SIZE / 1000)%10)),
+            ^
+/home/robbr48/h/Dependencies/FMILibrary-2.0.1/build-fmil/CMakeFiles/CheckTypeSize/HAVE_LONG_LONG_INT.c:17:27: warning: ISO C90 does not support ‘long long’ [-Wlong-long]
+ #define SIZE (sizeof(long long int))
+                           ^
+/home/robbr48/h/Dependencies/FMILibrary-2.0.1/build-fmil/CMakeFiles/CheckTypeSize/HAVE_LONG_LONG_INT.c:21:12: note: in expansion of macro ‘SIZE’
+   ('0' + ((SIZE / 100)%10)),
+            ^
+/home/robbr48/h/Dependencies/FMILibrary-2.0.1/build-fmil/CMakeFiles/CheckTypeSize/HAVE_LONG_LONG_INT.c:17:27: warning: ISO C90 does not support ‘long long’ [-Wlong-long]
+ #define SIZE (sizeof(long long int))
+                           ^
+/home/robbr48/h/Dependencies/FMILibrary-2.0.1/build-fmil/CMakeFiles/CheckTypeSize/HAVE_LONG_LONG_INT.c:22:12: note: in expansion of macro ‘SIZE’
+   ('0' + ((SIZE / 10)%10)),
+            ^
+/home/robbr48/h/Dependencies/FMILibrary-2.0.1/build-fmil/CMakeFiles/CheckTypeSize/HAVE_LONG_LONG_INT.c:17:27: warning: ISO C90 does not support ‘long long’ [-Wlong-long]
+ #define SIZE (sizeof(long long int))
+                           ^
+/home/robbr48/h/Dependencies/FMILibrary-2.0.1/build-fmil/CMakeFiles/CheckTypeSize/HAVE_LONG_LONG_INT.c:23:12: note: in expansion of macro ‘SIZE’
+   ('0' +  (SIZE    % 10)),
+            ^
+Linking C executable cmTryCompileExec823164116
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTryCompileExec823164116.dir/link.txt --verbose=1
+/usr/bin/cc   -std=c89 -pedantic -Wall -Wno-unused-function -fvisibility=hidden -fPIC     CMakeFiles/cmTryCompileExec823164116.dir/HAVE_LONG_LONG_INT.c.o  -o cmTryCompileExec823164116 -rdynamic 
+make[1]: Leaving directory '/home/robbr48/Documents/Subversion/hopsan/Dependencies/FMILibrary-2.0.1/build-fmil/CMakeFiles/CMakeTmp'
+
+
+Determining size of unsigned long long int passed with the following output:
+Change Dir: /home/robbr48/h/Dependencies/FMILibrary-2.0.1/build-fmil/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTryCompileExec3670295526/fast"
+/usr/bin/make -f CMakeFiles/cmTryCompileExec3670295526.dir/build.make CMakeFiles/cmTryCompileExec3670295526.dir/build
+make[1]: Entering directory '/home/robbr48/Documents/Subversion/hopsan/Dependencies/FMILibrary-2.0.1/build-fmil/CMakeFiles/CMakeTmp'
+/usr/bin/cmake -E cmake_progress_report /home/robbr48/h/Dependencies/FMILibrary-2.0.1/build-fmil/CMakeFiles/CMakeTmp/CMakeFiles 1
+Building C object CMakeFiles/cmTryCompileExec3670295526.dir/HAVE_UNSIGNED_LONG_LONG_INT.c.o
+/usr/bin/cc   -std=c89 -pedantic -Wall -Wno-unused-function -fvisibility=hidden -fPIC    -o CMakeFiles/cmTryCompileExec3670295526.dir/HAVE_UNSIGNED_LONG_LONG_INT.c.o   -c /home/robbr48/h/Dependencies/FMILibrary-2.0.1/build-fmil/CMakeFiles/CheckTypeSize/HAVE_UNSIGNED_LONG_LONG_INT.c
+/home/robbr48/h/Dependencies/FMILibrary-2.0.1/build-fmil/CMakeFiles/CheckTypeSize/HAVE_UNSIGNED_LONG_LONG_INT.c:17:36: warning: ISO C90 does not support ‘long long’ [-Wlong-long]
+ #define SIZE (sizeof(unsigned long long int))
+                                    ^
+/home/robbr48/h/Dependencies/FMILibrary-2.0.1/build-fmil/CMakeFiles/CheckTypeSize/HAVE_UNSIGNED_LONG_LONG_INT.c:19:12: note: in expansion of macro ‘SIZE’
+   ('0' + ((SIZE / 10000)%10)),
+            ^
+/home/robbr48/h/Dependencies/FMILibrary-2.0.1/build-fmil/CMakeFiles/CheckTypeSize/HAVE_UNSIGNED_LONG_LONG_INT.c:17:36: warning: ISO C90 does not support ‘long long’ [-Wlong-long]
+ #define SIZE (sizeof(unsigned long long int))
+                                    ^
+/home/robbr48/h/Dependencies/FMILibrary-2.0.1/build-fmil/CMakeFiles/CheckTypeSize/HAVE_UNSIGNED_LONG_LONG_INT.c:20:12: note: in expansion of macro ‘SIZE’
+   ('0' + ((SIZE / 1000)%10)),
+            ^
+/home/robbr48/h/Dependencies/FMILibrary-2.0.1/build-fmil/CMakeFiles/CheckTypeSize/HAVE_UNSIGNED_LONG_LONG_INT.c:17:36: warning: ISO C90 does not support ‘long long’ [-Wlong-long]
+ #define SIZE (sizeof(unsigned long long int))
+                                    ^
+/home/robbr48/h/Dependencies/FMILibrary-2.0.1/build-fmil/CMakeFiles/CheckTypeSize/HAVE_UNSIGNED_LONG_LONG_INT.c:21:12: note: in expansion of macro ‘SIZE’
+   ('0' + ((SIZE / 100)%10)),
+            ^
+/home/robbr48/h/Dependencies/FMILibrary-2.0.1/build-fmil/CMakeFiles/CheckTypeSize/HAVE_UNSIGNED_LONG_LONG_INT.c:17:36: warning: ISO C90 does not support ‘long long’ [-Wlong-long]
+ #define SIZE (sizeof(unsigned long long int))
+                                    ^
+/home/robbr48/h/Dependencies/FMILibrary-2.0.1/build-fmil/CMakeFiles/CheckTypeSize/HAVE_UNSIGNED_LONG_LONG_INT.c:22:12: note: in expansion of macro ‘SIZE’
+   ('0' + ((SIZE / 10)%10)),
+            ^
+/home/robbr48/h/Dependencies/FMILibrary-2.0.1/build-fmil/CMakeFiles/CheckTypeSize/HAVE_UNSIGNED_LONG_LONG_INT.c:17:36: warning: ISO C90 does not support ‘long long’ [-Wlong-long]
+ #define SIZE (sizeof(unsigned long long int))
+                                    ^
+/home/robbr48/h/Dependencies/FMILibrary-2.0.1/build-fmil/CMakeFiles/CheckTypeSize/HAVE_UNSIGNED_LONG_LONG_INT.c:23:12: note: in expansion of macro ‘SIZE’
+   ('0' +  (SIZE    % 10)),
+            ^
+Linking C executable cmTryCompileExec3670295526
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTryCompileExec3670295526.dir/link.txt --verbose=1
+/usr/bin/cc   -std=c89 -pedantic -Wall -Wno-unused-function -fvisibility=hidden -fPIC     CMakeFiles/cmTryCompileExec3670295526.dir/HAVE_UNSIGNED_LONG_LONG_INT.c.o  -o cmTryCompileExec3670295526 -rdynamic 
+make[1]: Leaving directory '/home/robbr48/Documents/Subversion/hopsan/Dependencies/FMILibrary-2.0.1/build-fmil/CMakeFiles/CMakeTmp'
+
+
+Determining size of struct lconv passed with the following output:
+Change Dir: /home/robbr48/h/Dependencies/FMILibrary-2.0.1/build-fmil/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTryCompileExec3696332917/fast"
+/usr/bin/make -f CMakeFiles/cmTryCompileExec3696332917.dir/build.make CMakeFiles/cmTryCompileExec3696332917.dir/build
+make[1]: Entering directory '/home/robbr48/Documents/Subversion/hopsan/Dependencies/FMILibrary-2.0.1/build-fmil/CMakeFiles/CMakeTmp'
+/usr/bin/cmake -E cmake_progress_report /home/robbr48/h/Dependencies/FMILibrary-2.0.1/build-fmil/CMakeFiles/CMakeTmp/CMakeFiles 1
+Building C object CMakeFiles/cmTryCompileExec3696332917.dir/LCONV.c.o
+/usr/bin/cc   -std=c89 -pedantic -Wall -Wno-unused-function -fvisibility=hidden -fPIC    -o CMakeFiles/cmTryCompileExec3696332917.dir/LCONV.c.o   -c /home/robbr48/h/Dependencies/FMILibrary-2.0.1/build-fmil/CMakeFiles/CheckTypeSize/LCONV.c
+Linking C executable cmTryCompileExec3696332917
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTryCompileExec3696332917.dir/link.txt --verbose=1
+/usr/bin/cc   -std=c89 -pedantic -Wall -Wno-unused-function -fvisibility=hidden -fPIC     CMakeFiles/cmTryCompileExec3696332917.dir/LCONV.c.o  -o cmTryCompileExec3696332917 -rdynamic 
+make[1]: Leaving directory '/home/robbr48/Documents/Subversion/hopsan/Dependencies/FMILibrary-2.0.1/build-fmil/CMakeFiles/CMakeTmp'
+
+
+Performing C SOURCE FILE Test HAVE_LCONV_DECIMAL_POINT succeded with the following output:
+Change Dir: /home/robbr48/h/Dependencies/FMILibrary-2.0.1/build-fmil/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTryCompileExec1502398016/fast"
+/usr/bin/make -f CMakeFiles/cmTryCompileExec1502398016.dir/build.make CMakeFiles/cmTryCompileExec1502398016.dir/build
+make[1]: Entering directory '/home/robbr48/Documents/Subversion/hopsan/Dependencies/FMILibrary-2.0.1/build-fmil/CMakeFiles/CMakeTmp'
+/usr/bin/cmake -E cmake_progress_report /home/robbr48/h/Dependencies/FMILibrary-2.0.1/build-fmil/CMakeFiles/CMakeTmp/CMakeFiles 1
+Building C object CMakeFiles/cmTryCompileExec1502398016.dir/src.c.o
+/usr/bin/cc   -std=c89 -pedantic -Wall -Wno-unused-function -fvisibility=hidden -fPIC -DHAVE_LCONV_DECIMAL_POINT   -o CMakeFiles/cmTryCompileExec1502398016.dir/src.c.o   -c /home/robbr48/h/Dependencies/FMILibrary-2.0.1/build-fmil/CMakeFiles/CMakeTmp/src.c
+Linking C executable cmTryCompileExec1502398016
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTryCompileExec1502398016.dir/link.txt --verbose=1
+/usr/bin/cc   -std=c89 -pedantic -Wall -Wno-unused-function -fvisibility=hidden -fPIC -DHAVE_LCONV_DECIMAL_POINT    CMakeFiles/cmTryCompileExec1502398016.dir/src.c.o  -o cmTryCompileExec1502398016 -rdynamic 
+make[1]: Leaving directory '/home/robbr48/Documents/Subversion/hopsan/Dependencies/FMILibrary-2.0.1/build-fmil/CMakeFiles/CMakeTmp'
+
+Source file was:
+
+#include <locale.h>
+
+int main()
+{
+   (void)((struct lconv *)0)->decimal_point;
+   return 0;
+}
+
+Performing C SOURCE FILE Test HAVE_LCONV_THOUSANDS_SEP succeded with the following output:
+Change Dir: /home/robbr48/h/Dependencies/FMILibrary-2.0.1/build-fmil/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTryCompileExec71642847/fast"
+/usr/bin/make -f CMakeFiles/cmTryCompileExec71642847.dir/build.make CMakeFiles/cmTryCompileExec71642847.dir/build
+make[1]: Entering directory '/home/robbr48/Documents/Subversion/hopsan/Dependencies/FMILibrary-2.0.1/build-fmil/CMakeFiles/CMakeTmp'
+/usr/bin/cmake -E cmake_progress_report /home/robbr48/h/Dependencies/FMILibrary-2.0.1/build-fmil/CMakeFiles/CMakeTmp/CMakeFiles 1
+Building C object CMakeFiles/cmTryCompileExec71642847.dir/src.c.o
+/usr/bin/cc   -std=c89 -pedantic -Wall -Wno-unused-function -fvisibility=hidden -fPIC -DHAVE_LCONV_THOUSANDS_SEP   -o CMakeFiles/cmTryCompileExec71642847.dir/src.c.o   -c /home/robbr48/h/Dependencies/FMILibrary-2.0.1/build-fmil/CMakeFiles/CMakeTmp/src.c
+Linking C executable cmTryCompileExec71642847
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTryCompileExec71642847.dir/link.txt --verbose=1
+/usr/bin/cc   -std=c89 -pedantic -Wall -Wno-unused-function -fvisibility=hidden -fPIC -DHAVE_LCONV_THOUSANDS_SEP    CMakeFiles/cmTryCompileExec71642847.dir/src.c.o  -o cmTryCompileExec71642847 -rdynamic 
+make[1]: Leaving directory '/home/robbr48/Documents/Subversion/hopsan/Dependencies/FMILibrary-2.0.1/build-fmil/CMakeFiles/CMakeTmp'
+
+Source file was:
+
+#include <locale.h>
+
+int main()
+{
+   (void)((struct lconv *)0)->thousands_sep;
+   return 0;
+}
+
+Determining size of intmax_t passed with the following output:
+Change Dir: /home/robbr48/h/Dependencies/FMILibrary-2.0.1/build-fmil/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTryCompileExec2225884181/fast"
+/usr/bin/make -f CMakeFiles/cmTryCompileExec2225884181.dir/build.make CMakeFiles/cmTryCompileExec2225884181.dir/build
+make[1]: Entering directory '/home/robbr48/Documents/Subversion/hopsan/Dependencies/FMILibrary-2.0.1/build-fmil/CMakeFiles/CMakeTmp'
+/usr/bin/cmake -E cmake_progress_report /home/robbr48/h/Dependencies/FMILibrary-2.0.1/build-fmil/CMakeFiles/CMakeTmp/CMakeFiles 1
+Building C object CMakeFiles/cmTryCompileExec2225884181.dir/HAVE_INTMAX_T.c.o
+/usr/bin/cc   -std=c89 -pedantic -Wall -Wno-unused-function -fvisibility=hidden -fPIC    -o CMakeFiles/cmTryCompileExec2225884181.dir/HAVE_INTMAX_T.c.o   -c /home/robbr48/h/Dependencies/FMILibrary-2.0.1/build-fmil/CMakeFiles/CheckTypeSize/HAVE_INTMAX_T.c
+Linking C executable cmTryCompileExec2225884181
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTryCompileExec2225884181.dir/link.txt --verbose=1
+/usr/bin/cc   -std=c89 -pedantic -Wall -Wno-unused-function -fvisibility=hidden -fPIC     CMakeFiles/cmTryCompileExec2225884181.dir/HAVE_INTMAX_T.c.o  -o cmTryCompileExec2225884181 -rdynamic 
+make[1]: Leaving directory '/home/robbr48/Documents/Subversion/hopsan/Dependencies/FMILibrary-2.0.1/build-fmil/CMakeFiles/CMakeTmp'
+
+
+Determining size of uintmax_t passed with the following output:
+Change Dir: /home/robbr48/h/Dependencies/FMILibrary-2.0.1/build-fmil/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTryCompileExec1036546957/fast"
+/usr/bin/make -f CMakeFiles/cmTryCompileExec1036546957.dir/build.make CMakeFiles/cmTryCompileExec1036546957.dir/build
+make[1]: Entering directory '/home/robbr48/Documents/Subversion/hopsan/Dependencies/FMILibrary-2.0.1/build-fmil/CMakeFiles/CMakeTmp'
+/usr/bin/cmake -E cmake_progress_report /home/robbr48/h/Dependencies/FMILibrary-2.0.1/build-fmil/CMakeFiles/CMakeTmp/CMakeFiles 1
+Building C object CMakeFiles/cmTryCompileExec1036546957.dir/HAVE_UINTMAX_T.c.o
+/usr/bin/cc   -std=c89 -pedantic -Wall -Wno-unused-function -fvisibility=hidden -fPIC    -o CMakeFiles/cmTryCompileExec1036546957.dir/HAVE_UINTMAX_T.c.o   -c /home/robbr48/h/Dependencies/FMILibrary-2.0.1/build-fmil/CMakeFiles/CheckTypeSize/HAVE_UINTMAX_T.c
+Linking C executable cmTryCompileExec1036546957
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTryCompileExec1036546957.dir/link.txt --verbose=1
+/usr/bin/cc   -std=c89 -pedantic -Wall -Wno-unused-function -fvisibility=hidden -fPIC     CMakeFiles/cmTryCompileExec1036546957.dir/HAVE_UINTMAX_T.c.o  -o cmTryCompileExec1036546957 -rdynamic 
+make[1]: Leaving directory '/home/robbr48/Documents/Subversion/hopsan/Dependencies/FMILibrary-2.0.1/build-fmil/CMakeFiles/CMakeTmp'
+
+
+Determining size of uintptr_t passed with the following output:
+Change Dir: /home/robbr48/h/Dependencies/FMILibrary-2.0.1/build-fmil/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTryCompileExec2831271820/fast"
+/usr/bin/make -f CMakeFiles/cmTryCompileExec2831271820.dir/build.make CMakeFiles/cmTryCompileExec2831271820.dir/build
+make[1]: Entering directory '/home/robbr48/Documents/Subversion/hopsan/Dependencies/FMILibrary-2.0.1/build-fmil/CMakeFiles/CMakeTmp'
+/usr/bin/cmake -E cmake_progress_report /home/robbr48/h/Dependencies/FMILibrary-2.0.1/build-fmil/CMakeFiles/CMakeTmp/CMakeFiles 1
+Building C object CMakeFiles/cmTryCompileExec2831271820.dir/HAVE_UINTPTR_T.c.o
+/usr/bin/cc   -std=c89 -pedantic -Wall -Wno-unused-function -fvisibility=hidden -fPIC    -o CMakeFiles/cmTryCompileExec2831271820.dir/HAVE_UINTPTR_T.c.o   -c /home/robbr48/h/Dependencies/FMILibrary-2.0.1/build-fmil/CMakeFiles/CheckTypeSize/HAVE_UINTPTR_T.c
+Linking C executable cmTryCompileExec2831271820
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTryCompileExec2831271820.dir/link.txt --verbose=1
+/usr/bin/cc   -std=c89 -pedantic -Wall -Wno-unused-function -fvisibility=hidden -fPIC     CMakeFiles/cmTryCompileExec2831271820.dir/HAVE_UINTPTR_T.c.o  -o cmTryCompileExec2831271820 -rdynamic 
+make[1]: Leaving directory '/home/robbr48/Documents/Subversion/hopsan/Dependencies/FMILibrary-2.0.1/build-fmil/CMakeFiles/CMakeTmp'
+
+
+Determining size of ptrdiff_t passed with the following output:
+Change Dir: /home/robbr48/h/Dependencies/FMILibrary-2.0.1/build-fmil/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTryCompileExec2650552871/fast"
+/usr/bin/make -f CMakeFiles/cmTryCompileExec2650552871.dir/build.make CMakeFiles/cmTryCompileExec2650552871.dir/build
+make[1]: Entering directory '/home/robbr48/Documents/Subversion/hopsan/Dependencies/FMILibrary-2.0.1/build-fmil/CMakeFiles/CMakeTmp'
+/usr/bin/cmake -E cmake_progress_report /home/robbr48/h/Dependencies/FMILibrary-2.0.1/build-fmil/CMakeFiles/CMakeTmp/CMakeFiles 1
+Building C object CMakeFiles/cmTryCompileExec2650552871.dir/HAVE_PTRDIFF_T.c.o
+/usr/bin/cc   -std=c89 -pedantic -Wall -Wno-unused-function -fvisibility=hidden -fPIC    -o CMakeFiles/cmTryCompileExec2650552871.dir/HAVE_PTRDIFF_T.c.o   -c /home/robbr48/h/Dependencies/FMILibrary-2.0.1/build-fmil/CMakeFiles/CheckTypeSize/HAVE_PTRDIFF_T.c
+Linking C executable cmTryCompileExec2650552871
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTryCompileExec2650552871.dir/link.txt --verbose=1
+/usr/bin/cc   -std=c89 -pedantic -Wall -Wno-unused-function -fvisibility=hidden -fPIC     CMakeFiles/cmTryCompileExec2650552871.dir/HAVE_PTRDIFF_T.c.o  -o cmTryCompileExec2650552871 -rdynamic 
+make[1]: Leaving directory '/home/robbr48/Documents/Subversion/hopsan/Dependencies/FMILibrary-2.0.1/build-fmil/CMakeFiles/CMakeTmp'
+
+
+Determining if the __va_copy exist passed with the following output:
+Change Dir: /home/robbr48/h/Dependencies/FMILibrary-2.0.1/build-fmil/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTryCompileExec152250218/fast"
+/usr/bin/make -f CMakeFiles/cmTryCompileExec152250218.dir/build.make CMakeFiles/cmTryCompileExec152250218.dir/build
+make[1]: Entering directory '/home/robbr48/Documents/Subversion/hopsan/Dependencies/FMILibrary-2.0.1/build-fmil/CMakeFiles/CMakeTmp'
+/usr/bin/cmake -E cmake_progress_report /home/robbr48/h/Dependencies/FMILibrary-2.0.1/build-fmil/CMakeFiles/CMakeTmp/CMakeFiles 1
+Building C object CMakeFiles/cmTryCompileExec152250218.dir/CheckSymbolExists.c.o
+/usr/bin/cc   -std=c89 -pedantic -Wall -Wno-unused-function -fvisibility=hidden -fPIC    -o CMakeFiles/cmTryCompileExec152250218.dir/CheckSymbolExists.c.o   -c /home/robbr48/h/Dependencies/FMILibrary-2.0.1/build-fmil/CMakeFiles/CMakeTmp/CheckSymbolExists.c
+Linking C executable cmTryCompileExec152250218
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTryCompileExec152250218.dir/link.txt --verbose=1
+/usr/bin/cc   -std=c89 -pedantic -Wall -Wno-unused-function -fvisibility=hidden -fPIC     CMakeFiles/cmTryCompileExec152250218.dir/CheckSymbolExists.c.o  -o cmTryCompileExec152250218 -rdynamic 
+make[1]: Leaving directory '/home/robbr48/Documents/Subversion/hopsan/Dependencies/FMILibrary-2.0.1/build-fmil/CMakeFiles/CMakeTmp'
+
+File /home/robbr48/h/Dependencies/FMILibrary-2.0.1/build-fmil/CMakeFiles/CMakeTmp/CheckSymbolExists.c:
+/* */
+#include <stdarg.h>
+
+int main(int argc, char** argv)
+{
+  (void)argv;
+#ifndef __va_copy
+  return ((int*)(&__va_copy))[argc];
+#else
+  (void)argc;
+  return 0;
+#endif
+}
+
+Determining size of off64_t passed with the following output:
+Change Dir: /home/robbr48/h/Dependencies/FMILibrary-2.0.1/build-fmil/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTryCompileExec1597458673/fast"
+/usr/bin/make -f CMakeFiles/cmTryCompileExec1597458673.dir/build.make CMakeFiles/cmTryCompileExec1597458673.dir/build
+make[1]: Entering directory '/home/robbr48/Documents/Subversion/hopsan/Dependencies/FMILibrary-2.0.1/build-fmil/CMakeFiles/CMakeTmp'
+/usr/bin/cmake -E cmake_progress_report /home/robbr48/h/Dependencies/FMILibrary-2.0.1/build-fmil/CMakeFiles/CMakeTmp/CMakeFiles 1
+Building C object CMakeFiles/cmTryCompileExec1597458673.dir/OFF64_T.c.o
+/usr/bin/cc  -DHAVE_STDDEF_H -DHAVE_STDINT_H -DHAVE_SYS_TYPES_H -D_LARGEFILE64_SOURCE=1 -std=c89 -pedantic -Wall -Wno-unused-function -fvisibility=hidden -fPIC -DXML_STATIC -DFMI_XML_QUERY    -o CMakeFiles/cmTryCompileExec1597458673.dir/OFF64_T.c.o   -c /home/robbr48/h/Dependencies/FMILibrary-2.0.1/build-fmil/CMakeFiles/CheckTypeSize/OFF64_T.c
+Linking C executable cmTryCompileExec1597458673
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTryCompileExec1597458673.dir/link.txt --verbose=1
+/usr/bin/cc   -std=c89 -pedantic -Wall -Wno-unused-function -fvisibility=hidden -fPIC -DXML_STATIC -DFMI_XML_QUERY     CMakeFiles/cmTryCompileExec1597458673.dir/OFF64_T.c.o  -o cmTryCompileExec1597458673 -rdynamic 
+make[1]: Leaving directory '/home/robbr48/Documents/Subversion/hopsan/Dependencies/FMILibrary-2.0.1/build-fmil/CMakeFiles/CMakeTmp'
+
+
+Determining if the function fseeko exists passed with the following output:
+Change Dir: /home/robbr48/h/Dependencies/FMILibrary-2.0.1/build-fmil/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTryCompileExec461603596/fast"
+/usr/bin/make -f CMakeFiles/cmTryCompileExec461603596.dir/build.make CMakeFiles/cmTryCompileExec461603596.dir/build
+make[1]: Entering directory '/home/robbr48/Documents/Subversion/hopsan/Dependencies/FMILibrary-2.0.1/build-fmil/CMakeFiles/CMakeTmp'
+/usr/bin/cmake -E cmake_progress_report /home/robbr48/h/Dependencies/FMILibrary-2.0.1/build-fmil/CMakeFiles/CMakeTmp/CMakeFiles 1
+Building C object CMakeFiles/cmTryCompileExec461603596.dir/CheckFunctionExists.c.o
+/usr/bin/cc   -std=c89 -pedantic -Wall -Wno-unused-function -fvisibility=hidden -fPIC -DXML_STATIC -DFMI_XML_QUERY -DCHECK_FUNCTION_EXISTS=fseeko   -o CMakeFiles/cmTryCompileExec461603596.dir/CheckFunctionExists.c.o   -c /usr/share/cmake-3.2/Modules/CheckFunctionExists.c
+Linking C executable cmTryCompileExec461603596
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTryCompileExec461603596.dir/link.txt --verbose=1
+/usr/bin/cc   -std=c89 -pedantic -Wall -Wno-unused-function -fvisibility=hidden -fPIC -DXML_STATIC -DFMI_XML_QUERY -DCHECK_FUNCTION_EXISTS=fseeko    CMakeFiles/cmTryCompileExec461603596.dir/CheckFunctionExists.c.o  -o cmTryCompileExec461603596 -rdynamic 
+make[1]: Leaving directory '/home/robbr48/Documents/Subversion/hopsan/Dependencies/FMILibrary-2.0.1/build-fmil/CMakeFiles/CMakeTmp'
+
+
+Determining if the include file unistd.h exists passed with the following output:
+Change Dir: /home/robbr48/h/Dependencies/FMILibrary-2.0.1/build-fmil/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTryCompileExec826734257/fast"
+/usr/bin/make -f CMakeFiles/cmTryCompileExec826734257.dir/build.make CMakeFiles/cmTryCompileExec826734257.dir/build
+make[1]: Entering directory '/home/robbr48/Documents/Subversion/hopsan/Dependencies/FMILibrary-2.0.1/build-fmil/CMakeFiles/CMakeTmp'
+/usr/bin/cmake -E cmake_progress_report /home/robbr48/h/Dependencies/FMILibrary-2.0.1/build-fmil/CMakeFiles/CMakeTmp/CMakeFiles 1
+Building C object CMakeFiles/cmTryCompileExec826734257.dir/CheckIncludeFile.c.o
+/usr/bin/cc   -std=c89 -pedantic -Wall -Wno-unused-function -fvisibility=hidden -fPIC -DXML_STATIC -DFMI_XML_QUERY    -o CMakeFiles/cmTryCompileExec826734257.dir/CheckIncludeFile.c.o   -c /home/robbr48/h/Dependencies/FMILibrary-2.0.1/build-fmil/CMakeFiles/CMakeTmp/CheckIncludeFile.c
+Linking C executable cmTryCompileExec826734257
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTryCompileExec826734257.dir/link.txt --verbose=1
+/usr/bin/cc   -std=c89 -pedantic -Wall -Wno-unused-function -fvisibility=hidden -fPIC -DXML_STATIC -DFMI_XML_QUERY     CMakeFiles/cmTryCompileExec826734257.dir/CheckIncludeFile.c.o  -o cmTryCompileExec826734257 -rdynamic 
+make[1]: Leaving directory '/home/robbr48/Documents/Subversion/hopsan/Dependencies/FMILibrary-2.0.1/build-fmil/CMakeFiles/CMakeTmp'
+
+

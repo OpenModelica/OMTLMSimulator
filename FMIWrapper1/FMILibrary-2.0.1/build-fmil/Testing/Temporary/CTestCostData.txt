@@ -1,0 +1,25 @@
+ctest_build_all 1 1.07775
+ctest_fmi_zip_unzip_test 1 0.00112295
+ctest_fmi_zip_zip_test 1 0.00102997
+ctest_fmi_import_me_test 1 0.0433521
+ctest_fmi_import_cs_test 1 0.00268102
+ctest_fmi_import_cs_tc_test 1 0.00247908
+ctest_fmi_import_xml_test_empty 1 0.00108814
+ctest_fmi_import_xml_test 1 0.0012958
+ctest_fmi_import_xml_test_mf 1 0.00109386
+ctest_fmi1_capi_cs_test 1 0.000921011
+ctest_fmi1_capi_me_test 1 0.00111389
+ctest_fmi1_logger_test_run 1 0.00287199
+ctest_fmi1_logger_test_check 1 0.00685787
+ctest_fmi2_import_xml_test_empty 1 0.00121093
+ctest_fmi2_import_xml_test_me 1 0.00157094
+ctest_fmi2_import_xml_test_cs 1 0.00133419
+ctest_fmi2_import_xml_test_mf 1 0.00128603
+ctest_fmi2_import_test_me 1 0.00223804
+ctest_fmi2_import_test_cs 1 0.00247312
+ctest_fmi_import_test_no_xml 1 0.001194
+ctest_fmi_import_test_me_1 1 0.00241685
+ctest_fmi_import_test_cs_1 1 0.0020299
+ctest_fmi_import_test_me_2 1 0.00243306
+ctest_fmi_import_test_cs_2 1 0.00232601
+---
