@@ -1,8 +1,0 @@
-fmi1_enums.c.o
-fmi2_enums.c.o
-fmi_util.c.o
-fmi_version.c.o
-jm_callbacks.c.o
-jm_named_ptr.c.o
-jm_portability.c.o
-jm_templates_inst.c.o
