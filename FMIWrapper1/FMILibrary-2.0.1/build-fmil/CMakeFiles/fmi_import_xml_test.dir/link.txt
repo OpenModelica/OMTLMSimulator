@@ -1,1 +1,0 @@
-/usr/bin/c++   -g   CMakeFiles/fmi_import_xml_test.dir/Test/FMI1/fmi_import_xml_test.cc.o  -o fmi_import_xml_test -rdynamic libfmilib_shared.so -Wl,-rpath,/home/robbr48/h/Dependencies/FMILibrary-2.0.1/build-fmil 

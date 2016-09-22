@@ -1,2 +1,0 @@
-/usr/bin/ar cq libfmilib.a  CMakeFiles/fmilib.dir/fmilib_dummy.c.o
-/usr/bin/ranlib libfmilib.a
