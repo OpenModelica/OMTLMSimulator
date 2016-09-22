@@ -1,2 +1,0 @@
-/usr/bin/ar cq libc99snprintf.a  CMakeFiles/c99snprintf.dir/c99-snprintf_1.1/snprintf.c.o
-/usr/bin/ranlib libc99snprintf.a

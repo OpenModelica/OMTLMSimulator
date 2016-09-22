@@ -1,1 +1,0 @@
-/usr/bin/cc   -std=c89 -pedantic -Wall -Wno-unused-function -fvisibility=hidden -fPIC -DXML_STATIC -DFMI_XML_QUERY -DZLIB_STATIC -g   CMakeFiles/compress_test_fmu_zip.dir/Test/compress_test_fmu_zip.c.o  -o compress_test_fmu_zip -rdynamic libfmizip.a Config.cmake/Minizip/libminizip.a zlib/libz.a libjmutils.a ThirdParty/c99_snprintf/libc99snprintf.a -ldl 

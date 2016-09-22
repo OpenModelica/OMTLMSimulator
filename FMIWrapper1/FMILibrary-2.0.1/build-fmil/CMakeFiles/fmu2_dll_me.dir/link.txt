@@ -1,1 +1,0 @@
-/usr/bin/cc  -fPIC  -std=c89 -pedantic -Wall -Wno-unused-function -fvisibility=hidden -fPIC -DXML_STATIC -DFMI_XML_QUERY -DZLIB_STATIC -g  -shared -Wl,-soname,libfmu2_dll_me.so -o libfmu2_dll_me.so CMakeFiles/fmu2_dll_me.dir/Test/FMI2/fmu_dummy/fmu2_model_me.c.o 
