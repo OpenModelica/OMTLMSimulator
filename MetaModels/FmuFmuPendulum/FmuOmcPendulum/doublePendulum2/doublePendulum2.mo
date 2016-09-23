@@ -3,11 +3,17 @@ model doublePendulum2 "Simple double pendulum with two revolute joints and two b
   Modelica.Mechanics.MultiBody.Parts.BodyBox boxBody1(r = {0.25,0,0}, width = 0.06, r_0.start = {0.25,0,0}, r_0.fixed = true, v_0.fixed = true) annotation(Placement(transformation(extent = {{-10,0},{10,20}}, rotation = 0)));
   Modelica.Mechanics.MultiBody.Joints.Revolute revolute2(phi(fixed = true), w(fixed = true)) annotation(Placement(transformation(extent = {{32,0},{52,20}}, rotation = 0)));
   Modelica.Mechanics.MultiBody.Parts.BodyBox boxBody2(r = {0.5,0,0}, width = 0.06, r_0.start = {0.5,0,0}) annotation(Placement(transformation(extent = {{74,0},{94,20}}, rotation = 0)));
-  TLM.TLM_Interface_3D.TLMInterface3D mbs_tlminterface1 annotation(Placement(visible = true, transformation(origin = {-12.2244,-19.6393}, extent = {{-10,-10},{10,10}}, rotation = 0)));
+  FMITLM.FMITLM_Interface_3D.FMITLMInterface3D fMITLMInterface3D1 annotation(Placement(visible = true, transformation(origin = {-34, 10}, extent = {{-10, -10}, {10, 10}}, rotation = 180)));
+
+  input Real f[3](start = zeros(3));
+  input Real t[3](start = zeros(3));
 equation
-  connect(boxBody1.frame_a,mbs_tlminterface1.frame_a) annotation(Line(points = {{-10,10},{-15.8317,10},{-19.0235,-16.5362},{-19.0235,-19.943}}));
-  connect(revolute2.frame_b,boxBody2.frame_a) annotation(Line(points = {{52,10},{74,10}}, color = {95,95,95}, thickness = 0.5));
-  connect(boxBody1.frame_b,revolute2.frame_a) annotation(Line(points = {{10,10},{32,10}}, color = {95,95,95}, thickness = 0.5));
+  fMITLMInterface3D1.f = f;
+  fMITLMInterface3D1.t = t;
+  
+  connect(boxBody1.frame_a, fMITLMInterface3D1.frame_a) annotation(Line(points = {{-10, 10}, {-26, 10}, {-26, 10}, {-28, 10}}, color = {95, 95, 95}));
+  connect(revolute2.frame_b, boxBody2.frame_a) annotation(Line(points = {{52, 10}, {74, 10}}, color = {95, 95, 95}, thickness = 0.5));
+  connect(boxBody1.frame_b, revolute2.frame_a) annotation(Line(points = {{10, 10}, {32, 10}}, color = {95, 95, 95}, thickness = 0.5));
   annotation(Icon(coordinateSystem(extent = {{-100,-100},{100,100}}, preserveAspectRatio = true, initialScale = 0.1, grid = {10,10}), graphics = {Rectangle(visible = true, origin = {-10.651,-8.377}, lineColor = {0,0,255}, fillColor = {128,128,128}, fillPattern = FillPattern.Solid, extent = {{-89.349,-91.623},{110.651,108.377}}, radius = 20),Text(visible = true, origin = {-15.021,-3.686}, textColor = {255,255,255}, extent = {{-81.612,-54.575},{111.654,66.091}}, textString = "EX")}), experiment(StopTime = 3), Documentation(info = "<html>
 <p>
 This example demonstrates that by using joint and body
@@ -25,4 +31,3 @@ ALT=\"model Examples.Elementary.DoublePendulum\">
 
 </HTML>"));
 end doublePendulum2;
-
