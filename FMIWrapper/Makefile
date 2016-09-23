@@ -1,5 +1,5 @@
 #################################################################################
-#   Makefile for the FMIWrapper1
+#   Makefile for the FMIWrapper
 #   Date: 2016/09
 #   Author: Robert Braun
 #
@@ -24,18 +24,15 @@ include $(MAKEFILEHEADHOME)/Makefile.head
 CC += -pipe -fno-keep-inline-dllexport -O2 -frtti -Wall -Wextra -fexceptions -mthreads -DUNICODE
 cc += -pipe -fno-keep-inline-dllexport -O2 -frtti -Wall -Wextra -fexceptions -mthreads -DUNICODE
 
-# includes
 
-#-Wl,-s -Wl,-subsystem,console -mthreads -o release\FMIWrapper1.exe object_script.FMIWrapper1.Release  -lws2_32 -LC:/Users/robbr48/Documents/Mercurial/TLMPlugin/FMIWrapper1/FMILibrary-2.0.1/install/lib -llibfmilib_shared 
-
-BNAME=FMIWrapper1.exe
+BNAME=FMIWrapper.exe
 INSTDIR=$(BINDIR)
 #RESOURCESDIR=$(INSTDIR)/Resources
 MISCHOME=../extralibs/misc
 
 INCLUDES=  -I. \
-	-I"..\FMIWrapper1" \
-    -I"..\FMIWrapper1\FMILibrary-2.0.1\install\include" \
+	-I"..\FMIWrapper" \
+    -I"..\FMIWrapper\FMILibrary-2.0.1\install\include" \
     -I"..\common" -I"..\extralibs\misc\include"
 
 LIBS = 	-lws2_32 \
