@@ -3,7 +3,7 @@ CONFIG += console
 CONFIG -= app_bundle
 CONFIG -= qt
 
-TARGET = ../../bin/FMIWrapper1
+TARGET = ../../bin/FMIWrapper
 
 unix {
 LIBS += -ldl
