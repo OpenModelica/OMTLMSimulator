@@ -1,0 +1,170 @@
+#include <cassert>
+
+// For repetive division it can be more efficient to create a intermediate variable
+// and to do multiplication instead. Some low level tests indicate a factor 4.
+// On other hand, we loose some precision. Which is most important, tests will tell.
+// To activate, define these. DF 2011-04-04
+#define FASTDIV          // Was activated in the past.
+//#define FASTDIVX       // Was not activated in the past. 
+	                 // Tried 2011-04-13, was a bit slower on test cases! Needs more investigation. DF
+
+namespace tlmMisc
+{
+
+///////////////////////////////////////////////////////////////////////
+//
+// Definitions of functions used for coordinate transformations etc.
+//
+
+
+// Create a symmetric matrix 
+inline const double33Mat Asym(const double axx,
+			   const double axy, 
+			   const double axz,
+			   const double ayy, 
+			   const double ayz, 
+			   const double azz) 
+{ 
+    return double33Mat(axx,axy,axz,
+		    axy,ayy,ayz,
+		    axz,ayz,azz);
+}
+
+
+inline const double33Mat Acyl(const double& RC_2)
+{ 
+    double tmpc = ::cos(RC_2);
+    double tmps = ::sin(RC_2);
+
+    // Transformation matrix from system cBase to system this system.
+    // We use cylindrical rotation.
+    
+    return double33Mat(tmpc, tmps, 0.0,
+		    -tmps, tmpc, 0.0,
+		    0.0, 0.0, 1.0);
+}
+
+inline const double33Mat Acyl(const double3Vec& RC)
+{ 
+    double tmpc = ::cos(RC.YY);
+    double tmps = ::sin(RC.YY);
+
+    // Transformation matrix from system cBase to system this system.
+    // We use cylindrical rotation.
+    
+    return double33Mat(tmpc, tmps, 0.0,
+                       -tmps, tmpc, 0.0,
+                       0.0, 0.0, 1.0);
+}
+
+
+inline const double3Vec RC2R(const double3Vec& RC)
+{
+    return double3Vec( ::cos(RC.YY)*RC.XX, ::sin(RC.YY)*RC.XX, RC.ZZ);
+}
+
+
+inline const double3Vec vRC2vR(const double3Vec& RC,
+                const double3Vec& vRC)
+{
+    double tmpc = ::cos(RC.YY);
+    double tmps = ::sin(RC.YY);
+
+    return double3Vec(tmpc*vRC.XX - tmps*RC.XX*vRC.YY,
+                      tmps*vRC.XX + tmpc*RC.XX*vRC.YY,
+                      vRC.ZZ);
+}
+
+inline const double3Vec R2RC(const double3Vec& R)
+{
+    return double3Vec(sqrt(R.XX*R.XX + R.YY*R.YY), atan2(R.YY, R.XX), R.ZZ);
+}
+
+
+inline int sizeOf(const double3Vec &)
+{
+    return 3*sizeof(double) ;
+}
+
+inline int sizeOf(const double33Mat &)
+{
+    return 9*sizeof(double) ;
+}
+
+
+
+inline void TFMc1toc2(const double3Vec& F_In,
+              const double3Vec& M_c1_In,
+              const double3Vec& c2_R_c1_In,
+              double3Vec& M_c2_Out)
+{
+    M_c2_Out = M_c1_In - Cross(c2_R_c1_In, F_In);
+}
+
+
+inline void TFMc1toc2(const double3Vec& F_c1_In,
+              const double3Vec& M_c1_c1_In,
+              const double3Vec& c2_R_c1_c1_In,
+              const double33Mat& c2_A_c1_In,
+              double3Vec& F_c2_Out,
+              double3Vec& M_c2_c2_Out)
+{
+    F_c2_Out = c2_A_c1_In*F_c1_In;
+    M_c2_c2_Out = c2_A_c1_In*(M_c1_c1_In - Cross(c2_R_c1_c1_In, F_c1_In));
+}
+
+
+
+inline void TFMc2toc1(const double3Vec& F_In,
+              const double3Vec& M_c2_In,
+              const double3Vec& c2_R_c1_In,
+              double3Vec& M_c1_Out)
+{
+    M_c1_Out = M_c2_In + Cross(c2_R_c1_In, F_In);
+}
+
+
+inline void TFMc2toc1(const double3Vec& F_c2_In,
+              const double3Vec& M_c2_c2_In,
+              const double3Vec& c2_R_c1_c1_In,
+              const double33Mat& c2_A_c1_In,
+              double3Vec& F_c1_Out,
+              double3Vec& M_c1_c1_Out)
+{
+    double33Mat c1_A_c2_tmp = c2_A_c1_In.T();
+    F_c1_Out = c1_A_c2_tmp*F_c2_In;
+    M_c1_c1_Out = c1_A_c2_tmp*M_c2_c2_In + Cross(c2_R_c1_c1_In, F_c1_Out);
+}
+
+
+//! Create a skew symmetric matrix. That is Cross(v, x) = Skew(v)*x;
+//! This function logically belongs to lightmat.
+inline void MakeSkewMatrix(const double3Vec& v, double33Mat& m)
+{
+    m(1,1) = 0;
+    m(2,2) = 0;
+    m(3,3) = 0;
+    register double tmp;
+    tmp = v(1);
+    m(3, 2) = tmp;
+    m(2, 3) = -tmp;
+    tmp = v(2);
+    m(1, 3) = tmp;
+    m(3, 1) = -tmp;
+    tmp = v(3);
+    m(2, 1) = tmp;
+    m(1, 2) = -tmp;
+}
+
+//! Create a skew symmetric matrix. That is Cross(v, x) = Skew(v)*x;
+inline double33Mat Skew(const double3Vec& a) {
+    double a1, a2, a3;
+    a.Get(a1, a2, a3);
+
+    // Skew or anti-symmetric matrix
+    return double33Mat(0.0, -a3, a2,
+                    a3,  0.0, -a1,
+                    -a2, a1, 0.0);
+}
+
+}

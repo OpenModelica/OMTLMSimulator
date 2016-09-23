@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<hopsancomponentlibrary name="TLMPluginLib" xmlversion="0.1" libversion="1">
+    <lib debug_ext="_d">TLMPluginLib</lib>
+    <source>TLMPluginLib.cc</source>
+    <source>c:/users/robbr48/Documents/Mercurial/TLMPlugin/common/PluginImplementer.cc</source>
+    <source>c:/users/robbr48/Documents/Mercurial/TLMPlugin/common/TLMClientComm.cc</source>
+    <source>c:/users/robbr48/Documents/Mercurial/TLMPlugin/common/TLMCommUtil.cc</source>
+    <source>c:/users/robbr48/Documents/Mercurial/TLMPlugin/common/TLMErrorLog.cc</source>
+    <source>c:/users/robbr48/Documents/Mercurial/TLMPlugin/common/TLMInterface.cc</source>
+    <source>c:/users/robbr48/Documents/Mercurial/TLMPlugin/common/TLMPlugin.cc</source>
+    <source>c:/users/robbr48/Documents/Mercurial/TLMPlugin/extralibs/misc/src/strConv.cc</source>
+    <source>c:/users/robbr48/Documents/Mercurial/TLMPlugin/extralibs/misc/src/coordTrans.cc</source>
+    <source>c:/users/robbr48/Documents/Mercurial/TLMPlugin/extralibs/misc/src/double3Vec.cc</source>
+    <source>c:/users/robbr48/Documents/Mercurial/TLMPlugin/extralibs/misc/src/double33Mat.cc</source>
+    <component>TLMPluginInterface.hpp</component>
+    <caf>TLMPluginInterface.xml</caf>
+    <buildflags>
+      <cflags>-Ic:/users/robbr48/Documents/Mercurial/TLMPlugin/common -Ic:/users/robbr48/Documents/Mercurial/TLMPlugin/extralibs/misc/include</cflags>
+      <lflags>-lws2_32</lflags>
+    </buildflags>
+</hopsancomponentlibrary>
