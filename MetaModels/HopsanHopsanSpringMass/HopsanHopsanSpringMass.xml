@@ -1,0 +1,19 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<Model Name="HopsanHopsanSpringMass">
+  <SubModels>
+    <SubModel ModelFile="left.hmf" StartCommand="StartTLMHopsan" Name="left" ExactStep="0">
+      <Annotation Rotation="0" Visible="true" Origin="{-54,14}" Extent="{-10,-10,10,10}"/>
+      <InterfacePoint Angle321="0,0,0" Position="0,0,0" Name="TLM_Plugin_Inerface"/>
+    </SubModel>
+    <SubModel ModelFile="right.hmf" StartCommand="StartTLMHopsan" Name="right" ExactStep="0">
+      <Annotation Rotation="0" Visible="true" Origin="{8,12}" Extent="{-10,-10,10,10}"/>
+      <InterfacePoint Angle321="0,0,0" Position="0,0,0" Name="TLM_Plugin_Inerface"/>
+    </SubModel>
+  </SubModels>
+  <Connections>
+    <Connection To="right.TLM_Plugin_Inerface" From="left.TLM_Plugin_Inerface" alpha="0.2" Delay="1e-4" Zfr="100" Zf="10000">
+      <Annotation Points="{{-42,18},{-22,18},{-22,36},{36,36},{36,16},{20,16},{20,16}}"/>
+    </Connection>
+  </Connections>
+  <SimulationParams StartTime="0" StopTime="1"/>
+</Model>
