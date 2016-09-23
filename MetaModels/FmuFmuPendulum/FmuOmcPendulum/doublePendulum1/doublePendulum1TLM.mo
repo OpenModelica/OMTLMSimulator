@@ -1,5 +1,4 @@
 within ;
-import "C:/OpenModelica/ModelicaModels/TLM.mo";
 
 
 model doublePendulum1TLM

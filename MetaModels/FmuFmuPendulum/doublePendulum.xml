@@ -3,12 +3,12 @@
 <Model Name="doublePendulum">
   <!-- List of connected sub-models -->
   <SubModels>
-    <SubModel StartCommand="StartTLMFmiWrapper1" ExactStep="0" ModelFile="doublePendulum1TLM.fmu" Name="doublePendulum1">
+    <SubModel Name="doublePendulum1" ModelFile="doublePendulum1TLM.fmu" ExactStep="0" StartCommand="StartTLMFmiWrapper1">
       <!-- TLM interface points for SubModel A -->
       <InterfacePoint Name="tlm"/>
     </SubModel>
-    <SubModel StartCommand="StartTLMOpenModelica" ExactStep="0" ModelFile="doublePendulum2.mo" Name="doublePendulum2">
-      <Annotation Visible="true" Rotation="0" Extent="{-10,-10,10,10}" Origin="{-44,20}"/>
+    <SubModel Name="doublePendulum2" ModelFile="doublePendulum2.fmu" ExactStep="0" StartCommand="dummy">
+      <Annotation Extent="{-10,-10,10,10}" Rotation="0" Origin="{-44,20}" Visible="true"/>
       <!-- TLM interface points for SubModel C -->
       <InterfacePoint Name="tlm"/>
     </SubModel>
@@ -16,7 +16,7 @@
   <!-- List of TLM connections -->
   <Connections>
     <!-- Some more physical values: Delay="1e-5" Zf="8e4" Zfr="400" alpha="0.2" -->
-    <Connection From="doublePendulum1.tlm" alpha="0.9" Zf="2000" To="doublePendulum2.tlm" Delay="2e-4" Zfr="1">
+    <Connection Zf="2000" alpha="0.9" To="doublePendulum2.tlm" Delay="2e-4" Zfr="1" From="doublePendulum1.tlm">
       <Annotation Points="{{11,8},{9,8},{9,28},{-33,28}}"/>
     </Connection>
   </Connections>
