@@ -32,7 +32,7 @@ SOURCES += main.cpp \
     ../extralibs/misc/src/strConv.cc \
     ../extralibs/misc/src/coordTrans.cc \
     ../extralibs/misc/src/double3Vec.cc \
-    ../extralibs/misc/src/double33Mat.cc #\
+    ../extralibs/misc/src/double33Mat.cc
 
 HEADERS += \
     FMILibrary-2.0.1/install/include/JM/jm_portability.h \
