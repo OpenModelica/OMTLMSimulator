@@ -49,7 +49,8 @@ struct tlmConfig_t {
 };
 
 // FMILibrary logger
-void importlogger(jm_callbacks* c, jm_string module, jm_log_level_enu_t log_level, jm_string message) {
+void fmiLogger(jm_callbacks* c, jm_string module, jm_log_level_enu_t log_level, jm_string message)
+{
     std::stringstream ss;
     ss << "FMI: module = " << module << ", log level = " << jm_log_level_to_string(log_level) << ": " << message;
     switch(log_level)
@@ -69,12 +70,6 @@ void importlogger(jm_callbacks* c, jm_string module, jm_log_level_enu_t log_leve
     }
 }
 
-// Exit function
-void do_exit(int code) {
-  printf("Press 'Enter' to exit\n");
-  /* getchar(); */
-  exit(code);
-}
 
 // Simulate function
 int simulate(fmi2_import_t* fmu, tlmConfig_t tlmConfig, fmiConfig_t fmiConfig)
@@ -101,26 +96,22 @@ int simulate(fmi2_import_t* fmu, tlmConfig_t tlmConfig, fmiConfig_t fmiConfig)
   jmstatus = fmi2_import_instantiate(fmu, instanceName, fmi2_cosimulation, fmuLocation, visible);
   if (jmstatus == jm_status_error) {
     TLMErrorLog::FatalError("fmi2_import_instantiate failed");
-    do_exit(-1);
   }
 
   fmistatus = fmi2_import_setup_experiment(fmu, fmi2_true,
                                            relativeTol, tlmConfig.tstart, StopTimeDefined, tlmConfig.tend);
   if(fmistatus != fmi2_status_ok) {
     TLMErrorLog::FatalError("fmi2_import_setup_experiment failed");
-    do_exit(-1);
   }
 
   fmistatus = fmi2_import_enter_initialization_mode(fmu);
   if(fmistatus != fmi2_status_ok) {
     TLMErrorLog::FatalError("fmi2_import_enter_initialization_mode failed");
-    do_exit(-1);
   }
 
   fmistatus = fmi2_import_exit_initialization_mode(fmu);
   if(fmistatus != fmi2_status_ok) {
     TLMErrorLog::FatalError("fmi2_import_exit_initialization_mode failed");
-    do_exit(-1);
   }
 
   tcur = tlmConfig.tstart;
@@ -181,7 +172,9 @@ int simulate(fmi2_import_t* fmu, tlmConfig_t tlmConfig, fmiConfig_t fmiConfig)
 }
 
 
-void csvToIntArray(std::string csv, int length, fmi2_value_reference_t array[]){
+// Convert a CSV string to an array of integers
+void csvToIntArray(std::string csv, int length, fmi2_value_reference_t array[])
+{
   std::string word;
   std::stringstream ss(csv);
   getline(ss,word,',');
@@ -195,15 +188,14 @@ void csvToIntArray(std::string csv, int length, fmi2_value_reference_t array[]){
 
 
 
-//Reads interface data (Value references for FMI mapped to TLM connecitons) from fmi_interfaces.csv
-//Todo: Add error handling
+// Reads interface data (Value references for FMI mapped to TLM connections) from FMI configuration file
+// Todo: Add error handling
 fmiConfig_t readFmiConfigFile(std::string path)
 {
   fmiConfig_t fmiConfig;
   fmiConfig.nInterfaces=0;
   std::ifstream infile(path.c_str());
-  if(infile.is_open())
-  {
+  if(infile.is_open()) {
     for( std::string line; getline( infile, line ); ) {
       std::stringstream ss(line);
 
@@ -241,6 +233,7 @@ fmiConfig_t readFmiConfigFile(std::string path)
       }
     }
 
+    // Print log output
     TLMErrorLog::Log("---"+string(FMI_CONFIG_FILE_NAME)+"---");
     TLMErrorLog::Log("Number of interfaces: "+fmiConfig.nInterfaces);
     for(size_t i=0; i<fmiConfig.nInterfaces; ++i) {
@@ -277,8 +270,7 @@ fmiConfig_t readFmiConfigFile(std::string path)
       TLMErrorLog::Log(output.str());
     }
   }
-  else
-  {
+  else {
     TLMErrorLog::FatalError("Unable to read "+string(FMI_CONFIG_FILE_NAME));
     exit(1);
   }
@@ -320,9 +312,10 @@ tlmConfig_t readTlmConfigFile(std::string path)
     return tlmConfig;
 }
 
+
+//Create temp directory, or clear contents if it already exists
 void createAndClearTempDirectory(std::string path)
 {
-    //Create temp directory, or clear contents if it already exists
     struct stat info;
     if( stat( path.c_str(), &info ) != 0 ) {            //cannot access temp directory
       TLMErrorLog::FatalError("Unable to access temp directory!");
@@ -343,8 +336,8 @@ void createAndClearTempDirectory(std::string path)
 
 
 
-int main(int argc, char* argv[]) {
-
+int main(int argc, char* argv[])
+{
   if(argc < 2) {
     TLMErrorLog::FatalError("Too few arguments!");
     return -1;
@@ -412,7 +405,7 @@ int main(int argc, char* argv[]) {
   callbacks.calloc = calloc;
   callbacks.realloc = realloc;
   callbacks.free = free;
-  callbacks.logger = importlogger;
+  callbacks.logger = fmiLogger;
   callbacks.log_level = jm_log_level_warning;
   callbacks.context = 0;
 
@@ -422,19 +415,16 @@ int main(int argc, char* argv[]) {
 
   if(version != fmi_version_2_0_enu) {
     TLMErrorLog::FatalError("The code only supports version 2.0");
-    do_exit(-1);
   }
 
   fmu = fmi2_import_parse_xml(context, tmpPath.c_str(), 0);
 
   if(!fmu) {
     TLMErrorLog::FatalError("Error parsing XML, exiting");
-    do_exit(-1);
   }
 
   if(fmi2_import_get_fmu_kind(fmu) == fmi2_fmu_kind_me) {
     TLMErrorLog::FatalError("Only CS 2.0 is supported by this code");
-    do_exit(-1);
   }
 
   callBackFunctions.logger = fmi2_log_forwarding;
@@ -446,7 +436,6 @@ int main(int argc, char* argv[]) {
   status = fmi2_import_create_dllfmu(fmu, fmi2_fmu_kind_cs, &callBackFunctions);
   if (status == jm_status_error) {
     TLMErrorLog::FatalError("Could not create the DLL loading mechanism(C-API). Error: "+string(fmi2_import_get_last_error(fmu)));
-    do_exit(-1);
   }
 
   //Start simulation
@@ -458,8 +447,6 @@ int main(int argc, char* argv[]) {
   fmi_import_free_context(context);
 
   TLMErrorLog::Log("FMIWrapper1 completed successfully!");
-
-  do_exit(0);
 
   return 0;
 }
