@@ -9,7 +9,7 @@ REM 5 server-name:port
 REM 6 FMU file
 
 rem *********************SETUP SIMULATION*********************************************
-set FMIWrapper1_Cmd="FMIWrapper1.exe"
+set FMIWrapper_Cmd="FMIWrapper.exe"
 
 set TLMCONFIGFILE=tlm.config
 
@@ -20,7 +20,7 @@ cd %1
 
 If not exist %6 goto BADFILE
 
-echo Starting an FMIWrapper1 simulation with input file: %6
+echo Starting an FMIWrapper simulation with input file: %6
 echo Make sure that: 
 echo time = %2
 echo timeEnd = %3
@@ -34,11 +34,11 @@ echo %2 >> %TLMCONFIGFILE%
 echo %3 >> %TLMCONFIGFILE%
 echo %4 >> %TLMCONFIGFILE%
 
-echo Starting FMIWrapper1
-echo %FMIWrapper1_Cmd% %CD% %6 -d
-echo DOING THIS: %FMIWrapper1_Cmd% %CD% %6 -d > %1.simlog
-%FMIWrapper1_Cmd% %CD% %6 -d
-echo DONE THIS: %FMIWrapper1_Cmd% %CD% %6 -d > %1.simlog
+echo Starting FMIWrapper
+echo %FMIWrapper_Cmd% %CD% %6 -d
+echo DOING THIS: %FMIWrapper_Cmd% %CD% %6 -d > %1.simlog
+%FMIWrapper_Cmd% %CD% %6 -d
+echo DONE THIS: %FMIWrapper_Cmd% %CD% %6 -d > %1.simlog
 
 goto DONE
 
