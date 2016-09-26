@@ -403,6 +403,7 @@ int simulate_fmi2_me(fmi2_import_t* fmu, tlmConfig_t tlmConfig, fmiConfig_t fmiC
 // Convert a CSV string to an array of integers
 void csvToIntArray(std::string csv, int length, fmi2_value_reference_t array[])
 {
+  array = (fmi2_value_reference_t*)calloc(3, sizeof(fmi2_value_reference_t*));
   std::string word;
   std::stringstream ss(csv);
   getline(ss,word,',');
@@ -421,6 +422,9 @@ void csvToIntArray(std::string csv, int length, fmi2_value_reference_t array[])
 fmiConfig_t readFmiConfigFile(std::string path)
 {
   fmiConfig_t fmiConfig;
+
+
+
   fmiConfig.nInterfaces=0;
   std::ifstream infile(path.c_str());
   if(infile.is_open()) {
@@ -474,7 +478,7 @@ fmiConfig_t readFmiConfigFile(std::string path)
       TLMErrorLog::Log(output.str());
       output.str("");
       output << "Orientation:";
-      for(int j=0; j<9; ++j) {
+      for(int j=0; j<3; ++j) {
         output << " " << fmiConfig.orientation_vr[i][j];
       }
       TLMErrorLog::Log(output.str());
@@ -572,10 +576,10 @@ int main(int argc, char* argv[])
   }
 
   std::string path = argv[1];
-  std::string FMUPath = path+"/"+argv[2];
-  std::string tmpPath = path+"/temp";
-  std::string fmiConfigPath = path+"/"+FMI_CONFIG_FILE_NAME;
-  std::string tlmConfigPath = path+"/"+TLM_CONFIG_FILE_NAME;
+  std::string FMUPath = path+"\\"+argv[2];
+  std::string tmpPath = path+"\\temp";
+  std::string fmiConfigPath = path+"\\"+FMI_CONFIG_FILE_NAME;
+  std::string tlmConfigPath = path+"\\"+TLM_CONFIG_FILE_NAME;
 
   if(argc > 3 && !strcmp(argv[3],"-d")) {
     TLMErrorLog::SetDebugOut(true);
