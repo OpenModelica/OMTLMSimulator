@@ -39,7 +39,11 @@ TLMInterface::TLMInterface(TLMClientComm& theComm, std::string& aName, double St
     Message.SocketHandle = Comm.GetSocketHandle();
 
     TLMCommUtil::SendMessage(Message);
+
     TLMCommUtil::ReceiveMessage(Message);
+    while(Message.Header.MessageType != TLMMessageTypeConst::TLM_REG_INTERFACE) {
+        TLMCommUtil::ReceiveMessage(Message);
+    }
     InterfaceID =  Message.Header.TLMInterfaceID;
 
     TLMErrorLog::Log(std::string("Interface ") + GetName() + " got ID " + TLMErrorLog::ToStdStr(InterfaceID));

@@ -43,6 +43,12 @@ std::ofstream debugOutFile;
 //! MarkerIDmap maps the Modelica marker ID to registration index/ TLM force ID
 std::map<std::string, int> MarkerIDmap;
 
+//#define ALWAYSCALLSETMOTION
+#ifdef ALWAYSCALLSETMOTION
+//! Keep track of last time setMotion was called
+double lastSetMotionTime = 0.0;
+#endif
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -89,6 +95,7 @@ void* initialize_TLM()
         TLMErrorLog::FatalError("Error initializing the TLM plugin, exiting...");
 	return 0;
     }
+
     return (void*)TLMPluginStructObj;
 }
 
@@ -201,11 +208,20 @@ void calc_tlm_force(void* in_TLMPluginStructObj,
     // defined in OpenModelica dassl.c
     extern int RHSFinalFlag;
     static bool firstFinalStepReached = false;
-    
+
+#ifdef ALWAYSCALLSETMOTION
+    double setMotionThreshold = 1e-5;
+    if(RHSFinalFlag || simTime-lastSetMotionTime > setMotionThreshold) {
+      set_tlm_motion(TLMPluginStructObj, interfaceID, simTime, position, orientation, speed, ang_speed);
+      firstFinalStepReached=true;
+      lastSetMotionTime = simTime;
+    }
+#else
     if( RHSFinalFlag ){
       set_tlm_motion(TLMPluginStructObj, interfaceID, simTime, position, orientation, speed, ang_speed);
       firstFinalStepReached = true;
     }
+#endif
 
     // Check if interface is registered. If it's not, register it
     if( MarkerIDmap.find(interfaceID) == MarkerIDmap.end() ){

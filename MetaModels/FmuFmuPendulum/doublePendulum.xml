@@ -1,0 +1,25 @@
+<?xml version='1.0' encoding='ISO-8859-1'?>
+<!-- The root node is the meta-model -->
+<Model Name="doublePendulum">
+  <!-- List of connected sub-models -->
+  <SubModels>
+    <SubModel StartCommand="StartTLMFmiWrapper" ExactStep="0" ModelFile="doublePendulum1TLM.fmu" Name="doublePendulum1">
+      <!-- TLM interface points for SubModel A -->
+      <InterfacePoint Name="tlm"/>
+    </SubModel>
+    <SubModel StartCommand="StartTLMFmiWrapper" ExactStep="0" ModelFile="doublePendulum2.fmu" Name="doublePendulum2">
+      <Annotation Rotation="0" Origin="{-44,20}" Visible="true" Extent="{-10,-10,10,10}"/>
+      <!-- TLM interface points for SubModel C -->
+      <InterfacePoint Name="tlm"/>
+    </SubModel>
+  </SubModels>
+  <!-- List of TLM connections -->
+  <Connections>
+    <!-- Some more physical values: Delay="1e-5" Zf="8e4" Zfr="400" alpha="0.2" -->
+    <Connection To="doublePendulum2.tlm" Zf="2000" alpha="0.9" From="doublePendulum1.tlm" Zfr="1" Delay="2e-4">
+      <Annotation Points="{{11,8},{9,8},{9,28},{-33,28}}"/>
+    </Connection>
+  </Connections>
+  <!-- Parameters for the simulation -->
+  <SimulationParams StartTime="0" ManagerPort="11113" StopTime="3"/>
+</Model>

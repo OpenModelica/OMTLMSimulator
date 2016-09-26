@@ -379,10 +379,10 @@ void ManagerCommHandler::ReaderThreadRun() {
                 if(TLMCommUtil::ReceiveMessage(*message)) {
                     if( CommMode == CoSimulationMode ){
                         MarshalMessage(*message);
-                        
+
                         // Forward message for monitoring.
                         ForwardToMonitor(*message);
-                        
+
                         // Place in send buffer
                         MessageQueue.PutWriteSlot(message);
                     }

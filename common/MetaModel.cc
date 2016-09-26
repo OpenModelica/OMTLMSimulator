@@ -316,7 +316,7 @@ void MetaModel::Print(std::ostream &os )
     } 
 }
 
-
+#if defined(WIN32)
 // Create a string with last error message
 std::string GetLastErrorStdStr()
 {
@@ -345,7 +345,7 @@ std::string GetLastErrorStdStr()
   }
   return std::string();
 }
-
+#endif
 // Start the component executable
 void TLMComponentProxy::StartComponent(SimulationParams& SimParams, double MaxStep) {
     TLMErrorLog::Log(string("Starting ") + StartCommand );
