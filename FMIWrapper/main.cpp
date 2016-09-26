@@ -401,9 +401,9 @@ int simulate_fmi2_me(fmi2_import_t* fmu, tlmConfig_t tlmConfig, fmiConfig_t fmiC
 
 
 // Convert a CSV string to an array of integers
-void csvToIntArray(std::string csv, int length, fmi2_value_reference_t array[])
+void csvToIntArray(std::string csv, int length, fmi2_value_reference_t *array[])
 {
-  array = (fmi2_value_reference_t*)calloc(3, sizeof(fmi2_value_reference_t*));
+  *array = (fmi2_value_reference_t*)calloc(length, sizeof(fmi2_value_reference_t*));
   std::string word;
   std::stringstream ss(csv);
   getline(ss,word,',');
@@ -411,7 +411,7 @@ void csvToIntArray(std::string csv, int length, fmi2_value_reference_t array[])
     getline(ss, word,',');
     int number;
     std::istringstream(word) >> number;
-    array[i] = number;
+    (*array)[i] = number;
   }
 }
 
@@ -445,23 +445,23 @@ fmiConfig_t readFmiConfigFile(std::string path)
       }
       else if(word == "position") {
         fmiConfig.position_vr.push_back(new fmi2_value_reference_t);
-        csvToIntArray(ss.str(),3,fmiConfig.position_vr.back());
+        csvToIntArray(ss.str(),3,&(fmiConfig.position_vr.back()));
       }
       else if(word == "orientation") {
         fmiConfig.orientation_vr.push_back(new fmi2_value_reference_t);
-        csvToIntArray(ss.str(),9,fmiConfig.orientation_vr.back());
+        csvToIntArray(ss.str(),9,&(fmiConfig.orientation_vr.back()));
       }
       else if(word == "speed") {
         fmiConfig.speed_vr.push_back(new fmi2_value_reference_t);
-        csvToIntArray(ss.str(),3,fmiConfig.speed_vr.back());
+        csvToIntArray(ss.str(),3,&(fmiConfig.speed_vr.back()));
       }
       else if(word == "ang_speed") {
         fmiConfig.ang_speed_vr.push_back(new fmi2_value_reference_t);
-        csvToIntArray(ss.str(),3,fmiConfig.ang_speed_vr.back());
+        csvToIntArray(ss.str(),3,&(fmiConfig.ang_speed_vr.back()));
       }
       else if(word == "force") {
         fmiConfig.force_vr.push_back(new fmi2_value_reference_t);
-        csvToIntArray(ss.str(),6,fmiConfig.force_vr.back());
+        csvToIntArray(ss.str(),6,&(fmiConfig.force_vr.back()));
       }
     }
 
@@ -478,7 +478,7 @@ fmiConfig_t readFmiConfigFile(std::string path)
       TLMErrorLog::Log(output.str());
       output.str("");
       output << "Orientation:";
-      for(int j=0; j<3; ++j) {
+      for(int j=0; j<9; ++j) {
         output << " " << fmiConfig.orientation_vr[i][j];
       }
       TLMErrorLog::Log(output.str());
@@ -549,10 +549,7 @@ tlmConfig_t readTlmConfigFile(std::string path)
 void createAndClearTempDirectory(std::string path)
 {
   struct stat info;
-  if( stat( path.c_str(), &info ) != 0 ) {            //cannot access temp directory
-    TLMErrorLog::FatalError("Unable to access temp directory!");
-  }
-  else if( info.st_mode & S_IFDIR ) {           //temp directory already exists
+  if( info.st_mode & S_IFDIR ) {           //temp directory already exists
 #ifdef WIN32
     std::string command = "rd /s /q \""+path+"\"";
 #else
@@ -583,6 +580,7 @@ int main(int argc, char* argv[])
 
   if(argc > 3 && !strcmp(argv[3],"-d")) {
     TLMErrorLog::SetDebugOut(true);
+    cout << "Activating debug output" << endl;
   }
   TLMErrorLog::SetNormalErrorLogOn(true);
   TLMErrorLog::SetWarningOut(true);
