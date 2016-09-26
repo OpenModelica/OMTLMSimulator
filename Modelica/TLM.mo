@@ -40,6 +40,15 @@ package TLM
       external "C" set_debug_mode(DebugFlg) annotation(Include = "#include<tlmforce.h>", Library = "tlmmodelica", IncludeDirectory = "modelica://TLM/Resources/Include", LibraryDirectory = "modelica://TLM/Resources/Library");
       annotation(Icon(coordinateSystem(extent = {{-100, -100}, {100, 100}}, preserveAspectRatio = true, initialScale = 0.1, grid = {10, 10}), graphics = {Rectangle(visible = true, fillColor = {255, 85, 0}, fillPattern = FillPattern.Solid, extent = {{-100, -100}, {100, 100}}, radius = 20), Text(visible = true, origin = {3.13, 5}, textColor = {255, 255, 255}, extent = {{-66.87, -65}, {66.87, 65}}, textString = "F")}));
     end TLMSetDebugMode;
+    
+    function TLMInitialize
+      input String name "Name of the interface";
+
+      external "C" initialize_interface(name) annotation(Include = "#include<tlmforce.h>", Library = "tlmmodelica", IncludeDirectory = "modelica://TLM/Resources/Include", LibraryDirectory = "modelica://TLM/Resources/Library");
+      annotation(Icon(coordinateSystem(extent = {{-100, -100}, {100, 100}}, preserveAspectRatio = true, initialScale = 0.1, grid = {10, 10}), graphics={  Rectangle(visible = true, fillColor = {255, 85, 0},
+      fillPattern = FillPattern.Solid, extent = {{-100, -100}, {100, 100}}, radius = 20), Text(visible = true, origin = {3.13, 5}, textColor = {255, 255, 255}, extent = {{-66.87, -65}, {66.87, 65}}, textString = "F")}));
+    end TLMInitialize;
+    
     annotation(Icon(coordinateSystem(extent = {{-100, -100}, {100, 100}}, preserveAspectRatio = true, initialScale = 0.1, grid = {10, 10}), graphics = {Rectangle(visible = true, fillColor = {255, 85, 0}, fillPattern = FillPattern.Solid, extent = {{-100, -100}, {100, 100}}, radius = 20), Text(visible = true, origin = {3.13, 5}, textColor = {255, 255, 255}, extent = {{-66.87, -65}, {66.87, 65}}, textString = "F")}), Diagram(coordinateSystem(extent = {{-148.5, -105}, {148.5, 105}}, preserveAspectRatio = true, initialScale = 0.1, grid = {5, 5})));
   end TLM_Functions;
 
@@ -57,6 +66,7 @@ package TLM
       parameter Real tlmDelay = TLMGetDelay(interfaceName);
     initial algorithm
       assert(tlmDelay > 0.0, "Bad TLM delay in" + interfaceName + ", give up");
+      TLM_Functions.TLMInitialize(interfaceName);
       TLMSetDebugMode(debugFlg);
     equation
       w[1] = der(flange_b.phi);
@@ -85,6 +95,7 @@ package TLM
       parameter Real tlmDelay = TLMGetDelay(interfaceName);
     initial algorithm
       assert(tlmDelay > 0.0, "Bad TLM delay in" + interfaceName + ", give up");
+      TLM_Functions.TLMInitialize(interfaceName);
       TLMSetDebugMode(debugFlg);
     equation
       vel[1] = der(flange_b.s);
@@ -119,6 +130,7 @@ package TLM
       parameter Real tlmDelay = TLM_Functions.TLMGetDelay(interfaceName);
     initial algorithm
       assert(tlmDelay > 0.0, "Bad TLM delay in" + interfaceName + ", give up");
+      TLM_Functions.TLMInitialize(interfaceName);
       TLM_Functions.TLMSetDebugMode(debugFlg);
     equation
       //
@@ -161,6 +173,7 @@ package TLM
       parameter Real tlmDelay = TLMGetDelay(interfaceName);
     initial algorithm
       assert(tlmDelay > 0.0, "Bad TLM delay in" + interfaceName + ", give up");
+      TLM_Functions.TLMInitialize(interfaceName);
       TLMSetDebugMode(debugFlg);
     algorithm
       (f, t) := TLMGetForce(interfaceName, time, r, A, v, w);
@@ -172,5 +185,5 @@ package TLM
     end TLMSensor;
     annotation(Icon(coordinateSystem(extent = {{-100, -100}, {100, 100}}, preserveAspectRatio = true, initialScale = 0.1, grid = {10, 10}), graphics = {Rectangle(visible = true, origin = {-10.651, -8.377000000000001}, lineColor = {0, 0, 255}, fillColor = {128, 0, 0}, fillPattern = FillPattern.Solid, extent = {{-89.349, -91.623}, {110.651, 108.377}}, radius = 20), Text(visible = true, origin = {-15.021, -3.686}, textColor = {255, 255, 255}, extent = {{-81.61199999999999, -54.575}, {111.654, 66.09099999999999}}, textString = "S")}), Diagram(coordinateSystem(extent = {{-148.5, -105}, {148.5, 105}}, preserveAspectRatio = true, initialScale = 0.1, grid = {5, 5})));
   end TLM_Sensors;
-  annotation(Icon(coordinateSystem(extent = {{-100, -100}, {100, 100}}, preserveAspectRatio = true, initialScale = 0.1, grid = {10, 10}), graphics = {Rectangle(visible = true, fillColor = {0, 0, 255}, fillPattern = FillPattern.Solid, extent = {{-100, -100}, {100, 100}}, radius = 20), Text(visible = true, textColor = {255, 255, 255}, extent = {{-86.59099999999999, -54.721}, {86.59099999999999, 54.721}}, textString = "TLM")}), uses(Modelica(version = "3.0")));
+  annotation(Icon(coordinateSystem(extent = {{-100, -100}, {100, 100}}, preserveAspectRatio = true, initialScale = 0.1, grid = {10, 10}), graphics = {Rectangle(visible = true, fillColor = {0, 0, 255}, fillPattern = FillPattern.Solid, extent = {{-100, -100}, {100, 100}}, radius = 20), Text(visible = true, textColor = {255, 255, 255}, extent = {{-86.59099999999999, -54.721}, {86.59099999999999, 54.721}}, textString = "TLM")}), uses(Modelica(version = "3.2.1")));
 end TLM;

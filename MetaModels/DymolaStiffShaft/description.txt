@@ -1,0 +1,1 @@
+A rotating shaft connected to another rotating shaft through a rigid TLM connection. One shaft has a fixed position and rotation, while the other one is subjected to forces and torques. Both shafts are in the same Modelica model, so that multiple TLM interfaces on one model can be verified.

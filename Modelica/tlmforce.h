@@ -9,6 +9,9 @@
 extern "C" {
 #endif
 
+//! Initialize one interface
+void initialize_interface(const char* markerID);
+
 //! Enable, disable debug output.
 void set_debug_mode(int debugFlgIn);
 

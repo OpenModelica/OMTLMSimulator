@@ -91,6 +91,20 @@ void initialize_TLM()
     }
 }
 
+
+void initialize_interface(const char* markerID)
+{
+    // Check if interface is registered. If it's not, register it
+    if( MarkerIDmap.find(markerID) == MarkerIDmap.end() ){
+        if( Plugin == 0 ){
+            initialize_TLM();
+        }
+
+        MarkerIDmap[markerID] = Plugin->RegisteTLMInterface(markerID);
+    }
+}
+
+
 void set_debug_mode(int debugFlgIn)
 {
     debugFlg = debugFlgIn;
