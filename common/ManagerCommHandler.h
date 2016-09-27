@@ -19,7 +19,9 @@
 
 #include "TLMThreadSynch.h"
 
-
+#ifndef _MSC_VER
+#include <unistd.h>
+#endif
 
 //! \class ManagerCommHandler
 //! ManagerCommHandler class implements the communication protocol 
@@ -33,7 +35,9 @@ private:
     TLMManagerComm Comm;
 
     //! Meta-model
-    MetaModel& TheModel;        
+    MetaModel& TheModel;
+
+    bool MonitorConnected;
 
 public:
     //! The communication protocol modes, i.e., real co-simulation or interface information request. 
@@ -69,6 +73,7 @@ public:
         MessageQueue(),
         Comm(Model.GetComponentsNum(), Model.GetSimParams().GetPort()),
         TheModel(Model),
+	MonitorConnected(false),
         CommMode(CoSimulationMode),
         monitorInterfaceMap(),
         monitorMapLock(),
@@ -85,7 +90,18 @@ public:
 
     //! Forward start to the particular object
     static void* thread_ReaderThreadRun(void * arg) {
-        ManagerCommHandler* con = (ManagerCommHandler*)arg;
+	ManagerCommHandler* con = (ManagerCommHandler*)arg;
+
+	if (con->TheModel.GetSimParams().GetMonitorPort() > 0) {
+	    while (!con->MonitorConnected) {
+#ifndef _MSC_VER
+		usleep(10000); // micro seconds
+#else
+		Sleep(10); // milli seconds
+#endif
+		TLMErrorLog::Log("Waiting for monitor to connect");
+	    }
+	}
 
         try {
             con->ReaderThreadRun();
@@ -125,6 +141,18 @@ public:
     //! Forward start to the particular object
     static void* thread_WriterThreadRun(void * arg) {
         ManagerCommHandler* con = (ManagerCommHandler*)arg;
+
+        if (con->TheModel.GetSimParams().GetMonitorPort() > 0) {
+            while (!con->MonitorConnected) {
+#ifndef _MSC_VER
+        	usleep(10000); // micro seconds
+#else
+        	Sleep(10); // milli seconds
+#endif
+        	TLMErrorLog::Log("Waiting for monitor to connect");
+            }
+        }
+
         try {
             con->WriterThreadRun();
         }

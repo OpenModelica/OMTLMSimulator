@@ -29,11 +29,6 @@ void ManagerCommHandler::Run(CommunicationMode CommMode_In) {
     pthread_attr_setscope(&attr,  PTHREAD_SCOPE_SYSTEM);
     pthread_t reader, writer;
 
-    // start the reader & writer threads
-    pthread_create( &reader, &attr, thread_ReaderThreadRun, (void*)this);
-
-    pthread_create( &writer, &attr, thread_WriterThreadRun, (void*)this);
-
 #if 1
     pthread_t monitor;
     if( CommMode == CoSimulationMode ){
@@ -41,14 +36,18 @@ void ManagerCommHandler::Run(CommunicationMode CommMode_In) {
     }
 #endif
 
-    pthread_join(reader, NULL);
-    pthread_join(writer, NULL);
+    // start the reader & writer threads
+    pthread_create( &reader, &attr, thread_ReaderThreadRun, (void*)this);
+
+    pthread_create( &writer, &attr, thread_WriterThreadRun, (void*)this);
 
 #if 1
     if( CommMode == CoSimulationMode ){
         pthread_join(monitor, NULL);
     }
 #endif
+    pthread_join(reader, NULL);
+    pthread_join(writer, NULL);
 #endif
 
     if(exceptionMsg.size() > 0){
@@ -574,15 +573,6 @@ void ManagerCommHandler::MonitorThreadRun()
         TLMErrorLog::Log("Monitoring disabled!");
         return;
     }
-
-    // Wait for initialized manager 
-    while( runningMode != RunMode ){
-#ifndef _MSC_VER
-        usleep(10000); // micro seconds
-#else
-        Sleep(10); // milli seconds
-#endif
-    }
     
     TLMErrorLog::Log("Initialize monitoring port");
 
@@ -613,7 +603,7 @@ void ManagerCommHandler::MonitorThreadRun()
 
     std::multimap<int,int> localIntMap;
 
-    assert( runningMode == RunMode );
+    //assert( runningMode == RunMode );
     while(runningMode != ShutdownMode){
         int hdl = -1;
 
@@ -630,6 +620,7 @@ void ManagerCommHandler::MonitorThreadRun()
                 abort();        
             }
             monComm.AddActiveSocket(hdl);
+            MonitorConnected = true;
             socks.push_back(hdl);            
         }
         else {
