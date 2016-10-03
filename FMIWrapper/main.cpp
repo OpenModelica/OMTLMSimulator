@@ -22,6 +22,7 @@
 
 using namespace std;
 
+static const char* TEMP_DIR_NAME = "temp";
 static const char* TLM_CONFIG_FILE_NAME = "tlm.config";
 static const char* FMI_CONFIG_FILE_NAME = "fmi.config";
 
@@ -196,6 +197,48 @@ void do_event_iteration(fmi2_import_t *fmu, fmi2_event_info_t *eventInfo)
 }
 
 
+//Read force from TLMPlugin and write it to FMU
+void forceFromTlmToFmu(fmi2_import_t *fmu, fmi2_status_t &fmistatus, fmiConfig_t &fmiConfig, double tcur)
+{
+  //Write interpolated force to FMU
+  for(size_t j=0; j<fmiConfig.plugins.size(); ++j) {
+    double position[3],orientation[9],speed[3],ang_speed[3],force[6];
+
+    //Read position and speed from FMU
+    fmistatus = fmi2_import_get_real(fmu,fmiConfig.position_vr[j],3,position);
+    fmistatus = fmi2_import_get_real(fmu,fmiConfig.orientation_vr[j],9,orientation);
+    fmistatus = fmi2_import_get_real(fmu,fmiConfig.speed_vr[j],3,speed);
+    fmistatus = fmi2_import_get_real(fmu,fmiConfig.ang_speed_vr[j],3,ang_speed);
+
+    //Get interpolated force
+    fmiConfig.plugins.at(j)->GetForce(fmiConfig.interfaceIds[j], tcur, position,orientation,speed,ang_speed,force);
+
+    for(size_t k=0; k<6; ++k) {
+      force[k] = -force[k];
+    }
+
+    // Write force to FMU
+    fmistatus = fmi2_import_set_real(fmu,fmiConfig.force_vr[j],6,force);
+  }
+}
+
+
+//Read motion from FMU and write it to TLMPlugin
+void motionFromFmuToTlm(fmi2_import_t *fmu, fmi2_status_t &fmistatus, fmiConfig_t &fmiConfig, double tcur)
+{
+  for(size_t j=0; j<fmiConfig.plugins.size(); ++j) {
+    double position[3],orientation[9],speed[3],ang_speed[3];
+
+    fmistatus = fmi2_import_get_real(fmu,fmiConfig.position_vr[j],3,position);
+    fmistatus = fmi2_import_get_real(fmu,fmiConfig.orientation_vr[j],9,orientation);
+    fmistatus = fmi2_import_get_real(fmu,fmiConfig.speed_vr[j],3,speed);
+    fmistatus = fmi2_import_get_real(fmu,fmiConfig.ang_speed_vr[j],3,ang_speed);
+
+    fmiConfig.plugins.at(j)->SetMotion(fmiConfig.interfaceIds[j], tcur, position, orientation, speed, ang_speed);
+  }
+}
+
+
 // Simulate function for model exchange
 int simulate_fmi2_me(fmi2_import_t* fmu, tlmConfig_t tlmConfig, fmiConfig_t fmiConfig)
 {
@@ -327,6 +370,12 @@ int simulate_fmi2_me(fmi2_import_t* fmu, tlmConfig_t tlmConfig, fmiConfig_t fmiC
       fmistatus = fmi2_import_get_event_indicators(fmu, event_indicators, n_event_indicators);
     }
 
+
+//#define RK4
+#ifdef RK4 //Runge-Kutta
+    tlast = tcur;
+    tcur += hdef/2.0;
+    //Ignore events with Runge-Kutta for now
     /* Calculate next time step */
     tlast = tcur;
     tcur += hdef;
@@ -340,25 +389,35 @@ int simulate_fmi2_me(fmi2_import_t* fmu, tlmConfig_t tlmConfig, fmiConfig_t fmiC
     }
 
     //Write interpolated force to FMU
-    for(size_t j=0; j<fmiConfig.plugins.size(); ++j) {
-      double position[3],orientation[9],speed[3],ang_speed[3],force[6];
+    forceFromTlmToFmu(fmu, fmistatus, fmiConfig, tcur);
 
-      //Read position and speed from FMU
-      fmistatus = fmi2_import_get_real(fmu,fmiConfig.position_vr[j],3,position);
-      fmistatus = fmi2_import_get_real(fmu,fmiConfig.orientation_vr[j],9,orientation);
-      fmistatus = fmi2_import_get_real(fmu,fmiConfig.speed_vr[j],3,speed);
-      fmistatus = fmi2_import_get_real(fmu,fmiConfig.ang_speed_vr[j],3,ang_speed);
-
-      //Get interpolated force
-      fmiConfig.plugins.at(j)->GetForce(fmiConfig.interfaceIds[j], tcur, position,orientation,speed,ang_speed,force);
-
-      for(size_t k=0; k<6; ++k) {
-        force[k] = -force[k];
-      }
-
-      // Write force to FMU
-      fmistatus = fmi2_import_set_real(fmu,fmiConfig.force_vr[j],6,force);
+    // Integrate one step (Euler forward)
+    fmistatus = fmi2_import_get_derivatives(fmu, states_der, n_states);
+    for (k = 0; k < n_states; k++) {
+      states[k] = states[k] + hcur*states_der[k];
     }
+
+    /* Set states */
+    fmistatus = fmi2_import_set_continuous_states(fmu, states, n_states);
+    /* Step is complete */
+    fmistatus = fmi2_import_completed_integrator_step(fmu, fmi2_true, &callEventUpdate,
+                                                      &terminateSimulation);
+
+#else //Euler
+    /* Calculate next time step */
+    tlast = tcur;
+    tcur += hdef;
+    if (eventInfo.nextEventTimeDefined && (tcur >= eventInfo.nextEventTime)) {
+      tcur = eventInfo.nextEventTime;
+    }
+    hcur = tcur - tlast;
+    if(tcur > tend - hcur/1e16) {
+      tcur = tend;
+      hcur = tcur - tlast;
+    }
+
+    //Write interpolated force to FMU
+    forceFromTlmToFmu(fmu, fmistatus, fmiConfig, tcur);
 
 
     // Integrate one step (Euler forward)
@@ -373,17 +432,10 @@ int simulate_fmi2_me(fmi2_import_t* fmu, tlmConfig_t tlmConfig, fmiConfig_t fmiC
     fmistatus = fmi2_import_completed_integrator_step(fmu, fmi2_true, &callEventUpdate,
                                                       &terminateSimulation);
 
+#endif
+
     // Read motion from FMU
-    for(size_t j=0; j<fmiConfig.plugins.size(); ++j) {
-      double position[3],orientation[9],speed[3],ang_speed[3];
-
-      fmistatus = fmi2_import_get_real(fmu,fmiConfig.position_vr[j],3,position);
-      fmistatus = fmi2_import_get_real(fmu,fmiConfig.orientation_vr[j],9,orientation);
-      fmistatus = fmi2_import_get_real(fmu,fmiConfig.speed_vr[j],3,speed);
-      fmistatus = fmi2_import_get_real(fmu,fmiConfig.ang_speed_vr[j],3,ang_speed);
-
-      fmiConfig.plugins.at(j)->SetMotion(fmiConfig.interfaceIds[j], tcur, position, orientation, speed, ang_speed);
-    }
+    motionFromFmuToTlm(fmu, fmistatus, fmiConfig, tcur);
   }
 
   fmistatus = fmi2_import_terminate(fmu);
@@ -422,9 +474,6 @@ void csvToIntArray(std::string csv, int length, fmi2_value_reference_t *array[])
 fmiConfig_t readFmiConfigFile(std::string path)
 {
   fmiConfig_t fmiConfig;
-
-
-
   fmiConfig.nInterfaces=0;
   std::ifstream infile(path.c_str());
   if(infile.is_open()) {
@@ -467,10 +516,12 @@ fmiConfig_t readFmiConfigFile(std::string path)
 
     // Print log output
     TLMErrorLog::Log("---"+string(FMI_CONFIG_FILE_NAME)+"---");
-    TLMErrorLog::Log("Number of interfaces: "+fmiConfig.nInterfaces);
+    std::stringstream output;
+    output << "Number of interfaces: " << fmiConfig.nInterfaces;
+    TLMErrorLog::Log(output.str());
     for(size_t i=0; i<fmiConfig.nInterfaces; ++i) {
       TLMErrorLog::Log("Name: "+fmiConfig.interfaceNames[i]);
-      std::stringstream output;
+      output.str("");
       output << "Position:";
       for(int j=0; j<3; ++j) {
         output << " " << fmiConfig.position_vr[i][j];
@@ -574,7 +625,7 @@ int main(int argc, char* argv[])
 
   std::string path = argv[1];
   std::string FMUPath = path+"\\"+argv[2];
-  std::string tmpPath = path+"\\temp";
+  std::string tmpPath = path+"\\"+TEMP_DIR_NAME;
   std::string fmiConfigPath = path+"\\"+FMI_CONFIG_FILE_NAME;
   std::string tlmConfigPath = path+"\\"+TLM_CONFIG_FILE_NAME;
 
@@ -601,8 +652,7 @@ int main(int argc, char* argv[])
   tlmConfig_t tlmConfig = readTlmConfigFile(tlmConfigPath);
 
   // Instantiate each TLMPlugin
-  for(size_t i=0; i<fmiConfig.nInterfaces; ++i)
-  {
+  for(size_t i=0; i<fmiConfig.nInterfaces; ++i) {
     fmiConfig.plugins.push_back(TLMPlugin::CreateInstance());
   }
 
@@ -618,16 +668,14 @@ int main(int argc, char* argv[])
     }
   }
 
-  // Register each TLMPlugin
-  for(size_t i=0; i<fmiConfig.plugins.size(); ++i)
-  {
+  // Register TLM interfaces
+  for(size_t i=0; i<fmiConfig.plugins.size(); ++i) {
     fmiConfig.interfaceIds[i] = fmiConfig.plugins[i]->RegisteTLMInterface(fmiConfig.interfaceNames[i]);
   }
 
   jm_callbacks callbacks;
   fmi_import_context_t* context;
   fmi_version_enu_t version;
-  jm_status_enu_t status;
   fmi2_import_t* fmu;
 
   callbacks.malloc = malloc;
@@ -635,30 +683,28 @@ int main(int argc, char* argv[])
   callbacks.realloc = realloc;
   callbacks.free = free;
   callbacks.logger = fmiLogger;
-  callbacks.log_level = jm_log_level_warning;
+  callbacks.log_level = jm_log_level_warning;   //Log level
   callbacks.context = 0;
 
   context = fmi_import_allocate_context(&callbacks);
 
+  // Check version of FMU
   version = fmi_import_get_fmi_version(context, FMUPath.c_str(), tmpPath.c_str());
-
   if(version != fmi_version_2_0_enu) {
     TLMErrorLog::FatalError("The code only supports version 2.0");
   }
 
+  // Parse modelDescription.xml
   fmu = fmi2_import_parse_xml(context, tmpPath.c_str(), 0);
 
   if(!fmu) {
     TLMErrorLog::FatalError("Error parsing XML, exiting");
   }
 
-  //  if(fmi2_import_get_fmu_kind(fmu) == fmi2_fmu_kind_me) {
-  //    TLMErrorLog::FatalError("Only CS 2.0 is supported by this code");
-  //  }
-
+  // Check FMU kind (CS or ME)
   fmi2_fmu_kind_enu_t kind = fmi2_import_get_fmu_kind(fmu);
 
-  //Start simulation
+  // Start simulation
   switch(kind) {
     case fmi2_fmu_kind_cs:
       simulate_fmi2_cs(fmu, tlmConfig, fmiConfig);
@@ -666,18 +712,17 @@ int main(int argc, char* argv[])
     case fmi2_fmu_kind_me:
       simulate_fmi2_me(fmu, tlmConfig, fmiConfig);
       break;
-    case fmi2_fmu_kind_me_and_cs:         //Not sure how to handle FMUs that can be both kinds
+    case fmi2_fmu_kind_me_and_cs:         //Not sure how to handle FMUs that can be both kinds, guess ME better than CS
       simulate_fmi2_me(fmu, tlmConfig, fmiConfig);
       break;
   }
-
 
   //Clean up
   fmi2_import_destroy_dllfmu(fmu);
   fmi2_import_free(fmu);
   fmi_import_free_context(context);
 
-  TLMErrorLog::Log("FMIWrapper1 completed successfully!");
+  TLMErrorLog::Log("FMIWrapper completed successfully!");
 
   return 0;
 }
