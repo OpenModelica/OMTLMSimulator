@@ -3,20 +3,20 @@
 <Model Name="doublePendulum">
   <!-- List of connected sub-models -->
   <SubModels>
-    <SubModel StartCommand="StartTLMFmiWrapper" ExactStep="0" ModelFile="doublePendulum1TLM.fmu" Name="doublePendulum1">
+    <SubModel ModelFile="doublePendulum1TLM.fmu" ExactStep="0" StartCommand="StartTLMFmiWrapper" Name="doublePendulum1" Angle321="0,0,-1.7964e-09" Position="0,-1.8272e-08,0">
       <!-- TLM interface points for SubModel A -->
-      <InterfacePoint Name="tlm"/>
+      <InterfacePoint Name="tlm" Angle321="0,0,1.7964e-009" Position="0.25,-4.49101e-010,0"/>
     </SubModel>
-    <SubModel StartCommand="StartTLMFmiWrapper" ExactStep="0" ModelFile="doublePendulum2.fmu" Name="doublePendulum2">
-      <Annotation Rotation="0" Origin="{-44,20}" Visible="true" Extent="{-10,-10,10,10}"/>
+    <SubModel ModelFile="doublePendulum2.fmu" ExactStep="0" StartCommand="StartTLMFmiWrapper" Name="doublePendulum2" Angle321="0,0,1.15716e-70" Position="0,-1e-15,0">
+      <Annotation Extent="{-10,-10,10,10}" Rotation="0" Origin="{-44,20}" Visible="true"/>
       <!-- TLM interface points for SubModel C -->
-      <InterfacePoint Name="tlm"/>
+      <InterfacePoint Name="tlm" Angle321="0,0,-1.15716e-070" Position="0.25,-1.91702e-008,0"/>
     </SubModel>
   </SubModels>
   <!-- List of TLM connections -->
   <Connections>
     <!-- Some more physical values: Delay="1e-5" Zf="8e4" Zfr="400" alpha="0.2" -->
-    <Connection To="doublePendulum2.tlm" Zf="2000" alpha="0.9" From="doublePendulum1.tlm" Zfr="1" Delay="2e-4">
+    <Connection Delay="2e-4" alpha="0.9" Zfr="1" Zf="2000" To="doublePendulum2.tlm" From="doublePendulum1.tlm">
       <Annotation Points="{{11,8},{9,8},{9,28},{-33,28}}"/>
     </Connection>
   </Connections>

@@ -33,7 +33,9 @@ MISCHOME=../extralibs/misc
 INCLUDES=  -I. \
 	-I"..\FMIWrapper" \
     -I"..\FMIWrapper\FMILibrary-2.0.1\install\include" \
-    -I"..\common" -I"..\extralibs\misc\include"
+    -I"..\common" -I"..\extralibs\misc\include" \
+    -I"cvode-2.9.0/include"
+    
 
 LIBS = 	-lws2_32 \
         -LFMILibrary-2.0.1/install/lib \
@@ -50,7 +52,16 @@ $(ABI)/%.o: $(MISCHOME)/src/%.cc
 
 $(ABI)/%.o: $(MISCHOME)/src/%.cc
 	$(CC) $(INCLUDES) -c $< -o $@
+    
+$(ABI)/%.o: cvode-2.9.0/src/nvec_ser/%.c
+	$(CC) $(INCLUDES) -c $< -o $@
 
+$(ABI)/%.o: cvode-2.9.0/src/sundials/%.c
+	$(CC) $(INCLUDES) -c $< -o $@
+    
+$(ABI)/%.o: cvode-2.9.0/src/cvode/%.c
+	$(CC) $(INCLUDES) -c $< -o $@    
+    
 OBJS=  main.o 
 
 EXT_OBJS = PluginImplementer.o \
@@ -62,7 +73,16 @@ EXT_OBJS = PluginImplementer.o \
 	coordTrans.o \
 	double3Vec.o \
 	double33Mat.o \
-	strConv.o
+	strConv.o \
+    nvector_serial.o \
+    sundials_math.o \
+    sundials_nvector.o \
+    sundials_direct.o \
+    sundials_dense.o \
+    cvode.o \
+    cvode_dense.o \
+    cvode_direct.o \
+    cvode_io.o
 
 ABIOBJS=$(OBJS:%.o= $(ABI)/%.o) $(EXT_OBJS:%.o= $(ABI)/%.o)
 
