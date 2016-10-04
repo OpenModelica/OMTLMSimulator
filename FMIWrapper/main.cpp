@@ -69,6 +69,8 @@ static const char* FMI_CONFIG_FILE_NAME = "fmi.config";
 static size_t n_states = 0;
 static fmi2_status_t fmistatus = fmi2_status_t();
 static fmi2_real_t* states = 0;
+static fmi2_real_t* states_nominal = 0;
+static fmi2_real_t* states_abstol = 0;
 static fmi2_real_t* states_der = 0;
 static fmi2_import_t* fmu = 0;
 
@@ -389,6 +391,8 @@ int simulate_fmi2_me()
   n_event_indicators = fmi2_import_get_number_of_event_indicators(fmu);
 
   states = (fmi2_real_t*)calloc(n_states, sizeof(double));
+  states_nominal = (fmi2_real_t*)calloc(n_states, sizeof(double));
+  states_abstol = (fmi2_real_t*)calloc(n_states, sizeof(double));
   states_der = (fmi2_real_t*)calloc(n_states, sizeof(double));
   event_indicators = (fmi2_real_t*)calloc(n_event_indicators, sizeof(double));
   event_indicators_prev = (fmi2_real_t*)calloc(n_event_indicators, sizeof(double));
@@ -403,6 +407,8 @@ int simulate_fmi2_me()
   ss << "fmi2_import_set_debug_logging: " << fmi2_status_to_string(fmistatus);
   TLMErrorLog::Log(ss.str());
   fmi2_import_set_debug_logging(fmu, fmi2_true, 0, 0);
+
+  relativeTolerance = fmi2_import_get_default_experiment_tolerance(fmu);
 
   fmistatus = fmi2_import_setup_experiment(fmu, toleranceControlled,
                                            relativeTolerance, tlmConfig.tstart, StopTimeDefined, tlmConfig.tend);
@@ -436,9 +442,13 @@ int simulate_fmi2_me()
   fmi2_import_enter_continuous_time_mode(fmu);
 
   fmistatus = fmi2_import_get_continuous_states(fmu, states, n_states);
+  fmistatus = fmi2_import_get_nominals_of_continuous_states(fmu,states_nominal, n_states);
   fmistatus = fmi2_import_get_event_indicators(fmu, event_indicators, n_event_indicators);
 
-  realtype reltol;//, t, tout;
+  realtype reltol = relativeTolerance;
+  for(size_t i=0; i<n_states; ++i) {
+    states_abstol[i] = 0.01*reltol*states_nominal[i];
+  }
   N_Vector y, abstol;
   void *cvode_mem;
   int flag;
@@ -458,14 +468,10 @@ int simulate_fmi2_me()
       Ith(y,i+1) = states[i];
     }
 
-    // TODO: tolerances should not be hard coded, how can they be obtained?
-    /* Set the scalar relative tolerance */
-    reltol = 1e-4;
     /* Set the vector absolute tolerance */
     for(size_t i=0; i<n_states; ++i) {
-      Ith(abstol,i+1) = 1e-5;
+      Ith(abstol,i+1) = states_abstol[i];
     }
-
 
     /* Call CVodeCreate to create the solver memory and specify the
    * Backward Differentiation Formula and the use of a Newton iteration */
