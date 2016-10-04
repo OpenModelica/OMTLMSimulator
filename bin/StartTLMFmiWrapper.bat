@@ -9,7 +9,7 @@ REM 5 server-name:port
 REM 6 FMU file
 
 rem *********************SETUP SIMULATION*********************************************
-set FMIWrapper_Cmd="FMIWrapper.exe"
+set FMIWrapper_Cmd="FMIWrapper.exe" %CD%/%1 %6 CVODE -d 
 
 set TLMCONFIGFILE=tlm.config
 
@@ -35,10 +35,10 @@ echo %3 >> %TLMCONFIGFILE%
 echo %4 >> %TLMCONFIGFILE%
 
 echo Starting FMIWrapper
-echo %FMIWrapper_Cmd% %CD% %6 -d
-echo DOING THIS: %FMIWrapper_Cmd% %CD% %6 -d > %1.simlog
-%FMIWrapper_Cmd% %CD% %6 -d
-echo DONE THIS: %FMIWrapper_Cmd% %CD% %6 -d > %1.simlog
+echo %FMIWrapper_Cmd%
+echo DOING THIS: %FMIWrapper_Cmd% > %1.simlog
+%FMIWrapper_Cmd%
+echo DONE THIS: %FMIWrapper_Cmd% > %1.simlog
 
 goto DONE
 
