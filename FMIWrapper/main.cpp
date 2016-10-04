@@ -10,6 +10,20 @@
 #include <vector>
 #include <fstream>
 
+#define CVODE
+#ifdef CVODE //CVODE includes and defines
+
+#define Ith(v,i)    NV_Ith_S(v,i-1)       /* Ith numbers components 1..NEQ */
+#define IJth(A,i,j) DENSE_ELEM(A,i-1,j-1) /* IJth numbers rows,cols 1..NEQ */
+
+#include "cvode/cvode.h"             /* prototypes for CVODE fcts., consts. */
+#include "nvector/nvector_serial.h"  /* serial N_Vector types, fcts., macros */
+#include "cvode/cvode_dense.h"       /* prototype for CVDense */
+#include "sundials/sundials_dense.h" /* definitions DlsMat DENSE_ELEM */
+#include "sundials/sundials_types.h" /* definition of type realtype */
+
+#endif
+
 // FMILibrary includes
 #include "FMI/fmi_import_context.h"
 #include "FMI1/fmi1_import.h"
@@ -21,10 +35,6 @@
 #include "TLMErrorLog.h"
 
 using namespace std;
-
-static const char* TEMP_DIR_NAME = "temp";
-static const char* TLM_CONFIG_FILE_NAME = "tlm.config";
-static const char* FMI_CONFIG_FILE_NAME = "fmi.config";
 
 // FMI config data
 struct fmiConfig_t {
@@ -48,6 +58,121 @@ struct tlmConfig_t {
   double tend;
   double hmax;
 };
+
+static const char* TEMP_DIR_NAME = "temp";
+static const char* TLM_CONFIG_FILE_NAME = "tlm.config";
+static const char* FMI_CONFIG_FILE_NAME = "fmi.config";
+
+size_t n_states = 0;
+fmi2_status_t fmistatus = fmi2_status_t();
+fmi2_real_t* states = 0;
+fmi2_real_t* states_der = 0;
+fmi2_import_t* fmu = 0;
+
+fmiConfig_t fmiConfig = fmiConfig_t();
+tlmConfig_t tlmConfig = tlmConfig_t();
+
+
+
+//Read force from TLMPlugin and write it to FMU
+void forceFromTlmToFmu(double tcur)
+{
+  //Write interpolated force to FMU
+  for(size_t j=0; j<fmiConfig.plugins.size(); ++j) {
+    double position[3],orientation[9],speed[3],ang_speed[3],force[6];
+
+    //Read position and speed from FMU
+    fmistatus = fmi2_import_get_real(fmu,fmiConfig.position_vr[j],3,position);
+    fmistatus = fmi2_import_get_real(fmu,fmiConfig.orientation_vr[j],9,orientation);
+    fmistatus = fmi2_import_get_real(fmu,fmiConfig.speed_vr[j],3,speed);
+    fmistatus = fmi2_import_get_real(fmu,fmiConfig.ang_speed_vr[j],3,ang_speed);
+
+    //Get interpolated force
+    fmiConfig.plugins.at(j)->GetForce(fmiConfig.interfaceIds[j], tcur, position,orientation,speed,ang_speed,force);
+
+    for(size_t k=0; k<6; ++k) {
+      force[k] = -force[k];
+    }
+
+    // Write force to FMU
+    fmistatus = fmi2_import_set_real(fmu,fmiConfig.force_vr[j],6,force);
+  }
+}
+
+
+#ifdef CVODE
+static int rhs(realtype t, N_Vector y, N_Vector ydot, void *user_data)
+{
+  // Update states in FMU
+  for(size_t i=0; i<n_states; ++i) {
+    states[i] = Ith(y,i+1);
+  }
+  fmistatus = fmi2_import_set_continuous_states(fmu, states, n_states);
+
+  // Write interpolated force to FMU
+  forceFromTlmToFmu(t);
+
+  // Read derivatives
+  fmistatus = fmi2_import_get_derivatives(fmu, states_der, n_states);
+
+  for(size_t i=0; i<n_states; ++i) {
+    Ith(ydot,i+1) = states_der[i];
+  }
+
+  return(0);
+}
+
+
+/*
+ * Jacobian routine. Compute J(t,y) = df/dy. *
+ */
+
+static int Jac(long int N, realtype t,
+               N_Vector y, N_Vector fy, DlsMat J, void *user_data,
+               N_Vector tmp1, N_Vector tmp2, N_Vector tmp3)
+{
+  realtype y1, y2, y3;
+
+  y1 = Ith(y,1); y2 = Ith(y,2); y3 = Ith(y,3);
+
+  IJth(J,1,1) = RCONST(-0.04);
+  IJth(J,1,2) = RCONST(1.0e4)*y3;
+  IJth(J,1,3) = RCONST(1.0e4)*y2;
+  IJth(J,2,1) = RCONST(0.04);
+  IJth(J,2,2) = RCONST(-1.0e4)*y3-RCONST(6.0e7)*y2;
+  IJth(J,2,3) = RCONST(-1.0e4)*y2;
+  IJth(J,3,2) = RCONST(6.0e7)*y2;
+
+  return(0);
+}
+
+static int check_flag(void *flagvalue, const char *funcname, int opt)
+{
+  int *errflag;
+
+  /* Check if SUNDIALS function returned NULL pointer - no memory allocated */
+  if (opt == 0 && flagvalue == NULL) {
+    fprintf(stderr, "\nSUNDIALS_ERROR: %s() failed - returned NULL pointer\n\n",
+            funcname);
+    return(1); }
+
+  /* Check if flag < 0 */
+  else if (opt == 1) {
+    errflag = (int *) flagvalue;
+    if (*errflag < 0) {
+      fprintf(stderr, "\nSUNDIALS_ERROR: %s() failed with flag = %d\n\n",
+              funcname, *errflag);
+      return(1); }}
+
+  /* Check if function returned NULL pointer - no memory allocated */
+  else if (opt == 2 && flagvalue == NULL) {
+    fprintf(stderr, "\nMEMORY_ERROR: %s() failed - returned NULL pointer\n\n",
+            funcname);
+    return(1); }
+
+  return(0);
+}
+#endif
 
 // FMILibrary logger
 void fmiLogger(jm_callbacks* c, jm_string module, jm_log_level_enu_t log_level, jm_string message)
@@ -73,7 +198,7 @@ void fmiLogger(jm_callbacks* c, jm_string module, jm_log_level_enu_t log_level, 
 
 
 // Simulate function
-int simulate_fmi2_cs(fmi2_import_t* fmu, tlmConfig_t tlmConfig, fmiConfig_t fmiConfig)
+int simulate_fmi2_cs()
 {
   fmi2_status_t fmistatus;
   jm_status_enu_t jmstatus;
@@ -197,34 +322,8 @@ void do_event_iteration(fmi2_import_t *fmu, fmi2_event_info_t *eventInfo)
 }
 
 
-//Read force from TLMPlugin and write it to FMU
-void forceFromTlmToFmu(fmi2_import_t *fmu, fmi2_status_t &fmistatus, fmiConfig_t &fmiConfig, double tcur)
-{
-  //Write interpolated force to FMU
-  for(size_t j=0; j<fmiConfig.plugins.size(); ++j) {
-    double position[3],orientation[9],speed[3],ang_speed[3],force[6];
-
-    //Read position and speed from FMU
-    fmistatus = fmi2_import_get_real(fmu,fmiConfig.position_vr[j],3,position);
-    fmistatus = fmi2_import_get_real(fmu,fmiConfig.orientation_vr[j],9,orientation);
-    fmistatus = fmi2_import_get_real(fmu,fmiConfig.speed_vr[j],3,speed);
-    fmistatus = fmi2_import_get_real(fmu,fmiConfig.ang_speed_vr[j],3,ang_speed);
-
-    //Get interpolated force
-    fmiConfig.plugins.at(j)->GetForce(fmiConfig.interfaceIds[j], tcur, position,orientation,speed,ang_speed,force);
-
-    for(size_t k=0; k<6; ++k) {
-      force[k] = -force[k];
-    }
-
-    // Write force to FMU
-    fmistatus = fmi2_import_set_real(fmu,fmiConfig.force_vr[j],6,force);
-  }
-}
-
-
 //Read motion from FMU and write it to TLMPlugin
-void motionFromFmuToTlm(fmi2_import_t *fmu, fmi2_status_t &fmistatus, fmiConfig_t &fmiConfig, double tcur)
+void motionFromFmuToTlm(double tcur)
 {
   for(size_t j=0; j<fmiConfig.plugins.size(); ++j) {
     double position[3],orientation[9],speed[3],ang_speed[3];
@@ -239,20 +338,21 @@ void motionFromFmuToTlm(fmi2_import_t *fmu, fmi2_status_t &fmistatus, fmiConfig_
 }
 
 
+
+
+
 // Simulate function for model exchange
-int simulate_fmi2_me(fmi2_import_t* fmu, tlmConfig_t tlmConfig, fmiConfig_t fmiConfig)
+int simulate_fmi2_me()
 {
-  fmi2_status_t fmistatus;
+  TLMErrorLog::Log("Starting simulation using FMI for Model Exchange.");
+
   jm_status_enu_t jmstatus;
   fmi2_real_t tstart = 0.0;
   fmi2_real_t tcur = tlmConfig.tstart;
   fmi2_real_t hcur;
   fmi2_real_t hdef = tlmConfig.hmax;
   fmi2_real_t tend = tlmConfig.tend;
-  size_t n_states;
   size_t n_event_indicators;
-  fmi2_real_t* states;
-  fmi2_real_t* states_der;
   fmi2_real_t* event_indicators;
   fmi2_real_t* event_indicators_prev;
   fmi2_boolean_t callEventUpdate;
@@ -337,6 +437,64 @@ int simulate_fmi2_me(fmi2_import_t* fmu, tlmConfig_t tlmConfig, fmiConfig_t fmiC
   fmistatus = fmi2_import_get_continuous_states(fmu, states, n_states);
   fmistatus = fmi2_import_get_event_indicators(fmu, event_indicators, n_event_indicators);
 
+#ifdef CVODE //Initialize CVODE
+  realtype reltol;//, t, tout;
+  N_Vector y, abstol;
+  void *cvode_mem;
+  int flag;
+
+  y = abstol = NULL;
+  cvode_mem = NULL;
+
+  /* Create serial vector of length NEQ for I.C. and abstol */
+  y = N_VNew_Serial(n_states);
+  if (check_flag((void *)y, "N_VNew_Serial", 0)) return(1);
+  abstol = N_VNew_Serial(n_states);
+  if (check_flag((void *)abstol, "N_VNew_Serial", 0)) return(1);
+
+  /* Initialize y */
+  for(size_t i=0; i<n_states; ++i) {
+    Ith(y,i+1) = states[i];
+  }
+
+  // TODO: tolerances should not be hard coded, how can they be obtained?
+  /* Set the scalar relative tolerance */
+  reltol = 1e-4;
+  /* Set the vector absolute tolerance */
+  for(size_t i=0; i<n_states; ++i) {
+    Ith(abstol,i+1) = 1e-5;
+  }
+
+
+  /* Call CVodeCreate to create the solver memory and specify the
+   * Backward Differentiation Formula and the use of a Newton iteration */
+  cvode_mem = CVodeCreate(CV_BDF, CV_NEWTON);
+  if (check_flag((void *)cvode_mem, "CVodeCreate", 0)) return(1);
+
+  /* Call CVodeInit to initialize the integrator memory and specify the
+   * user's right hand side function in y'=f(t,y), the inital time T0, and
+   * the initial dependent variable vector y. */
+  flag = CVodeInit(cvode_mem, rhs, tstart, y);
+  if (check_flag(&flag, "CVodeInit", 1)) return(1);
+
+  /* Call CVodeSVtolerances to specify the scalar relative tolerance
+   * and vector absolute tolerances */
+  flag = CVodeSVtolerances(cvode_mem, reltol, abstol);
+  if (check_flag(&flag, "CVodeSVtolerances", 1)) return(1);
+
+  /* Call CVDense to specify the CVDENSE dense linear solver */
+  flag = CVDense(cvode_mem, n_states);
+  if (check_flag(&flag, "CVDense", 1)) return(1);
+
+  flag = CVodeSetMaxStep(cvode_mem, tlmConfig.hmax);
+  if (check_flag(&flag, "CVodeSetMaxStep", 1)) return(1);
+
+  /* Set the Jacobian routine to Jac (user-supplied) */
+  //flag = CVDlsSetDenseJacFn(cvode_mem, Jac);        //TODO: Supply with jacobian somehow
+  //if (check_flag(&flag, "CVDlsSetDenseJacFn", 1)) return(1);
+
+#endif
+  double tc=tstart; //Cvode time
   while ((tcur < tend) && (!(eventInfo.terminateSimulation || terminateSimulation))) {
     size_t k;
     fmi2_real_t tlast;
@@ -371,11 +529,8 @@ int simulate_fmi2_me(fmi2_import_t* fmu, tlmConfig_t tlmConfig, fmiConfig_t fmiC
     }
 
 
-//#define RK4
-#ifdef RK4 //Runge-Kutta
-    tlast = tcur;
-    tcur += hdef/2.0;
-    //Ignore events with Runge-Kutta for now
+//#define CVODE
+#ifdef CVODE //CVODE
     /* Calculate next time step */
     tlast = tcur;
     tcur += hdef;
@@ -389,21 +544,27 @@ int simulate_fmi2_me(fmi2_import_t* fmu, tlmConfig_t tlmConfig, fmiConfig_t fmiC
     }
 
     //Write interpolated force to FMU
-    forceFromTlmToFmu(fmu, fmistatus, fmiConfig, tcur);
+    forceFromTlmToFmu(tcur);
 
-    // Integrate one step (Euler forward)
-    fmistatus = fmi2_import_get_derivatives(fmu, states_der, n_states);
-    for (k = 0; k < n_states; k++) {
-      states[k] = states[k] + hcur*states_der[k];
+    //Take one step
+    while(tc < tcur){
+      flag = CVode(cvode_mem, tcur, y, &tc, CV_ONE_STEP);  //TODO: Use one-step mode
+      if (check_flag(&flag, "CVode", 1)) {
+        TLMErrorLog::FatalError("CVODE solver failed!");
+        exit(1);
+      }
     }
 
     /* Set states */
+    for(size_t i=0; i<n_states; ++i) {
+      states[i] = Ith(y,i+1);
+    }
     fmistatus = fmi2_import_set_continuous_states(fmu, states, n_states);
     /* Step is complete */
     fmistatus = fmi2_import_completed_integrator_step(fmu, fmi2_true, &callEventUpdate,
                                                       &terminateSimulation);
 
-#else //Euler
+#else //Explicit Euler
     /* Calculate next time step */
     tlast = tcur;
     tcur += hdef;
@@ -435,7 +596,7 @@ int simulate_fmi2_me(fmi2_import_t* fmu, tlmConfig_t tlmConfig, fmiConfig_t fmiC
 #endif
 
     // Read motion from FMU
-    motionFromFmuToTlm(fmu, fmistatus, fmiConfig, tcur);
+    motionFromFmuToTlm(tcur);
   }
 
   fmistatus = fmi2_import_terminate(fmu);
@@ -471,9 +632,8 @@ void csvToIntArray(std::string csv, int length, fmi2_value_reference_t *array[])
 
 // Reads interface data (Value references for FMI mapped to TLM connections) from FMI configuration file
 // Todo: Add error handling
-fmiConfig_t readFmiConfigFile(std::string path)
+void readFmiConfigFile(std::string path)
 {
-  fmiConfig_t fmiConfig;
   fmiConfig.nInterfaces=0;
   std::ifstream infile(path.c_str());
   if(infile.is_open()) {
@@ -557,14 +717,11 @@ fmiConfig_t readFmiConfigFile(std::string path)
     TLMErrorLog::FatalError("Unable to read "+string(FMI_CONFIG_FILE_NAME));
     exit(1);
   }
-
-  return fmiConfig;
 }
 
 
-tlmConfig_t readTlmConfigFile(std::string path)
+void readTlmConfigFile(std::string path)
 {
-  tlmConfig_t tlmConfig;
   ifstream tlmConfigFile(path.c_str());
 
   tlmConfigFile >> tlmConfig.model;
@@ -591,8 +748,6 @@ tlmConfig_t readTlmConfigFile(std::string path)
   std::stringstream ss3;
   ss3 << "hmax: " << tlmConfig.hmax;
   TLMErrorLog::Log(ss3.str());
-
-  return tlmConfig;
 }
 
 
@@ -646,10 +801,10 @@ int main(int argc, char* argv[])
   createAndClearTempDirectory(tmpPath);
 
   // Read TLM configuration
-  fmiConfig_t fmiConfig = readFmiConfigFile(fmiConfigPath);
+  readFmiConfigFile(fmiConfigPath);
 
   // Read FMI configuration
-  tlmConfig_t tlmConfig = readTlmConfigFile(tlmConfigPath);
+  readTlmConfigFile(tlmConfigPath);
 
   // Instantiate each TLMPlugin
   for(size_t i=0; i<fmiConfig.nInterfaces; ++i) {
@@ -676,7 +831,6 @@ int main(int argc, char* argv[])
   jm_callbacks callbacks;
   fmi_import_context_t* context;
   fmi_version_enu_t version;
-  fmi2_import_t* fmu;
 
   callbacks.malloc = malloc;
   callbacks.calloc = calloc;
@@ -707,13 +861,16 @@ int main(int argc, char* argv[])
   // Start simulation
   switch(kind) {
     case fmi2_fmu_kind_cs:
-      simulate_fmi2_cs(fmu, tlmConfig, fmiConfig);
+      simulate_fmi2_cs();
       break;
     case fmi2_fmu_kind_me:
-      simulate_fmi2_me(fmu, tlmConfig, fmiConfig);
+      simulate_fmi2_me();
       break;
     case fmi2_fmu_kind_me_and_cs:         //Not sure how to handle FMUs that can be both kinds, guess ME better than CS
-      simulate_fmi2_me(fmu, tlmConfig, fmiConfig);
+      simulate_fmi2_me();
+      break;
+    case fmi2_fmu_kind_unknown:
+      TLMErrorLog::FatalError("Unknown FMU kind.");
       break;
   }
 

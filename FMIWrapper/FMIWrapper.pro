@@ -18,6 +18,11 @@ LIBS += -llibfmilib_shared
 #FMILibrary include path
 INCLUDEPATH += FMILibrary-2.0.1/install/include
 
+#CVODE include path
+INCLUDEPATH += cvode-2.9.0/include
+
+#DEFINES += SUNDIALS_EXPORT=""
+
 #TLMPLugin include paths
 INCLUDEPATH += ../common
 INCLUDEPATH += ../extralibs/misc/include
@@ -32,7 +37,16 @@ SOURCES += main.cpp \
     ../extralibs/misc/src/strConv.cc \
     ../extralibs/misc/src/coordTrans.cc \
     ../extralibs/misc/src/double3Vec.cc \
-    ../extralibs/misc/src/double33Mat.cc
+    ../extralibs/misc/src/double33Mat.cc \
+    cvode-2.9.0/src/nvec_ser/nvector_serial.c \
+    cvode-2.9.0/src/sundials/sundials_math.c \
+    cvode-2.9.0/src/cvode/cvode.c \
+    cvode-2.9.0/src/sundials/sundials_nvector.c \
+    cvode-2.9.0/src/cvode/cvode_dense.c \
+    cvode-2.9.0/src/cvode/cvode_direct.c \
+    cvode-2.9.0/src/sundials/sundials_direct.c \
+    cvode-2.9.0/src/sundials/sundials_dense.c \
+    cvode-2.9.0/src/cvode/cvode_io.c
 
 HEADERS += \
     FMILibrary-2.0.1/install/include/JM/jm_portability.h \
