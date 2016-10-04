@@ -10,9 +10,6 @@
 #include <vector>
 #include <fstream>
 
-#define CVODE
-#ifdef CVODE //CVODE includes and defines
-
 #define Ith(v,i)    NV_Ith_S(v,i-1)       /* Ith numbers components 1..NEQ */
 #define IJth(A,i,j) DENSE_ELEM(A,i-1,j-1) /* IJth numbers rows,cols 1..NEQ */
 
@@ -21,8 +18,6 @@
 #include "cvode/cvode_dense.h"       /* prototype for CVDense */
 #include "sundials/sundials_dense.h" /* definitions DlsMat DENSE_ELEM */
 #include "sundials/sundials_types.h" /* definition of type realtype */
-
-#endif
 
 // FMILibrary includes
 #include "FMI/fmi_import_context.h"
@@ -59,20 +54,27 @@ struct tlmConfig_t {
   double hmax;
 };
 
+enum solver_t { ExplicitEuler, Cvode };
+
+struct simConfig_t {
+  solver_t solver;
+  double reltol;
+  std::vector<double> abstol;
+};
+
 static const char* TEMP_DIR_NAME = "temp";
 static const char* TLM_CONFIG_FILE_NAME = "tlm.config";
 static const char* FMI_CONFIG_FILE_NAME = "fmi.config";
 
-size_t n_states = 0;
-fmi2_status_t fmistatus = fmi2_status_t();
-fmi2_real_t* states = 0;
-fmi2_real_t* states_der = 0;
-fmi2_import_t* fmu = 0;
+static size_t n_states = 0;
+static fmi2_status_t fmistatus = fmi2_status_t();
+static fmi2_real_t* states = 0;
+static fmi2_real_t* states_der = 0;
+static fmi2_import_t* fmu = 0;
 
-fmiConfig_t fmiConfig = fmiConfig_t();
-tlmConfig_t tlmConfig = tlmConfig_t();
-
-
+static fmiConfig_t fmiConfig = fmiConfig_t();
+static tlmConfig_t tlmConfig = tlmConfig_t();
+static simConfig_t simConfig = simConfig_t();
 
 //Read force from TLMPlugin and write it to FMU
 void forceFromTlmToFmu(double tcur)
@@ -100,7 +102,6 @@ void forceFromTlmToFmu(double tcur)
 }
 
 
-#ifdef CVODE
 static int rhs(realtype t, N_Vector y, N_Vector ydot, void *user_data)
 {
   // Update states in FMU
@@ -172,7 +173,7 @@ static int check_flag(void *flagvalue, const char *funcname, int opt)
 
   return(0);
 }
-#endif
+
 
 // FMILibrary logger
 void fmiLogger(jm_callbacks* c, jm_string module, jm_log_level_enu_t log_level, jm_string message)
@@ -314,11 +315,11 @@ int simulate_fmi2_cs()
 // Event iteration auxiliary function
 void do_event_iteration(fmi2_import_t *fmu, fmi2_event_info_t *eventInfo)
 {
-    eventInfo->newDiscreteStatesNeeded = fmi2_true;
-    eventInfo->terminateSimulation     = fmi2_false;
-    while (eventInfo->newDiscreteStatesNeeded && !eventInfo->terminateSimulation) {
-        fmi2_import_new_discrete_states(fmu, eventInfo);
-    }
+  eventInfo->newDiscreteStatesNeeded = fmi2_true;
+  eventInfo->terminateSimulation     = fmi2_false;
+  while (eventInfo->newDiscreteStatesNeeded && !eventInfo->terminateSimulation) {
+    fmi2_import_new_discrete_states(fmu, eventInfo);
+  }
 }
 
 
@@ -437,63 +438,63 @@ int simulate_fmi2_me()
   fmistatus = fmi2_import_get_continuous_states(fmu, states, n_states);
   fmistatus = fmi2_import_get_event_indicators(fmu, event_indicators, n_event_indicators);
 
-#ifdef CVODE //Initialize CVODE
   realtype reltol;//, t, tout;
   N_Vector y, abstol;
   void *cvode_mem;
   int flag;
+  if(simConfig.solver == Cvode) {
 
-  y = abstol = NULL;
-  cvode_mem = NULL;
+    y = abstol = NULL;
+    cvode_mem = NULL;
 
-  /* Create serial vector of length NEQ for I.C. and abstol */
-  y = N_VNew_Serial(n_states);
-  if (check_flag((void *)y, "N_VNew_Serial", 0)) return(1);
-  abstol = N_VNew_Serial(n_states);
-  if (check_flag((void *)abstol, "N_VNew_Serial", 0)) return(1);
+    /* Create serial vector of length NEQ for I.C. and abstol */
+    y = N_VNew_Serial(n_states);
+    if (check_flag((void *)y, "N_VNew_Serial", 0)) return(1);
+    abstol = N_VNew_Serial(n_states);
+    if (check_flag((void *)abstol, "N_VNew_Serial", 0)) return(1);
 
-  /* Initialize y */
-  for(size_t i=0; i<n_states; ++i) {
-    Ith(y,i+1) = states[i];
-  }
+    /* Initialize y */
+    for(size_t i=0; i<n_states; ++i) {
+      Ith(y,i+1) = states[i];
+    }
 
-  // TODO: tolerances should not be hard coded, how can they be obtained?
-  /* Set the scalar relative tolerance */
-  reltol = 1e-4;
-  /* Set the vector absolute tolerance */
-  for(size_t i=0; i<n_states; ++i) {
-    Ith(abstol,i+1) = 1e-5;
-  }
+    // TODO: tolerances should not be hard coded, how can they be obtained?
+    /* Set the scalar relative tolerance */
+    reltol = 1e-4;
+    /* Set the vector absolute tolerance */
+    for(size_t i=0; i<n_states; ++i) {
+      Ith(abstol,i+1) = 1e-5;
+    }
 
 
-  /* Call CVodeCreate to create the solver memory and specify the
+    /* Call CVodeCreate to create the solver memory and specify the
    * Backward Differentiation Formula and the use of a Newton iteration */
-  cvode_mem = CVodeCreate(CV_BDF, CV_NEWTON);
-  if (check_flag((void *)cvode_mem, "CVodeCreate", 0)) return(1);
+    cvode_mem = CVodeCreate(CV_BDF, CV_NEWTON);
+    if (check_flag((void *)cvode_mem, "CVodeCreate", 0)) return(1);
 
-  /* Call CVodeInit to initialize the integrator memory and specify the
+    /* Call CVodeInit to initialize the integrator memory and specify the
    * user's right hand side function in y'=f(t,y), the inital time T0, and
    * the initial dependent variable vector y. */
-  flag = CVodeInit(cvode_mem, rhs, tstart, y);
-  if (check_flag(&flag, "CVodeInit", 1)) return(1);
+    flag = CVodeInit(cvode_mem, rhs, tstart, y);
+    if (check_flag(&flag, "CVodeInit", 1)) return(1);
 
-  /* Call CVodeSVtolerances to specify the scalar relative tolerance
+    /* Call CVodeSVtolerances to specify the scalar relative tolerance
    * and vector absolute tolerances */
-  flag = CVodeSVtolerances(cvode_mem, reltol, abstol);
-  if (check_flag(&flag, "CVodeSVtolerances", 1)) return(1);
+    flag = CVodeSVtolerances(cvode_mem, reltol, abstol);
+    if (check_flag(&flag, "CVodeSVtolerances", 1)) return(1);
 
-  /* Call CVDense to specify the CVDENSE dense linear solver */
-  flag = CVDense(cvode_mem, n_states);
-  if (check_flag(&flag, "CVDense", 1)) return(1);
+    /* Call CVDense to specify the CVDENSE dense linear solver */
+    flag = CVDense(cvode_mem, n_states);
+    if (check_flag(&flag, "CVDense", 1)) return(1);
 
-  flag = CVodeSetMaxStep(cvode_mem, tlmConfig.hmax);
-  if (check_flag(&flag, "CVodeSetMaxStep", 1)) return(1);
+    flag = CVodeSetMaxStep(cvode_mem, tlmConfig.hmax);
+    if (check_flag(&flag, "CVodeSetMaxStep", 1)) return(1);
 
-  /* Set the Jacobian routine to Jac (user-supplied) */
-  //flag = CVDlsSetDenseJacFn(cvode_mem, Jac);        //TODO: Supply with jacobian somehow
-  //if (check_flag(&flag, "CVDlsSetDenseJacFn", 1)) return(1);
+    /* Set the Jacobian routine to Jac (user-supplied) */
+    //flag = CVDlsSetDenseJacFn(cvode_mem, Jac);        //TODO: Supply with jacobian somehow
+    //if (check_flag(&flag, "CVDlsSetDenseJacFn", 1)) return(1);
+  }
 
-#endif
   double tc=tstart; //Cvode time
   while ((tcur < tend) && (!(eventInfo.terminateSimulation || terminateSimulation))) {
     size_t k;
@@ -529,71 +530,70 @@ int simulate_fmi2_me()
     }
 
 
-//#define CVODE
-#ifdef CVODE //CVODE
-    /* Calculate next time step */
-    tlast = tcur;
-    tcur += hdef;
-    if (eventInfo.nextEventTimeDefined && (tcur >= eventInfo.nextEventTime)) {
-      tcur = eventInfo.nextEventTime;
-    }
-    hcur = tcur - tlast;
-    if(tcur > tend - hcur/1e16) {
-      tcur = tend;
-      hcur = tcur - tlast;
-    }
-
-    //Write interpolated force to FMU
-    forceFromTlmToFmu(tcur);
-
-    //Take one step
-    while(tc < tcur){
-      flag = CVode(cvode_mem, tcur, y, &tc, CV_ONE_STEP);  //TODO: Use one-step mode
-      if (check_flag(&flag, "CVode", 1)) {
-        TLMErrorLog::FatalError("CVODE solver failed!");
-        exit(1);
+    if(simConfig.solver == Cvode) {
+      /* Calculate next time step */
+      tlast = tcur;
+      tcur += hdef;
+      if (eventInfo.nextEventTimeDefined && (tcur >= eventInfo.nextEventTime)) {
+        tcur = eventInfo.nextEventTime;
       }
-    }
-
-    /* Set states */
-    for(size_t i=0; i<n_states; ++i) {
-      states[i] = Ith(y,i+1);
-    }
-    fmistatus = fmi2_import_set_continuous_states(fmu, states, n_states);
-    /* Step is complete */
-    fmistatus = fmi2_import_completed_integrator_step(fmu, fmi2_true, &callEventUpdate,
-                                                      &terminateSimulation);
-
-#else //Explicit Euler
-    /* Calculate next time step */
-    tlast = tcur;
-    tcur += hdef;
-    if (eventInfo.nextEventTimeDefined && (tcur >= eventInfo.nextEventTime)) {
-      tcur = eventInfo.nextEventTime;
-    }
-    hcur = tcur - tlast;
-    if(tcur > tend - hcur/1e16) {
-      tcur = tend;
       hcur = tcur - tlast;
+      if(tcur > tend - hcur/1e16) {
+        tcur = tend;
+        hcur = tcur - tlast;
+      }
+
+      //Write interpolated force to FMU
+      forceFromTlmToFmu(tcur);
+
+      //Take one step
+      while(tc < tcur){
+        flag = CVode(cvode_mem, tcur, y, &tc, CV_ONE_STEP);  //TODO: Use one-step mode
+        if (check_flag(&flag, "CVode", 1)) {
+          TLMErrorLog::FatalError("CVODE solver failed!");
+          exit(1);
+        }
+      }
+
+      /* Set states */
+      for(size_t i=0; i<n_states; ++i) {
+        states[i] = Ith(y,i+1);
+      }
+      fmistatus = fmi2_import_set_continuous_states(fmu, states, n_states);
+      /* Step is complete */
+      fmistatus = fmi2_import_completed_integrator_step(fmu, fmi2_true, &callEventUpdate,
+                                                        &terminateSimulation);
+
     }
+    else if(simConfig.solver == ExplicitEuler) {
+      /* Calculate next time step */
+      tlast = tcur;
+      tcur += hdef;
+      if (eventInfo.nextEventTimeDefined && (tcur >= eventInfo.nextEventTime)) {
+        tcur = eventInfo.nextEventTime;
+      }
+      hcur = tcur - tlast;
+      if(tcur > tend - hcur/1e16) {
+        tcur = tend;
+        hcur = tcur - tlast;
+      }
 
-    //Write interpolated force to FMU
-    forceFromTlmToFmu(fmu, fmistatus, fmiConfig, tcur);
+      //Write interpolated force to FMU
+      forceFromTlmToFmu(tcur);
 
 
-    // Integrate one step (Euler forward)
-    fmistatus = fmi2_import_get_derivatives(fmu, states_der, n_states);
-    for (k = 0; k < n_states; k++) {
-      states[k] = states[k] + hcur*states_der[k];
+      // Integrate one step (Euler forward)
+      fmistatus = fmi2_import_get_derivatives(fmu, states_der, n_states);
+      for (k = 0; k < n_states; k++) {
+        states[k] = states[k] + hcur*states_der[k];
+      }
+
+      /* Set states */
+      fmistatus = fmi2_import_set_continuous_states(fmu, states, n_states);
+      /* Step is complete */
+      fmistatus = fmi2_import_completed_integrator_step(fmu, fmi2_true, &callEventUpdate,
+                                                        &terminateSimulation);
     }
-
-    /* Set states */
-    fmistatus = fmi2_import_set_continuous_states(fmu, states, n_states);
-    /* Step is complete */
-    fmistatus = fmi2_import_completed_integrator_step(fmu, fmi2_true, &callEventUpdate,
-                                                      &terminateSimulation);
-
-#endif
 
     // Read motion from FMU
     motionFromFmuToTlm(tcur);
@@ -632,10 +632,10 @@ void csvToIntArray(std::string csv, int length, fmi2_value_reference_t *array[])
 
 // Reads interface data (Value references for FMI mapped to TLM connections) from FMI configuration file
 // Todo: Add error handling
-void readFmiConfigFile(std::string path)
+void readFmiConfigFile()
 {
   fmiConfig.nInterfaces=0;
-  std::ifstream infile(path.c_str());
+  std::ifstream infile(FMI_CONFIG_FILE_NAME);
   if(infile.is_open()) {
     for( std::string line; getline( infile, line ); ) {
       std::stringstream ss(line);
@@ -720,9 +720,9 @@ void readFmiConfigFile(std::string path)
 }
 
 
-void readTlmConfigFile(std::string path)
+void readTlmConfigFile()
 {
-  ifstream tlmConfigFile(path.c_str());
+  ifstream tlmConfigFile(TLM_CONFIG_FILE_NAME);
 
   tlmConfigFile >> tlmConfig.model;
   tlmConfigFile >> tlmConfig.server;
@@ -774,7 +774,7 @@ void createAndClearTempDirectory(std::string path)
 int main(int argc, char* argv[])
 {
   if(argc < 2) {
-    TLMErrorLog::FatalError("Too few arguments!");
+    TLMErrorLog::FatalError("Too few arguments!");  //This will never print; log is not active yet
     return -1;
   }
 
@@ -784,12 +784,29 @@ int main(int argc, char* argv[])
   std::string fmiConfigPath = path+"\\"+FMI_CONFIG_FILE_NAME;
   std::string tlmConfigPath = path+"\\"+TLM_CONFIG_FILE_NAME;
 
-  if(argc > 3 && !strcmp(argv[3],"-d")) {
+  simConfig.solver = ExplicitEuler;
+  if(argc > 3) {
+    if(!strcmp(argv[3],"CVODE")) {
+      simConfig.solver = Cvode;
+      cout << "Using CVODE solver!\n";
+    }
+    else
+    {
+      cout << "Using Explicit Euler solver!\n";
+    }
+  }
+
+  if(argc > 4 && !strcmp(argv[4],"-d")) {
     TLMErrorLog::SetDebugOut(true);
     cout << "Activating debug output" << endl;
   }
   TLMErrorLog::SetNormalErrorLogOn(true);
   TLMErrorLog::SetWarningOut(true);
+
+  for(int i=0; i<argc; ++i) {
+    TLMErrorLog::Log("Hello!");
+    TLMErrorLog::Log(argv[i]);
+  }
 
   TLMErrorLog::Log("---Arguments---");
   TLMErrorLog::Log("FMU file: "+FMUPath+"");
@@ -801,10 +818,10 @@ int main(int argc, char* argv[])
   createAndClearTempDirectory(tmpPath);
 
   // Read TLM configuration
-  readFmiConfigFile(fmiConfigPath);
+  readFmiConfigFile();
 
   // Read FMI configuration
-  readTlmConfigFile(tlmConfigPath);
+  readTlmConfigFile();
 
   // Instantiate each TLMPlugin
   for(size_t i=0; i<fmiConfig.nInterfaces; ++i) {
