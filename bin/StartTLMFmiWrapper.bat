@@ -9,7 +9,7 @@ REM 5 server-name:port
 REM 6 FMU file
 
 rem *********************SETUP SIMULATION*********************************************
-set FMIWrapper_Cmd="FMIWrapper.exe" %CD%/%1 %6 CVODE -d 
+set FMIWrapper_Cmd="FMIWrapper.exe" %CD%/%1 %6 solver=CVODE -d 
 
 set TLMCONFIGFILE=tlm.config
 
