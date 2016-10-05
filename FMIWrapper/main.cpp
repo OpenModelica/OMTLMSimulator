@@ -54,7 +54,7 @@ struct tlmConfig_t {
   double hmax;
 };
 
-enum solver_t { ExplicitEuler, Cvode };
+enum solver_t { ExplicitEuler, CVODE, IDA };
 
 struct simConfig_t {
   solver_t solver;
@@ -779,8 +779,12 @@ void createAndClearTempDirectory(std::string path)
 
 int main(int argc, char* argv[])
 {
+  TLMErrorLog::SetNormalErrorLogOn(true);
+  TLMErrorLog::SetWarningOut(true);
+
   if(argc < 2) {
-    TLMErrorLog::FatalError("Too few arguments!");  //This will never print; log is not active yet
+    cout << "Too few arguments to FMIWrapper (should be at least 3)." << endl;
+    TLMErrorLog::FatalError("Too few arguments!");
     return -1;
   }
 
@@ -791,23 +795,21 @@ int main(int argc, char* argv[])
   std::string tlmConfigPath = path+"\\"+TLM_CONFIG_FILE_NAME;
 
   simConfig.solver = ExplicitEuler;
-  if(argc > 3) {
-    if(!strcmp(argv[3],"CVODE")) {
-      simConfig.solver = Cvode;
-      cout << "Using CVODE solver!\n";
-    }
-    else
-    {
-      cout << "Using Explicit Euler solver!\n";
-    }
-  }
 
-  if(argc > 4 && !strcmp(argv[4],"-d")) {
-    TLMErrorLog::SetDebugOut(true);
-    cout << "Activating debug output" << endl;
+  // Check additional arguments (solver and debug settings)
+  // Not so nice to test all cases, but it works for now
+  for(int i=3; i<argc; ++i) {
+    if(!strcmp(argv[i],"solver=Euler"))
+      simConfig.solver = ExplicitEuler;
+    else if(!strcmp(argv[i],"solver=CVODE"))
+      simConfig.solver = CVODE;
+    else if(!strcmp(argv[i],"solver=IDA"))
+      simConfig.solver = IDA;
+    else if(!strcmp(argv[i],"-d")) {
+      TLMErrorLog::SetDebugOut(true);
+      cout << "Activating debug output" << endl;
+    }
   }
-  TLMErrorLog::SetNormalErrorLogOn(true);
-  TLMErrorLog::SetWarningOut(true);
 
   for(int i=0; i<argc; ++i) {
     TLMErrorLog::Log("Hello!");
