@@ -21,6 +21,9 @@ INCLUDEPATH += FMILibrary-2.0.1/install/include
 #CVODE include path
 INCLUDEPATH += cvode-2.9.0/include
 
+#IDA include path
+INCLUDEPATH += ida-2.9.0/include
+
 #DEFINES += SUNDIALS_EXPORT=""
 
 #TLMPLugin include paths
@@ -46,7 +49,11 @@ SOURCES += main.cpp \
     cvode-2.9.0/src/cvode/cvode_direct.c \
     cvode-2.9.0/src/sundials/sundials_direct.c \
     cvode-2.9.0/src/sundials/sundials_dense.c \
-    cvode-2.9.0/src/cvode/cvode_io.c
+    cvode-2.9.0/src/cvode/cvode_io.c \
+    ida-2.9.0/src/ida/ida.c \
+    ida-2.9.0/src/ida/ida_dense.c \
+    ida-2.9.0/src/ida/ida_direct.c \
+    ida-2.9.0/src/ida/ida_io.c
 
 HEADERS += \
     FMILibrary-2.0.1/install/include/JM/jm_portability.h \
