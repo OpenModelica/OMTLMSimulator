@@ -19,6 +19,12 @@
 #include "sundials/sundials_dense.h" /* definitions DlsMat DENSE_ELEM */
 #include "sundials/sundials_types.h" /* definition of type realtype */
 
+#include "ida/ida.h"
+#include "ida/ida_dense.h"
+#include "nvector/nvector_serial.h"
+#include "sundials/sundials_math.h"
+#include "sundials/sundials_types.h"
+
 // FMILibrary includes
 #include "FMI/fmi_import_context.h"
 #include "FMI1/fmi1_import.h"
@@ -125,6 +131,28 @@ static int rhs(realtype t, N_Vector y, N_Vector ydot, void *user_data)
   return(0);
 }
 
+
+
+static int rhs_ida(realtype t, N_Vector yy, N_Vector yp, N_Vector rr, void *user_data)
+{
+  // Update states in FMU
+  for(size_t i=0; i<n_states; ++i) {
+    states[i] = Ith(yy,i+1);
+  }
+  fmistatus = fmi2_import_set_continuous_states(fmu, states, n_states);
+
+  // Write interpolated force to FMU
+  forceFromTlmToFmu(t);
+
+  // Read derivatives
+  fmistatus = fmi2_import_get_derivatives(fmu, states_der, n_states);
+
+  for(size_t i=0; i<n_states; ++i) {
+    Ith(rr,i+1) = Ith(yp,i+1)-states_der[i];
+  }
+
+  return(0);
+}
 
 /*
  * Jacobian routine. Compute J(t,y) = df/dy. *
@@ -348,6 +376,17 @@ void motionFromFmuToTlm(double tcur)
 int simulate_fmi2_me()
 {
   TLMErrorLog::Log("Starting simulation using FMI for Model Exchange.");
+  switch (simConfig.solver) {
+    case CVODE:
+      TLMErrorLog::Log("Using CVODE solver.");
+      break;
+    case IDA:
+      TLMErrorLog::Log("Using IDA solver.");
+      break;
+    case ExplicitEuler:
+      TLMErrorLog::Log("Using explicit Euler solver.");
+      break;
+  }
 
   jm_status_enu_t jmstatus;
   fmi2_real_t tstart = 0.0;
@@ -442,6 +481,7 @@ int simulate_fmi2_me()
   fmi2_import_enter_continuous_time_mode(fmu);
 
   fmistatus = fmi2_import_get_continuous_states(fmu, states, n_states);
+  fmistatus = fmi2_import_get_derivatives(fmu,states_der, n_states);
   fmistatus = fmi2_import_get_nominals_of_continuous_states(fmu,states_nominal, n_states);
   fmistatus = fmi2_import_get_event_indicators(fmu, event_indicators, n_event_indicators);
 
@@ -449,13 +489,12 @@ int simulate_fmi2_me()
   for(size_t i=0; i<n_states; ++i) {
     states_abstol[i] = 0.01*reltol*states_nominal[i];
   }
-  N_Vector y, abstol;
-  void *cvode_mem;
+  N_Vector y, yp, abstol;
+  void *mem;
   int flag;
-  if(simConfig.solver == Cvode) {
-
+  if(simConfig.solver == CVODE) {
     y = abstol = NULL;
-    cvode_mem = NULL;
+    mem = NULL;
 
     /* Create serial vector of length NEQ for I.C. and abstol */
     y = N_VNew_Serial(n_states);
@@ -475,26 +514,78 @@ int simulate_fmi2_me()
 
     /* Call CVodeCreate to create the solver memory and specify the
    * Backward Differentiation Formula and the use of a Newton iteration */
-    cvode_mem = CVodeCreate(CV_BDF, CV_NEWTON);
-    if (check_flag((void *)cvode_mem, "CVodeCreate", 0)) return(1);
+    mem = CVodeCreate(CV_BDF, CV_NEWTON);
+    if (check_flag((void *)mem, "CVodeCreate", 0)) return(1);
 
     /* Call CVodeInit to initialize the integrator memory and specify the
    * user's right hand side function in y'=f(t,y), the inital time T0, and
    * the initial dependent variable vector y. */
-    flag = CVodeInit(cvode_mem, rhs, tstart, y);
+    flag = CVodeInit(mem, rhs, tstart, y);
     if (check_flag(&flag, "CVodeInit", 1)) return(1);
 
     /* Call CVodeSVtolerances to specify the scalar relative tolerance
    * and vector absolute tolerances */
-    flag = CVodeSVtolerances(cvode_mem, reltol, abstol);
+    flag = CVodeSVtolerances(mem, reltol, abstol);
     if (check_flag(&flag, "CVodeSVtolerances", 1)) return(1);
 
     /* Call CVDense to specify the CVDENSE dense linear solver */
-    flag = CVDense(cvode_mem, n_states);
+    flag = CVDense(mem, n_states);
     if (check_flag(&flag, "CVDense", 1)) return(1);
 
-    flag = CVodeSetMaxStep(cvode_mem, tlmConfig.hmax);
+    flag = CVodeSetMaxStep(mem, tlmConfig.hmax);
     if (check_flag(&flag, "CVodeSetMaxStep", 1)) return(1);
+
+    /* Set the Jacobian routine to Jac (user-supplied) */
+    //flag = CVDlsSetDenseJacFn(cvode_mem, Jac);        //TODO: Supply with jacobian somehow
+    //if (check_flag(&flag, "CVDlsSetDenseJacFn", 1)) return(1);
+  }
+  else if(simConfig.solver == IDA) {
+    y = yp = abstol = NULL;
+    mem = NULL;
+
+    /* Create serial vector of length NEQ for I.C. and abstol */
+    y = N_VNew_Serial(n_states);
+    if (check_flag((void *)y, "N_VNew_Serial", 0)) return(1);
+    yp = N_VNew_Serial(n_states);
+    if (check_flag((void *)yp, "N_VNew_Serial", 0)) return(1);
+    abstol = N_VNew_Serial(n_states);
+    if (check_flag((void *)abstol, "N_VNew_Serial", 0)) return(1);
+
+    /* Initialize y */
+    for(size_t i=0; i<n_states; ++i) {
+      Ith(y,i+1) = states[i];
+    }
+
+    /* Initialize yp */
+    for(size_t i=0; i<n_states; ++i) {
+      Ith(yp,i+1) = states_der[i];
+    }
+
+    /* Set the vector absolute tolerance */
+    for(size_t i=0; i<n_states; ++i) {
+      Ith(abstol,i+1) = states_abstol[i];
+    }
+
+    /* Call CVodeCreate to create the solver memory and specify the
+     * Backward Differentiation Formula and the use of a Newton iteration */
+    mem = IDACreate();
+    if (check_flag((void *)mem, "IDACreate", 0)) return(1);
+
+    /* Call IDACreate and IDAInit to initialize IDA memory */
+    flag = IDAInit(mem, rhs_ida, tstart, y, yp);
+    if (check_flag(&flag, "IDAInit", 1)) return(1);
+
+    /* Call CVodeSVtolerances to specify the scalar relative tolerance
+   * and vector absolute tolerances */
+    flag = IDASVtolerances(mem, reltol, abstol);
+    if (check_flag(&flag, "IDASVtolerances", 1)) return(1);
+
+    /* Call CVDense to specify the CVDENSE dense linear solver */
+    flag = IDADense(mem, n_states);
+    if (check_flag(&flag, "IDADense", 1)) return(1);
+
+    flag = IDASetMaxStep(mem, tlmConfig.hmax);
+    if (check_flag(&flag, "IDASetMaxStep", 1)) return(1);
 
     /* Set the Jacobian routine to Jac (user-supplied) */
     //flag = CVDlsSetDenseJacFn(cvode_mem, Jac);        //TODO: Supply with jacobian somehow
@@ -536,7 +627,7 @@ int simulate_fmi2_me()
     }
 
 
-    if(simConfig.solver == Cvode) {
+    if(simConfig.solver == CVODE) {
       /* Calculate next time step */
       tlast = tcur;
       tcur += hdef;
@@ -554,7 +645,7 @@ int simulate_fmi2_me()
 
       //Take one step
       while(tc < tcur){
-        flag = CVode(cvode_mem, tcur, y, &tc, CV_ONE_STEP);  //TODO: Use one-step mode
+        flag = CVode(mem, tcur, y, &tc, CV_ONE_STEP);
         if (check_flag(&flag, "CVode", 1)) {
           TLMErrorLog::FatalError("CVODE solver failed!");
           exit(1);
@@ -570,6 +661,49 @@ int simulate_fmi2_me()
       fmistatus = fmi2_import_completed_integrator_step(fmu, fmi2_true, &callEventUpdate,
                                                         &terminateSimulation);
 
+    }
+    else if(simConfig.solver == IDA) {
+      /* Calculate next time step */
+      tlast = tcur;
+      tcur += hdef;
+      if (eventInfo.nextEventTimeDefined && (tcur >= eventInfo.nextEventTime)) {
+        tcur = eventInfo.nextEventTime;
+      }
+      hcur = tcur - tlast;
+      if(tcur > tend - hcur/1e16) {
+        tcur = tend;
+        hcur = tcur - tlast;
+      }
+
+      //Write interpolated force to FMU
+      forceFromTlmToFmu(tcur);
+
+      fmistatus = fmi2_import_get_continuous_states(fmu,states,n_states);
+      fmistatus = fmi2_import_get_derivatives(fmu,states_der,n_states);
+
+      //Read states from FMU
+      for(size_t i=0; i<n_states; ++i) {
+        Ith(y,i+1) = states[i];
+        Ith(yp,i+1) = states_der[i];
+      }
+
+      //Take one step
+      while(tc < tcur){
+        flag = IDASolve(mem, tcur, &tc, y, yp, IDA_ONE_STEP);
+        if (check_flag(&flag, "IDASolve", 1)) {
+          TLMErrorLog::FatalError("IDA solver failed!");
+          exit(1);
+        }
+      }
+
+      /* Set states */
+      for(size_t i=0; i<n_states; ++i) {
+        states[i] = Ith(y,i+1);
+      }
+      fmistatus = fmi2_import_set_continuous_states(fmu, states, n_states);
+      /* Step is complete */
+      fmistatus = fmi2_import_completed_integrator_step(fmu, fmi2_true, &callEventUpdate,
+                                                        &terminateSimulation);
     }
     else if(simConfig.solver == ExplicitEuler) {
       /* Calculate next time step */
