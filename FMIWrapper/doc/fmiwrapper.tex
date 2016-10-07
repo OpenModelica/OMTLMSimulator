@@ -1,0 +1,176 @@
+\documentclass[11pt,a4paper]{report}
+\usepackage{inputenc} 
+\usepackage[english]{babel} 
+\usepackage{graphicx}
+\usepackage{a4wide}
+\usepackage[dvipsnames]{xcolor}
+\usepackage{tikz}
+\usepackage{lipsum}
+\usepackage{listings}
+\usepackage{cleveref}
+
+%Remove trailing zero in section numbering
+\renewcommand{\thesection}{\arabic{section}}
+
+%\lstset{
+%  basicstyle=\ttfamily,
+%  keywordstyle=\textcolor{blue},
+%  language=XML,
+%  morekeywords={<ScalarVariable,Real}
+%}
+
+\lstdefinelanguage{XML}
+{
+  basicstyle=\ttfamily\footnotesize,
+  morestring=[b]",
+  moredelim=[s][\bfseries\color{Maroon}]{<}{\ },
+  moredelim=[s][\bfseries\color{Maroon}]{</}{>},
+  moredelim=[l][\bfseries\color{Maroon}]{/>},
+  moredelim=[l][\bfseries\color{Maroon}]{>},
+  morecomment=[s]{<?}{?>},
+  morecomment=[s]{<!--}{-->},
+  commentstyle=\color{DarkOliveGreen},
+  stringstyle=\color{blue},
+  identifierstyle=\color{red}
+}
+
+\begin{document}
+
+\title{Wrapper for Functional Mock-up Interface in TLM-based Asynchronous Co-Simulation}
+\author{Robert Braun}
+
+\maketitle
+
+\section{Introduction}
+Functional Mock-up Interface (FMI) is a tool-independent standard for connecting simulation tools. 
+One tool can export a model as a Functional Mockup Unit (FMU), a ZIP package with the file extension FMU. 
+This file is in turn loaded by the master simulation tool, which can connect and simulate the model.
+An FMU file contains a model description XML file called \texttt{modelDescription.xml}, binaries for different platforms and other optional content.
+It is important that the FMU contains a binary file for the platform where the master simulation tool is executed.
+
+There are two versions of the FMI standard: FMI for Co-Simulation and FMI for Model Exchange.
+The main difference is that FMUs for Co-Simulation contain their own built-in solvers, and only exchange data at predefined communication points.
+FMUs for Model Exchange require a solver in the master simulation tool.
+
+Including FMUs in the TLM framework requires a wrapper.
+\texttt{FMIWrapper} is a generic wrapper for connecting functional mockup units (FMUs) to the TLM framework.
+It uses the FMI Library from Modelon to load an FMU, and the TLMPlugin for socket communication with the framework, see \cref{fig:overview}.
+
+\begin{figure}[ht]
+\begin{tikzpicture}
+\def\dx{0.0495*\textwidth}
+
+\node[rectangle,draw,thick, 
+      minimum width=5*\dx, 
+      minimum height=5*\dx, 
+      text depth=5*\dx-20pt] () {FMIWrapper};
+
+\node[rectangle, draw, thick, 
+      minimum width=3*\dx, 
+      minimum height=3*\dx, 
+      xshift=2.5*\dx,
+      fill=white] (tp1) {TLMPlugin};
+      
+\node[rectangle, draw, thick, 
+      minimum width=3*\dx, 
+      minimum height=3*\dx, 
+      xshift=-2.5*\dx,
+      fill=white] (fl) {FMILibrary};
+      
+\node[rectangle, draw, thick, 
+      minimum width=3*\dx, 
+      minimum height=3*\dx, 
+      xshift=-7.5*\dx] (fmu) {xmodel.fmu};
+
+\node[rectangle, draw, thick, 
+      minimum width=3.5*\dx, 
+      minimum height=5*\dx, 
+      text depth=5*\dx-20pt,
+      xshift=9.25*\dx,
+      fill=white] () {TLMManager};
+
+\node[rectangle, draw, thick, 
+      minimum width=3*\dx, 
+      minimum height=3*\dx, 
+      xshift=7.5*\dx,
+      fill=white] (tp2) {TLMPlugin};
+
+\draw[thick,->,very thick] (fmu) edge[bend left] (fl);
+\draw[thick,<-,very thick] (fmu) edge[bend right] (fl);
+\draw[thick,->,very thick] (fl) edge[bend left] (tp1);
+\draw[thick,<-,very thick] (fl) edge[bend right] (tp1);
+\draw[thick,->,very thick] (tp1) edge[bend left] (tp2);
+\draw[thick,<-,very thick] (tp1) edge[bend right] (tp2);
+\end{tikzpicture}
+\caption{Blabla...}
+\label{fig:overview}
+\end{figure}
+
+Both FMI for co-simulation and FMI for model exchange are supported. 
+Model exchange requires a solver in the wrapper executable.
+For this reason, two solvers from the Sundials package are included.
+
+\section{Setting up a simulation}
+The FMI wrapper is started by the StartTLMFMIWrapper startup script.
+This script generates the \texttt{tlm.config} fileand calls the FMIWrapper executable.
+The executable takes the following arguments:\\
+
+\noindent \verb|FMIWrapper <path> <fmufile> <solver> <debug>|\\
+
+Example:\\
+
+\noindent \verb|FMIWrapper C:\temp\folder mymodel.fmu solver=CVODE -d|\\
+
+The last to arguments are optional.
+Available solvers are \texttt{Euler}, \texttt{CVODE} and \texttt{IDA}.
+These can currently only be changed by modifying the startup script, i.e. not from the graphical interface.
+
+An FMU keep track of its variables by integer numbers called \texttt{value references}.
+However, it does not provide any information about the mapping between its variables and the TLM interface.
+Hence, this information must be provided by the user.
+A configuration file called \texttt{fmi.config} is used for this purpose, see \cref{lst:fmiconfig}.
+
+\begin{lstlisting}[basicstyle=\ttfamily,floatplacement=ht,caption="Blabla",label=lst:fmiconfig]
+substeps,100
+name,tlm1
+position,6,7,8
+orientation,136,139,142,137,140,143,138,141,144
+speed,9,10,11
+ang_speed,145,146,147
+force,133,134,135,167,168,169
+name,tlm2
+position,...
+\end{lstlisting}
+
+As can be seen, data is stored in a comma-separated format.
+The first line specifies the number of substeps used for FMI for Co-Simulation (see \cref{sec:fmi_cs}).
+After this comes the port information.
+Each port is specified by name, position, orientation, speed, angular speed and force, according to the TLM interfaces in the TLM framework.
+The numbers after each keyword are the value references.
+These can be obtained by analyzing the \texttt{modelDescription.xml} file.
+\Cref{lst:modeldescription} shows an example.
+The variable first torque component has the value reference 167.
+Hence, this number should be inserted as number four on the "force" line in \texttt{fmi.config}.
+
+\begin{lstlisting}[language=XML,floatplacement=ht,caption="Blabla",label=lst:modeldescription]
+  <ScalarVariable
+    name="fMITLMInterface3D1.t[1]"
+    valueReference="167"
+    variability="continuous"
+    causality="local"
+    >
+    <Real/>
+  </ScalarVariable>
+\end{lstlisting}
+
+
+
+\section{FMI for co-simulation}
+\label{sec:fmi_cs}
+%Förklara hur det fungerar med substeps
+
+\section{FMI for model exchange}
+%Förklara hur variabler översätts
+
+
+\end{document}
