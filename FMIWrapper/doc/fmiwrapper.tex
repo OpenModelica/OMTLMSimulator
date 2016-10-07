@@ -8,6 +8,7 @@
 \usepackage{lipsum}
 \usepackage{listings}
 \usepackage{cleveref}
+\usepackage{placeins}
 
 %Remove trailing zero in section numbering
 \renewcommand{\thesection}{\arabic{section}}
@@ -18,6 +19,8 @@
 %  language=XML,
 %  morekeywords={<ScalarVariable,Real}
 %}
+
+\renewcommand{\ttdefault}{pcr}
 
 \lstdefinelanguage{XML}
 {
@@ -165,12 +168,77 @@ Hence, this number should be inserted as number four on the "force" line in \tex
 
 
 
-\section{FMI for co-simulation}
+\FloatBarrier
+\section{FMI for Co-Simulation}
 \label{sec:fmi_cs}
-%Förklara hur det fungerar med substeps
+With FMI for Co-Simulation the solver is embedded within the FMU.
+Variables can only be exchanged at predefined communication points.
+Hence, it is not possible for the solver to obtain interpolated force variables during internal iteration steps.
+Keeping the force constant during the entire communication interval may, however, have a negative effect on numerical stability.
+For this reason it is possible to divide each communication interval into a fixed number of \textit{sub steps}, as defined in the \texttt{fmi.config}.
+In this way the forces can at least be updated in the FMU at more fine-grained intervals.
+Pseudo-code for the simulation loop in the wrapper is shown in \cref{lst:wrapper_cs}.
+
+\lstset{emph={fmu},emphstyle={\color{red}\bfseries},
+        emph={[2]TLMPlugin},emphstyle={[2]\color{blue}\bfseries}
+}
+\begin{lstlisting}[float, language=c++, basicstyle=\ttfamily\small,floatplacement=htb,caption=Blabla,label=lst:wrapper_cs]
+while (tcur < tend) {
+    double hsub = hmax/nSubSteps;
+    for(size_t i=0; i<nSubSteps; ++i) {
+        x = fmu.get_real(x_vr,3);
+        T = fmu.get_real(T_vr,9);
+        v = fmu.get_real(v_vr,3);
+        w = fmu.get_real(w_vr,3);
+        f = TLMPlugin.GetForce(tcur,x,T,v,w);
+        fmu.set_real(f_vr[j],6,f);
+
+        fmu.do_step(tcur,hsub);
+        tcur+=hsub;
+
+        x = fmu.get_real(x_vr,3);
+        T = fmu.get_real(T_vr,9);
+        v = fmu.get_real(v_vr,3);
+        w = fmu.get_real(w_vr,3);
+        TLMPlugin.GetForce(tcur,x,T,v,w);
+        TLMPlugin.SetMotion(tcur,x,T,v,w);
+    }
+}
+\end{lstlisting}
+
+Note that it is necessary to read the motion variables from the FMU before obtaining the force from the TLMPlugin. 
+At the end of each major step it is also necessary to call \texttt{GetForce()} before calling \texttt{SetMotion()}.
+The reason for this is that \texttt{SetMotion()} requires updated input variables which are retreived by \texttt{GetForce()}.
 
 \section{FMI for model exchange}
-%Förklara hur variabler översätts
+With model exchange, the wrapper must provide a solver for the FMU.
+Three solvers are available: an explicit Euler, and the CVODE and IDA solvers from Sundials.
+\Cref{lst:wrapper_me} shows pseudo code for one major step (i.e. one communication interval) with the IDA solver.
+Note that the solver is used with one step mode.
+This means that it takes one step at a time, until its internal time exceeds the next communication interval.
+The CVODE solver requires a callback function for obtaining derivatives of state variables (i.e. "right-hand side").
+The IDA solver requires a similar callback for obtaining the residuals.
 
+\begin{lstlisting}[float, language=c++, basicstyle=\ttfamily\small,floatplacement=ht,caption=Blabla,label=lst:wrapper_me]
+double position[3],orientation[9],speed[3],ang_speed[3],force[6];
+
+x = fmu.get_real(x_vr,3);
+T = fmu.get_real(T_vr,9);
+v = fmu.get_real(v_vr,3);
+w = fmu.get_real(w_vr,3);
+f = TLMPlugin.GetForce(tcur,x,T,v,w);
+fmu.set_real(f_vr[j],6,f);
+
+y = fmu.get_continuous_states();
+dy = fmu.get_derivatives();
+
+tcur += h;
+
+while(tc < tcur){
+    IDASolve(mem, tcur, &tc, y, dy, IDA_ONE_STEP);
+}
+
+fmu.set_continuous_states(y);
+\end{lstlisting}
 
 \end{document}
