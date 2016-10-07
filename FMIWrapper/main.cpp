@@ -315,15 +315,18 @@ int simulate_fmi2_cs()
       //Increment time
       tcur+=hsub;
 
-      for(size_t j=0; j<fmiConfig.plugins.size(); ++j)
-      {
-        double position[3],orientation[9],speed[3],ang_speed[3];
+      for(size_t j=0; j<fmiConfig.plugins.size(); ++j) {
+
+        double force[6], position[3],orientation[9],speed[3],ang_speed[3];
 
         //Read position and speed from FMU
         fmistatus = fmi2_import_get_real(fmu,fmiConfig.position_vr[j],3,position);
         fmistatus = fmi2_import_get_real(fmu,fmiConfig.orientation_vr[j],9,orientation);
         fmistatus = fmi2_import_get_real(fmu,fmiConfig.speed_vr[j],3,speed);
         fmistatus = fmi2_import_get_real(fmu,fmiConfig.ang_speed_vr[j],3,ang_speed);
+
+        //Get interpolated force
+        fmiConfig.plugins.at(j)->GetForce(fmiConfig.interfaceIds[j], tcur, position,orientation,speed,ang_speed,force);
 
         //Write back motion for sub step
         fmiConfig.plugins.at(j)->SetMotion(fmiConfig.interfaceIds[j], tcur, position, orientation, speed, ang_speed);
@@ -641,7 +644,14 @@ int simulate_fmi2_me()
       }
 
       //Write interpolated force to FMU
-      forceFromTlmToFmu(tcur);
+      forceFromTlmToFmu(tlast);
+
+      fmistatus = fmi2_import_get_continuous_states(fmu,states,n_states);
+
+      //Read states from FMU
+      for(size_t i=0; i<n_states; ++i) {
+        Ith(y,i+1) = states[i];
+      }
 
       //Take one step
       while(tc < tcur){
@@ -660,7 +670,6 @@ int simulate_fmi2_me()
       /* Step is complete */
       fmistatus = fmi2_import_completed_integrator_step(fmu, fmi2_true, &callEventUpdate,
                                                         &terminateSimulation);
-
     }
     else if(simConfig.solver == IDA) {
       /* Calculate next time step */
@@ -676,7 +685,7 @@ int simulate_fmi2_me()
       }
 
       //Write interpolated force to FMU
-      forceFromTlmToFmu(tcur);
+      forceFromTlmToFmu(tlast);
 
       fmistatus = fmi2_import_get_continuous_states(fmu,states,n_states);
       fmistatus = fmi2_import_get_derivatives(fmu,states_der,n_states);
@@ -718,10 +727,6 @@ int simulate_fmi2_me()
         hcur = tcur - tlast;
       }
 
-      //Write interpolated force to FMU
-      forceFromTlmToFmu(tcur);
-
-
       // Integrate one step (Euler forward)
       fmistatus = fmi2_import_get_derivatives(fmu, states_der, n_states);
       for (k = 0; k < n_states; k++) {
@@ -733,9 +738,12 @@ int simulate_fmi2_me()
       /* Step is complete */
       fmistatus = fmi2_import_completed_integrator_step(fmu, fmi2_true, &callEventUpdate,
                                                         &terminateSimulation);
+      //Write interpolated force to FMU
+      forceFromTlmToFmu(tlast);
     }
 
     // Read motion from FMU
+    forceFromTlmToFmu(tcur);
     motionFromFmuToTlm(tcur);
   }
 
