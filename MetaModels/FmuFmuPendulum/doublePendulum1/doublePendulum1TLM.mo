@@ -11,8 +11,7 @@ model doublePendulum1TLM
       w(fixed=true),
     stateSelect=StateSelect.always)                              annotation (Placement(transformation(extent={{-38,10},
             {-18,30}}, rotation=0)));
-  Modelica.Mechanics.Rotational.Components.Damper damper(
-                                              d=0.1)
+  Modelica.Mechanics.Rotational.Components.Damper damper(d=0)
     annotation (Placement(transformation(extent={{-38,50},{-18,70}}, rotation=0)));
   Modelica.Mechanics.MultiBody.Parts.BodyBox boxBody1(             width=0.06,
     r={0.25,0,0},
