@@ -3,23 +3,23 @@
 <Model Name="doublePendulum">
   <!-- List of connected sub-models -->
   <SubModels>
-    <SubModel ModelFile="doublePendulum1TLM.fmu" ExactStep="0" StartCommand="StartTLMFmiWrapper" Name="doublePendulum1" Angle321="0,0,-1.7964e-09" Position="0,-1.8272e-08,0">
+    <SubModel ExactStep="0" StartCommand="StartTLMFmiWrapper" Position="0,-1.8272e-08,0" Name="doublePendulum1" ModelFile="doublePendulum1TLM.fmu" Angle321="0,0,-1.7964e-09">
       <!-- TLM interface points for SubModel A -->
-      <InterfacePoint Name="tlm" Angle321="0,0,1.7964e-009" Position="0.25,-4.49101e-010,0"/>
+      <InterfacePoint Position="0.25,-4.49101e-010,0" Name="tlm" Angle321="0,0,1.7964e-009"/>
     </SubModel>
-    <SubModel ModelFile="doublePendulum2.fmu" ExactStep="0" StartCommand="StartTLMFmiWrapper" Name="doublePendulum2" Angle321="0,0,1.15716e-70" Position="0,-1e-15,0">
-      <Annotation Extent="{-10,-10,10,10}" Rotation="0" Origin="{-44,20}" Visible="true"/>
+    <SubModel ExactStep="0" StartCommand="StartTLMFmiWrapper" Position="0,-1e-15,0" Name="doublePendulum2" ModelFile="doublePendulum2.fmu" Angle321="0,0,1.15716e-70">
+      <Annotation Rotation="0" Visible="true" Origin="{-44,20}" Extent="{-10,-10,10,10}"/>
       <!-- TLM interface points for SubModel C -->
-      <InterfacePoint Name="tlm" Angle321="0,0,-1.15716e-070" Position="0.25,-1.91702e-008,0"/>
+      <InterfacePoint Position="0.25,-1.91702e-008,0" Name="tlm" Angle321="0,0,-1.15716e-070"/>
     </SubModel>
   </SubModels>
   <!-- List of TLM connections -->
   <Connections>
     <!-- Some more physical values: Delay="1e-5" Zf="8e4" Zfr="400" alpha="0.2" -->
-    <Connection Delay="2e-4" alpha="0.9" Zfr="1" Zf="2000" To="doublePendulum2.tlm" From="doublePendulum1.tlm">
+    <Connection Zf="10000" Delay="1e-4" Zfr="100" From="doublePendulum1.tlm" To="doublePendulum2.tlm" alpha="0.2">
       <Annotation Points="{{11,8},{9,8},{9,28},{-33,28}}"/>
     </Connection>
   </Connections>
   <!-- Parameters for the simulation -->
-  <SimulationParams StartTime="0" ManagerPort="11113" StopTime="3"/>
+  <SimulationParams StartTime="0" StopTime="3" ManagerPort="11113"/>
 </Model>
