@@ -45,7 +45,7 @@
 \maketitle
 
 \section{Introduction}
-Functional Mock-up Interface (FMI) is a tool-independent standard for connecting simulation tools. 
+Functional Mock-up Interface (FMI) is a tool-independent standard for connecting simulation tools \cite{blochwitz2009}. 
 One tool can export a model as a Functional Mockup Unit (FMU), a ZIP package with the file extension FMU. 
 This file is in turn loaded by the master simulation tool, which can connect and simulate the model.
 An FMU file contains a model description XML file called \texttt{modelDescription.xml}, binaries for different platforms and other optional content.
@@ -57,7 +57,7 @@ FMUs for Model Exchange require a solver in the master simulation tool.
 
 Including FMUs in the TLM framework requires a wrapper.
 \texttt{FMIWrapper} is a generic wrapper for connecting functional mockup units (FMUs) to the TLM framework.
-It uses the FMI Library from Modelon to load an FMU, and the TLMPlugin for socket communication with the framework, see \cref{fig:overview}.
+It uses the FMI Library from Modelon \cite{modelon2015} to load an FMU, and the TLMPlugin for socket communication with the framework, see \cref{fig:overview}.
 
 \begin{figure}[ht]
 \begin{tikzpicture}
@@ -212,7 +212,7 @@ The reason for this is that \texttt{SetMotion()} requires updated input variable
 
 \section{FMI for model exchange}
 With model exchange, the wrapper must provide a solver for the FMU.
-Three solvers are available: an explicit Euler, and the CVODE and IDA solvers from Sundials.
+Three solvers are available: an explicit Euler, and the CVODE and IDA solvers from Sundials \cite{hindmarsh2005}.
 \Cref{lst:wrapper_me} shows pseudo code for one major step (i.e. one communication interval) with the IDA solver.
 Note that the solver is used with one step mode.
 This means that it takes one step at a time, until its internal time exceeds the next communication interval.
@@ -240,5 +240,9 @@ while(tc < tcur){
 
 fmu.set_continuous_states(y);
 \end{lstlisting}
+
+\bibliographystyle{plain}
+\bibliography{references}
+
 
 \end{document}
