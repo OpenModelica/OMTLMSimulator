@@ -32,7 +32,7 @@
   moredelim=[l][\bfseries\color{Maroon}]{>},
   morecomment=[s]{<?}{?>},
   morecomment=[s]{<!--}{-->},
-  commentstyle=\color{DarkOliveGreen},
+  commentstyle=\color{Maroon},
   stringstyle=\color{blue},
   identifierstyle=\color{red}
 }
@@ -114,6 +114,7 @@ Model exchange requires a solver in the wrapper executable.
 For this reason, two solvers from the Sundials package are included.
 
 \section{Setting up a simulation}
+\label{sec:setting_up}
 The FMI wrapper is started by the StartTLMFMIWrapper startup script.
 This script generates the \texttt{tlm.config} fileand calls the FMIWrapper executable.
 The executable takes the following arguments:\\
@@ -240,6 +241,137 @@ while(tc < tcur){
 
 fmu.set_continuous_states(y);
 \end{lstlisting}
+
+\section{Example: Double Pendulum with Dymola and OpenModelica}
+This section will explain how to build a meta model of a double pendulum, using FMUs exported from Dymola and OpenModelica.
+The resulting meta model is found in the \linebreak\texttt{/MetaModels/FmuFmuPendulum} folder.
+One FMU for Co-simulation and one for Model Exchange will be used.
+Both models use a custom Modelica library called FMILIB for the TLM interfaces.
+This library is shipped together with the FMI wrapper.
+
+\begin{figure}[ht]
+\centering
+\begin{tikzpicture}
+\node[draw,thick,minimum width=3cm,rectangle,rotate=-45,fill=white,xshift=1.5cm] (beam1) {};
+\draw[thick,loop] (0,0) -- (0.5cm,0.5cm) -- (-0.5cm,0.5cm) -- (0,0);
+\node[draw,thick,circle,minimum width=0.5cm,fill=white] () {};
+\node[draw,thick,minimum width=3cm,rectangle,rotate=-30,fill=white,xshift=1.5cm] at(beam1.east) (beam2) {};
+\node[draw,thick,circle,minimum width=0.5cm,fill=white] at (beam1.east) () {};
+
+\draw[thick,dashed] (-1cm,1.5cm) -- node[below] () {Dymola} (2cm,1.5cm) -- (2cm,-0.0cm) -- (-0.0cm,-2cm) -- (-1cm,-2cm) -- (-1cm,1.5cm);
+
+\draw[thick,dashed] (0.1cm,-2.1cm) -- (2.1cm,-0.1cm) --node[below] () {OpenModelica} (5cm,-0.1cm) -- (5.2cm,-4.1cm) -- (0.1cm,-4.1cm) -- (0.1cm,-2.1cm);
+\end{tikzpicture}
+\caption{Blabla...}
+\label{fig:double_pendulum}
+\end{figure}
+
+The Dymola model consists of half the first pendulum and the fixed attachment to the inertial system, see figure \cref{fig:model_dymola}.
+Force and torque variables must be specified as input and output variables at the top level of the model, in order to get the correct number of equations and variables.
+Hence, we need to add the following variables and equations:
+
+\begin{lstlisting}[basicstyle=\footnotesize\ttfamily]
+  input Real f[3](start = zeros(3));
+  input Real t[3](start = zeros(3));
+equation
+  fMITLMInterface3D.f = f;
+  fMITLMInterface3D.t = t;
+\end{lstlisting}
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=0.65\textwidth]{gfx/model_dymola.png}
+\caption{Blabla...}
+\label{fig:model_dymola}
+\end{figure}
+
+Now it is time to export the model so it can be used with the framework.
+\begin{enumerate}
+\item \textbf{Transform the model to an FMU for co-simulation.}\\
+      Use a suitable solver, for example CVODE.
+\item \textbf{Put the \texttt{.fmu} file in a new subfolder.}
+\item \textbf{Create an empty text file called \texttt{fmi.config} in the same folder.}
+\item \textbf{Specify number of substeps on the first line.}\\
+              For example: "substeps,10"
+\item \textbf{Open \texttt{modelDescription.xml}.}\\
+              By opening the \texttt{.fmu} as a zip package.
+\item \textbf{Locate the TLM variables and write the value reference in \texttt{fmi.config}.}\\
+              The desired variables are position, orientation, velocity, angular velocity, force and torque:\\
+              \texttt{fMITLMInterface3D.r[x]}, \texttt{fMITLMInterface3D.A[x,y]},\\
+              \texttt{fMITLMInterface3D.v[x]}, \texttt{fMITLMInterface3D.w[x]},\\
+              \texttt{fMITLMInterface3D.f[x]}, \texttt{fMITLMInterface3D.t[x]}
+\item \textbf{Enter the value reference for each variable in \texttt{fmi.config}.}\\
+              See section \cref{sec:setting_up} for more information.              
+\end{enumerate}
+
+The OpenModelica model as shown in \cref{fig:model_omedit} consists of the second half of the first beam and the second beam.
+The export process is exaclty the same as for Dymola, except that the FMU exported should be for model exchange.
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=0.85\textwidth]{gfx/model_omedit.png}
+\caption{Blabla...}
+\label{fig:model_omedit}
+\end{figure}
+
+When both FMUs have been generated together with one \texttt{fmi.config} file each, it is time to build the meta model.
+\begin{enumerate}
+\item \textbf{Create a new meta model.}\\
+             Either by hand or by using the graphical user interface.
+\item \textbf{Add the FMUs as submodels.}\\
+              Use \texttt{StartTLMFmiWrapper} as start command.
+\item \textbf{Fetch TLM interfaces.}
+\item \textbf{Add a connection between the two models.}\\
+              Default TLM parameters should work fine.
+\item \textbf{Make sure interfaces are aligned.}
+\item \textbf{Choose solver for model exchange.}\\
+              By editing \texttt{StartTLMFmiWrapper.bat}.\\
+              Use for example \texttt{solver=CVODE} or \texttt{solver=IDA}.
+\end{enumerate}
+
+When done, the meta model XML file should look similar to \cref{lst:metamodel}.
+The model is now ready to be simulated!
+
+\begin{lstlisting}[language=xml,float,floatplacement=ht,label={lst:metamodel},caption=Blabla...]
+<?xml version='1.0' encoding='ISO-8859-1'?>
+<Model Name="doublePendulum">
+  <SubModels>
+    <SubModel Name="doublePendulum1" 
+              ModelFile="doublePendulum1.fmu"
+              StartCommand="StartTLMFmiWrapper" 
+              Position="0,0,0" 
+              Angle321="0,0,0">
+      <InterfacePoint Name="tlm" 
+                      Position="0.25,0,0" 
+                      Angle321="0,0,0"/>
+    </SubModel>
+    <SubModel Name="doublePendulum2" 
+              ModelFile="doublePendulum2.fmu" 
+              StartCommand="StartTLMFmiWrapper" 
+              Position="0.25,0,0"  
+              Angle321="0,0,0">
+      <InterfacePoint Name="tlm" 
+                      Position="0,0,0" 
+                      Angle321="0,0,0"/>
+    </SubModel>
+  </SubModels>
+  <Connections>
+    <Connection From="doublePendulum1.tlm" 
+                To="doublePendulum2.tlm" 
+                Delay="1e-4" 
+                Zf="10000"   
+                Zfr="100"
+                alpha="0.2">
+    </Connection>
+  </Connections>
+  <SimulationParams ManagerPort="11113" StopTime="3" StartTime="0"/>
+</Model>
+\end{lstlisting}
+%Koppla ihop modellerna
+%Aligna OpenModelicas pendel till Dymolas
+%Välj lösare för model exchange i StartTLMFMIWrapper.bat, t.ex. CVODE eller IDA
+%Kör simuleringen!
+
 
 \bibliographystyle{plain}
 \bibliography{references}
