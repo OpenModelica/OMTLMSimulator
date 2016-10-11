@@ -192,6 +192,8 @@ while (tcur < tend) {
         w = fmu.get_real(w_vr,3);
         f = TLMPlugin.GetForce(tcur,x,T,v,w);
         fmu.set_real(f_vr[j],6,f);
+        
+        TLMPlugin.SetMotion(tcur,x,T,v,w);
 
         fmu.do_step(tcur,hsub);
         tcur+=hsub;
@@ -200,8 +202,6 @@ while (tcur < tend) {
         T = fmu.get_real(T_vr,9);
         v = fmu.get_real(v_vr,3);
         w = fmu.get_real(w_vr,3);
-        TLMPlugin.GetForce(tcur,x,T,v,w);
-        TLMPlugin.SetMotion(tcur,x,T,v,w);
     }
 }
 \end{lstlisting}
@@ -212,7 +212,7 @@ The reason for this is that \texttt{SetMotion()} requires updated input variable
 
 \section{FMI for model exchange}
 With model exchange, the wrapper must provide a solver for the FMU.
-Three solvers are available: an explicit Euler, and the CVODE and IDA solvers from Sundials \cite{hindmarsh2005}.
+Three solvers are available: explicit Euler, Runge-Kutta, and the CVODE and IDA solvers from Sundials \cite{hindmarsh2005}.
 \Cref{lst:wrapper_me} shows pseudo code for one major step (i.e. one communication interval) with the IDA solver.
 Note that the solver is used with one step mode.
 This means that it takes one step at a time, until its internal time exceeds the next communication interval.
