@@ -60,7 +60,7 @@ struct tlmConfig_t {
   double hmax;
 };
 
-enum solver_t { ExplicitEuler, CVODE, IDA };
+enum solver_t { ExplicitEuler, RungeKutta, CVODE, IDA };
 
 struct simConfig_t {
   solver_t solver;
@@ -495,26 +495,34 @@ int simulate_fmi2_me()
   N_Vector y, yp, abstol;
   void *mem;
   int flag;
+  mem = NULL;
+  y = yp = abstol = NULL;
+
+  /* Create serial vector of length NEQ for I.C. and abstol */
+  y = N_VNew_Serial(n_states);
+  if (check_flag((void *)y, "N_VNew_Serial", 0)) return(1);
+  yp = N_VNew_Serial(n_states);
+  if (check_flag((void *)yp, "N_VNew_Serial", 0)) return(1);
+  abstol = N_VNew_Serial(n_states);
+  if (check_flag((void *)abstol, "N_VNew_Serial", 0)) return(1);
+
+
+  /* Initialize y */
+  for(size_t i=0; i<n_states; ++i) {
+    Ith(y,i+1) = states[i];
+  }
+
+  /* Initialize yp */
+  for(size_t i=0; i<n_states; ++i) {
+    Ith(yp,i+1) = states_der[i];
+  }
+
+  /* Set the vector absolute tolerance */
+  for(size_t i=0; i<n_states; ++i) {
+    Ith(abstol,i+1) = states_abstol[i];
+  }
+
   if(simConfig.solver == CVODE) {
-    y = abstol = NULL;
-    mem = NULL;
-
-    /* Create serial vector of length NEQ for I.C. and abstol */
-    y = N_VNew_Serial(n_states);
-    if (check_flag((void *)y, "N_VNew_Serial", 0)) return(1);
-    abstol = N_VNew_Serial(n_states);
-    if (check_flag((void *)abstol, "N_VNew_Serial", 0)) return(1);
-
-    /* Initialize y */
-    for(size_t i=0; i<n_states; ++i) {
-      Ith(y,i+1) = states[i];
-    }
-
-    /* Set the vector absolute tolerance */
-    for(size_t i=0; i<n_states; ++i) {
-      Ith(abstol,i+1) = states_abstol[i];
-    }
-
     /* Call CVodeCreate to create the solver memory and specify the
    * Backward Differentiation Formula and the use of a Newton iteration */
     mem = CVodeCreate(CV_BDF, CV_NEWTON);
@@ -543,47 +551,21 @@ int simulate_fmi2_me()
     //if (check_flag(&flag, "CVDlsSetDenseJacFn", 1)) return(1);
   }
   else if(simConfig.solver == IDA) {
-    y = yp = abstol = NULL;
-    mem = NULL;
-
-    /* Create serial vector of length NEQ for I.C. and abstol */
-    y = N_VNew_Serial(n_states);
-    if (check_flag((void *)y, "N_VNew_Serial", 0)) return(1);
-    yp = N_VNew_Serial(n_states);
-    if (check_flag((void *)yp, "N_VNew_Serial", 0)) return(1);
-    abstol = N_VNew_Serial(n_states);
-    if (check_flag((void *)abstol, "N_VNew_Serial", 0)) return(1);
-
-    /* Initialize y */
-    for(size_t i=0; i<n_states; ++i) {
-      Ith(y,i+1) = states[i];
-    }
-
-    /* Initialize yp */
-    for(size_t i=0; i<n_states; ++i) {
-      Ith(yp,i+1) = states_der[i];
-    }
-
-    /* Set the vector absolute tolerance */
-    for(size_t i=0; i<n_states; ++i) {
-      Ith(abstol,i+1) = states_abstol[i];
-    }
-
-    /* Call CVodeCreate to create the solver memory and specify the
+    /* Call IDACreate to create the solver memory and specify the
      * Backward Differentiation Formula and the use of a Newton iteration */
     mem = IDACreate();
     if (check_flag((void *)mem, "IDACreate", 0)) return(1);
 
-    /* Call IDACreate and IDAInit to initialize IDA memory */
+    /* Call IDAInit and IDAInit to initialize IDA memory */
     flag = IDAInit(mem, rhs_ida, tstart, y, yp);
     if (check_flag(&flag, "IDAInit", 1)) return(1);
 
-    /* Call CVodeSVtolerances to specify the scalar relative tolerance
+    /* Call IDASVtolerances to specify the scalar relative tolerance
    * and vector absolute tolerances */
     flag = IDASVtolerances(mem, reltol, abstol);
     if (check_flag(&flag, "IDASVtolerances", 1)) return(1);
 
-    /* Call CVDense to specify the CVDENSE dense linear solver */
+    /* Call IDADense to specify the CVDENSE dense linear solver */
     flag = IDADense(mem, n_states);
     if (check_flag(&flag, "IDADense", 1)) return(1);
 
@@ -629,31 +611,34 @@ int simulate_fmi2_me()
       fmistatus = fmi2_import_get_event_indicators(fmu, event_indicators, n_event_indicators);
     }
 
-
-    if(simConfig.solver == CVODE) {
-      /* Calculate next time step */
-      tlast = tcur;
-      tcur += hdef;
-      if (eventInfo.nextEventTimeDefined && (tcur >= eventInfo.nextEventTime)) {
-        tcur = eventInfo.nextEventTime;
-      }
+    /* Calculate next time step */
+    tlast = tcur;
+    tcur += hdef;
+    if (eventInfo.nextEventTimeDefined && (tcur >= eventInfo.nextEventTime)) {
+      tcur = eventInfo.nextEventTime;
+    }
+    hcur = tcur - tlast;
+    if(tcur > tend - hcur/1e16) {
+      tcur = tend;
       hcur = tcur - tlast;
-      if(tcur > tend - hcur/1e16) {
-        tcur = tend;
-        hcur = tcur - tlast;
-      }
+    }
 
-      //Write interpolated force to FMU
-      forceFromTlmToFmu(tlast);
+    // Write interpolated force to FMU
+    forceFromTlmToFmu(tlast);
 
-      fmistatus = fmi2_import_get_continuous_states(fmu,states,n_states);
+    // Read motion from FMU
+    motionFromFmuToTlm(tlast);
 
-      //Read states from FMU
-      for(size_t i=0; i<n_states; ++i) {
-        Ith(y,i+1) = states[i];
-      }
+    // Read states and derivatives from FMU
+    fmistatus = fmi2_import_get_continuous_states(fmu,states,n_states);
+    fmistatus = fmi2_import_get_derivatives(fmu, states_der, n_states);
+    for(size_t i=0; i<n_states; ++i) {
+      Ith(y,i+1) = states[i];
+      Ith(yp,i+1) = states_der[i];
+    }
 
-      //Take one step
+    //Integrate using specified solver
+    if(simConfig.solver == CVODE) {
       while(tc < tcur){
         flag = CVode(mem, tcur, y, &tc, CV_ONE_STEP);
         if (check_flag(&flag, "CVode", 1)) {
@@ -661,42 +646,8 @@ int simulate_fmi2_me()
           exit(1);
         }
       }
-
-      /* Set states */
-      for(size_t i=0; i<n_states; ++i) {
-        states[i] = Ith(y,i+1);
-      }
-      fmistatus = fmi2_import_set_continuous_states(fmu, states, n_states);
-      /* Step is complete */
-      fmistatus = fmi2_import_completed_integrator_step(fmu, fmi2_true, &callEventUpdate,
-                                                        &terminateSimulation);
     }
     else if(simConfig.solver == IDA) {
-      /* Calculate next time step */
-      tlast = tcur;
-      tcur += hdef;
-      if (eventInfo.nextEventTimeDefined && (tcur >= eventInfo.nextEventTime)) {
-        tcur = eventInfo.nextEventTime;
-      }
-      hcur = tcur - tlast;
-      if(tcur > tend - hcur/1e16) {
-        tcur = tend;
-        hcur = tcur - tlast;
-      }
-
-      //Write interpolated force to FMU
-      forceFromTlmToFmu(tlast);
-
-      fmistatus = fmi2_import_get_continuous_states(fmu,states,n_states);
-      fmistatus = fmi2_import_get_derivatives(fmu,states_der,n_states);
-
-      //Read states from FMU
-      for(size_t i=0; i<n_states; ++i) {
-        Ith(y,i+1) = states[i];
-        Ith(yp,i+1) = states_der[i];
-      }
-
-      //Take one step
       while(tc < tcur){
         flag = IDASolve(mem, tcur, &tc, y, yp, IDA_ONE_STEP);
         if (check_flag(&flag, "IDASolve", 1)) {
@@ -704,47 +655,55 @@ int simulate_fmi2_me()
           exit(1);
         }
       }
-
-      /* Set states */
-      for(size_t i=0; i<n_states; ++i) {
-        states[i] = Ith(y,i+1);
-      }
-      fmistatus = fmi2_import_set_continuous_states(fmu, states, n_states);
-      /* Step is complete */
-      fmistatus = fmi2_import_completed_integrator_step(fmu, fmi2_true, &callEventUpdate,
-                                                        &terminateSimulation);
     }
     else if(simConfig.solver == ExplicitEuler) {
-      /* Calculate next time step */
-      tlast = tcur;
-      tcur += hdef;
-      if (eventInfo.nextEventTimeDefined && (tcur >= eventInfo.nextEventTime)) {
-        tcur = eventInfo.nextEventTime;
-      }
-      hcur = tcur - tlast;
-      if(tcur > tend - hcur/1e16) {
-        tcur = tend;
-        hcur = tcur - tlast;
-      }
 
-      // Integrate one step (Euler forward)
-      fmistatus = fmi2_import_get_derivatives(fmu, states_der, n_states);
+      double k1,k2,k3,k4;
       for (k = 0; k < n_states; k++) {
-        states[k] = states[k] + hcur*states_der[k];
+        Ith(y,k+1) = Ith(y,k+1) + hcur*Ith(yp,k+1);
       }
+    }
+    else if(simConfig.solver == RungeKutta) {
+      N_Vector k1,k2,k3,k4;
+      k1 = N_VNew_Serial(n_states);
+      if (check_flag((void *)y, "N_VNew_Serial", 0)) return(1);
+      k2 = N_VNew_Serial(n_states);
+      if (check_flag((void *)y, "N_VNew_Serial", 0)) return(1);
+      k3 = N_VNew_Serial(n_states);
+      if (check_flag((void *)y, "N_VNew_Serial", 0)) return(1);
+      k4 = N_VNew_Serial(n_states);
+      if (check_flag((void *)y, "N_VNew_Serial", 0)) return(1);
 
-      /* Set states */
-      fmistatus = fmi2_import_set_continuous_states(fmu, states, n_states);
-      /* Step is complete */
-      fmistatus = fmi2_import_completed_integrator_step(fmu, fmi2_true, &callEventUpdate,
-                                                        &terminateSimulation);
-      //Write interpolated force to FMU
-      forceFromTlmToFmu(tlast);
+      k1 = yp;
+      for(k=0; k<n_states; ++k) {
+        Ith(y,k+1) = Ith(y,k+1) + hcur/2.0*Ith(k1,k+1);
+      }
+      rhs(tcur+hcur/2.0,y,yp,0);
+      k2 = yp;
+      for(k=0; k<n_states; ++k) {
+        Ith(y,k+1) = Ith(y,k+1) + hcur/2.0*Ith(k2,k+1);
+      }
+      rhs(tcur+hcur/2.0,y,yp,0);
+      k3 = yp;
+      for(k=0; k<n_states; ++k) {
+        Ith(y,k+1) = Ith(y,k+1) + hcur*Ith(k3,k+1);
+      }
+      rhs(tcur+hcur/2.0,y,yp,0);
+      k4 = yp;
+
+      for(k=0; k<n_states; ++k) {
+        Ith(y,k+1) = Ith(y,k+1)+hcur*(Ith(k1,k+1)+2*Ith(k2,k+1)+2*Ith(k3,k+1)+Ith(k4,k+1))/6.0;
+      }
     }
 
-    // Read motion from FMU
-    forceFromTlmToFmu(tcur);
-    motionFromFmuToTlm(tcur);
+    /* Set states */
+    for(size_t i=0; i<n_states; ++i) {
+      states[i] = Ith(y,i+1);
+    }
+    fmistatus = fmi2_import_set_continuous_states(fmu, states, n_states);
+    /* Step is complete */
+    fmistatus = fmi2_import_completed_integrator_step(fmu, fmi2_true, &callEventUpdate,
+                                                      &terminateSimulation);
   }
 
   fmistatus = fmi2_import_terminate(fmu);
@@ -943,6 +902,8 @@ int main(int argc, char* argv[])
   for(int i=3; i<argc; ++i) {
     if(!strcmp(argv[i],"solver=Euler"))
       simConfig.solver = ExplicitEuler;
+    else if(!strcmp(argv[i],"solver=RungeKutta"))
+      simConfig.solver = RungeKutta;
     else if(!strcmp(argv[i],"solver=CVODE"))
       simConfig.solver = CVODE;
     else if(!strcmp(argv[i],"solver=IDA"))
