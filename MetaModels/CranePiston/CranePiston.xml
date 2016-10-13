@@ -1,0 +1,22 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!-- The root node is the meta-model -->
+<Model Name="CranePiston">
+  <!-- List of connected sub-models -->
+  <SubModels>
+    <SubModel Angle321="0,0,0" Name="crane" StartCommand="StartTLMFmiWrapper" Position="0,0,0" ModelFile="crane.fmu" ExactStep="0">
+      <InterfacePoint Angle321="0,0,0" Name="tlm" Position="0.736802,0,0"/>
+    </SubModel>
+    <SubModel Angle321="0,0,0" Name="piston" StartCommand="StartTLMHopsan" Position="0.736802,0,0" ModelFile="piston.hmf" ExactStep="0">
+      <Annotation Visible="true" Rotation="0" Extent="{-10,-10,10,10}" Origin="{-34,0}"/>
+      <InterfacePoint Angle321="0,0,0" Name="TLM_Plugin_Inerface" Position="0,0,0"/>
+    </SubModel>
+  </SubModels>
+  <!-- List of TLM connections -->
+  <Connections>
+    <Connection To="piston.TLM_Plugin_Inerface" From="crane.tlm" Zfr="100" Delay="1e-4" alpha="0.9" Zf="10000">
+      <Annotation Points="{{12,8},{18,8},{18,18},{-18,18},{-18,8},{-22,8},{-22,8}}"/>
+    </Connection>
+  </Connections>
+  <!-- Parameters for the simulation -->
+  <SimulationParams StartTime="0" StopTime="3"/>
+</Model>
