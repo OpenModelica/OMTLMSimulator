@@ -41,7 +41,6 @@ using namespace std;
 struct fmiConfig_t {
   size_t nSubSteps;
   size_t nInterfaces;
-  std::vector<TLMPlugin*> plugins;
   std::vector<std::string> interfaceNames;
   std::vector<int> interfaceIds;
   std::vector<fmi2_value_reference_t*> position_vr;
@@ -72,6 +71,7 @@ static const char* TEMP_DIR_NAME = "temp";
 static const char* TLM_CONFIG_FILE_NAME = "tlm.config";
 static const char* FMI_CONFIG_FILE_NAME = "fmi.config";
 
+static TLMPlugin* plugin;
 static size_t n_states = 0;
 static fmi2_status_t fmistatus = fmi2_status_t();
 static fmi2_real_t* states = 0;
@@ -88,7 +88,7 @@ static simConfig_t simConfig = simConfig_t();
 void forceFromTlmToFmu(double tcur)
 {
   //Write interpolated force to FMU
-  for(size_t j=0; j<fmiConfig.plugins.size(); ++j) {
+  for(size_t j=0; j<fmiConfig.nInterfaces; ++j) {
     double position[3],orientation[9],speed[3],ang_speed[3],force[6];
 
     //Read position and speed from FMU
@@ -98,7 +98,7 @@ void forceFromTlmToFmu(double tcur)
     fmistatus = fmi2_import_get_real(fmu,fmiConfig.ang_speed_vr[j],3,ang_speed);
 
     //Get interpolated force
-    fmiConfig.plugins.at(0)->GetForce(fmiConfig.interfaceIds[j], tcur, position,orientation,speed,ang_speed,force);
+    plugin->GetForce(fmiConfig.interfaceIds[j], tcur, position,orientation,speed,ang_speed,force);
 
     for(size_t k=0; k<6; ++k) {
       force[k] = -force[k];
@@ -288,7 +288,7 @@ int simulate_fmi2_cs()
   while (tcur < tlmConfig.tend) {
     fmi2_real_t hsub = tlmConfig.hmax/fmiConfig.nSubSteps;
     for(size_t i=0; i<fmiConfig.nSubSteps; ++i) {
-      for(size_t j=0; j<fmiConfig.plugins.size(); ++j)
+      for(size_t j=0; j<fmiConfig.nInterfaces; ++j)
       {
         double position[3],orientation[9],speed[3],ang_speed[3],force[6];
 
@@ -299,7 +299,7 @@ int simulate_fmi2_cs()
         fmistatus = fmi2_import_get_real(fmu,fmiConfig.ang_speed_vr[j],3,ang_speed);
 
         //Get interpolated force
-        fmiConfig.plugins.at(0)->GetForce(fmiConfig.interfaceIds[j], tcur, position,orientation,speed,ang_speed,force);
+        plugin->GetForce(fmiConfig.interfaceIds[j], tcur, position,orientation,speed,ang_speed,force);
 
         for(size_t k=0; k<6; ++k) {
           force[k] = -force[k];
@@ -315,7 +315,7 @@ int simulate_fmi2_cs()
       //Increment time
       tcur+=hsub;
 
-      for(size_t j=0; j<fmiConfig.plugins.size(); ++j) {
+      for(size_t j=0; j<fmiConfig.nInterfaces; ++j) {
 
         double force[6], position[3],orientation[9],speed[3],ang_speed[3];
 
@@ -326,10 +326,10 @@ int simulate_fmi2_cs()
         fmistatus = fmi2_import_get_real(fmu,fmiConfig.ang_speed_vr[j],3,ang_speed);
 
         //Get interpolated force
-        fmiConfig.plugins.at(0)->GetForce(fmiConfig.interfaceIds[j], tcur, position,orientation,speed,ang_speed,force);
+        plugin->GetForce(fmiConfig.interfaceIds[j], tcur, position,orientation,speed,ang_speed,force);
 
         //Write back motion for sub step
-        fmiConfig.plugins.at(0)->SetMotion(fmiConfig.interfaceIds[j], tcur, position, orientation, speed, ang_speed);
+        plugin->SetMotion(fmiConfig.interfaceIds[j], tcur, position, orientation, speed, ang_speed);
       }
     }
   }
@@ -359,7 +359,7 @@ void do_event_iteration(fmi2_import_t *fmu, fmi2_event_info_t *eventInfo)
 //Read motion from FMU and write it to TLMPlugin
 void motionFromFmuToTlm(double tcur)
 {
-  for(size_t j=0; j<fmiConfig.plugins.size(); ++j) {
+  for(size_t j=0; j<fmiConfig.nInterfaces; ++j) {
     double position[3],orientation[9],speed[3],ang_speed[3];
 
     fmistatus = fmi2_import_get_real(fmu,fmiConfig.position_vr[j],3,position);
@@ -367,7 +367,7 @@ void motionFromFmuToTlm(double tcur)
     fmistatus = fmi2_import_get_real(fmu,fmiConfig.speed_vr[j],3,speed);
     fmistatus = fmi2_import_get_real(fmu,fmiConfig.ang_speed_vr[j],3,ang_speed);
 
-    fmiConfig.plugins.at(0)->SetMotion(fmiConfig.interfaceIds[j], tcur, position, orientation, speed, ang_speed);
+    plugin->SetMotion(fmiConfig.interfaceIds[j], tcur, position, orientation, speed, ang_speed);
   }
 }
 
@@ -934,14 +934,12 @@ int main(int argc, char* argv[])
   // Read FMI configuration
   readTlmConfigFile();
 
-  // Instantiate each TLMPlugin
-  for(size_t i=0; i<fmiConfig.nInterfaces; ++i) {
-    fmiConfig.plugins.push_back(TLMPlugin::CreateInstance());
-  }
+  // Instantiate the TLMPlugin
+  plugin = TLMPlugin::CreateInstance();
 
-  // Initialize each TLMPlugin
-  //for(size_t i=0; i<fmiConfig.nInterfaces; ++i) {
-    if(!fmiConfig.plugins[0]->Init(tlmConfig.model,
+
+  // Initialize the TLMPlugin
+    if(!plugin->Init(tlmConfig.model,
                                    tlmConfig.tstart,
                                    tlmConfig.tend,
                                    tlmConfig.hmax,
@@ -949,11 +947,10 @@ int main(int argc, char* argv[])
       TLMErrorLog::FatalError("Error initializing the TLM plugin.");
       exit(1);
     }
-  //}
 
   // Register TLM interfaces
   for(size_t i=0; i<fmiConfig.interfaceNames.size(); ++i) {
-    fmiConfig.interfaceIds[i] = fmiConfig.plugins[0]->RegisteTLMInterface(fmiConfig.interfaceNames[i]);
+    fmiConfig.interfaceIds[i] = plugin->RegisteTLMInterface(fmiConfig.interfaceNames[i]);
   }
 
   jm_callbacks callbacks;
