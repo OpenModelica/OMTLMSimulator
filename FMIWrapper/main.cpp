@@ -98,7 +98,7 @@ void forceFromTlmToFmu(double tcur)
     fmistatus = fmi2_import_get_real(fmu,fmiConfig.ang_speed_vr[j],3,ang_speed);
 
     //Get interpolated force
-    fmiConfig.plugins.at(j)->GetForce(fmiConfig.interfaceIds[j], tcur, position,orientation,speed,ang_speed,force);
+    fmiConfig.plugins.at(0)->GetForce(fmiConfig.interfaceIds[j], tcur, position,orientation,speed,ang_speed,force);
 
     for(size_t k=0; k<6; ++k) {
       force[k] = -force[k];
@@ -299,7 +299,7 @@ int simulate_fmi2_cs()
         fmistatus = fmi2_import_get_real(fmu,fmiConfig.ang_speed_vr[j],3,ang_speed);
 
         //Get interpolated force
-        fmiConfig.plugins.at(j)->GetForce(fmiConfig.interfaceIds[j], tcur, position,orientation,speed,ang_speed,force);
+        fmiConfig.plugins.at(0)->GetForce(fmiConfig.interfaceIds[j], tcur, position,orientation,speed,ang_speed,force);
 
         for(size_t k=0; k<6; ++k) {
           force[k] = -force[k];
@@ -326,10 +326,10 @@ int simulate_fmi2_cs()
         fmistatus = fmi2_import_get_real(fmu,fmiConfig.ang_speed_vr[j],3,ang_speed);
 
         //Get interpolated force
-        fmiConfig.plugins.at(j)->GetForce(fmiConfig.interfaceIds[j], tcur, position,orientation,speed,ang_speed,force);
+        fmiConfig.plugins.at(0)->GetForce(fmiConfig.interfaceIds[j], tcur, position,orientation,speed,ang_speed,force);
 
         //Write back motion for sub step
-        fmiConfig.plugins.at(j)->SetMotion(fmiConfig.interfaceIds[j], tcur, position, orientation, speed, ang_speed);
+        fmiConfig.plugins.at(0)->SetMotion(fmiConfig.interfaceIds[j], tcur, position, orientation, speed, ang_speed);
       }
     }
   }
@@ -367,7 +367,7 @@ void motionFromFmuToTlm(double tcur)
     fmistatus = fmi2_import_get_real(fmu,fmiConfig.speed_vr[j],3,speed);
     fmistatus = fmi2_import_get_real(fmu,fmiConfig.ang_speed_vr[j],3,ang_speed);
 
-    fmiConfig.plugins.at(j)->SetMotion(fmiConfig.interfaceIds[j], tcur, position, orientation, speed, ang_speed);
+    fmiConfig.plugins.at(0)->SetMotion(fmiConfig.interfaceIds[j], tcur, position, orientation, speed, ang_speed);
   }
 }
 
@@ -940,8 +940,8 @@ int main(int argc, char* argv[])
   }
 
   // Initialize each TLMPlugin
-  for(size_t i=0; i<fmiConfig.nInterfaces; ++i) {
-    if(!fmiConfig.plugins[i]->Init(tlmConfig.model,
+  //for(size_t i=0; i<fmiConfig.nInterfaces; ++i) {
+    if(!fmiConfig.plugins[0]->Init(tlmConfig.model,
                                    tlmConfig.tstart,
                                    tlmConfig.tend,
                                    tlmConfig.hmax,
@@ -949,11 +949,11 @@ int main(int argc, char* argv[])
       TLMErrorLog::FatalError("Error initializing the TLM plugin.");
       exit(1);
     }
-  }
+  //}
 
   // Register TLM interfaces
-  for(size_t i=0; i<fmiConfig.plugins.size(); ++i) {
-    fmiConfig.interfaceIds[i] = fmiConfig.plugins[i]->RegisteTLMInterface(fmiConfig.interfaceNames[i]);
+  for(size_t i=0; i<fmiConfig.interfaceNames.size(); ++i) {
+    fmiConfig.interfaceIds[i] = fmiConfig.plugins[0]->RegisteTLMInterface(fmiConfig.interfaceNames[i]);
   }
 
   jm_callbacks callbacks;
