@@ -9,12 +9,12 @@ package FMITLM
       Modelica.Mechanics.MultiBody.Interfaces.Frame_a frame_a annotation(Placement(visible = true, transformation(origin = {-67.9907, -3.03738}, extent = {{-12, -12}, {12, 12}}, rotation = 0), iconTransformation(origin = {-67.9907, -3.03738}, extent = {{-12, -12}, {12, 12}}, rotation = 0)));
       parameter String interfaceName = "fmitlm";
       parameter Boolean debugFlg = false;
-      Real v[3];
-      Real w[3];
-      Real f[3](start = zeros(3));
-      Real t[3](start = zeros(3));
-      Real r[3];
-      Real A[3, 3];
+      output Real v[3];
+      output Real w[3];
+      input Real f[3](start = zeros(3));
+      input Real t[3](start = zeros(3));
+      output Real r[3];
+      output Real A[3, 3];
       Real AT[3, 3];
     equation
 //
@@ -42,51 +42,48 @@ package FMITLM
       Modelica.Mechanics.MultiBody.Interfaces.Frame_a frame_a annotation(Placement(visible = true, transformation(origin = {-67.9907, -3.03738}, extent = {{-12, -12}, {12, 12}}, rotation = 0), iconTransformation(origin = {-97.9907, -3.03738}, extent = {{-12, -12}, {12, 12}}, rotation = 0)));
       parameter String interfaceName = "fmitlm";
       parameter Boolean debugFlg = false;
-      Real v[3];
-      Real w[3];
-      Real r[3];
-      Real f[3];
+      output Real w[3];
+      output Real phi[3];
+      output Real r[3];
+      input Real f;
       Real ft[3];
-      Real t[3];
       Real Aa[3, 3];
       Real Ab[3, 3];
-      Real ATa[3, 3];
-      Real ATb[3, 3];
-      Real d;
+      Real x1,x2,x3;
+      Real v[3];
+      Real v1,v2,v3;
+     // Real d[3];
   Modelica.Mechanics.MultiBody.Interfaces.Frame_b frame_b annotation(Placement(visible = true, transformation(origin = {-17.9907, 46.9626}, extent = {{-12, -12}, {12, 12}}, rotation = 0), iconTransformation(origin = {102.009, -3.0374}, extent = {{-12, -12}, {12, 12}}, rotation = 0)));
     equation
 //
 // World to frame transformation matrix
       Aa = frame_a.R.T;
       Ab = frame_b.R.T;
-//
-// Frame to world transformation matrix
-      ATa = transpose(frame_a.R.T);
-      ATb = transpose(frame_b.R.T);
-//
+
 // Transform motion into world system
-      r[0] = frame_b.r_0[0]-frame_a.r_0[0];
-      r[1] = frame_b.r_0[1]-frame_a.r_0[1];
-      r[2] = frame_b.r_0[2]-frame_a.r_0[2]; 
+      r = frame_b.r_0-frame_a.r_0;
+      v = der(r);
+    
+      x1 = Modelica.Math.Vectors.length(r);
+      x2 =0.0;
+      x3 = 0.0;
       
-      d = sqrt(r[0]^2+r[1]^2+r[2]^2);
+      v1=der(x1);
+      v2=0.0;
+      v3=0.0;
       
-      v[0] = der(frame_b.r_0[0])-der(frame_a.r_0[0]);
-      v[1] = der(frame_b.r_0[1])-der(frame_a.r_0[1]);
-      v[2] = der(frame_b.r_0[2])-der(frame_a.r_0[2]);
+     
+      w = zeros(3);
+      phi = zeros(3);
       
-      w = M.resolve2(ATa, frame_a.R.w);
-      w = M.resolve2(ATb, frame_b.R.w);
-      
-      ft[0] = f[0]*r[0]/d;
-      ft[1] = f[0]*r[1]/d;
-      ft[2] = f[0]*r[2]/d;
+      ft = f*r/x1;
+     
       
 // Transform force and moment into local system
       frame_a.f = M.resolve2(Aa, ft);
-      frame_a.t = M.resolve2(Aa, t);
+      frame_a.t = zeros(3);
       frame_b.f = M.resolve2(Ab, ft);
-      frame_b.t = M.resolve2(Ab, t);
+      frame_b.t = zeros(3);
       annotation(Diagram, Icon(coordinateSystem(preserveAspectRatio = false, initialScale = 0.1, grid = {10, 10}), graphics = {Rectangle(origin = {-30, 0}, lineColor = {255, 255, 255}, fillColor = {0, 0, 255}, fillPattern = FillPattern.HorizontalCylinder, extent = {{-29.548, -45.806}, {96.903, 42.581}}, radius = 20), Line(points = {{-93.226, -2.581}, {101.613, -2.581}}, color = {0, 0, 255}, thickness = 5), Text(origin = {5.194, -1.225}, lineColor = {255, 255, 255}, extent = {{-59.815, -21.225}, {59.815, 21.225}}, textString = "3DFMITLM", fontSize = 48, fontName = "MS Shell Dlg 2")}), uses(Modelica(version = "3.2.2")));
     end FMITLMInterface1Dto3D;
     annotation(Icon(coordinateSystem(extent = {{-100, -100}, {100, 100}}, preserveAspectRatio = true, initialScale = 0.1, grid = {10, 10}), graphics={  Rectangle(visible = true, fillColor = {0, 170, 0},
