@@ -17,6 +17,11 @@ install:
 	-mkdir -p $(INSTDIR)
 	-mkdir -p $(LIBDIR)
 	cp TLMPluginLib/TLMPluginLib.dll $(LIBDIR)
+	cp TLMPluginLib/TLMPluginLib.xml $(LIBDIR)
+	cp TLMPluginLib/TLMPluginLib.cc $(LIBDIR)
+	cp TLMPluginLib/TLMPluginInterface.xml $(LIBDIR)
+	cp TLMPluginLib/TLMPluginInterface.hpp $(LIBDIR)
+	cp TLMPluginLib/TLMPluginInterface.svg $(LIBDIR)
 	cp StartTLMHopsan.bat $(BINDIR)
     
 clean:
