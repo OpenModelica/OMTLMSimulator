@@ -54,7 +54,7 @@ int main(int argn, char* argv[]) {
     };
 
     // This is the only TLM interface of this model: px
-    int forceID = TlmForce->RegisteTLMInterface("px");
+    int forceID = TlmForce->RegisteTLMInterface3D("px");
 
     if(forceID < 0) {
 	cerr << "Failed to register TLM interface" << endl;
@@ -90,7 +90,7 @@ int main(int argn, char* argv[]) {
 	dt = (MaxStep + rand() * MaxStep / RAND_MAX) / 2;
 
 	// Get force & moment from TLM connection
-	TlmForce->GetForce(forceID, Time+dt,  position, orientation, speed, ang_speed, force);
+	TlmForce->GetForce3D(forceID, Time+dt,  position, orientation, speed, ang_speed, force);
 
 	cout<< "Mdl: " << Model << " t=" << Time+dt << " got f= " << force[0] << "; v= " << v << endl;
 
@@ -106,7 +106,7 @@ int main(int argn, char* argv[]) {
 	speed[0] = v;
 	
 	// Pass info to the tlm
-	TlmForce->SetMotion(forceID, Time + dt, position, orientation, speed, ang_speed);
+	TlmForce->SetMotion3D(forceID, Time + dt, position, orientation, speed, ang_speed);
 
 	cout<< "Model " << Model << " time: " << Time << "; x = " << x << "; v = " << v << endl;
 

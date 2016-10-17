@@ -305,7 +305,7 @@ void ManagerCommHandler::SetupInterfaceConnectionMessage(int IfcID, std::string&
     TheModel.GetTLMComponentProxy(CompId).GetInertialTranformation(param.cX_R_cG_cG, param.cX_A_cG);
 
     // Send initial interface position
-    TLMTimeData& td = ifc.getTime0Data();
+    TLMTimeData3D& td = ifc.getTime0Data();
     for(int i=0 ; i<3 ; i++ ) param.Nom_cI_R_cX_cX[i] = td.Position[i];
     for(int i=0 ; i<9 ; i++ ) param.Nom_cI_A_cX[i] = td.RotMatrix[i];
 
@@ -458,7 +458,7 @@ void ManagerCommHandler::UnpackAndStoreTimeData(TLMMessage& message)
     };
 
     // since mess.Data is continious we can just convert the pointer
-    TLMTimeData* Next = (TLMTimeData*)(&message.Data[0]);
+    TLMTimeData3D* Next = (TLMTimeData3D*)(&message.Data[0]);
 
     // check if we have byte order missmatch in the message and perform
     // swapping if necessary
@@ -469,7 +469,7 @@ void ManagerCommHandler::UnpackAndStoreTimeData(TLMMessage& message)
 
     // forward the time data
     TLMInterfaceProxy& src = TheModel.GetTLMInterfaceProxy(message.Header.TLMInterfaceID);
-    TLMTimeData& data = src.getTime0Data();
+    TLMTimeData3D& data = src.getTime0Data();
 
     TLMErrorLog::Log("Unpack and store time data for " + src.GetName() ); 
     

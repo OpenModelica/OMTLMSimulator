@@ -57,7 +57,7 @@ TLMPlugin* initializeTLMConnection(MetaModel& model, std::string& serverName)
         TLMComponentProxy& component = model.GetTLMComponentProxy(interfaceProxy.GetComponentID());
 
         TLMErrorLog::Log( "Trying to register monitoring interface " + interfaceProxy.GetName() );
-        int TLMInterfaceID = TLMlink->RegisteTLMInterface( component.GetName() + "." + interfaceProxy.GetName() );
+        int TLMInterfaceID = TLMlink->RegisteTLMInterface3D( component.GetName() + "." + interfaceProxy.GetName() );
 
         if(TLMInterfaceID >= 0) {
             TLMErrorLog::Log("Registration was successful");
@@ -71,7 +71,7 @@ TLMPlugin* initializeTLMConnection(MetaModel& model, std::string& serverName)
 }
 
 //! Evaluate the data needed for the current time step.
-void MonitorTimeStep(TLMPlugin* TLMlink, MetaModel& model, double SimTime, std::map<int, TLMTimeData>& dataStorage )
+void MonitorTimeStep(TLMPlugin* TLMlink, MetaModel& model, double SimTime, std::map<int, TLMTimeData3D>& dataStorage )
 {
     if( TLMlink != 0 ){
         // Get data from TLM-Manager here!
@@ -87,14 +87,14 @@ void MonitorTimeStep(TLMPlugin* TLMlink, MetaModel& model, double SimTime, std::
             if( connectionID >= 0 ){
 #define LOGGEDFORCEFIX
 #ifdef  LOGGEDFORCEFIX
-                TLMTimeData& PrevTimeData = dataStorage[interfaceID];
-                TLMTimeData& CurTimeData = dataStorage[interfaceID];
+                TLMTimeData3D& PrevTimeData = dataStorage[interfaceID];
+                TLMTimeData3D& CurTimeData = dataStorage[interfaceID];
 
-                TLMlink->GetTimeData(interfaceID, SimTime, CurTimeData);
+                TLMlink->GetTimeData3D(interfaceID, SimTime, CurTimeData);
 
                 double delay = model.GetTLMConnection(interfaceProxy.GetConnectionID()).GetParams().Delay;
                 double alpha = model.GetTLMConnection(interfaceProxy.GetConnectionID()).GetParams().alpha;
-                TLMlink->GetTimeData(interfaceID, SimTime-delay, PrevTimeData);
+                TLMlink->GetTimeData3D(interfaceID, SimTime-delay, PrevTimeData);
 
                 //Apply damping factor, since this can not be done in GetTimeData (DampedTimeData is not available for monitor)
                 for(int i = 0; i < 6; i++) {
@@ -144,7 +144,7 @@ void printHeader(MetaModel& model, std::ofstream& dataFile)
     dataFile << std::endl;
 }
 
-void printData(MetaModel& model, std::ofstream& dataFile, std::map<int, TLMTimeData>& dataStorage)
+void printData(MetaModel& model, std::ofstream& dataFile, std::map<int, TLMTimeData3D>& dataStorage)
 {
     // Get data from TLM-Manager here!
     int nTLMInterfaces = model.GetInterfacesNum();
@@ -156,7 +156,7 @@ void printData(MetaModel& model, std::ofstream& dataFile, std::map<int, TLMTimeD
         TLMInterfaceProxy& interfaceProxy = model.GetTLMInterfaceProxy(i);
         if( interfaceProxy.GetConnectionID() >= 0 ){
 
-            TLMTimeData& timeData = dataStorage.at(interfaceProxy.GetID());
+            TLMTimeData3D& timeData = dataStorage.at(interfaceProxy.GetID());
 
             // Print time only once, that is, for the first entry.
             if( printTimeFlg ){
@@ -353,7 +353,7 @@ int main(int argc, char* argv[]) {
         if( simTime > endTime ) simTime = endTime;
 
         // Data structure for data logging
-        std::map<int, TLMTimeData> data;
+        std::map<int, TLMTimeData3D> data;
 
         // Get data for next time step.
         TM_Start(&tInfo);

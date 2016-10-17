@@ -189,7 +189,7 @@ void TLM_force::GetForce(bool derCalc, int markerID,
     }
 
     // Call the plugin to get reaction force
-    Plugin->GetForce(interfaceID,
+    Plugin->GetForce3D(interfaceID,
 		     param.Time,
 		     param.Position,
 		     param.Orientation,
@@ -207,7 +207,7 @@ void TLM_force::RegisterMarker(int markerID) {
 
     cerr << "Trying to register interface " << markerName << endl;
 
-    int interfaceID = Plugin->RegisteTLMInterface(markerName);
+    int interfaceID = Plugin->RegisteTLMInterface3D(markerName);
 
     MarkerID& mID = MarkerIDmap[markerID];
     mID.ID = interfaceID;

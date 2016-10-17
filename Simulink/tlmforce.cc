@@ -121,7 +121,7 @@ void TLM_InterfaceReg::RegisterInterface(std::string ifID) {
 	TLMErrorLog::FatalError( "Try to register same interface twice " + ifID );
     }
   
-    int interfaceID = Plugin->RegisteTLMInterface(ifID);
+    int interfaceID = Plugin->RegisteTLMInterface3D(ifID);
     
     InterfaceIDmap[ifID] = interfaceID;
     NumInterfaces++;
@@ -351,10 +351,10 @@ static void mdlOutputs(SimStruct *S, int_T tid)
 
     /* output */
     double force[6];
-    TLMTimeData CurTimeData;
+    TLMTimeData3D CurTimeData;
 
     if( ifID >= 0 ) {
-        TLM_InterfaceReg::GetInstance()->GetPlugin()->GetForce(ifID,
+        TLM_InterfaceReg::GetInstance()->GetPlugin()->GetForce3D(ifID,
                                                                time,
                                                                R,
                                                                A,
@@ -376,7 +376,7 @@ static void mdlOutputs(SimStruct *S, int_T tid)
 #endif
         
         /* Get Position and Orientation */
-        TLM_InterfaceReg::GetInstance()->GetPlugin()->GetTimeData(ifID, time, CurTimeData);        
+        TLM_InterfaceReg::GetInstance()->GetPlugin()->GetTimeData3D(ifID, time, CurTimeData);        
 
         TLMErrorLog::Log("Got position for: " + std::string(name) );
         TLMErrorLog::Log("R: " + ToStr(CurTimeData.Position[0]) + " " +  ToStr(CurTimeData.Position[1]) + " " + ToStr(CurTimeData.Position[2]) );
@@ -457,7 +457,7 @@ static void mdlOutputs(SimStruct *S, int_T tid)
               TLMErrorLog::Log("vR: " + ToStr(vR[0]) + " " +  ToStr(vR[1]) + " " + ToStr(vR[2]) );
               //TLMErrorLog::Log("Omega: " + ToStr(Omega[0]) + " " +  ToStr(Omega[1]) + " " + ToStr(Omega[2]) );
               
-              TLM_InterfaceReg::GetInstance()->GetPlugin()->SetMotion(ifID,          // Send data to the Plugin
+              TLM_InterfaceReg::GetInstance()->GetPlugin()->SetMotion3D(ifID,          // Send data to the Plugin
                                                                       time,
                                                                       R,
                                                                       A,

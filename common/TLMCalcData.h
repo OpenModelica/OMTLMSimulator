@@ -86,11 +86,11 @@ public:
     double mode;
 };
 
-//! Time stamped data that is send over between connected TLM interfaces.
+//! Time stamped 3D data that is send over between connected TLM interfaces.
 //! Note that the strucutre MUST:
 //! - contain only "double" number that are transmitted (important for byte swapping)
 //! - have continious storage
-class TLMTimeData {
+class TLMTimeData3D {
 public:
     //! The time instance
     double time;
@@ -109,7 +109,7 @@ public:
     //! Force and moment "waves" acting and expressed in this TLM interface
     double GenForce[6];
 
-    TLMTimeData() 
+    TLMTimeData3D()
         : time(0.0)
         // Position
         // RotMatrix
@@ -129,7 +129,7 @@ public:
         GenForce[3] = 0.0; GenForce[4] = 0.0; GenForce[5] = 0.0;
     }
 
-    TLMTimeData& operator=(const TLMTimeData& td){
+    TLMTimeData3D& operator=(const TLMTimeData3D& td){
         if( &td != this ){
             time = td.time;
 
@@ -141,7 +141,53 @@ public:
         }
         return *this;
     }
+};
 
+
+
+//! Time stamped 1D data that is send over between connected TLM interfaces.
+//! Note that the strucutre MUST:
+//! - contain only "double" number that are transmitted (important for byte swapping)
+//! - have continious storage
+class TLMTimeData1D {
+public:
+    //! The time instance
+    double time;
+
+    //! Position (or angle)
+    double Position;
+
+    //! Velocity (or angular velocity)
+    double Velocity;
+
+    //! Force (or torque)
+    double GenForce;
+
+    TLMTimeData1D()
+        : time(0.0)
+        // Position
+        // RotMatrix
+        // Velocity
+        // GenForce
+    {
+        Position = 0.0;
+
+        Velocity = 0.0;
+
+        GenForce = 0.0;
+    }
+
+    TLMTimeData1D& operator=(const TLMTimeData1D& td){
+        if( &td != this ){
+            time = td.time;
+
+            int i=0;
+            Position = td.Position;
+            Velocity = td.Velocity;
+            GenForce = td.GenForce;
+        }
+        return *this;
+    }
 };
 
 

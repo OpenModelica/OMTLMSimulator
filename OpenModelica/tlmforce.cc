@@ -174,7 +174,7 @@ void set_tlm_motion(void* in_TLMPluginStructObj,
         int id = MarkerIDmap[interfaceID];
 
         if( id >= 0 ){
-            TLMPluginStructObj->Plugin->SetMotion(id,          // Send data to the Plugin
+            TLMPluginStructObj->Plugin->SetMotion3D(id,          // Send data to the Plugin
 						  simTime,
 						  position,
 						  orientation,
@@ -225,7 +225,7 @@ void calc_tlm_force(void* in_TLMPluginStructObj,
 
     // Check if interface is registered. If it's not, register it
     if( MarkerIDmap.find(interfaceID) == MarkerIDmap.end() ){
-        MarkerIDmap[interfaceID] = TLMPluginStructObj->Plugin->RegisteTLMInterface(interfaceID);
+        MarkerIDmap[interfaceID] = TLMPluginStructObj->Plugin->RegisteTLMInterface3D(interfaceID);
     }
 
     // Interface force ID in TLM manager
@@ -236,7 +236,7 @@ void calc_tlm_force(void* in_TLMPluginStructObj,
     // This gives a well defined start condition where all forces and moments are 0.0
     if( id >= 0 && firstFinalStepReached ){
         // Call the plugin to get reaction force
-	TLMPluginStructObj->Plugin->GetForce(id,
+	TLMPluginStructObj->Plugin->GetForce3D(id,
 					     simTime,
 					     position,
 					     orientation,

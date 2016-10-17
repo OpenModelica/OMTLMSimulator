@@ -87,7 +87,7 @@ public:
     };
 
     //! Access data for simulation start time.
-    TLMTimeData& getTime0Data(){
+    TLMTimeData3D& getTime0Data(){
         return time0Data;
     }
 
@@ -118,7 +118,7 @@ private:
 
     //! Data at simulation start time.
     //! Used for data interface data request mode.
-    TLMTimeData time0Data;
+    TLMTimeData3D time0Data;
 };
 
 
