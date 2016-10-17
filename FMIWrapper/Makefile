@@ -24,7 +24,7 @@ include $(MAKEFILEHEADHOME)/Makefile.head
 CC += -pipe -fno-keep-inline-dllexport -O2 -frtti -Wall -Wextra -fexceptions -mthreads -DUNICODE
 cc += -pipe -fno-keep-inline-dllexport -O2 -frtti -Wall -Wextra -fexceptions -mthreads -DUNICODE
 
-BNAME=FMIWrapper.exe
+BNAME=FMIWrapper$(FEXT)
 INSTDIR=$(BINDIR)
 #RESOURCESDIR=$(INSTDIR)/Resources
 MISCHOME=../extralibs/misc
@@ -122,7 +122,8 @@ dirs_unix:
 
 clean:
 	rm -rf $(ABI)
-	rm -rf $(INSTDIR)
+	rm -rf $(BINDIR)/FMIWrapper$(FEXT)
 	rm -rf FMILibrary-2.0.1/build
+	rm -rf FMILibrary-2.0.1/install
 
 # DO NOT DELETE
