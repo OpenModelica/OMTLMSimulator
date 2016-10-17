@@ -1,0 +1,38 @@
+Determining if the _POSIX_TIMERS exist failed with the following output:
+Change Dir: C:/Users/robbr48/Documents/Mercurial/TLMPlugin/FMIWrapper/cvode-2.9.0/builddir/CMakeFiles/CMakeTmp
+
+Run Build Command:"C:/mingw64/bin/mingw32-make.exe" "cmTryCompileExec3480320913/fast"
+C:/mingw64/bin/mingw32-make.exe -f CMakeFiles\cmTryCompileExec3480320913.dir\build.make CMakeFiles/cmTryCompileExec3480320913.dir/build
+mingw32-make.exe[1]: Entering directory 'C:/Users/robbr48/Documents/Mercurial/TLMPlugin/FMIWrapper/cvode-2.9.0/builddir/CMakeFiles/CMakeTmp'
+"C:\Program Files (x86)\CMake\bin\cmake.exe" -E cmake_progress_report C:\Users\robbr48\Documents\Mercurial\TLMPlugin\FMIWrapper\cvode-2.9.0\builddir\CMakeFiles\CMakeTmp\CMakeFiles 1
+Building C object CMakeFiles/cmTryCompileExec3480320913.dir/CheckSymbolExists.c.obj
+C:\mingw64\bin\gcc.exe    -o CMakeFiles\cmTryCompileExec3480320913.dir\CheckSymbolExists.c.obj   -c C:\Users\robbr48\Documents\Mercurial\TLMPlugin\FMIWrapper\cvode-2.9.0\builddir\CMakeFiles\CMakeTmp\CheckSymbolExists.c
+Linking C executable cmTryCompileExec3480320913.exe
+"C:\Program Files (x86)\CMake\bin\cmake.exe" -E cmake_link_script CMakeFiles\cmTryCompileExec3480320913.dir\link.txt --verbose=1
+"C:\Program Files (x86)\CMake\bin\cmake.exe" -E remove -f CMakeFiles\cmTryCompileExec3480320913.dir/objects.a
+C:\mingw64\bin\ar.exe cr CMakeFiles\cmTryCompileExec3480320913.dir/objects.a @CMakeFiles\cmTryCompileExec3480320913.dir\objects1.rsp
+C:\mingw64\bin\gcc.exe      -Wl,--whole-archive CMakeFiles\cmTryCompileExec3480320913.dir/objects.a -Wl,--no-whole-archive  -o cmTryCompileExec3480320913.exe -Wl,--out-implib,libcmTryCompileExec3480320913.dll.a -Wl,--major-image-version,0,--minor-image-version,0 @CMakeFiles\cmTryCompileExec3480320913.dir\linklibs.rsp
+C:/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/4.9.3/../../../../x86_64-w64-mingw32/bin/ld.exe: cannot find -lrt
+collect2.exe: error: ld returned 1 exit status
+CMakeFiles\cmTryCompileExec3480320913.dir\build.make:89: recipe for target 'cmTryCompileExec3480320913.exe' failed
+mingw32-make.exe[1]: *** [cmTryCompileExec3480320913.exe] Error 1
+mingw32-make.exe[1]: Leaving directory 'C:/Users/robbr48/Documents/Mercurial/TLMPlugin/FMIWrapper/cvode-2.9.0/builddir/CMakeFiles/CMakeTmp'
+makefile:117: recipe for target 'cmTryCompileExec3480320913/fast' failed
+mingw32-make.exe: *** [cmTryCompileExec3480320913/fast] Error 2
+
+File C:/Users/robbr48/Documents/Mercurial/TLMPlugin/FMIWrapper/cvode-2.9.0/builddir/CMakeFiles/CMakeTmp/CheckSymbolExists.c:
+/* */
+#include <unistd.h>
+#include <time.h>
+
+int main(int argc, char** argv)
+{
+  (void)argv;
+#ifndef _POSIX_TIMERS
+  return ((int*)(&_POSIX_TIMERS))[argc];
+#else
+  (void)argc;
+  return 0;
+#endif
+}
+

@@ -1,0 +1,226 @@
+\chapter{Simulink TLM Plugin}
+
+The Matlab/Simulink TLMPlugin implementation is based on a Matlab
+S-function interface.
+
+{\scriptsize
+\begin{verbatim}
+/*
+ * tlmforce.c: Based on 'C' template for a level 2 S-function.
+ *
+ *  -------------------------------------------------------------------------
+ *  | See matlabroot/simulink/src/sfuntmpl_doc.c for a more detailed template |
+ *  -------------------------------------------------------------------------
+ *
+ * Copyright 1990-2000 The MathWorks, Inc.
+ * $Revision$
+ */
+\end{verbatim}
+}
+
+TLM delay is set in the initialization of the S-Function interface
+function {\em mdlInitializeSampleTimes(...).}
+
+{\scriptsize
+\begin{verbatim}
+/* Function: mdlInitializeSampleTimes =========================================
+ * Abstract:
+ *    This function is used to specify the sample time(s) for your
+ *    S-function. You must register the same number of sample times as
+ *    specified in ssSetNumSampleTimes.
+ */
+static void mdlInitializeSampleTimes(SimStruct *S)
+{
+    double sTime, eTime, timeStep;
+    TLM_InterfaceReg::GetInstance(false)->GetSimParameters(sTime, eTime, timeStep);
+    // true or false in GetInstance(...) enables/disables debug output
+
+    TLMErrorLog::Log("Set sample time to " + ToStr(timeStep));
+
+    /* Set TLM delay here! */
+    ssSetSampleTime(S, 0, CONTINUOUS_SAMPLE_TIME);
+    ssSetOffsetTime(S, 0, 0.0);
+
+    /* Set TLM delay here! */
+    ssSetSampleTime(S, 1, timeStep);
+    ssSetOffsetTime(S, 1, 0.0);
+}
+\end{verbatim}
+}
+
+Note, that the first call to {\em TLM\_InterfaceReg::GetInstance(...)}
+initialized the TLM plugin, that is, it reads the TLM configuration
+parameters form the config file.
+
+Communication with Simulink is based on the C structure {\em
+  SimStruct}. Initially we need to setup the size (of the
+data that we want to communicate in the structure. This is done in the
+S-Function interface function {\em mdlInitializeSizes(...)}.
+
+{\scriptsize
+\begin{verbatim}
+/* Function: mdlInitializeSizes ===============================================
+ * Abstract:
+ *    The sizes information is used by Simulink to determine the S-function
+ *    block's characteristics (number of inputs, outputs, states, etc.).
+ */
+static void mdlInitializeSizes(SimStruct *S)
+{
+    /* See sfuntmpl_doc.c for more details on the macros below */
+
+    ...
+
+    /* input ports are: */
+    /* position[3]      Interface position data */
+    /* orientation[3x3] Interface rotation matrix */
+    /* speed[3]         Interface translational velocity */
+    /* ang_speed[3]     Interface angular velocity */
+
+    if (!ssSetNumInputPorts(S, 4)) return;
+    /* Set size of input arrays */
+    ssSetInputPortWidth(S, 0, 3);
+    ssSetInputPortWidth(S, 1, 9);
+    ssSetInputPortWidth(S, 2, 3);
+    ssSetInputPortWidth(S, 3, 3);
+
+    ...
+
+    /* output ports are: */
+    /* force[3]  Output force */
+    /* moment[3] Output moment */
+
+    if (!ssSetNumOutputPorts(S, 4)) return;
+    ssSetOutputPortWidth(S, 0, 3);
+    ssSetOutputPortWidth(S, 1, 3);
+    ssSetOutputPortWidth(S, 2, 3);
+    ssSetOutputPortWidth(S, 3, 9);
+
+}
+\end{verbatim}
+}
+
+The force calculation in the TLM interface takes place in the
+S-Function interface function {\em mdlOutputs(...)}. This function is
+called by Simuink for a given time instance. The motion of the
+interface can be extracted from the {\em SimStruct} structure that has
+been setup before, see {\em mdlInitializeSizes} above. The resulting
+load (force and moment) is stored in the same structure.
+
+{\scriptsize
+\begin{verbatim}
+/* Function: mdlOutputs =======================================================
+ * Abstract:
+ *    In this function, you compute the outputs of your S-function
+ *    block. Generally outputs are placed in the output vector, ssGetY(S).
+ */
+static void mdlOutputs(SimStruct *S, int_T tid)
+{
+    /* inputs: */
+    /* position[3]      Interface position data */
+    /* orientation[3x3] Interface rotation matrix */
+    /* speed[3]         Interface translational velocity */
+    /* ang_speed[3]     Interface angular velocity */
+    double *R = (double*)ssGetInputPortSignal(S,0);
+    double *A = (double*)ssGetInputPortSignal(S,1);
+    double *vR = (double*)ssGetInputPortSignal(S,2);
+    double *Omega = (double*)ssGetInputPortSignal(S,3);
+
+    const char* name = ssGetPath(S);
+    real_T time = ssGetT(S);
+
+    int ifID = TLM_InterfaceReg::GetInstance()->GetInterfaceID(name);
+
+    /* output */
+    double force[6];
+    TLMTimeData CurTimeData;
+
+    if( ifID >= 0 ) {
+        TLM_InterfaceReg::GetInstance()->GetPlugin()->GetForce(ifID,
+                                                               time,
+                                                               R,
+                                                               A,
+                                                               vR,
+                                                               Omega,
+                                                               force);
+
+        /* Get Position and Orientation */
+        TLM_InterfaceReg::GetInstance()->GetPlugin()->GetTimeData(ifID,
+                                                                  time,
+                                                                  CurTimeData);
+
+    }
+    else {
+        /* Not connected */
+        for( int i=0 ; i<6 ; i++ ) {
+            force[i] = 0.0;
+        }
+    }
+
+    /* ------- store the result ------- */
+
+    /* Force & Moment */
+    real_T  *f = ssGetOutputPortRealSignal(S,0);
+    real_T  *m = ssGetOutputPortRealSignal(S,1);
+
+    for( int i=0 ; i<3 ; i++ ){
+        f[i] = force[i];
+        m[i] = force[i+3];
+    }
+
+    /* Position & Orientation */
+    real_T  *R_TLM = ssGetOutputPortRealSignal(S,2);
+    real_T  *A_TLM = ssGetOutputPortRealSignal(S,3);
+
+    for( int i=0 ; i<3 ; i++ ){
+        R_TLM[i] = CurTimeData.Position[i];
+        A_TLM[i] = CurTimeData.RotMatrix[i];
+        A_TLM[i+3] = CurTimeData.RotMatrix[i+3];
+        A_TLM[i+6] = CurTimeData.RotMatrix[i+6];
+    }
+
+}
+\end{verbatim}
+}
+
+{\em TLM::SetMotion(...)} is called when we want to update the states
+for a ``final'' integration step. In the S-Function interface this is
+handled in the function {\em mdlUpdate(...)}. This triggers the
+communication with the connected simulation tools in order to
+propagate the states.
+
+{\scriptsize
+\begin{verbatim}
+  /* Function: mdlUpdate ======================================================
+   * Abstract:
+   *    This function is called once for every major integration time step.
+   *    Discrete states are typically updated here, but this function is useful
+   *    for performing any tasks that should only take place once per
+   *    integration step.
+   */
+  static void mdlUpdate(SimStruct *S, int_T tid)
+  {
+      if( ssIsSampleHit(S, 1, tid) ){
+
+          double *R = (double*)ssGetInputPortSignal(S,0);
+          double *A = (double*)ssGetInputPortSignal(S,1);
+          double *vR = (double*)ssGetInputPortSignal(S,2);
+          double *Omega = (double*)ssGetInputPortSignal(S,3);
+
+          const char* name = ssGetPath(S);
+          real_T time = ssGetT(S);
+
+          int ifID = TLM_InterfaceReg::GetInstance()->GetInterfaceID(name);
+
+          if( ifID >= 0 ){
+            // Send data to the Plugin
+            TLM_InterfaceReg::GetInstance()->GetPlugin()->SetMotion(ifID,
+                                                                    time,
+                                                                    R,
+                                                                    A,
+                                                                    vR,
+                                                                    Omega);
+          }
+      }
+  }
+\end{verbatim}
+} 

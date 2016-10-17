@@ -1,0 +1,2 @@
+C:\mingw64\bin\ar.exe cq libsundials_nvecserial.a  CMakeFiles/sundials_nvecserial_static.dir/nvector_serial.c.obj CMakeFiles/sundials_nvecserial_static.dir/__/sundials/sundials_math.c.obj
+C:\mingw64\bin\ranlib.exe libsundials_nvecserial.a
