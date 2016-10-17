@@ -34,7 +34,8 @@ INCLUDES=  -I. \
 	-I"..\FMIWrapper" \
     -I"..\FMIWrapper\FMILibrary-2.0.1\install\include" \
     -I"..\common" -I"..\extralibs\misc\include" \
-    -I"cvode-2.9.0/include"
+    -I"cvode-2.9.0/include" \
+    -I"ida-2.9.0/include"
     
 
 LIBS = 	-lws2_32 \
@@ -62,6 +63,9 @@ $(ABI)/%.o: cvode-2.9.0/src/sundials/%.c
 $(ABI)/%.o: cvode-2.9.0/src/cvode/%.c
 	$(CC) $(INCLUDES) -c $< -o $@    
     
+$(ABI)/%.o: ida-2.9.0/src/ida/%.c
+	$(CC) $(INCLUDES) -c $< -o $@        
+    
 OBJS=  main.o 
 
 EXT_OBJS = PluginImplementer.o \
@@ -82,7 +86,12 @@ EXT_OBJS = PluginImplementer.o \
     cvode.o \
     cvode_dense.o \
     cvode_direct.o \
-    cvode_io.o
+    cvode_io.o \
+    ida.o \
+    ida_dense.o \
+    ida_direct.o \
+    ida_io.o
+   
 
 ABIOBJS=$(OBJS:%.o= $(ABI)/%.o) $(EXT_OBJS:%.o= $(ABI)/%.o)
 
