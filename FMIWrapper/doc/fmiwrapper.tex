@@ -8,7 +8,7 @@
 \usepackage{lipsum}
 \usepackage{listings}
 \usepackage{cleveref}
-\usepackage{placeins}
+\usepackage[section]{placeins}
 
 %Remove trailing zero in section numbering
 \renewcommand{\thesection}{\arabic{section}}
@@ -134,7 +134,7 @@ However, it does not provide any information about the mapping between its varia
 Hence, this information must be provided by the user.
 A configuration file called \texttt{fmi.config} is used for this purpose, see \cref{lst:fmiconfig}.
 
-\begin{lstlisting}[basicstyle=\ttfamily,floatplacement=ht,caption="Blabla",label=lst:fmiconfig]
+\begin{lstlisting}[basicstyle=\ttfamily,floatplacement=ht,caption=A configuration file maps value references to TLM variables,label=lst:fmiconfig]
 substeps,100
 name,tlm1
 position,6,7,8
@@ -156,7 +156,7 @@ These can be obtained by analyzing the \texttt{modelDescription.xml} file.
 The variable first torque component has the value reference 167.
 Hence, this number should be inserted as number four on the "force" line in \texttt{fmi.config}.
 
-\begin{lstlisting}[language=XML,floatplacement=ht,caption="Blabla",label=lst:modeldescription]
+\begin{lstlisting}[language=XML,floatplacement=ht,caption=Value references for variables are obtained from \texttt{modelDescription.xml},label=lst:modeldescription]
   <ScalarVariable
     name="fMITLMInterface3D1.t[1]"
     valueReference="167"
@@ -168,8 +168,6 @@ Hence, this number should be inserted as number four on the "force" line in \tex
 \end{lstlisting}
 
 
-
-\FloatBarrier
 \section{FMI for Co-Simulation}
 \label{sec:fmi_cs}
 With FMI for Co-Simulation the solver is embedded within the FMU.
@@ -183,7 +181,7 @@ Pseudo-code for the simulation loop in the wrapper is shown in \cref{lst:wrapper
 \lstset{emph={fmu},emphstyle={\color{red}\bfseries},
         emph={[2]TLMPlugin},emphstyle={[2]\color{blue}\bfseries}
 }
-\begin{lstlisting}[float, language=c++, basicstyle=\ttfamily\small,floatplacement=htb,caption=Blabla,label=lst:wrapper_cs]
+\begin{lstlisting}[float, language=c++, basicstyle=\ttfamily\small,floatplacement=htb,caption=Pseudo code for the simulation loop with FMI for co-simulation,label=lst:wrapper_cs]
 while (tcur < tend) {
     double hsub = hmax/nSubSteps;
     for(size_t i=0; i<nSubSteps; ++i) {
@@ -211,6 +209,8 @@ Note that it is necessary to read the motion variables from the FMU before obtai
 At the end of each major step it is also necessary to call \texttt{GetForce()} before calling \texttt{SetMotion()}.
 The reason for this is that \texttt{SetMotion()} requires updated input variables which are retreived by \texttt{GetForce()}.
 
+\vspace{0cm}
+
 \section{FMI for model exchange}
 With model exchange, the wrapper must provide a solver for the FMU.
 Three solvers are available: explicit Euler, Runge-Kutta, and the CVODE and IDA solvers from Sundials \cite{hindmarsh2005}.
@@ -220,7 +220,7 @@ This means that it takes one step at a time, until its internal time exceeds the
 The CVODE solver requires a callback function for obtaining derivatives of state variables (i.e. "right-hand side").
 The IDA solver requires a similar callback for obtaining the residuals.
 
-\begin{lstlisting}[float, language=c++, basicstyle=\ttfamily\small,floatplacement=ht,caption=Blabla,label=lst:wrapper_me]
+\begin{lstlisting}[float, language=c++, basicstyle=\ttfamily\small,floatplacement=ht,caption=Pseudo code for the simulation loop with FMI for model exchange,label=lst:wrapper_me]
 double position[3],orientation[9],speed[3],ang_speed[3],force[6];
 
 x = fmu.get_real(x_vr,3);
@@ -243,7 +243,8 @@ fmu.set_continuous_states(y);
 \end{lstlisting}
 
 \section{Example: Double Pendulum with Dymola and OpenModelica}
-This section will explain how to build a meta model of a double pendulum, using FMUs exported from Dymola and OpenModelica.
+This section will explain how to build a meta model of a double pendulum using FMUs exported from Dymola and OpenModelica.
+\Cref{fig:double_pendulum} shows a sketch of the model.
 The resulting meta model is found in the \linebreak\texttt{/MetaModels/FmuFmuPendulum} folder.
 One FMU for Co-simulation and one for Model Exchange will be used.
 Both models use a custom Modelica library called FMILIB for the TLM interfaces.
@@ -262,26 +263,29 @@ This library is shipped together with the FMI wrapper.
 
 \draw[thick,dashed] (0.1cm,-2.1cm) -- (2.1cm,-0.1cm) --node[below] () {OpenModelica} (5cm,-0.1cm) -- (5.2cm,-4.1cm) -- (0.1cm,-4.1cm) -- (0.1cm,-2.1cm);
 \end{tikzpicture}
-\caption{Blabla...}
+\caption{A double pendulum is simulated using FMUs exported from Dymola and OpenModelica}
 \label{fig:double_pendulum}
 \end{figure}
 
 The Dymola model consists of half the first pendulum and the fixed attachment to the inertial system, see figure \cref{fig:model_dymola}.
-Force and torque variables must be specified as input and output variables at the top level of the model, in order to get the correct number of equations and variables.
-Hence, we need to add the following variables and equations:
+Force and torque variables must be specified as input variables at the top level of the model, in order to get the correct number of equations and variables.
+Hence, we need to add the equations shown in \cref{lst:dymola_equations}.
 
-\begin{lstlisting}[basicstyle=\footnotesize\ttfamily]
+\begin{lstlisting}[basicstyle=\small\ttfamily, floatplacement=ht,label=lst:dymola_equations,caption=Input variables must be specified on top level in the Modelica models]
+  [...]
+  FMITLM.FMITLM_Interface_3D.FMITLMInterface3D fMITLMInterface3D;
   input Real f[3](start = zeros(3));
   input Real t[3](start = zeros(3));
 equation
   fMITLMInterface3D.f = f;
-  fMITLMInterface3D.t = t;
+  fMITLMInterface3D3D.t = t;
+  [...]
 \end{lstlisting}
 
 \begin{figure}[ht]
 \centering
 \includegraphics[width=0.65\textwidth]{gfx/model_dymola.png}
-\caption{Blabla...}
+\caption{}
 \label{fig:model_dymola}
 \end{figure}
 
@@ -295,7 +299,7 @@ Now it is time to export the model so it can be used with the framework.
               For example: "substeps,10"
 \item \textbf{Open \texttt{modelDescription.xml}.}\\
               By opening the \texttt{.fmu} as a zip package.
-\item \textbf{Locate the TLM variables and write the value reference in \texttt{fmi.config}.}\\
+\item \textbf{Locate the TLM variables and write the value references in \texttt{fmi.config}.}\\
               The desired variables are position, orientation, velocity, angular velocity, force and torque:\\
               \texttt{fMITLMInterface3D.r[x]}, \texttt{fMITLMInterface3D.A[x,y]},\\
               \texttt{fMITLMInterface3D.v[x]}, \texttt{fMITLMInterface3D.w[x]},\\
@@ -310,7 +314,7 @@ The export process is exaclty the same as for Dymola, except that the FMU export
 \begin{figure}[ht]
 \centering
 \includegraphics[width=0.85\textwidth]{gfx/model_omedit.png}
-\caption{Blabla...}
+\caption{The second half of the first beam and the second beam  are modelled in OpenModelica}
 \label{fig:model_omedit}
 \end{figure}
 
@@ -332,7 +336,7 @@ When both FMUs have been generated together with one \texttt{fmi.config} file ea
 When done, the meta model XML file should look similar to \cref{lst:metamodel}.
 The model is now ready to be simulated!
 
-\begin{lstlisting}[language=xml,float,floatplacement=ht,label={lst:metamodel},caption=Blabla...]
+\begin{lstlisting}[language=xml,float,floatplacement=ht,label={lst:metamodel},caption=XML description of the complete meta model]
 <?xml version='1.0' encoding='ISO-8859-1'?>
 <Model Name="doublePendulum">
   <SubModels>
