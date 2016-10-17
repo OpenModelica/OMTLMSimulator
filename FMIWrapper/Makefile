@@ -24,7 +24,6 @@ include $(MAKEFILEHEADHOME)/Makefile.head
 CC += -pipe -fno-keep-inline-dllexport -O2 -frtti -Wall -Wextra -fexceptions -mthreads -DUNICODE
 cc += -pipe -fno-keep-inline-dllexport -O2 -frtti -Wall -Wextra -fexceptions -mthreads -DUNICODE
 
-
 BNAME=FMIWrapper.exe
 INSTDIR=$(BINDIR)
 #RESOURCESDIR=$(INSTDIR)/Resources
@@ -96,19 +95,25 @@ EXT_OBJS = PluginImplementer.o \
 ABIOBJS=$(OBJS:%.o= $(ABI)/%.o) $(EXT_OBJS:%.o= $(ABI)/%.o)
 
 
-default: dirs $(ABIOBJS)
+default: dirs fmil $(ABIOBJS)
 	$(LINK) $(ABIOBJS$) -o $(ABI)/$(BNAME) $(LIBS)
 
 install: default
 	cp $(ABI)/$(BNAME) $(INSTDIR)
 	cp FMILibrary-2.0.1/install/lib/libfmilib_shared.dll $(INSTDIR)
 
-
 .PHONY: dirs clean
 
 dirs:
 	-mkdir -p $(ABI)
 	-mkdir -p $(INSTDIR)
+
+fmil:
+	mkdir -p FMILibrary-2.0.1/build
+	(cd FMILibrary-2.0.1/build && $(CMAKE) -D CMAKE_AR:String="$(AR)" $(MINGW_FMIL_FLAGS) -D FMILIB_BUILD_TESTS:Bool=OFF -D FMILIB_GENERATE_DOXYGEN_DOC:Bool=OFF -DFMILIB_INSTALL_PREFIX:String=../install .. -G $(CMAKE_TARGET))
+	make -C FMILibrary-2.0.1/build
+	make -C FMILibrary-2.0.1/build install
+	CP -p FMILibrary-2.0.1/install/lib/libfmilib_shared$(SHREXT) $(BINDIR)
 
 # Problem that MingW contains no shell to perform the "if" command.	
 dirs_unix:	
@@ -118,5 +123,6 @@ dirs_unix:
 clean:
 	rm -rf $(ABI)
 	rm -rf $(INSTDIR)
+	rm -rf FMILibrary-2.0.1/build
 
 # DO NOT DELETE
