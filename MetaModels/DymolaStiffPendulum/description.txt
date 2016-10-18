@@ -1,0 +1,1 @@
+A pendulum consisting of two arms with a rigid TLM connection between them. Both arms are in the same Modelica model. Hence, this model can be used to verify that several TLM interfaces on the same model can be simulated.

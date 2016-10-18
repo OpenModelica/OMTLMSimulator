@@ -1,0 +1,154 @@
+%\documentclass[a4paper,12pt,twoside]{report}
+\documentclass[11pt,a4paper,UKenglish,twoside]{book} % openanyopenright
+\input{macros2}
+\usepackage[ansinew]{inputenc} %signs
+\usepackage[english]{babel} 
+%\usepackage[T1]{fontenc} %  fonte (output) enable when printing the report
+\usepackage{graphicx} % insert image
+\usepackage{subfigure}
+\usepackage[numbers]{natbib}
+%\usepackage{verbatim} %
+\usepackage{shortvrb} % use to create a easy |
+\usepackage{amsmath,amssymb,amstext,latexsym} % math symbols
+\usepackage{textcomp,calc}
+\usepackage{mathtools} % mathmatics
+\usepackage{marvosym}
+\usepackage{lipsum}
+\usepackage{pdfpages}
+\usepackage[font=small,labelfont=bf]{caption}
+\usepackage{titlesec}
+\usepackage{afterpage} % Clear floats after each page
+
+\usepackage{eepic}
+\usepackage{epic}
+\usepackage{rotating}
+
+
+\titleformat{\chapter}[display]{\normalfont\Large\bfseries\color[rgb]{0,0.4,0.796078431372549}}{\normalfont\huge\bfseries\chaptername \space \thechapter}{16pt}{\Huge}
+\titleformat{\part}[display]{\centering\normalfont\Large\bfseries\color[rgb]{0,0.4,0.796078431372549}}{\centering\normalfont\huge\bfseries\partname~\thepart}{16pt}{\Huge}
+\titleformat{\section}{\normalfont\Large\bfseries\color[rgb]{0,0.4,0.796078431372549}}{\thesection}{1em}{}
+\titleformat{\subsection}{\normalfont\large\bfseries\color[rgb]{0,0.4,0.796078431372549}}{\thesubsection}{1em}{}
+\titleformat{\subsubsection}{\normalfont\normalsize\bfseries\color[rgb]{0,0.4,0.796078431372549}}{\thesubsubsection}{1em}{}
+\titleformat{\paragraph}{\normalfont\normalsize\bfseries\color[rgb]{0,0.4,0.796078431372549}}{\theparagraph}{1em}{}
+\titleformat{\subparagraph}{\normalfont\normalsize\bfseries\color[rgb]{0,0.4,0.796078431372549}}{\thesubparagraph}{1em}{}
+
+
+\usepackage{longtable}
+\usepackage{multirow}
+\usepackage{thesislayout}
+
+%_______________________________________________________________________________________
+\makeatletter
+\renewcommand\fps@figure{htbp}
+\renewcommand\fps@table{htbp}
+\makeatother
+%_______________________________________________________________________________________
+
+
+%__________________________________________________________________
+
+%NOTE algorithm MUST be loaded after hyperref or things DO break!!
+%The counter for algorithms is not recognized by hyperref.
+\usepackage{algorithm,algorithmic}
+\usepackage{pstricks} %basic pstricks support
+\usepackage{multirow}
+
+%_______________________________________________________________________________________
+
+
+%table colors
+\usepackage{colortbl} %til farver i tabeller
+\usepackage{array,booktabs,color}
+
+% link colors
+\usepackage{url} 
+%\usepackage[colorlinks,linkcolor={black},citecolor={black},urlcolor={black},linktocpage]{hyperref}
+
+\newcommand*{\rc}{
+  \textcolor[rgb]{0,0.4,0.796078431372549}}
+
+%_______________________________________________________________________________________
+
+
+%Margin
+
+\usepackage[innermargin=3.7cm,outermargin=3.7 cm,top=3.5cm,bottom=3.5cm]{geometry}
+
+%_______________________________________________________________________________________
+
+%NEW COMMANDOS
+%\image{!hbtp}{0.9}{quadruple-tank.png}{figuretext}{tableofcontentstext}
+
+\newcommand*{\image}[5]{%image{htb}{0.9}{filnavn}{caption}
+\begin{figure}[#1]
+    \centering
+    \includegraphics[width=#2\textwidth]{./figs/#3}
+    \caption[#5]{#4}\label{fig:#3}
+\end{figure}
+}
+
+
+%\eq{equation}{label}
+\newcommand*{\eq}[2]{
+\begin{equation}
+    #1
+   \label{eq:#2}
+\end{equation}
+}
+
+%_______________________________________________________________________________________
+%COMMANDOS
+\addto\captionsenglish{\renewcommand*\bibname{\rc{Bibliography}}}
+\addto\captionsenglish{\renewcommand*\contentsname{\rc{List of Contents}}}
+\addto\captionsenglish{\renewcommand*\listfigurename{\rc{List of Figures}}}
+\addto\captionsenglish{\renewcommand*\listtablename{\rc{List of Tables}}}
+
+%_______________________________________________________________________________________
+%PDF Property
+
+\usepackage{hyperref}
+\hypersetup{pdftitle={Transmission Line Modeling},
+                pdfauthor={SKF},
+                pdfsubject={TLM},
+                colorlinks,
+                }
+
+
+%_______________________________________________________________________________________
+\parindent=14pt
+
+\begin{document}
+
+\frontmatter
+
+\makefrontpage
+\thispagestyle{empty}
+
+%\tableofcontents
+\listoffigures
+%\listoftables
+\mainmatter
+\tableofcontents
+
+%\chapter{Background}
+\input{TLMCoSim}
+\input{TLM_background}
+
+%\chapter{Design and Implementation}
+\input{TLMDesign}
+\input{Impl_Simulink}
+\input{Impl_Adams}
+\input{Impl_BEAST}
+\input{Impl_Modelica}
+
+%\chapter{Modelling}
+\input{MM_Adams}
+\input{MM_Simulink}
+\input{MM_Beast}
+\input{MM_Modelica}
+
+\input{RunningMMCoSim}
+
+\input{bibliography}
+
+\end{document}
