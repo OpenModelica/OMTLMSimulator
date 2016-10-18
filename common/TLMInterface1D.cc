@@ -28,7 +28,6 @@ TLMInterface1D::~TLMInterface1D() {
 
 void TLMInterface1D::UnpackTimeData(TLMMessage &mess)
 {
-    TLMErrorLog::Log(std::string("Interface ") + GetName());
     Comm.UnpackTimeDataMessage1D(mess, TimeData);
 
     NextRecvTime =  TimeData.back().time + Params.Delay;
@@ -94,8 +93,7 @@ void TLMInterface1D::GetTimeData(TLMTimeData1D& Instance, std::deque<TLMTimeData
 #endif
         {
             // linear interpolation
-            linear_interpolate(Instance,
-                               Data[CurrentIntervalIndex], Data[CurrentIntervalIndex+1],OnlyForce);
+            linear_interpolate(Instance, Data[CurrentIntervalIndex], Data[CurrentIntervalIndex+1],OnlyForce);
         }
     }
     else {
@@ -164,11 +162,11 @@ void TLMInterface1D::SetTimeData(double time,
     TLMPlugin::GetForce1D(position, speed, request, Params, &item.GenForce);
 
     // The wave to send is: (- Force + Impedance * Velocity)
+    double oldForce = item.GenForce;
     item.GenForce   = -item.GenForce   +  Params.Zf * speed;
 
     TLMErrorLog::Log(std::string("Interface ") + GetName() +
-                     " SET for time= " + TLMErrorLog::ToStdStr(time)
-                     );
+                     " SET for time= " + TLMErrorLog::ToStdStr(time));
 
     // Send the data if we past the synchronization point or are in data request mode.
     if(time >= LastSendTime + Params.Delay / 2 || Params.mode > 0.0 ) {
@@ -209,7 +207,7 @@ void TLMInterface1D::linear_interpolate(TLMTimeData1D& Instance, TLMTimeData1D& 
     const double t1 = p1.time;
 
     // interpolate force "wave"
-    TLMInterface::linear_interpolate(time, t0, t1, p0.GenForce, p1.GenForce);
+    Instance.GenForce = TLMInterface::linear_interpolate(time, t0, t1, p0.GenForce, p1.GenForce);
 
     if(OnlyForce) return;
 

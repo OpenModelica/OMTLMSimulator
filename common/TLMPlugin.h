@@ -66,7 +66,7 @@ class TLMPlugin {
     //! and returns the ID for the interface. '-1' is returned if
     //! the interface is not connected in the MetaModel.
     //! \param name Name of the TLM interface
-    virtual int RegisteTLMInterface3D( std::string name ) = 0;
+    virtual int RegisteTLMInterface( std::string name, std::string type="3D" ) = 0;
 
     //! Evaluate the reaction force from the TLM connection
     //! for a specified interface. This function might result in a request sent
@@ -136,6 +136,7 @@ class TLMPlugin {
     //! for the calculation of the reaction force at a given time.
     //! The function might result in a request sent to TLM manager.
     virtual void GetTimeData3D(int interfaceID, double time, TLMTimeData3D& DataOut) = 0;
+    virtual void GetTimeData1D(int interfaceID, double time, TLMTimeData1D& DataOut) = 0;
 
     //! The static GetForce function is a pure function that uses
     //! parameters as defined for the GetForce function above.

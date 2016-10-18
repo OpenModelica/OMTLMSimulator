@@ -52,7 +52,9 @@ SOURCES += \
     c:/users/robbr48/Documents/Mercurial/TLMPlugin/extralibs/misc/src/strConv.cc \
     c:/users/robbr48/Documents/Mercurial/TLMPlugin/extralibs/misc/src/coordTrans.cc \
     c:/users/robbr48/Documents/Mercurial/TLMPlugin/extralibs/misc/src/double3Vec.cc \
-    c:/users/robbr48/Documents/Mercurial/TLMPlugin/extralibs/misc/src/double33Mat.cc
+    c:/users/robbr48/Documents/Mercurial/TLMPlugin/extralibs/misc/src/double33Mat.cc \
+    ../../common/TLMInterface1D.cc \
+    ../../common/TLMInterface3D.cc
 
 HEADERS += \
     TLMPluginInterface.hpp

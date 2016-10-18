@@ -225,7 +225,7 @@ void calc_tlm_force(void* in_TLMPluginStructObj,
 
     // Check if interface is registered. If it's not, register it
     if( MarkerIDmap.find(interfaceID) == MarkerIDmap.end() ){
-        MarkerIDmap[interfaceID] = TLMPluginStructObj->Plugin->RegisteTLMInterface3D(interfaceID);
+        MarkerIDmap[interfaceID] = TLMPluginStructObj->Plugin->RegisteTLMInterface(interfaceID);
     }
 
     // Interface force ID in TLM manager

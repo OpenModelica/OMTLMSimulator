@@ -25,7 +25,7 @@ class TLMInterface {
     //! TLMInterface constructor. Sends a registration message to the TLM manager
     //! and prepares the object for simulation.
     TLMInterface(TLMClientComm& theComm, std::string& aName, double StartTime);
-
+    virtual ~TLMInterface();
     //! Indecates if the interface is finished and waits for shutdown.
     //! This is use for interface request mode and not simulation mode.
     bool waitForShutdown(){ return waitForShutdownFlg; }

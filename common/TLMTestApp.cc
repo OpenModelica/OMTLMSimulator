@@ -54,7 +54,7 @@ int main(int argn, char* argv[]) {
     };
 
     // This is the only TLM interface of this model: px
-    int forceID = TlmForce->RegisteTLMInterface3D("px");
+    int forceID = TlmForce->RegisteTLMInterface("px");
 
     if(forceID < 0) {
 	cerr << "Failed to register TLM interface" << endl;
