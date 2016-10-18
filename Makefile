@@ -12,8 +12,8 @@ else
 endif
 
 
-allplugins=ADAMS Simulink Modelica OpenModelica
-plugins=Modelica OpenModelica
+allplugins=ADAMS Simulink Modelica OpenModelica FMIWrapper
+plugins=Modelica OpenModelica FMIWrapper
 
 all default: lib
 	cd common; $(MAKE) all

@@ -24,17 +24,15 @@ include $(MAKEFILEHEADHOME)/Makefile.head
 CC += -pipe -fno-keep-inline-dllexport -O2 -frtti -Wall -Wextra -fexceptions -mthreads -DUNICODE
 cc += -pipe -fno-keep-inline-dllexport -O2 -frtti -Wall -Wextra -fexceptions -mthreads -DUNICODE
 
-
-BNAME=FMIWrapper.exe
-INSTDIR=$(BINDIR)
-#RESOURCESDIR=$(INSTDIR)/Resources
+BNAME=FMIWrapper$(FEXT)
 MISCHOME=../extralibs/misc
 
 INCLUDES=  -I. \
 	-I"..\FMIWrapper" \
     -I"..\FMIWrapper\FMILibrary-2.0.1\install\include" \
     -I"..\common" -I"..\extralibs\misc\include" \
-    -I"cvode-2.9.0/include"
+    -I"cvode-2.9.0/include" \
+    -I"ida-2.9.0/include"
     
 
 LIBS = 	-lws2_32 \
@@ -62,6 +60,9 @@ $(ABI)/%.o: cvode-2.9.0/src/sundials/%.c
 $(ABI)/%.o: cvode-2.9.0/src/cvode/%.c
 	$(CC) $(INCLUDES) -c $< -o $@    
     
+$(ABI)/%.o: ida-2.9.0/src/ida/%.c
+	$(CC) $(INCLUDES) -c $< -o $@        
+    
 OBJS=  main.o 
 
 EXT_OBJS = PluginImplementer.o \
@@ -84,24 +85,34 @@ EXT_OBJS = PluginImplementer.o \
     cvode.o \
     cvode_dense.o \
     cvode_direct.o \
-    cvode_io.o
+    cvode_io.o \
+    ida.o \
+    ida_dense.o \
+    ida_direct.o \
+    ida_io.o
+   
 
 ABIOBJS=$(OBJS:%.o= $(ABI)/%.o) $(EXT_OBJS:%.o= $(ABI)/%.o)
 
 
-default: dirs $(ABIOBJS)
+default: dirs fmil $(ABIOBJS)
 	$(LINK) $(ABIOBJS$) -o $(ABI)/$(BNAME) $(LIBS)
 
 install: default
-	cp $(ABI)/$(BNAME) $(INSTDIR)
-	cp FMILibrary-2.0.1/install/lib/libfmilib_shared.dll $(INSTDIR)
-
+	cp $(ABI)/$(BNAME) $(BINDIR)
+	cp StartTLMFmiWrapper* $(BINDIR)
 
 .PHONY: dirs clean
 
 dirs:
 	-mkdir -p $(ABI)
-	-mkdir -p $(INSTDIR)
+
+fmil:
+	mkdir -p FMILibrary-2.0.1/build
+	(cd FMILibrary-2.0.1/build && $(CMAKE) -D CMAKE_AR:String="$(AR)" $(MINGW_FMIL_FLAGS) -D FMILIB_BUILD_TESTS:Bool=OFF -D FMILIB_GENERATE_DOXYGEN_DOC:Bool=OFF -DFMILIB_INSTALL_PREFIX:String=../install .. -G $(CMAKE_TARGET))
+	make -C FMILibrary-2.0.1/build
+	make -C FMILibrary-2.0.1/build install
+	cp -p FMILibrary-2.0.1/install/lib/libfmilib_shared$(SHREXT) $(BINDIR)
 
 # Problem that MingW contains no shell to perform the "if" command.	
 dirs_unix:	
@@ -110,6 +121,9 @@ dirs_unix:
 
 clean:
 	rm -rf $(ABI)
-	rm -rf $(INSTDIR)
+	rm -rf $(BINDIR)/FMIWrapper$(FEXT)
+	rm -rf $(BINDIR)/StartTLMFmiWrapper*
+	rm -rf FMILibrary-2.0.1/build
+	rm -rf FMILibrary-2.0.1/install
 
 # DO NOT DELETE

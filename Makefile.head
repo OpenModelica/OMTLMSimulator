@@ -19,6 +19,11 @@ ifeq ($(ABI),WINDOWS64)
     AR=ar
     CP=cp
     FEXT=.exe
+    SHREXT=.dll
+    OMDEVMSYS=$(shell cygpath $$OMDEV)
+    CMAKE = $(OMDEVMSYS)/bin/cmake/bin/cmake
+    CMAKE_TARGET="MSYS Makefiles"
+    FMIL_FLAGS=-DFMILIB_FMI_PLATFORM=win64
   else
     CC=mycl cl64 /DMSC_VER /DWIN32 /D_WIN32 /EHsc /DNOMINMAX /GR
     cc=mycl cl64
@@ -35,6 +40,11 @@ else ifeq ($(ABI),WINDOWS32)
     AR=ar
     CP=cp
     FEXT=.exe
+    SHREXT=.dll
+    OMDEVMSYS=$(shell cygpath $$OMDEV)
+    CMAKE = $(OMDEVMSYS)/bin/cmake/bin/cmake
+    CMAKE_TARGET="MSYS Makefiles"
+    FMIL_FLAGS=-DFMILIB_FMI_PLATFORM=win32
   else
     $(error No compiler found to build for WINDOWS32)
   endif
@@ -44,6 +54,10 @@ else
     LINK=g++
     AR=ar
     CP=cp
+    SHREXT=.so
+    CMAKE=cmake
+    CMAKE_TARGET="Unix Makefiles"
+    FMIL_FLAGS=
 endif
 
 MISCHOME=$(UP)/extralibs/misc
