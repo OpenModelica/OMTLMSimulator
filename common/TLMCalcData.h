@@ -181,7 +181,6 @@ public:
         if( &td != this ){
             time = td.time;
 
-            int i=0;
             Position = td.Position;
             Velocity = td.Velocity;
             GenForce = td.GenForce;

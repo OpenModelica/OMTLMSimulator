@@ -57,7 +57,7 @@ TLMPlugin* initializeTLMConnection(MetaModel& model, std::string& serverName)
         TLMComponentProxy& component = model.GetTLMComponentProxy(interfaceProxy.GetComponentID());
 
         TLMErrorLog::Log( "Trying to register monitoring interface " + interfaceProxy.GetName() );
-        int TLMInterfaceID = TLMlink->RegisteTLMInterface3D( component.GetName() + "." + interfaceProxy.GetName() );
+        int TLMInterfaceID = TLMlink->RegisteTLMInterface( component.GetName() + "." + interfaceProxy.GetName(), interfaceProxy.GetType() );
 
         if(TLMInterfaceID >= 0) {
             TLMErrorLog::Log("Registration was successful");
@@ -71,8 +71,11 @@ TLMPlugin* initializeTLMConnection(MetaModel& model, std::string& serverName)
 }
 
 //! Evaluate the data needed for the current time step.
-void MonitorTimeStep(TLMPlugin* TLMlink, MetaModel& model, double SimTime, std::map<int, TLMTimeData3D>& dataStorage )
-{
+void MonitorTimeStep(TLMPlugin* TLMlink,
+                     MetaModel& model,
+                     double SimTime,
+                     std::map<int, TLMTimeData1D>& dataStorage1D,
+                     std::map<int, TLMTimeData3D>& dataStorage3D) {
     if( TLMlink != 0 ){
         // Get data from TLM-Manager here!
         int nTLMInterfaces = model.GetInterfacesNum();
@@ -81,27 +84,44 @@ void MonitorTimeStep(TLMPlugin* TLMlink, MetaModel& model, double SimTime, std::
             TLMInterfaceProxy& interfaceProxy = model.GetTLMInterfaceProxy(i);
             int interfaceID = interfaceProxy.GetID();
             int connectionID = interfaceProxy.GetConnectionID();
+            std::string type = interfaceProxy.GetType();
 
             TLMErrorLog::Log("Data request for " + interfaceProxy.GetName() + " for time " + ToStr(SimTime) + ", id: " + ToStr(interfaceID));
 
             if( connectionID >= 0 ){
 #define LOGGEDFORCEFIX
 #ifdef  LOGGEDFORCEFIX
-                TLMTimeData3D& PrevTimeData = dataStorage[interfaceID];
-                TLMTimeData3D& CurTimeData = dataStorage[interfaceID];
+              if(type == "3D") {
+                  TLMTimeData3D& PrevTimeData = dataStorage3D[interfaceID];
+                  TLMTimeData3D& CurTimeData = dataStorage3D[interfaceID];
 
-                TLMlink->GetTimeData3D(interfaceID, SimTime, CurTimeData);
+                  TLMlink->GetTimeData3D(interfaceID, SimTime, CurTimeData);
+
+                  double delay = model.GetTLMConnection(interfaceProxy.GetConnectionID()).GetParams().Delay;
+                  double alpha = model.GetTLMConnection(interfaceProxy.GetConnectionID()).GetParams().alpha;
+                  TLMlink->GetTimeData3D(interfaceID, SimTime-delay, PrevTimeData);
+
+                  //Apply damping factor, since this can not be done in GetTimeData (DampedTimeData is not available for monitor)
+                  for(int i = 0; i < 6; i++) {
+                    CurTimeData.GenForce[i] =
+                        CurTimeData.GenForce[i] * (1 - alpha)
+                        + PrevTimeData.GenForce[i] * alpha;
+                  }
+              }
+              else if(type == "1D"){
+                TLMTimeData1D& PrevTimeData = dataStorage1D[interfaceID];
+                TLMTimeData1D& CurTimeData = dataStorage1D[interfaceID];
+
+                TLMlink->GetTimeData1D(interfaceID, SimTime, CurTimeData);
 
                 double delay = model.GetTLMConnection(interfaceProxy.GetConnectionID()).GetParams().Delay;
                 double alpha = model.GetTLMConnection(interfaceProxy.GetConnectionID()).GetParams().alpha;
-                TLMlink->GetTimeData3D(interfaceID, SimTime-delay, PrevTimeData);
+                TLMlink->GetTimeData1D(interfaceID, SimTime-delay, PrevTimeData);
 
                 //Apply damping factor, since this can not be done in GetTimeData (DampedTimeData is not available for monitor)
-                for(int i = 0; i < 6; i++) {
-                    CurTimeData.GenForce[i] =
-                            CurTimeData.GenForce[i] * (1 - alpha)
-                            + PrevTimeData.GenForce[i] * alpha;
-                }
+                CurTimeData.GenForce = CurTimeData.GenForce*(1-alpha) + PrevTimeData.GenForce*alpha;
+              }
+              //No need to check for erroneous interface type, we can simply log nothing instead /robbr
 #else
                 TLMTimeData& CurTimeData = dataStorage[interfaceID];
                 TLMlink->GetTimeData(interfaceID, SimTime, CurTimeData);
@@ -124,27 +144,40 @@ void printHeader(MetaModel& model, std::ofstream& dataFile)
         TLMInterfaceProxy& interfaceProxy = model.GetTLMInterfaceProxy(i);
         TLMComponentProxy& component = model.GetTLMComponentProxy(interfaceProxy.GetComponentID());
         if( interfaceProxy.GetConnectionID() >= 0 ){
+            if(interfaceProxy.GetType() == "3D") {
+                // Comma between interfaces
+                if(nActiveInterfaces > 0) dataFile << ",";
 
-            // Comma between interfaces
-            if(nActiveInterfaces > 0) dataFile << ",";
+                // Add all TLM variable names for all active interfaces
+                std::string name = component.GetName() + "." + interfaceProxy.GetName();
+                dataFile << "\"" << name << ".R[cG][cG](1)\",\"" << name << ".R[cG][cG](2)\",\"" << name << ".R[cG][cG](3)\","; // Position vector
+                dataFile << "\"" << name << ".phi[cG](1)\",\"" << name << ".phi[cG](2)\",\"" << name << ".phi[cG](3)\","; // Orientation vector (three angles)
+                dataFile << "\"" << name << ".vR[cG][cG,cG](1)\",\"" << name << ".vR[cG][cG,cG](2)\",\"" << name << ".vR[cG][cG,cG](3)\","; // velocity
+                dataFile << "\"" << name << ".Omega[cG][cG](1)\",\"" << name << ".Omega[cG][cG](2)\",\"" << name << ".Omega[cG][cG](3)\","; // angular velocity
+                dataFile << "\"" << name << ".F_tie[cG](1)\",\"" << name << ".F_tie[cG](2)\",\"" << name << ".F_tie[cG](3)\","; // force vector
+                dataFile << "\"" << name << ".M_tie[cG][cG](1)\",\"" << name << ".M_tie[cG][cG](2)\",\"" << name << ".M_tie[cG][cG](3)\""; // torque vector
 
-            // Add all TLM variable names for all active interfaces
-            std::string name = component.GetName() + "." + interfaceProxy.GetName();
-            dataFile << "\"" << name << ".R[cG][cG](1)\",\"" << name << ".R[cG][cG](2)\",\"" << name << ".R[cG][cG](3)\","; // Position vector
-            dataFile << "\"" << name << ".phi[cG](1)\",\"" << name << ".phi[cG](2)\",\"" << name << ".phi[cG](3)\","; // Orientation vector (three angles)
-            dataFile << "\"" << name << ".vR[cG][cG,cG](1)\",\"" << name << ".vR[cG][cG,cG](2)\",\"" << name << ".vR[cG][cG,cG](3)\","; // velocity
-            dataFile << "\"" << name << ".Omega[cG][cG](1)\",\"" << name << ".Omega[cG][cG](2)\",\"" << name << ".Omega[cG][cG](3)\","; // angular velocity
-            dataFile << "\"" << name << ".F_tie[cG](1)\",\"" << name << ".F_tie[cG](2)\",\"" << name << ".F_tie[cG](3)\","; // force vector
-            dataFile << "\"" << name << ".M_tie[cG][cG](1)\",\"" << name << ".M_tie[cG][cG](2)\",\"" << name << ".M_tie[cG][cG](3)\""; // torque vector
+                nActiveInterfaces++;
+            }
+            else if(interfaceProxy.GetType() == "1D") {
+              // Comma between interfaces
+              if(nActiveInterfaces > 0) dataFile << ",";
 
-            nActiveInterfaces++;
+              // Add all TLM variable names for all active interfaces
+              std::string name = component.GetName() + "." + interfaceProxy.GetName();
+              dataFile << "\"" << name << ".x\","; // Position
+              dataFile << "\"" << name << ".v\","; // Speed
+              dataFile << "\"" << name << ".F\""; // Force
+
+              nActiveInterfaces++;
+            }
         }
     }
 
     dataFile << std::endl;
 }
 
-void printData(MetaModel& model, std::ofstream& dataFile, std::map<int, TLMTimeData3D>& dataStorage)
+void printData(MetaModel& model, std::ofstream& dataFile, std::map<int, TLMTimeData1D>& dataStorage1D, std::map<int, TLMTimeData3D> &dataStorage3D)
 {
     // Get data from TLM-Manager here!
     int nTLMInterfaces = model.GetInterfacesNum();
@@ -155,52 +188,79 @@ void printData(MetaModel& model, std::ofstream& dataFile, std::map<int, TLMTimeD
     for( int i=0 ; i<nTLMInterfaces ; i++ ){
         TLMInterfaceProxy& interfaceProxy = model.GetTLMInterfaceProxy(i);
         if( interfaceProxy.GetConnectionID() >= 0 ){
+            if(interfaceProxy.GetType() == "3D") {
+                TLMTimeData3D& timeData = dataStorage3D.at(interfaceProxy.GetID());
 
-            TLMTimeData3D& timeData = dataStorage.at(interfaceProxy.GetID());
+                // Print time only once, that is, for the first entry.
+                if( printTimeFlg ){
+                    dataFile << timeData.time << ",";
+                    printTimeFlg = false;
+                }
 
-            // Print time only once, that is, for the first entry.
-            if( printTimeFlg ){
-                dataFile << timeData.time << ",";
-                printTimeFlg = false;
+                // Comma between interfaces
+                if(nActiveInterfaces > 0) dataFile << ",";
+
+                // Convert orientation matrix to angles
+
+                // first convert the matrices into double33 format
+                double33Mat A(timeData.RotMatrix[0], timeData.RotMatrix[1], timeData.RotMatrix[2],
+                        timeData.RotMatrix[3], timeData.RotMatrix[4], timeData.RotMatrix[5],
+                        timeData.RotMatrix[6], timeData.RotMatrix[7], timeData.RotMatrix[8]);
+
+                // Then convert to angles
+                double3Vec phi = ATophi321(A);
+
+                // Backward calculation of force from TLM wave.
+                // This is done because the actual force send is the delayed force.
+                // The wave is: C = - Force + Impedance * Velocity -> F = -(C - Imp*Vel)
+                double3Vec force(0.0);
+                double3Vec torque(0.0);
+                TLMConnection& connection = model.GetTLMConnection(interfaceProxy.GetConnectionID());
+                for(int i = 0; i < 3; i++) {
+    #if 1
+                    force(i+1) =  -timeData.GenForce[i] + connection.GetParams().Zf * timeData.Velocity[i];
+                    torque(i+1) = -timeData.GenForce[i+3] + connection.GetParams().Zfr * timeData.Velocity[i+3];
+    #else
+                    force(i+1) =  timeData.GenForce[i];
+                    torque(i+1) = timeData.GenForce[i+3];
+    #endif
+                }
+
+                dataFile << timeData.Position[0] << "," << timeData.Position[1] << "," << timeData.Position[2] << ",";
+                dataFile << phi(1)               << "," << phi(2)               << "," << phi(3)               << ",";
+                dataFile << timeData.Velocity[0] << "," << timeData.Velocity[1] << "," << timeData.Velocity[2] << ",";
+                dataFile << timeData.Velocity[3] << "," << timeData.Velocity[4] << "," << timeData.Velocity[5] << ",";
+                dataFile << force(1)             << "," << force(2)             << "," << force(3)             << ",";
+                dataFile << torque(1)            << "," << torque(2)            << "," << torque(3);
+
+                nActiveInterfaces++;
             }
+            else {    //1D
+              TLMTimeData1D& timeData = dataStorage1D.at(interfaceProxy.GetID());
 
-            // Comma between interfaces
-            if(nActiveInterfaces > 0) dataFile << ",";
+              // Print time only once, that is, for the first entry.
+              if( printTimeFlg ){
+                  dataFile << timeData.time << ",";
+                  printTimeFlg = false;
+              }
 
-            // Convert orientation matrix to angles
+              // Comma between interfaces
+              if(nActiveInterfaces > 0) dataFile << ",";
 
-            // first convert the matrices into double33 format
-            double33Mat A(timeData.RotMatrix[0], timeData.RotMatrix[1], timeData.RotMatrix[2],
-                    timeData.RotMatrix[3], timeData.RotMatrix[4], timeData.RotMatrix[5],
-                    timeData.RotMatrix[6], timeData.RotMatrix[7], timeData.RotMatrix[8]);
+              // Backward calculation of force from TLM wave.
+              // This is done because the actual force send is the delayed force.
+              // The wave is: C = - Force + Impedance * Velocity -> F = -(C - Imp*Vel)
 
-            // Then convert to angles
-            double3Vec phi = ATophi321(A);
+              TLMConnection& connection = model.GetTLMConnection(interfaceProxy.GetConnectionID());
 
-            // Backward calculation of force from TLM wave.
-            // This is done because the actual force send is the delayed force.
-            // The wave is: C = - Force + Impedance * Velocity -> F = -(C - Imp*Vel)
-            double3Vec force(0.0);
-            double3Vec torque(0.0);
-            TLMConnection& connection = model.GetTLMConnection(interfaceProxy.GetConnectionID());
-            for(int i = 0; i < 3; i++) {
-#if 1
-                force(i+1) =  -timeData.GenForce[i] + connection.GetParams().Zf * timeData.Velocity[i];
-                torque(i+1) = -timeData.GenForce[i+3] + connection.GetParams().Zfr * timeData.Velocity[i+3];
-#else
-                force(i+1) =  timeData.GenForce[i];
-                torque(i+1) = timeData.GenForce[i+3];
-#endif
+              double force =  -timeData.GenForce + connection.GetParams().Zf * timeData.Velocity;
+
+              dataFile << timeData.Position << ",";
+              dataFile << timeData.Velocity << ",";
+              dataFile << force;
+
+              nActiveInterfaces++;
             }
-
-            dataFile << timeData.Position[0] << "," << timeData.Position[1] << "," << timeData.Position[2] << ",";
-            dataFile << phi(1)               << "," << phi(2)               << "," << phi(3)               << ",";
-            dataFile << timeData.Velocity[0] << "," << timeData.Velocity[1] << "," << timeData.Velocity[2] << ",";
-            dataFile << timeData.Velocity[3] << "," << timeData.Velocity[4] << "," << timeData.Velocity[5] << ",";
-            dataFile << force(1)             << "," << force(2)             << "," << force(3)             << ",";
-            dataFile << torque(1)            << "," << torque(2)            << "," << torque(3);
-
-            nActiveInterfaces++;
         }
     }
     dataFile << std::endl;
@@ -240,6 +300,8 @@ void printRunStatus(MetaModel& model, std::ofstream& runFile, tTM_Info& tInfo, d
 }
 
 int main(int argc, char* argv[]) {
+
+  TLMErrorLog::Log("Starting monitor...");
 
 #ifndef USE_THREADS
 #warning TLM manager requires pthreads to be compiled in. Use -DUSE_THREADS in the Makefile.head if neeeded.    
@@ -336,7 +398,6 @@ int main(int argc, char* argv[]) {
         }
     }
 
-
     // Print/log the header information
     printHeader(theModel, outdataFile);
 
@@ -353,15 +414,16 @@ int main(int argc, char* argv[]) {
         if( simTime > endTime ) simTime = endTime;
 
         // Data structure for data logging
-        std::map<int, TLMTimeData3D> data;
+        std::map<int, TLMTimeData1D> data1D;
+        std::map<int, TLMTimeData3D> data3D;
 
         // Get data for next time step.
         TM_Start(&tInfo);
-        MonitorTimeStep(thePlugin, theModel, simTime, data);
+        MonitorTimeStep(thePlugin, theModel, simTime, data1D, data3D);
         TM_Stop(&tInfo);
 
         // Print data row
-        printData(theModel, outdataFile, data);
+        printData(theModel, outdataFile, data1D, data3D);
 
         // Update run status
         printRunStatus(theModel, runFile, tInfo, simTime);

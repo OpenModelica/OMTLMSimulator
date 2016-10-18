@@ -157,41 +157,62 @@ namespace hopsan {
                            tlmConfig.server);
 
             // Register TLM Interface
-            mInterfaceId = mpPlugin->RegisteTLMInterface(this->getName().c_str());
+            mInterfaceId = mpPlugin->RegisteTLMInterface(this->getName().c_str(), "1D");
         }
 
 
         void simulateOneTimestep()
         {
             // Read input variables (position and speed only)
-            double x[3], T[9], v[3],w[3], f[6];
+            double x,v,f;
 
             // Position
-            x[0] = (*mpP1_x);   x[1] = 0;       x[2] = 0;
-
-            // Orientation
-            T[0] = 1;           T[1] = 0;       T[2] = 0;
-            T[3] = 0;           T[4] = 1;       T[5] = 0;
-            T[6] = 0;           T[7] = 0;       T[8] = 1;
+            x = (*mpP1_x);
 
             // Speed
-            v[0] = (*mpP1_v);   v[1] = 0;       v[2] = 0;
-
-            // Angular speed
-            w[0] = 0;           w[1] = 0;       w[2] = 0;
-
-            f[0] = 0;           f[1] = 0;       f[2] = 0;
-            f[3] = 0;           f[4] = 0;       f[5] = 0;
+            v = (*mpP1_v);
 
             // Get force from TLM interface
-            mpPlugin->GetForce(mInterfaceId,mTime,x,T,v,w,f);
+            mpPlugin->GetForce1D(mInterfaceId,mTime,x,v,&f);
 
             // Write output variables
-            (*mpP1_c) = -f[0];
+            (*mpP1_c) = -f;
             (*mpP1_Zc) = 0;     //Not needed, since already included in f
 
             // Set motion in TLM interface
-            mpPlugin->SetMotion(mInterfaceId,mTime,x,T,v,w);
+            mpPlugin->SetMotion1D(mInterfaceId,mTime,x,v);
+
+//          // Read input variables (position and speed only)
+//          double x[3], T[9], v[3],w[3], f[6];
+
+//          // Position
+//          x[0] = (*mpP1_x);   x[1] = 0;       x[2] = 0;
+
+//          // Orientation
+//          T[0] = 1;           T[1] = 0;       T[2] = 0;
+//          T[3] = 0;           T[4] = 1;       T[5] = 0;
+//          T[6] = 0;           T[7] = 0;       T[8] = 1;
+
+//          // Speed
+//          v[0] = (*mpP1_v);   v[1] = 0;       v[2] = 0;
+
+//          // Angular speed
+//          w[0] = 0;           w[1] = 0;       w[2] = 0;
+
+//          f[0] = 0;           f[1] = 0;       f[2] = 0;
+//          f[3] = 0;           f[4] = 0;       f[5] = 0;
+
+//          // Get force from TLM interface
+//          mpPlugin->GetForce3D(mInterfaceId,mTime,x,T,v,w,f);
+
+//          // Write output variables
+//          (*mpP1_c) = -f[0];
+//          (*mpP1_Zc) = 0;     //Not needed, since already included in f
+
+//          // Set motion in TLM interface
+//          mpPlugin->SetMotion3D(mInterfaceId,mTime,x,T,v,w);
+
+
         }
 
 

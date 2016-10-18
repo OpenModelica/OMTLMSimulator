@@ -207,7 +207,7 @@ void TLM_force::RegisterMarker(int markerID) {
 
     cerr << "Trying to register interface " << markerName << endl;
 
-    int interfaceID = Plugin->RegisteTLMInterface3D(markerName);
+    int interfaceID = Plugin->RegisteTLMInterface(markerName);
 
     MarkerID& mID = MarkerIDmap[markerID];
     mID.ID = interfaceID;

@@ -51,6 +51,8 @@ TLMInterface::TLMInterface(TLMClientComm& theComm, std::string& aName, double St
     NextRecvTime = StartTime + Params.Delay;
 }
 
+TLMInterface::~TLMInterface() { }
+
 
 
 

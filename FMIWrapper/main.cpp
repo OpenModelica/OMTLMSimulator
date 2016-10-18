@@ -98,7 +98,7 @@ void forceFromTlmToFmu(double tcur)
     fmistatus = fmi2_import_get_real(fmu,fmiConfig.ang_speed_vr[j],3,ang_speed);
 
     //Get interpolated force
-    plugin->GetForce(fmiConfig.interfaceIds[j], tcur, position,orientation,speed,ang_speed,force);
+    plugin->GetForce3D(fmiConfig.interfaceIds[j], tcur, position,orientation,speed,ang_speed,force);
 
     for(size_t k=0; k<6; ++k) {
       force[k] = -force[k];
@@ -299,7 +299,7 @@ int simulate_fmi2_cs()
         fmistatus = fmi2_import_get_real(fmu,fmiConfig.ang_speed_vr[j],3,ang_speed);
 
         //Get interpolated force
-        plugin->GetForce(fmiConfig.interfaceIds[j], tcur, position,orientation,speed,ang_speed,force);
+        plugin->GetForce3D(fmiConfig.interfaceIds[j], tcur, position,orientation,speed,ang_speed,force);
 
         for(size_t k=0; k<6; ++k) {
           force[k] = -force[k];
@@ -326,10 +326,10 @@ int simulate_fmi2_cs()
         fmistatus = fmi2_import_get_real(fmu,fmiConfig.ang_speed_vr[j],3,ang_speed);
 
         //Get interpolated force
-        plugin->GetForce(fmiConfig.interfaceIds[j], tcur, position,orientation,speed,ang_speed,force);
+        plugin->GetForce3D(fmiConfig.interfaceIds[j], tcur, position,orientation,speed,ang_speed,force);
 
         //Write back motion for sub step
-        plugin->SetMotion(fmiConfig.interfaceIds[j], tcur, position, orientation, speed, ang_speed);
+        plugin->SetMotion3D(fmiConfig.interfaceIds[j], tcur, position, orientation, speed, ang_speed);
       }
     }
   }
@@ -367,7 +367,7 @@ void motionFromFmuToTlm(double tcur)
     fmistatus = fmi2_import_get_real(fmu,fmiConfig.speed_vr[j],3,speed);
     fmistatus = fmi2_import_get_real(fmu,fmiConfig.ang_speed_vr[j],3,ang_speed);
 
-    plugin->SetMotion(fmiConfig.interfaceIds[j], tcur, position, orientation, speed, ang_speed);
+    plugin->SetMotion3D(fmiConfig.interfaceIds[j], tcur, position, orientation, speed, ang_speed);
   }
 }
 

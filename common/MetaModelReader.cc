@@ -86,11 +86,16 @@ void MetaModelReader::ReadTLMInterfaceNodes(xmlNode* node, int ComponentID) {
             // For every InterfacePoint element that we find read its name
 
             xmlNode* curAttrVal = FindAttributeByName(curNode, "Name");
-
             string name((const char*)curAttrVal->content);
 
-            TLMErrorLog::Log(string("Registering TLM interface ") + name);
-            int ipID = TheModel.RegisterTLMInterfaceProxy(ComponentID, name);
+            curAttrVal = FindAttributeByName(curNode, "Type");
+            string type="1D";          //HARD-CODED /robbr
+            if(curAttrVal) {
+              type = ((const char*)curAttrVal->content);
+            }
+
+            TLMErrorLog::Log(string("Registering TLM interface ") + name + string(" of type ") + type);
+            int ipID = TheModel.RegisterTLMInterfaceProxy(ComponentID, name, type);
 
             // Get/Set position and orientation if available in XML file.
             TLMInterfaceProxy& ip = TheModel.GetTLMInterfaceProxy(ipID);
@@ -223,7 +228,7 @@ xmlNode* MetaModelReader::FindAttributeByName(xmlNode* node, const char* name, b
         }
     }
     if(required) {
-        TLMErrorLog::FatalError(string("Cannot find attribute ") +  name);
+        TLMErrorLog::Warning(string("Cannot find attribute ") +  name);
     }
     return NULL;
 }

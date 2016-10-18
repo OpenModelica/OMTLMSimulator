@@ -100,7 +100,7 @@ void initialize_interface(const char* markerID)
             initialize_TLM();
         }
 
-        MarkerIDmap[markerID] = Plugin->RegisteTLMInterface3D(markerID);
+        MarkerIDmap[markerID] = Plugin->RegisteTLMInterface(markerID);
     }
 }
 
@@ -200,7 +200,7 @@ void calc_tlm_force(const char* markerID,   // The calling marker ID
             initialize_TLM();
         }
 
-        MarkerIDmap[markerID] = Plugin->RegisteTLMInterface3D(markerID);
+        MarkerIDmap[markerID] = Plugin->RegisteTLMInterface(markerID);
     }
 
     // Interface force ID in TLM manager

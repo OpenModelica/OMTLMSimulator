@@ -81,7 +81,8 @@ protected:
     //! Register TLM interface sends a registration request to TLMManager
     //! and returns the ID for the interface. '-1' is returned if
     //! the interface is not connected in the MetaModel.
-    int RegisteTLMInterface3D(std::string name);
+    int RegisteTLMInterface1D(std::string name);
+    int RegisteTLMInterface(std::string name, std::string type="3D" );
 
     //! ReceiveTimeData receives time-stamped data from coupled simulations
     //! if the specified interface needs more data for the given time..
@@ -140,12 +141,13 @@ protected:
     //! GetConnectionParams returnes the ConnectionParams for
     //! the specified interface ID. Interface must be registered
     //! first.
-    virtual void GetConnectionParams(int interfaceID, TLMConnectionParams& ParamsOut);
+    void GetConnectionParams(int interfaceID, TLMConnectionParams& ParamsOut);
 
     //! GetTimeData returnes the necessary time stamped information needed
     //! for the calculation of the reaction force at a given time.
     //! The function might result in a request sent to TLM manager.
-    virtual void GetTimeData3D(int interfaceID, double time, TLMTimeData3D& DataOut);
+    void GetTimeData1D(int interfaceID, double time, TLMTimeData1D& DataOut);
+    void GetTimeData3D(int interfaceID, double time, TLMTimeData3D& DataOut);
 
  protected:
 

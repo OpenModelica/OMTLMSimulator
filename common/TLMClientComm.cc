@@ -73,7 +73,7 @@ void TLMClientComm::PackTimeDataMessage1D(int InterfaceID, std::vector<TLMTimeDa
                                             out_mess.Header.MessageType =  TLMMessageTypeConst::TLM_TIME_DATA;
                                             out_mess.Header.TLMInterfaceID = InterfaceID;
                                             out_mess.Header.SourceIsBigEndianSystem = TLMMessageHeader::IsBigEndianSystem;
-                                            out_mess.Header.DataSize = Data.size() * sizeof(TLMTimeData3D);
+                                            out_mess.Header.DataSize = Data.size() * sizeof(TLMTimeData1D);
                                             out_mess.Data.clear();
                                             out_mess.Data.resize( out_mess.Header.DataSize );
                                             memcpy(& out_mess.Data[0], & Data[0], out_mess.Header.DataSize);
