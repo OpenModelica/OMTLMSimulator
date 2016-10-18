@@ -8,7 +8,6 @@ REM Argument %1 should be architecture: x86 or x64
 
 REM Default values. Use x64 for 64-bit, use x86 for 32-bit
 set arch=x64
-set hopsan_version=0.7.x
 
 if not "%~1"=="" (
 	set arch=%~2
@@ -16,16 +15,10 @@ if not "%~1"=="" (
 
 echo Setting paths for Version: %1, Architecture: %arch%
 
-REM Setup 0.7.x paths
-if "%hopsan_version%"=="0.7.x" (
-	REM These paths require the official qt version from Qt.io (for 32-bit) and the custom Hopsan version for 64-bit
-	set mingw_path32=C:\Qt\Tools\mingw491_32\bin
-	set mingw_path64=C:\Qt\x86_64-4.9.3-release-posix-seh-rt_v4-rev1\mingw64\bin
-) else (
-	echo Error: Unsupported version: %hopsan_version%
-	pause
-	goto :eof
-)
+
+set mingw_path32=C:\Qt\Tools\mingw491_32\bin
+set mingw_path64=C:\Qt\x86_64-4.9.3-release-posix-seh-rt_v4-rev1\mingw64\bin
+
 
 if not "%arch%"=="x86" (
   if not "%arch%"=="x64" (
