@@ -1,0 +1,179 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Setup front- and back matter and info-pages about the project
+%
+
+
+\renewcommand{\familydefault}{\sfdefault}
+
+\newcommand*{\subtitle}[1]{\gdef\@subtitle{#1}}
+\newcommand*{\@subtitle}{}%
+
+\RequirePackage[textwidth=16cm]{geometry}
+\RequirePackage{fancyhdr}
+\RequirePackage{lipsum}
+\RequirePackage[iso]{isodate}
+\RequirePackage{array}
+\RequirePackage{tabularx}
+\RequirePackage{multirow}
+\RequirePackage{lastpage}
+
+%\RequirePackage{fancyhdr,graphicx}% http://ctan.org/pkg/{fancyhdr,graphicx,lastpage}
+\fancypagestyle{plain}{
+  \fancyhf{}% Clear header/footer
+  \fancyhead[R]{OPENCPS DOCUMENT}% Right header
+  \fancyfoot[c]{ %
+  \scriptsize
+  \begin{tabularx}{\textwidth}{|X|X|X|X|}
+  \hline
+   \multicolumn{3}{|c|}{\multirow{2}{*}{OPENCPS DOCUMENT\vspace{6pt}}} & {\tiny Pages}\\
+       \cline{4-4}
+  \multicolumn{3}{|c|}{}& \thepage /\pageref{LastPage}\\
+    \hline
+  Reference number & Revision & Author & \\
+      \hline
+  & & &\\
+    \hline
+  \end{tabularx} %
+  }
+  
+%%  \fancyfoot[L]{Name Firstname - v1.0 \\  Date}% Left footer
+%%  \fancyfoot[R]{\thepage\  / \pageref{LastPage}}% Right footer
+}
+
+%\fancypagestyle{firststyle}
+%{
+%   \fancyhf{}
+%   \fancyfoot[C]{\footnotesize Page \thepage\ of \pageref{LastPage}}
+%}
+
+%\fancyhf{}
+%\fancyhead[R]{OPENCPS DOCUMENT}
+\pagestyle{plain}% Set page style to plain.
+
+\renewcommand{\headrulewidth}{0cm}
+
+\renewcommand{\thesection}{\arabic{section}}
+\renewcommand*{\@seccntformat}[1]{\csname the#1\endcsname .\hspace{0.15cm}}
+
+\renewcommand{\ttdefault}{pcr}
+
+
+%\rhead{OPENCPS DOCUMENT}
+
+\newcommand{\makefrontpage}
+{\begin{titlepage}%
+\thispagestyle{plain}
+\centering
+
+\vspace*{3.3cm}
+
+\includegraphics{gfx/OpenCPS_main}
+\vspace{0.75cm}
+
+\LARGE\bfseries
+\vspace{1cm}
+\@title
+\vspace{0.3cm}
+
+%\large
+\Large
+\@subtitle
+\vspace{0.9cm}
+\flushleft
+\large
+\normalfont
+\@author
+
+\vspace{0.5cm}
+
+\today
+
+%        \begin{minipage}[t]{14cm}
+%
+%          \textit{\textsf{\Large{
+%                \begingroup
+%                \tabcolsep -2mm
+%                \begin{tabular}{l}
+%                \end{tabular}
+%                \endgroup }}}
+%
+%
+%           \vspace*{2cm}
+%
+%          \begin{flushleft}
+%            \Huge{\textsf{\textbf{Transmission Line Modeling and Simulation}}}
+%          \end{flushleft}
+%
+%          \vspace*{0.5cm}
+%
+%          \begin{flushleft}
+%            \LARGE{\textsf{\textbf{Co-simulation for multiple modeling and simulation software}}}
+%          \end{flushleft}
+%
+%          \vspace*{1.0cm}
+%          \textsf{\Large{January 2014}}
+%        \end{minipage}}
+%    \end{figure}
+   \end{titlepage}%
+  \setcounter{footnote}{0}
+  %
+ }
+
+
+\newcommand{\makefrontpageempty}
+{\begin{titlepage}%
+    \setcounter{page}{3}%circumvent warning from hyperref about duplicate
+                        %pagenumbering
+    \begin{pspicture}(0cm,0cm)(15cm,20.5cm)
+      %\psgrid
+
+      \rput[tl](0.75,17.2){
+        \begin{minipage}[t]{14cm}
+          \textit{\textsf{\Large{
+                \begingroup
+                \tabcolsep -2mm
+                \begin{tabular}{l}
+                  \ThesisAuthor
+                \end{tabular}
+                \endgroup }}}
+
+          \vspace*{3.8cm}
+
+          \begin{flushleft}
+            \Huge{\textsf{\textbf{\ThesisTitle}} }
+          \end{flushleft}
+
+          \vspace*{0.5cm}
+
+          \begin{flushleft}
+            \LARGE{\textsf{\textbf{\Subtitle}}}
+          \end{flushleft}
+
+          \vspace*{1.0cm}
+          \textsf{\Large{\projecttype}}
+        \end{minipage}}
+    \end{pspicture}
+   \end{titlepage}%
+  \setcounter{footnote}{0}%
+  \newpage\thispagestyle{empty}
+}
+
+
+
+
+\newcommand{\emptypage}
+{\begin{titlepage}%
+    \begin{pspicture}(0cm,0cm)(15cm,22cm)
+    \end{pspicture}
+   \end{titlepage}%
+  \setcounter{footnote}{0}%
+ }
+
+
+% END - Setup front- and back matter and info-pages about the project
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "master"
+%%% End:
