@@ -72,6 +72,9 @@ There are two versions of the FMI standard: FMI for Co-Simulation and FMI for Mo
 The main difference is that FMUs for Co-Simulation contain their own built-in solvers, and only exchange data at predefined communication points.
 FMUs for Model Exchange require a solver in the master simulation tool.
 
+The TLM framework is able to simulate aggregated systems of connected sub-models using asynchronous TLM communication. 
+Currently, only 3D multi-body mechanical sub-models are supported.
+Other physical domains, 1D connections and causal signal communication is intended to be implemented in the future.
 Including FMUs in the TLM framework requires a wrapper.
 \texttt{FMIWrapper} is a generic wrapper for connecting functional mockup units (FMUs) to the TLM framework.
 It uses the FMI Library from Modelon \cite{modelon2015} to load an FMU, and the TLMPlugin for socket communication with the framework, see \cref{fig:overview}.
@@ -122,7 +125,7 @@ It uses the FMI Library from Modelon \cite{modelon2015} to load an FMU, and the 
 \draw[thick,->,very thick] (tp1) edge[bend left] (tp2);
 \draw[thick,<-,very thick] (tp1) edge[bend right] (tp2);
 \end{tikzpicture}
-\caption{Blabla...}
+\caption{FMIWrapper uses FMILibrary to import FMUs and TLMPlugin for socket communication.}
 \label{fig:overview}
 \end{figure}
 
@@ -262,7 +265,7 @@ The reason for this is that \texttt{SetMotion()} requires updated input variable
 \section{FMI for model exchange}
 \label{sec:fmi_me}
 With model exchange, the wrapper must provide a solver for the FMU.
-Three solvers are available: explicit Euler, 4th order Runge-Kutta, and the CVODE and IDA solvers from Sundials \cite{hindmarsh2005}.
+Three solvers are available: explicit Euler, 4th order explicit Runge-Kutta, and the CVODE and IDA solvers from Sundials \cite{hindmarsh2005}.
 \Cref{lst:wrapper_me} shows pseudo code for one major step (i.e. one communication interval) with the IDA solver.
 Note that the solver is used with one step mode.
 This means that it takes one step at a time, until its internal time exceeds the next communication interval.
@@ -343,7 +346,7 @@ equation
 \begin{figure}[ht]
 \centering
 \includegraphics[width=0.65\textwidth]{gfx/model_dymola.png}
-\caption{}
+\caption{The first half of the first beam is modelled in Dymola}
 \label{fig:model_dymola}
 \end{figure}
 
@@ -385,7 +388,7 @@ When both FMUs have been generated together with one \texttt{fmi.config} file ea
 \begin{enumerate}
 \item \textbf{Create a new meta model.}\\
              Either by hand or by using the graphical user interface.
-\item \textbf{Add the FMUs as submodels.}\\
+\item \textbf{Add the FMUs as sub-models.}\\
               Use \texttt{StartTLMFmiWrapper} as start command.
 \item \textbf{Fetch TLM interfaces.}
 \item \textbf{Add a connection between the two models.}\\
@@ -436,12 +439,13 @@ The model is now ready to be simulated!
 </Model>
 \end{lstlisting}
 
-\begin{figure}
+\begin{figure}[ht]
 \centering
-\includegraphics[width=0.5\textwidth]{gfx/metamodel.png}
+\includegraphics[width=0.75\textwidth]{gfx/metamodel.png}
 \caption{Graphical view of the complete meta model}
 \label{fig:metamodel_omedit}
 \end{figure}
+
 
 
 \bibliographystyle{plain}
