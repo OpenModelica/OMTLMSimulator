@@ -88,9 +88,14 @@ void MetaModelReader::ReadTLMInterfaceNodes(xmlNode* node, int ComponentID) {
             xmlNode* curAttrVal = FindAttributeByName(curNode, "Name");
             string name((const char*)curAttrVal->content);
 
-            curAttrVal = FindAttributeByName(curNode, "Type");
-            string type="1D";          //HARD-CODED /robbr
-            if(curAttrVal) {
+            curAttrVal = FindAttributeByName(curNode, "Type");    //This does not work with OMEdit, since attribute is not allowed
+            string type="3D";                                     //Default is 3D
+            if(name.size() > 1 &&                                 //Temporary hack: if name of interface ends
+               name[name.size()-2] == '1' &&                      //with "1D" it is a 1D connection
+               name[name.size()-1] == 'D') {
+                type = "1D";
+            }
+            if(curAttrVal) {                                      //Now check for XML attribute
               type = ((const char*)curAttrVal->content);
             }
 

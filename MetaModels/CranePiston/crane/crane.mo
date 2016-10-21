@@ -6,7 +6,7 @@ model crane
   input Real f1b,f2b,f3b,t1b,t2b,t3b;
   output Real x1b,x2b,x3b,v1b,v2b,v3b,T11b,T12b,T13b,T21b,T22b,T23b,T31b,T32b,T33b,w1b,w2b,w3b;
   Modelica.Mechanics.MultiBody.Parts.Fixed fixed1(r = {0, 0, 0.5}) annotation(Placement(visible = true, transformation(origin = {40, -10}, extent = {{-10, -10}, {10, 10}}, rotation = 90)));
-  FMITLM.FMITLM_Interface_3D.FMITLMInterface1Dto3D fmi1 annotation(Placement(visible = true, transformation(origin = {40, 18}, extent = {{-10, -10}, {10, 10}}, rotation = 90)));
+  FMITLM.FMITLM_Interface_3D.FMITLMInterface1Dto3D fmi1(interfaceName = "fmitlm1D")  annotation(Placement(visible = true, transformation(origin = {40, 18}, extent = {{-10, -10}, {10, 10}}, rotation = 90)));
   Modelica.Mechanics.MultiBody.Joints.Revolute revolute1(n = {1, 0, 0}, phi(displayUnit = "rad", fixed = true, start = -3.1415 / 4), stateSelect = StateSelect.always, useAxisFlange = true) annotation(Placement(visible = true, transformation(origin = {-14, 38}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
   Modelica.Mechanics.Rotational.Components.Damper damper1(d = 100, phi_rel(displayUnit = "rad")) annotation(Placement(visible = true, transformation(origin = {-14, 58}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
   Modelica.Mechanics.MultiBody.Parts.BodyCylinder bodyCylinder1(angles_start(displayUnit = "rad"), density(displayUnit = "kg/m3"), r = {0, 0, 1}) annotation(Placement(visible = true, transformation(origin = {58, 38}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));

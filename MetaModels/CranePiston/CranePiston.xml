@@ -3,28 +3,28 @@
 <Model Name="CranePiston">
   <!-- List of connected sub-models -->
   <SubModels>
-    <SubModel Angle321="0,0,0" ModelFile="crane.fmu" StartCommand="StartTLMFmiWrapper" Position="0,0,0" Name="crane" ExactStep="0">
-      <InterfacePoint Angle321="0,0,0" Position="0,0.736802,0.736802" Name="tlm1"/>
-      <InterfacePoint Angle321="0,0,0" Position="0,1.473604,1.473604" Name="tlm2"/>
+    <SubModel ModelFile="crane.fmu" ExactStep="0" Angle321="0,0,0" StartCommand="StartTLMFmiWrapper" Position="0,0,0" Name="crane">
+      <InterfacePoint Angle321="0,0,0" Position="0,0.736802,0.736802" Name="tlm1D"/>
+      <InterfacePoint Angle321="0,0,0" Position="0,1.473604,1.473604" Name="tlm3D"/>
     </SubModel>
-    <SubModel Angle321="0,0,0" ModelFile="piston.hmf" StartCommand="StartTLMHopsan" Position="0,0.736802,0.736802" Name="piston" ExactStep="0">
-      <Annotation Rotation="0" Visible="true" Extent="{-10,-10,10,10}" Origin="{-34,0}"/>
-      <InterfacePoint Angle321="0,0,0" Position="0,0,0" Name="TLM_Plugin_Inerface"/>
+    <SubModel ModelFile="piston.hmf" ExactStep="0" Angle321="0,0,0" StartCommand="StartTLMHopsan" Position="0,0.736802,0.736802" Name="piston">
+      <Annotation Extent="{-10,-10,10,10}" Visible="true" Rotation="0" Origin="{-34,0}"/>
+      <InterfacePoint Angle321="0,0,0" Position="0,0,0" Name="TLM_Plugin_Interface1D"/>
     </SubModel>
-    <SubModel Angle321="0,0,0" ModelFile="load.mo" StartCommand="StartTLMOpenModelica" Position="0,1.4736,1.4736" Name="load" ExactStep="0">
-      <Annotation Rotation="0" Visible="true" Extent="{-10,-10,10,10}" Origin="{2,-28}"/>
+    <SubModel ModelFile="load.mo" ExactStep="0" Angle321="0,0,0" StartCommand="StartTLMOpenModelica" Position="0,1.4736,1.4736" Name="load">
+      <Annotation Extent="{-10,-10,10,10}" Visible="true" Rotation="0" Origin="{2,-28}"/>
       <InterfacePoint Angle321="0,0,0" Position="0,-3.0581e-013,0" Name="tlm"/>
     </SubModel>
   </SubModels>
   <!-- List of TLM connections -->
   <Connections>
-    <Connection Zfr="100" From="crane.tlm1" Zf="10000" alpha="0.9" Delay="1e-4" To="piston.TLM_Plugin_Inerface">
+    <Connection Zfr="100" Delay="1e-4" Zf="10000" To="piston.TLM_Plugin_Interface1D" alpha="0.9" From="crane.tlm1D">
       <Annotation Points="{{12,8},{20,8},{20,16},{-22,16},{-22,8},{-22,8}}"/>
     </Connection>
-    <Connection Zfr="100" From="load.tlm" Zf="10000" alpha="0.9" Delay="1e-4" To="crane.tlm2">
+    <Connection Zfr="100" Delay="1e-4" Zf="10000" To="crane.tlm3D" alpha="0.9" From="load.tlm">
       <Annotation Points="{{14,-20},{24,-20},{24,4},{12,4},{12,4}}"/>
     </Connection>
   </Connections>
   <!-- Parameters for the simulation -->
-  <SimulationParams StopTime="1.5" StartTime="0"/>
+  <SimulationParams StartTime="0" StopTime="1.5"/>
 </Model>
