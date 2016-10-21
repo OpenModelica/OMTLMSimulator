@@ -84,7 +84,7 @@ void PluginImplementer::CheckModel() {
   TLMCommUtil::ReceiveMessage(Message);
 
   if(! Message.Header.TLMInterfaceID) {
-    TLMErrorLog::FatalError("Error detected on TLM manager while checking meta model");
+    TLMErrorLog::Log("Error detected on TLM manager while checking meta model");
     TLMErrorLog::FatalError("Header id is " + TLMErrorLog::ToStdStr(int(Message.Header.TLMInterfaceID)));
   }
 

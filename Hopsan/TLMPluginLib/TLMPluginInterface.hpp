@@ -158,6 +158,12 @@ namespace hopsan {
 
             // Register TLM Interface
             mInterfaceId = mpPlugin->RegisteTLMInterface(this->getName().c_str(), "1D");
+
+//            TLMTimeData1D data;
+//            mpPlugin->GetTimeData1D(mInterfaceId,mTime,data);
+//            (*mpP1_x) = data.Position;
+//            (*mpP1_v) = data.Velocity;
+//            TLMErrorLog::Log("Starting position: "+TLMErrorLog::ToStdStr(*mpP1_x));
         }
 
 

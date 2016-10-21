@@ -41,6 +41,7 @@ using namespace std;
 struct fmiConfig_t {
   size_t nSubSteps;
   size_t nInterfaces;
+  std::vector<std::string> types;
   std::vector<std::string> interfaceNames;
   std::vector<int> interfaceIds;
   std::vector<fmi2_value_reference_t*> position_vr;
@@ -87,26 +88,42 @@ static simConfig_t simConfig = simConfig_t();
 //Read force from TLMPlugin and write it to FMU
 void forceFromTlmToFmu(double tcur)
 {
-  //Write interpolated force to FMU
-  for(size_t j=0; j<fmiConfig.nInterfaces; ++j) {
-    double position[3],orientation[9],speed[3],ang_speed[3],force[6];
+    //Write interpolated force to FMU
+    for(size_t j=0; j<fmiConfig.nInterfaces; ++j) {
+        if(fmiConfig.types[j] == "3D") {
+            double position[3],orientation[9],speed[3],ang_speed[3],force[6];
+            //Read position and speed from FMU
+            fmistatus = fmi2_import_get_real(fmu,fmiConfig.position_vr[j],3,position);
+            fmistatus = fmi2_import_get_real(fmu,fmiConfig.orientation_vr[j],9,orientation);
+            fmistatus = fmi2_import_get_real(fmu,fmiConfig.speed_vr[j],3,speed);
+            fmistatus = fmi2_import_get_real(fmu,fmiConfig.ang_speed_vr[j],3,ang_speed);
 
-    //Read position and speed from FMU
-    fmistatus = fmi2_import_get_real(fmu,fmiConfig.position_vr[j],3,position);
-    fmistatus = fmi2_import_get_real(fmu,fmiConfig.orientation_vr[j],9,orientation);
-    fmistatus = fmi2_import_get_real(fmu,fmiConfig.speed_vr[j],3,speed);
-    fmistatus = fmi2_import_get_real(fmu,fmiConfig.ang_speed_vr[j],3,ang_speed);
+            //Get interpolated force
+            plugin->GetForce3D(fmiConfig.interfaceIds[j], tcur, position,orientation,speed,ang_speed,force);
 
-    //Get interpolated force
-    plugin->GetForce3D(fmiConfig.interfaceIds[j], tcur, position,orientation,speed,ang_speed,force);
+            for(size_t k=0; k<6; ++k) {
+              force[k] = -force[k];
+            }
 
-    for(size_t k=0; k<6; ++k) {
-      force[k] = -force[k];
+            // Write force to FMU
+            fmistatus = fmi2_import_set_real(fmu,fmiConfig.force_vr[j],6,force);
+        }
+        else if(fmiConfig.types[j] == "1D") {
+          double position,speed,force;
+
+          //Read position and speed from FMU
+          fmistatus = fmi2_import_get_real(fmu,fmiConfig.position_vr[j],1,&position);
+          fmistatus = fmi2_import_get_real(fmu,fmiConfig.speed_vr[j],1,&speed);
+
+          //Get interpolated force
+          plugin->GetForce1D(fmiConfig.interfaceIds[j], tcur, position,speed,&force);
+
+          force = -force;
+
+          // Write force to FMU
+          fmistatus = fmi2_import_set_real(fmu,fmiConfig.force_vr[j],1,&force);
+        }
     }
-
-    // Write force to FMU
-    fmistatus = fmi2_import_set_real(fmu,fmiConfig.force_vr[j],6,force);
-  }
 }
 
 
@@ -158,24 +175,6 @@ static int rhs_ida(realtype t, N_Vector yy, N_Vector yp, N_Vector rr, void *user
  * Jacobian routine. Compute J(t,y) = df/dy. *
  */
 
-static int Jac(long int N, realtype t,
-               N_Vector y, N_Vector fy, DlsMat J, void *user_data,
-               N_Vector tmp1, N_Vector tmp2, N_Vector tmp3)
-{
-  realtype y1, y2, y3;
-
-  y1 = Ith(y,1); y2 = Ith(y,2); y3 = Ith(y,3);
-
-  IJth(J,1,1) = RCONST(-0.04);
-  IJth(J,1,2) = RCONST(1.0e4)*y3;
-  IJth(J,1,3) = RCONST(1.0e4)*y2;
-  IJth(J,2,1) = RCONST(0.04);
-  IJth(J,2,2) = RCONST(-1.0e4)*y3-RCONST(6.0e7)*y2;
-  IJth(J,2,3) = RCONST(-1.0e4)*y2;
-  IJth(J,3,2) = RCONST(6.0e7)*y2;
-
-  return(0);
-}
 
 static int check_flag(void *flagvalue, const char *funcname, int opt)
 {
@@ -288,25 +287,41 @@ int simulate_fmi2_cs()
   while (tcur < tlmConfig.tend) {
     fmi2_real_t hsub = tlmConfig.hmax/fmiConfig.nSubSteps;
     for(size_t i=0; i<fmiConfig.nSubSteps; ++i) {
-      for(size_t j=0; j<fmiConfig.nInterfaces; ++j)
-      {
-        double position[3],orientation[9],speed[3],ang_speed[3],force[6];
+      for(size_t j=0; j<fmiConfig.nInterfaces; ++j) {
+          if(fmiConfig.types[j] == "3D") {
+              double position[3],orientation[9],speed[3],ang_speed[3],force[6];
 
-        //Read position and speed from FMU
-        fmistatus = fmi2_import_get_real(fmu,fmiConfig.position_vr[j],3,position);
-        fmistatus = fmi2_import_get_real(fmu,fmiConfig.orientation_vr[j],9,orientation);
-        fmistatus = fmi2_import_get_real(fmu,fmiConfig.speed_vr[j],3,speed);
-        fmistatus = fmi2_import_get_real(fmu,fmiConfig.ang_speed_vr[j],3,ang_speed);
+              //Read position and speed from FMU
+              fmistatus = fmi2_import_get_real(fmu,fmiConfig.position_vr[j],3,position);
+              fmistatus = fmi2_import_get_real(fmu,fmiConfig.orientation_vr[j],9,orientation);
+              fmistatus = fmi2_import_get_real(fmu,fmiConfig.speed_vr[j],3,speed);
+              fmistatus = fmi2_import_get_real(fmu,fmiConfig.ang_speed_vr[j],3,ang_speed);
 
-        //Get interpolated force
-        plugin->GetForce3D(fmiConfig.interfaceIds[j], tcur, position,orientation,speed,ang_speed,force);
+              //Get interpolated force
+              plugin->GetForce3D(fmiConfig.interfaceIds[j], tcur, position,orientation,speed,ang_speed,force);
 
-        for(size_t k=0; k<6; ++k) {
-          force[k] = -force[k];
-        }
+              for(size_t k=0; k<6; ++k) {
+                force[k] = -force[k];
+              }
 
-        //Write force to FMU
-        fmistatus = fmi2_import_set_real(fmu,fmiConfig.force_vr[j],6,force);
+              //Write force to FMU
+              fmistatus = fmi2_import_set_real(fmu,fmiConfig.force_vr[j],6,force);
+          }
+          else if(fmiConfig.types[j] == "1D") {
+            double position,speed,force;
+
+            //Read position and speed from FMU
+            fmistatus = fmi2_import_get_real(fmu,fmiConfig.position_vr[j],1,&position);
+            fmistatus = fmi2_import_get_real(fmu,fmiConfig.speed_vr[j],1,&speed);
+
+            //Get interpolated force
+            plugin->GetForce1D(fmiConfig.interfaceIds[j], tcur, position,speed,&force);
+
+            force = -force;
+
+            //Write force to FMU
+            fmistatus = fmi2_import_set_real(fmu,fmiConfig.force_vr[j],1,&force);
+          }
       }
 
       //Take one sub step
@@ -316,20 +331,34 @@ int simulate_fmi2_cs()
       tcur+=hsub;
 
       for(size_t j=0; j<fmiConfig.nInterfaces; ++j) {
+          if(fmiConfig.types[j] == "3D") {
+              double force[6], position[3],orientation[9],speed[3],ang_speed[3];
 
-        double force[6], position[3],orientation[9],speed[3],ang_speed[3];
+              //Read position and speed from FMU
+              fmistatus = fmi2_import_get_real(fmu,fmiConfig.position_vr[j],3,position);
+              fmistatus = fmi2_import_get_real(fmu,fmiConfig.orientation_vr[j],9,orientation);
+              fmistatus = fmi2_import_get_real(fmu,fmiConfig.speed_vr[j],3,speed);
+              fmistatus = fmi2_import_get_real(fmu,fmiConfig.ang_speed_vr[j],3,ang_speed);
 
-        //Read position and speed from FMU
-        fmistatus = fmi2_import_get_real(fmu,fmiConfig.position_vr[j],3,position);
-        fmistatus = fmi2_import_get_real(fmu,fmiConfig.orientation_vr[j],9,orientation);
-        fmistatus = fmi2_import_get_real(fmu,fmiConfig.speed_vr[j],3,speed);
-        fmistatus = fmi2_import_get_real(fmu,fmiConfig.ang_speed_vr[j],3,ang_speed);
+              //Get interpolated force
+              plugin->GetForce3D(fmiConfig.interfaceIds[j], tcur, position,orientation,speed,ang_speed,force);
 
-        //Get interpolated force
-        plugin->GetForce3D(fmiConfig.interfaceIds[j], tcur, position,orientation,speed,ang_speed,force);
+              //Write back motion for sub step
+              plugin->SetMotion3D(fmiConfig.interfaceIds[j], tcur, position, orientation, speed, ang_speed);
+          }
+          else if(fmiConfig.types[j] == "1D") {
+              double force, position, speed;
 
-        //Write back motion for sub step
-        plugin->SetMotion3D(fmiConfig.interfaceIds[j], tcur, position, orientation, speed, ang_speed);
+              //Read position and speed from FMU
+              fmistatus = fmi2_import_get_real(fmu,fmiConfig.position_vr[j],1,&position);
+              fmistatus = fmi2_import_get_real(fmu,fmiConfig.speed_vr[j],1,&speed);
+
+              //Get interpolated force
+              plugin->GetForce1D(fmiConfig.interfaceIds[j], tcur, position,speed,&force);
+
+              //Write back motion for sub step
+              plugin->SetMotion1D(fmiConfig.interfaceIds[j], tcur, position, speed);
+          }
       }
     }
   }
@@ -360,14 +389,24 @@ void do_event_iteration(fmi2_import_t *fmu, fmi2_event_info_t *eventInfo)
 void motionFromFmuToTlm(double tcur)
 {
   for(size_t j=0; j<fmiConfig.nInterfaces; ++j) {
-    double position[3],orientation[9],speed[3],ang_speed[3];
+    if(fmiConfig.types[j] == "3D") {
+      double position[3],orientation[9],speed[3],ang_speed[3];
 
-    fmistatus = fmi2_import_get_real(fmu,fmiConfig.position_vr[j],3,position);
-    fmistatus = fmi2_import_get_real(fmu,fmiConfig.orientation_vr[j],9,orientation);
-    fmistatus = fmi2_import_get_real(fmu,fmiConfig.speed_vr[j],3,speed);
-    fmistatus = fmi2_import_get_real(fmu,fmiConfig.ang_speed_vr[j],3,ang_speed);
+      fmistatus = fmi2_import_get_real(fmu,fmiConfig.position_vr[j],3,position);
+      fmistatus = fmi2_import_get_real(fmu,fmiConfig.orientation_vr[j],9,orientation);
+      fmistatus = fmi2_import_get_real(fmu,fmiConfig.speed_vr[j],3,speed);
+      fmistatus = fmi2_import_get_real(fmu,fmiConfig.ang_speed_vr[j],3,ang_speed);
 
-    plugin->SetMotion3D(fmiConfig.interfaceIds[j], tcur, position, orientation, speed, ang_speed);
+       plugin->SetMotion3D(fmiConfig.interfaceIds[j], tcur, position, orientation, speed, ang_speed);
+    }
+    else if(fmiConfig.types[j] == "1D") {
+      double position,speed;
+
+      fmistatus = fmi2_import_get_real(fmu,fmiConfig.position_vr[j],1,&position);
+      fmistatus = fmi2_import_get_real(fmu,fmiConfig.speed_vr[j],1,&speed);
+
+      plugin->SetMotion1D(fmiConfig.interfaceIds[j], tcur, position, speed);
+    }
   }
 }
 
@@ -389,6 +428,8 @@ int simulate_fmi2_me()
     case ExplicitEuler:
       TLMErrorLog::Log("Using explicit Euler solver.");
       break;
+    case RungeKutta:
+      TLMErrorLog::Log("Using 4th order explicit Runge-Kutta solver.");
   }
 
   jm_status_enu_t jmstatus;
@@ -445,9 +486,7 @@ int simulate_fmi2_me()
   }
 
   fmi2_import_set_debug_logging(fmu, fmi2_false, 0, 0);
-  std::stringstream ss;
-  ss << "fmi2_import_set_debug_logging: " << fmi2_status_to_string(fmistatus);
-  TLMErrorLog::Log(ss.str());
+  TLMErrorLog::Log("fmi2_import_set_debug_logging: " + string(fmi2_status_to_string(fmistatus)));
   fmi2_import_set_debug_logging(fmu, fmi2_true, 0, 0);
 
   relativeTolerance = fmi2_import_get_default_experiment_tolerance(fmu);
@@ -657,8 +696,6 @@ int simulate_fmi2_me()
       }
     }
     else if(simConfig.solver == ExplicitEuler) {
-
-      double k1,k2,k3,k4;
       for (k = 0; k < n_states; k++) {
         Ith(y,k+1) = Ith(y,k+1) + hcur*Ith(yp,k+1);
       }
@@ -758,63 +795,85 @@ void readFmiConfigFile()
         fmiConfig.interfaceIds.resize(fmiConfig.nInterfaces);
         getline(ss, word, ',');
         fmiConfig.interfaceNames.push_back(word);
-      }
-      else if(word == "position") {
+        fmiConfig.types.push_back("3D");    //Assume 3D interface
         fmiConfig.position_vr.push_back(new fmi2_value_reference_t);
+        fmiConfig.orientation_vr.push_back(new fmi2_value_reference_t);
+        fmiConfig.speed_vr.push_back(new fmi2_value_reference_t);
+        fmiConfig.ang_speed_vr.push_back(new fmi2_value_reference_t);
+        fmiConfig.force_vr.push_back(new fmi2_value_reference_t);
+      }
+      else if(word == "type") {
+        getline(ss, word, ',');
+        fmiConfig.types[fmiConfig.types.size()-1] = word;
+      }
+      else if(word == "position" && fmiConfig.types[fmiConfig.types.size()-1] == "3D") {
         csvToIntArray(ss.str(),3,&(fmiConfig.position_vr.back()));
       }
+      else if(word == "position" && fmiConfig.types[fmiConfig.types.size()-1] == "1D") {
+        csvToIntArray(ss.str(),1,&(fmiConfig.position_vr.back()));
+      }
       else if(word == "orientation") {
-        fmiConfig.orientation_vr.push_back(new fmi2_value_reference_t);
         csvToIntArray(ss.str(),9,&(fmiConfig.orientation_vr.back()));
       }
-      else if(word == "speed") {
-        fmiConfig.speed_vr.push_back(new fmi2_value_reference_t);
+      else if(word == "speed" && fmiConfig.types[fmiConfig.types.size()-1] == "3D") {
         csvToIntArray(ss.str(),3,&(fmiConfig.speed_vr.back()));
       }
+      else if(word == "speed" && fmiConfig.types[fmiConfig.types.size()-1] == "1D") {
+        csvToIntArray(ss.str(),1,&(fmiConfig.speed_vr.back()));
+      }
       else if(word == "ang_speed") {
-        fmiConfig.ang_speed_vr.push_back(new fmi2_value_reference_t);
         csvToIntArray(ss.str(),3,&(fmiConfig.ang_speed_vr.back()));
       }
-      else if(word == "force") {
-        fmiConfig.force_vr.push_back(new fmi2_value_reference_t);
+      else if(word == "force" && fmiConfig.types[fmiConfig.types.size()-1] == "3D") {
         csvToIntArray(ss.str(),6,&(fmiConfig.force_vr.back()));
+      }
+      else if(word == "force" && fmiConfig.types[fmiConfig.types.size()-1] == "1D") {
+        csvToIntArray(ss.str(),1,&(fmiConfig.force_vr.back()));
       }
     }
 
     // Print log output
     TLMErrorLog::Log("---"+string(FMI_CONFIG_FILE_NAME)+"---");
-    std::stringstream output;
-    output << "Number of interfaces: " << fmiConfig.nInterfaces;
-    TLMErrorLog::Log(output.str());
+    TLMErrorLog::Log("Number of interfaces: "+TLMErrorLog::ToStdStr(fmiConfig.nInterfaces));
     for(size_t i=0; i<fmiConfig.nInterfaces; ++i) {
       TLMErrorLog::Log("Name: "+fmiConfig.interfaceNames[i]);
-      output.str("");
+      int nP,nO,nS,nA,nF;
+      if(fmiConfig.types[i] == "3D") {
+          nP = nS = nA = 3;
+          nO = 9;
+          nF = 6;
+      }
+      else/* if(fmiConfig.types[i] == "1D") */{
+          nP = nS = nF = 1;
+          nA = nO = 0;
+      }
+      std::stringstream output;
       output << "Position:";
-      for(int j=0; j<3; ++j) {
+      for(int j=0; j<nP; ++j) {
         output << " " << fmiConfig.position_vr[i][j];
       }
       TLMErrorLog::Log(output.str());
       output.str("");
       output << "Orientation:";
-      for(int j=0; j<9; ++j) {
+      for(int j=0; j<nO; ++j) {
         output << " " << fmiConfig.orientation_vr[i][j];
       }
       TLMErrorLog::Log(output.str());
       output.str("");
       output << "Speed:";
-      for(int j=0; j<3; ++j) {
+      for(int j=0; j<nS; ++j) {
         output << " " << fmiConfig.speed_vr[i][j];
       }
       TLMErrorLog::Log(output.str());
       output.str("");
       output << "Angular speed:";
-      for(int j=0; j<3; ++j) {
+      for(int j=0; j<nA; ++j) {
         output << " " << fmiConfig.ang_speed_vr[i][j];
       }
       TLMErrorLog::Log(output.str());
       output.str("");
       output << "Force:";
-      for(int j=0; j<6; ++j) {
+      for(int j=0; j<nF; ++j) {
         output << " " << fmiConfig.force_vr[i][j];
       }
       TLMErrorLog::Log(output.str());
@@ -846,15 +905,9 @@ void readTlmConfigFile()
   TLMErrorLog::Log("---"+string(TLM_CONFIG_FILE_NAME)+"---");
   TLMErrorLog::Log("model: "+tlmConfig.model);
   TLMErrorLog::Log("server: "+tlmConfig.server);
-  std::stringstream ss1;
-  ss1 << "tstart: " << tlmConfig.tstart;
-  TLMErrorLog::Log(ss1.str());
-  std::stringstream ss2;
-  ss2 << "tend: " << tlmConfig.tend;
-  TLMErrorLog::Log(ss2.str());
-  std::stringstream ss3;
-  ss3 << "hmax: " << tlmConfig.hmax;
-  TLMErrorLog::Log(ss3.str());
+  TLMErrorLog::Log("tstart: "+TLMErrorLog::ToStdStr(tlmConfig.tstart));
+  TLMErrorLog::Log("tend: "+TLMErrorLog::ToStdStr(tlmConfig.tend));
+  TLMErrorLog::Log("hmax: "+TLMErrorLog::ToStdStr(tlmConfig.hmax));
 }
 
 
@@ -862,17 +915,16 @@ void readTlmConfigFile()
 void createAndClearTempDirectory(std::string path)
 {
   struct stat info;
+  stat(path.c_str(), &info);
   if( info.st_mode & S_IFDIR ) {           //temp directory already exists
 #ifdef WIN32
     std::string command = "rd /s /q \""+path+"\"";
 #else
     std::string command = "rm -rf "+tmpPath;
 #endif
-    TLMErrorLog::Log("Calling: "+command);
     system(command.c_str());
   }
   std::string command = "mkdir \""+path+"\"";
-  TLMErrorLog::Log("Calling: "+command);
   system(command.c_str());
 }
 
@@ -914,11 +966,6 @@ int main(int argc, char* argv[])
     }
   }
 
-  for(int i=0; i<argc; ++i) {
-    TLMErrorLog::Log("Hello!");
-    TLMErrorLog::Log(argv[i]);
-  }
-
   TLMErrorLog::Log("---Arguments---");
   TLMErrorLog::Log("FMU file: "+FMUPath+"");
   TLMErrorLog::Log("Temp path: "+tmpPath+"");
@@ -950,7 +997,8 @@ int main(int argc, char* argv[])
 
   // Register TLM interfaces
   for(size_t i=0; i<fmiConfig.interfaceNames.size(); ++i) {
-    fmiConfig.interfaceIds[i] = plugin->RegisteTLMInterface(fmiConfig.interfaceNames[i]);
+    TLMErrorLog::Log("Registers interface "+fmiConfig.interfaceNames[i]+" of type "+fmiConfig.types[i]);
+    fmiConfig.interfaceIds[i] = plugin->RegisteTLMInterface(fmiConfig.interfaceNames[i], fmiConfig.types[i]);
   }
 
   jm_callbacks callbacks;

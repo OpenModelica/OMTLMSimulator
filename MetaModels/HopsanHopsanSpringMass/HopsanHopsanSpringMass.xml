@@ -1,17 +1,17 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <Model Name="HopsanHopsanSpringMass">
   <SubModels>
-    <SubModel Name="left" ModelFile="left.hmf" Position="0,0,0" Angle321="0,0,0" ExactStep="0" StartCommand="StartTLMHopsan">
-      <Annotation Extent="{-10,-10,10,10}" Rotation="0" Origin="{-54,14}" Visible="true"/>
-      <InterfacePoint Name="TLM_Plugin_Inerface" Position="0,0,0" Angle321="0,0,0"/>
+    <SubModel ModelFile="left.hmf" ExactStep="0" Angle321="0,0,0" StartCommand="StartTLMHopsan" Position="0,0,0" Name="left">
+      <Annotation Extent="{-10,-10,10,10}" Visible="true" Rotation="0" Origin="{-54,14}"/>
+      <InterfacePoint Angle321="0,0,0" Position="0,0,0" Name="TLM_Plugin_Inerface1D"/>
     </SubModel>
-    <SubModel Name="right" ModelFile="right.hmf" Position="0,0,0" Angle321="0,0,0" ExactStep="0" StartCommand="StartTLMHopsan">
-      <Annotation Extent="{-10,-10,10,10}" Rotation="0" Origin="{8,12}" Visible="true"/>
-      <InterfacePoint Name="TLM_Plugin_Inerface" Position="0,0,0" Angle321="0,0,0"/>
+    <SubModel ModelFile="right.hmf" ExactStep="0" Angle321="0,0,0" StartCommand="StartTLMHopsan" Position="0,0,0" Name="right">
+      <Annotation Extent="{-10,-10,10,10}" Visible="true" Rotation="0" Origin="{8,12}"/>
+      <InterfacePoint Angle321="0,0,0" Position="0,0,0" Name="TLM_Plugin_Inerface1D"/>
     </SubModel>
   </SubModels>
   <Connections>
-    <Connection Zf="10000" alpha="0.9" To="right.TLM_Plugin_Inerface" Delay="1e-4" Zfr="100" From="left.TLM_Plugin_Inerface">
+    <Connection Delay="1e-4" Zfr="100" Zf="10000" To="right.TLM_Plugin_Inerface1D" alpha="0.9" From="left.TLM_Plugin_Inerface1D">
       <Annotation Points="{{-42,18},{-22,18},{-22,36},{36,36},{36,16},{20,16},{20,16}}"/>
     </Connection>
   </Connections>

@@ -10,7 +10,7 @@
 static const double TLM_DAMP_DELAY = 1.5;
 
 TLMInterface1D::TLMInterface1D(TLMClientComm &theComm, std::string &aName, double StartTime)
-    : TLMInterface(theComm, aName, StartTime)
+    : TLMInterface(theComm, aName, StartTime, "1D")
 {
 
 }
@@ -63,7 +63,7 @@ void TLMInterface1D::GetTimeData(TLMTimeData1D& Instance, std::deque<TLMTimeData
         // We always assume no waves initially.
         Instance.GenForce = 0.0;
 
-        Instance.Position = Params.Nom_cI_R_cX_cX[0];  //TODO: TLMConnectionParams are hard-coded for 3D. How to solve this? //robbr
+        Instance.Position = Params.cX_R_cG_cG[0]+Params.Nom_cI_R_cX_cX[0];  //TODO: TLMConnectionParams are hard-coded for 3D. How to solve this? //robbr
 
         Instance.time = TLMPlugin::TIME_WITHOUT_DATA;
 

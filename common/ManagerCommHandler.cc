@@ -234,7 +234,23 @@ void ManagerCommHandler::ProcessRegInterfaceMessage(int compID, TLMMessage& mess
     }
 
     // First, find the interface in the meta model
-    string aName ((const char*)(& mess.Data[0]), mess.Header.DataSize);
+    string aNameAndType ((const char*)(& mess.Data[0]), mess.Header.DataSize);
+
+    TLMErrorLog::Log("Manager received nameAndType: "+aNameAndType);
+
+    string aName, type;
+    bool readingType=false;
+    for(size_t i=0; i<aNameAndType.size(); ++i) {
+        if(aNameAndType[i] == ':') {
+            readingType = true;
+        }
+        if(readingType) {
+            type += aNameAndType[i];
+        }
+        else {
+            aName += aNameAndType[i];
+        }
+    }
 
     int IfcID = TheModel.GetTLMInterfaceID(compID, aName);    
 
@@ -245,7 +261,7 @@ void ManagerCommHandler::ProcessRegInterfaceMessage(int compID, TLMMessage& mess
 
     if(IfcID < 0 && CommMode == InterfaceRequestMode) {
         // interface not found, create it
-        std::string type = "1D";                                //HARD-CODED /robbr
+        //std::string type = "1D";                                //HARD-CODED /robbr
         TheModel.RegisterTLMInterfaceProxy(compID, aName, type);
         IfcID = TheModel.GetTLMInterfaceID(compID, aName);        
     }
@@ -425,6 +441,7 @@ void ManagerCommHandler::WriterThreadRun() {
 void ManagerCommHandler::MarshalMessage(TLMMessage& message) {
 
     if(message.Header.MessageType !=   TLMMessageTypeConst::TLM_TIME_DATA) {
+        TLMErrorLog::Log("Interface ID: "+TLMErrorLog::ToStdStr(message.Header.TLMInterfaceID));
         TLMErrorLog::FatalError("Unexpected message received " + tlmMisc::ToStr(message.Header.MessageType));
     };
 
@@ -485,8 +502,21 @@ int ManagerCommHandler::ProcessInterfaceMonitoringMessage(TLMMessage& message)
     }
     
     // First, find the interface in the meta model
-    string aName ((const char*)(& message.Data[0]), message.Header.DataSize);            
-    
+    string aNameAndType ((const char*)(& message.Data[0]), message.Header.DataSize);
+    string aName, type;
+    bool readingType=false;
+    for(size_t i=0; i<aNameAndType.size(); ++i) {
+        if(aNameAndType[i] == ':') {
+            readingType = true;
+        }
+        if(readingType) {
+            type += aNameAndType[i];
+        }
+        else {
+            aName += aNameAndType[i];
+        }
+    }
+
     TLMErrorLog::Log( "Request for monitoring " + aName ); 
 
     // Here the full name, i.e., component.interface, is requered
