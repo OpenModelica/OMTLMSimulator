@@ -25,9 +25,7 @@
 #ifndef TLMPLUGININTERFACE_HPP_INCLUDED
 #define TLMPLUGININTERFACE_HPP_INCLUDED
 
-static const char* TLM_CONFIG_FILE_NAME = "tlm.config";
-static const char* TLM_DEBUG_FILE_NAME = "tlmmodelica.log";
-
+#include "common.h"
 #include "ComponentEssentials.h"
 #include "ComponentUtilities.h"
 #include "ComponentSystem.h"
@@ -45,55 +43,10 @@ static const char* TLM_DEBUG_FILE_NAME = "tlmmodelica.log";
 
 // TLMPlugin includes
 #include "TLMPlugin.h"
-#include "TLMErrorLog.h"
-
-// TLM config data
-struct tlmConfig_t {
-    std::string model;
-    std::string server;
-    double tstart;
-    double tend;
-    double hmax;
-};
-
-
-tlmConfig_t readTlmConfigFile(std::string path)
-{
-    tlmConfig_t tlmConfig;
-    std::ifstream tlmConfigFile(path.c_str());
-
-    tlmConfigFile >> tlmConfig.model;
-    tlmConfigFile >> tlmConfig.server;
-    tlmConfigFile >> tlmConfig.tstart;
-    tlmConfigFile >> tlmConfig.tend;
-    tlmConfigFile >> tlmConfig.hmax;
-
-    if(!tlmConfigFile.good()) {
-      TLMErrorLog::FatalError("Error reading TLM configuration data from tlm.config");
-      exit(1);
-    }
-
-    //Print results to log file
-    TLMErrorLog::Log("---"+std::string(TLM_CONFIG_FILE_NAME)+"---");
-    TLMErrorLog::Log("model: "+tlmConfig.model);
-    TLMErrorLog::Log("server: "+tlmConfig.server);
-    std::stringstream ss1;
-    ss1 << "tstart: " << tlmConfig.tstart;
-    TLMErrorLog::Log(ss1.str());
-    std::stringstream ss2;
-    ss2 << "tend: " << tlmConfig.tend;
-    TLMErrorLog::Log(ss2.str());
-    std::stringstream ss3;
-    ss3 << "hmax: " << tlmConfig.hmax;
-    TLMErrorLog::Log(ss3.str());
-
-    return tlmConfig;
-}
-
 
 namespace hopsan {
 
-    class TLMPluginInterface : public ComponentC
+    class TLMPluginInterface1D : public ComponentC
     {
     private:
         //Constants
@@ -109,7 +62,7 @@ namespace hopsan {
     public:
         static Component *Creator()
         {
-            return new TLMPluginInterface();
+            return new TLMPluginInterface1D();
         }
 
         void configure()
@@ -172,11 +125,8 @@ namespace hopsan {
             // Read input variables (position and speed only)
             double x,v,f;
 
-            // Position
-            x = (*mpP1_x);
-
-            // Speed
-            v = (*mpP1_v);
+            x = (*mpP1_x);  // Position
+            v = (*mpP1_v);  // Speed
 
             // Get force from TLM interface
             mpPlugin->GetForce1D(mInterfaceId,mTime,x,v,&f);
@@ -187,38 +137,6 @@ namespace hopsan {
 
             // Set motion in TLM interface
             mpPlugin->SetMotion1D(mInterfaceId,mTime,x,v);
-
-//          // Read input variables (position and speed only)
-//          double x[3], T[9], v[3],w[3], f[6];
-
-//          // Position
-//          x[0] = (*mpP1_x);   x[1] = 0;       x[2] = 0;
-
-//          // Orientation
-//          T[0] = 1;           T[1] = 0;       T[2] = 0;
-//          T[3] = 0;           T[4] = 1;       T[5] = 0;
-//          T[6] = 0;           T[7] = 0;       T[8] = 1;
-
-//          // Speed
-//          v[0] = (*mpP1_v);   v[1] = 0;       v[2] = 0;
-
-//          // Angular speed
-//          w[0] = 0;           w[1] = 0;       w[2] = 0;
-
-//          f[0] = 0;           f[1] = 0;       f[2] = 0;
-//          f[3] = 0;           f[4] = 0;       f[5] = 0;
-
-//          // Get force from TLM interface
-//          mpPlugin->GetForce3D(mInterfaceId,mTime,x,T,v,w,f);
-
-//          // Write output variables
-//          (*mpP1_c) = -f[0];
-//          (*mpP1_Zc) = 0;     //Not needed, since already included in f
-
-//          // Set motion in TLM interface
-//          mpPlugin->SetMotion3D(mInterfaceId,mTime,x,T,v,w);
-
-
         }
 
 

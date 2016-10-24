@@ -7,13 +7,20 @@
     <source>c:/users/robbr48/Documents/Mercurial/TLMPlugin/common/TLMCommUtil.cc</source>
     <source>c:/users/robbr48/Documents/Mercurial/TLMPlugin/common/TLMErrorLog.cc</source>
     <source>c:/users/robbr48/Documents/Mercurial/TLMPlugin/common/TLMInterface.cc</source>
+    <source>c:/users/robbr48/Documents/Mercurial/TLMPlugin/common/TLMInterfaceSignal.cc</source>
+    <source>c:/users/robbr48/Documents/Mercurial/TLMPlugin/common/TLMInterface1D.cc</source>
+    <source>c:/users/robbr48/Documents/Mercurial/TLMPlugin/common/TLMInterface3D.cc</source>
     <source>c:/users/robbr48/Documents/Mercurial/TLMPlugin/common/TLMPlugin.cc</source>
     <source>c:/users/robbr48/Documents/Mercurial/TLMPlugin/extralibs/misc/src/strConv.cc</source>
     <source>c:/users/robbr48/Documents/Mercurial/TLMPlugin/extralibs/misc/src/coordTrans.cc</source>
     <source>c:/users/robbr48/Documents/Mercurial/TLMPlugin/extralibs/misc/src/double3Vec.cc</source>
     <source>c:/users/robbr48/Documents/Mercurial/TLMPlugin/extralibs/misc/src/double33Mat.cc</source>
-    <component>TLMPluginInterface.hpp</component>
-    <caf>TLMPluginInterface.xml</caf>
+    <component>TLMPluginInterfaceSignalInput.hpp</component>
+    <component>TLMPluginInterfaceSignalOutput.hpp</component>
+    <component>TLMPluginInterface1D.hpp</component>
+    <caf>TLMPluginInterfaceSignalInput.xml</caf>
+    <caf>TLMPluginInterfaceSignalOutput.xml</caf>
+    <caf>TLMPluginInterface1D.xml</caf>
     <buildflags>
       <cflags>-Ic:/users/robbr48/Documents/Mercurial/TLMPlugin/common -Ic:/users/robbr48/Documents/Mercurial/TLMPlugin/extralibs/misc/include</cflags>
       <lflags>-lws2_32</lflags>

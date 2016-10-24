@@ -27,7 +27,9 @@
 #include "ComponentUtilities.h"
 
 // Include component code files
-#include "TLMPluginInterface.hpp"
+#include "TLMPluginInterface1D.hpp"
+#include "TLMPluginInterfaceSignalInput.hpp"
+#include "TLMPluginInterfaceSignalOutput.hpp"
 
 using namespace hopsan;
 
@@ -35,7 +37,9 @@ using namespace hopsan;
 extern "C" DLLEXPORT void register_contents(ComponentFactory* pComponentFactory, NodeFactory* pNodeFactory)
 {
     // Register Components
-    pComponentFactory->registerCreatorFunction("TLMPluginInterface", TLMPluginInterface::Creator);
+    pComponentFactory->registerCreatorFunction("TLMPluginInterface1D", TLMPluginInterface1D::Creator);
+    pComponentFactory->registerCreatorFunction("TLMPluginInterfaceSignalInput", TLMPluginInterfaceSignalInput::Creator);
+    pComponentFactory->registerCreatorFunction("TLMPluginInterfaceSignalOutput", TLMPluginInterfaceSignalOutput::Creator);
 
     // Register Custom Nodes (not yet supported)
     HOPSAN_UNUSED(pNodeFactory);
