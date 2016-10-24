@@ -20,6 +20,7 @@ TLMPlugin* TLMPlugin::CreateInstance() {
   return PluginImplementerInstance;
 }
 
+
 void signalHandler_( int signum )
 {
   // Install default signal handler
@@ -236,6 +237,31 @@ void PluginImplementer::ReceiveTimeData(TLMInterface* reqIfc, double time)  {
   }
 }
 
+void PluginImplementer::GetValueSignal(int interfaceID, double time, double *value) {
+    if(!ModelChecked) CheckModel();
+
+    // Use the ID to get to the right interface object
+    int idx = GetInterfaceIndex(interfaceID);
+    TLMInterfaceSignal* ifc = dynamic_cast<TLMInterfaceSignal*>(Interfaces[idx]);
+
+    assert(!ifc || (ifc -> GetInterfaceID() == interfaceID));
+
+    if(!ifc) {
+      (*value) = 0.0;
+
+      TLMErrorLog::Warning(string("No interface in GetForce1D()"));
+
+      return;
+    }
+
+    // Check if the interface expects more data from the coupled simulation
+    // Receive if necessary .Note that potentially more that one receive is possible
+    ReceiveTimeData(ifc, time);
+
+    // evaluate the reaction force from the TLM connection
+    ifc->GetValue(time, value);
+}
+
 void PluginImplementer::GetForce1D(int interfaceID, double time, double position, double speed, double *force) {
   if(!ModelChecked) CheckModel();
 
@@ -339,6 +365,41 @@ void PluginImplementer::SetMotion3D(int forceID,
 }
 
 
+void PluginImplementer::SetValueSignal(int valueID,
+                                       double time,
+                                       double value) {
+    if(!ModelChecked) CheckModel();
+    if(valueID < 0) return;
+    // Find the interface object by its ID
+    int idx = GetInterfaceIndex(valueID);
+    TLMInterfaceSignal* ifc = dynamic_cast<TLMInterfaceSignal*>(Interfaces[idx]);
+    assert(ifc -> GetInterfaceID() == valueID);
+
+    if( !ifc->waitForShutdown() ){
+      // Store the data into the interface object
+      TLMErrorLog::Log(string("calling SetTimeData()"));
+      ifc->SetTimeData(time, value);
+    }
+    else {
+      // Check if all interfaces wait for shutdown
+      std::vector<TLMInterface*>::iterator iter;
+      for( iter=Interfaces.begin() ; iter!=Interfaces.end() ; iter++ ){
+        if( ! (*iter)->waitForShutdown() ) return;
+      }
+  #ifdef _MSC_VER
+      WSACleanup(); // BZ306 fixed here
+  #else
+      // needed anything ?
+  #endif
+
+      TLMErrorLog::Log(string("Takedown due to finished interface data request."));
+
+      // If we got here, we have a shutdown request from all interfaces
+      //abort(); // Some systems don't handle exit() very well, let's try abort();
+      // abort creates core dump!
+      exit(0);
+    }
+}
 
 void PluginImplementer::SetMotion1D(int forceID,
                                     double time,
@@ -389,6 +450,23 @@ void PluginImplementer::GetConnectionParams(int interfaceID, TLMConnectionParams
   assert(ifc -> GetInterfaceID() == interfaceID);
 
   ParamsOut = ifc->GetConnParams();
+}
+
+void PluginImplementer::GetTimeDataSignal(int interfaceID, double time, TLMTimeDataSignal &DataOut) {
+    if(!ModelChecked) CheckModel();
+
+    // Use the ID to get to the right interface object
+    int idx = GetInterfaceIndex(interfaceID);
+    TLMInterfaceSignal* ifc = dynamic_cast<TLMInterfaceSignal*>(Interfaces[idx]);
+    assert(ifc -> GetInterfaceID() == interfaceID);
+
+    // Check if the interface expects more data from the coupled simulation
+    // Receive if necessary .Note that potentially more that one receive is possible
+    ReceiveTimeData( ifc, time);
+
+    DataOut.time = time - ifc->GetConnParams().Delay;
+
+    ifc->GetTimeData(DataOut);
 }
 
 void PluginImplementer::GetTimeData1D(int interfaceID, double time, TLMTimeData1D &DataOut) {

@@ -190,4 +190,32 @@ public:
 };
 
 
+//! Time stamped signal data that is send over between connected TLM interfaces.
+//! Note that the strucutre MUST:
+//! - contain only "double" number that are transmitted (important for byte swapping)
+//! - have continious storage
+class TLMTimeDataSignal {
+public:
+    //! The time instance
+    double time;
+
+    //! Position (or angle)
+    double Value;
+
+    TLMTimeDataSignal()
+        : time(0.0)
+    {
+        Value = 0.0;
+    }
+
+    TLMTimeDataSignal& operator=(const TLMTimeDataSignal& td){
+        if( &td != this ){
+            time = td.time;
+
+            Value = td.Value;
+        }
+        return *this;
+    }
+};
+
 #endif
