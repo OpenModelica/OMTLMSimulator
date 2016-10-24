@@ -32,14 +32,21 @@ class TLMClientComm {
     //! Fill in TLMMessage with the information from TLMTimeData vector 
     //! coming to given InterfaceID. This function is called by TLMPlugin
     //!  when constructing messages with time-stamped data.
-    static void PackTimeDataMessage3D(int InterfaceID, std::vector<TLMTimeData3D> &Data,
-                                    TLMMessage& out_mess);
-    static void PackTimeDataMessage1D(int InterfaceID, std::vector<TLMTimeData1D> &Data,
-                               TLMMessage &out_mess);
+    static void PackTimeDataMessageSignal(int InterfaceID,
+                                          std::vector<TLMTimeDataSignal> &Data,
+                                          TLMMessage &out_mess);
+    static void PackTimeDataMessage1D(int InterfaceID,
+                                      std::vector<TLMTimeData1D> &Data,
+                                      TLMMessage &out_mess);
+    static void PackTimeDataMessage3D(int InterfaceID,
+                                      std::vector<TLMTimeData3D> &Data,
+                                      TLMMessage& out_mess);
 
     //! Unpack TLMTimeData from TLMMessage into Data queue
-    static void UnpackTimeDataMessage3D(TLMMessage& mess, std::deque<TLMTimeData3D>& Data);
+    static void UnpackTimeDataMessageSignal(TLMMessage &mess, std::deque<TLMTimeDataSignal> &Data);
     static void UnpackTimeDataMessage1D(TLMMessage &mess, std::deque<TLMTimeData1D> &Data);
+    static void UnpackTimeDataMessage3D(TLMMessage& mess, std::deque<TLMTimeData3D>& Data);
+
 
     //! ConnectManager function tries to establish a TCP/IP connection
     //! to the TLM manager.Returns socket handle on success.

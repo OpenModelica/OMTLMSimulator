@@ -74,6 +74,20 @@ void  TLMPlugin::GetForce3D(double position[],
     }
 }
 
+
+void TLMPlugin::GetValueSignal(TLMTimeDataSignal &Data,
+                               TLMConnectionParams &Params,
+                               double *value)
+{
+    if(Data.time == TIME_WITHOUT_DATA) {
+      (*value) = 0.0;
+    }
+    else {
+        //No physical connection, so just return the value
+        (*value) = Data.Value;
+    }
+}
+
 void TLMPlugin::GetForce1D(double position,
                            double speed,
                            TLMTimeData1D &Data,

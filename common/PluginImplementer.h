@@ -9,6 +9,7 @@
 #include <map>
 #include "TLMClientComm.h"
 #include "TLMInterface.h"
+#include "TLMInterfaceSignal.h"
 #include "TLMInterface1D.h"
 #include "TLMInterface3D.h"
 #include "TLMPlugin.h"
@@ -109,6 +110,9 @@ protected:
     //!    \param force - returns 6 doubles giving force & torque at the interface.
     //!  \note Global coordinate system common for the whole meta model is assumed
     //!   for all vectors.
+    void GetValueSignal(int interfaceID,
+                        double time,
+                        double *value);
     void GetForce1D(int interfaceID,
                     double time,
                     double position,
@@ -127,6 +131,9 @@ protected:
     //! to the coupled simulation.
     //! Input:
     //!  See comments to GetForce method
+    void SetValueSignal(int valueID,
+                        double time,
+                        double value);
     void SetMotion1D(int forceID,
                      double time,
                      double position,
@@ -146,6 +153,7 @@ protected:
     //! GetTimeData returnes the necessary time stamped information needed
     //! for the calculation of the reaction force at a given time.
     //! The function might result in a request sent to TLM manager.
+    void GetTimeDataSignal(int interfaceID, double time, TLMTimeDataSignal& DataOut);
     void GetTimeData1D(int interfaceID, double time, TLMTimeData1D& DataOut);
     void GetTimeData3D(int interfaceID, double time, TLMTimeData3D& DataOut);
 
