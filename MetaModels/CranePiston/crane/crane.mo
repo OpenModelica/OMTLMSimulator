@@ -7,19 +7,19 @@ model crane
   output Real x1b,x2b,x3b,v1b,v2b,v3b,T11b,T12b,T13b,T21b,T22b,T23b,T31b,T32b,T33b,w1b,w2b,w3b;
   Modelica.Mechanics.MultiBody.Parts.Fixed fixed1(r = {0, 0, 0.5}) annotation(Placement(visible = true, transformation(origin = {40, -10}, extent = {{-10, -10}, {10, 10}}, rotation = 90)));
   FMITLM.FMITLM_Interface_3D.FMITLMInterface1Dto3D fmi1(interfaceName = "fmitlm1D")  annotation(Placement(visible = true, transformation(origin = {40, 18}, extent = {{-10, -10}, {10, 10}}, rotation = 90)));
-  Modelica.Mechanics.MultiBody.Joints.Revolute revolute1(n = {1, 0, 0}, phi(displayUnit = "rad", fixed = true, start = -3.1415 / 4), stateSelect = StateSelect.always, useAxisFlange = true) annotation(Placement(visible = true, transformation(origin = {-14, 38}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
+  Modelica.Mechanics.MultiBody.Joints.Revolute revolute1(n = {1, 0, 0}, phi(displayUnit = "rad", fixed = true, start = -3.1415 / 4), stateSelect = StateSelect.always, useAxisFlange = true) annotation(Placement(visible = true, transformation(origin = {-14, 40}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
   Modelica.Mechanics.Rotational.Components.Damper damper1(d = 100, phi_rel(displayUnit = "rad")) annotation(Placement(visible = true, transformation(origin = {-14, 58}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
   Modelica.Mechanics.MultiBody.Parts.BodyCylinder bodyCylinder1(angles_start(displayUnit = "rad"), density(displayUnit = "kg/m3"), r = {0, 0, 1}) annotation(Placement(visible = true, transformation(origin = {58, 38}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
   FMITLM.FMITLM_Interface_3D.FMITLMInterface3D fmi2(interfaceName = "fmitlm2")  annotation(Placement(visible = true, transformation(origin = {84, 38}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
 equation
+  connect(bodycylinder1.frame_a, revolute1.frame_b) annotation(Line(points = {{8, 38}, {2, 38}, {2, 40}, {-4, 40}}, color = {95, 95, 95}));
+  connect(revolute1.axis, damper1.flange_b) annotation(Line(points = {{-14, 50}, {-4, 50}, {-4, 58}}));
+  connect(damper1.flange_a, revolute1.support) annotation(Line(points = {{-24, 58}, {-28, 58}, {-28, 50}, {-20, 50}}));
+  connect(revolute1.frame_a, world.frame_b) annotation(Line(points = {{-24, 40}, {-44, 40}, {-44, 37}}, color = {95, 95, 95}));
   connect(bodyCylinder1.frame_b, fmi2.frame_a) annotation(Line(points = {{68, 38}, {78, 38}, {78, 38}, {78, 38}}, color = {95, 95, 95}));
-  connect(revolute1.frame_a, world.frame_b) annotation(Line(points = {{-24, 38}, {-44, 38}, {-44, 37}}, color = {95, 95, 95}));
   connect(fixed1.frame_b, fmi1.frame_a) annotation(Line(points = {{40, 0}, {40, 8}}, color = {95, 95, 95}));
   connect(bodycylinder1.frame_b, fmi1.frame_b) annotation(Line(points = {{32, 38}, {40, 38}, {40, 28}}, color = {95, 95, 95}));
-  connect(damper1.flange_a, revolute1.support) annotation(Line(points = {{-24, 58}, {-28, 58}, {-28, 48}, {-20, 48}}));
-  connect(revolute1.axis, damper1.flange_b) annotation(Line(points = {{-14, 48}, {-4, 48}, {-4, 58}}));
   connect(bodycylinder1.frame_b, bodyCylinder1.frame_a) annotation(Line(points = {{32, 38}, {48, 38}}, color = {95, 95, 95}));
-  connect(bodycylinder1.frame_a, revolute1.frame_b) annotation(Line(points = {{8, 38}, {-4, 38}}, color = {95, 95, 95}));
   fmi1.f = f1a;
   fmi2.f[1] = f1b;
   fmi2.f[2] = f2b;
@@ -45,7 +45,6 @@ equation
   w1a = fmi1.w[1];
   w2a = fmi1.w[2];
   w3a = fmi1.w[3];
-  
   x1b = fmi2.r[1];
   x2b = fmi2.r[2];
   x3b = fmi2.r[3];
@@ -64,6 +63,5 @@ equation
   w1b = fmi2.w[1];
   w2b = fmi2.w[2];
   w3b = fmi2.w[3];
-  
   annotation(uses(Modelica(version = "3.2.2")));
 end crane;

@@ -3,26 +3,39 @@
 <Model Name="CranePiston">
   <!-- List of connected sub-models -->
   <SubModels>
-    <SubModel ModelFile="crane.fmu" ExactStep="0" Angle321="0,0,0" StartCommand="StartTLMFmiWrapper" Position="0,0,0" Name="crane">
-      <InterfacePoint Angle321="0,0,0" Position="0,0.736802,0.736802" Name="tlm1D"/>
-      <InterfacePoint Angle321="0,0,0" Position="0,1.473604,1.473604" Name="tlm3D"/>
+    <SubModel ExactStep="0" Position="0,0,0" ModelFile="crane.fmu" Name="crane" Angle321="0,0,0" StartCommand="StartTLMFmiWrapper">
+      <InterfacePoint Position="0,0.70710678,0.70710678" Name="tlm1D" Angle321="0,0,0"/>
+      <InterfacePoint Position="0,1.41421356,1.41421356" Name="tlm3D" Angle321="0,0,0"/>
     </SubModel>
-    <SubModel ModelFile="piston.hmf" ExactStep="0" Angle321="0,0,0" StartCommand="StartTLMHopsan" Position="0,0.736802,0.736802" Name="piston">
-      <Annotation Extent="{-10,-10,10,10}" Visible="true" Rotation="0" Origin="{-34,0}"/>
-      <InterfacePoint Angle321="0,0,0" Position="0,0,0" Name="TLM_Plugin_Interface1D"/>
+    <SubModel ExactStep="0" Position="0,0.70710678,0.70710678" ModelFile="piston.hmf" Name="piston" Angle321="0,0,0" StartCommand="StartTLMHopsan">
+      <Annotation Extent="{-10,-10,10,10}" Rotation="0" Origin="{-34,0}" Visible="true"/>
+      <InterfacePoint Position="0,0,0" Name="TLM1D" Angle321="0,0,0"/>
+      <InterfacePoint Position="0,0,0" Name="Input1DIN" Angle321="0,0,0"/>
+      <InterfacePoint Position="0,0,0" Name="Output1DOUT" Angle321="0,0,0"/>
     </SubModel>
-    <SubModel ModelFile="load.mo" ExactStep="0" Angle321="0,0,0" StartCommand="StartTLMOpenModelica" Position="0,1.4736,1.4736" Name="load">
-      <Annotation Extent="{-10,-10,10,10}" Visible="true" Rotation="0" Origin="{2,-28}"/>
-      <InterfacePoint Angle321="0,0,0" Position="0,-3.0581e-013,0" Name="tlm"/>
+    <SubModel ExactStep="0" Position="0,1.41421356,1.41421356" ModelFile="load.mo" Name="load" Angle321="0,0,0" StartCommand="StartTLMOpenModelica">
+      <Annotation Extent="{-10,-10,10,10}" Rotation="0" Origin="{2,-28}" Visible="true"/>
+      <InterfacePoint Position="0,-3.0581e-013,0" Name="tlm" Angle321="0,0,0"/>
+    </SubModel>
+    <SubModel ExactStep="0" Position="0,0,0" ModelFile="controller.hmf" Name="controller" Angle321="0,0,0" StartCommand="StartTLMHopsan">
+      <Annotation Extent="{-10,-10,10,10}" Rotation="0" Origin="{-48,32}" Visible="true"/>
+      <InterfacePoint Position="0,0,0" Name="Input1DIN" Angle321="0,0,0"/>
+      <InterfacePoint Position="0,0,0" Name="Output1DOUT" Angle321="0,0,0"/>
     </SubModel>
   </SubModels>
   <!-- List of TLM connections -->
   <Connections>
-    <Connection Zfr="100" Delay="1e-4" Zf="10000" To="piston.TLM_Plugin_Interface1D" alpha="0.9" From="crane.tlm1D">
+    <Connection Delay="1e-4" alpha="0.5" From="crane.tlm1D" Zfr="100" To="piston.TLM1D" Zf="10000">
       <Annotation Points="{{12,8},{20,8},{20,16},{-22,16},{-22,8},{-22,8}}"/>
     </Connection>
-    <Connection Zfr="100" Delay="1e-4" Zf="10000" To="crane.tlm3D" alpha="0.9" From="load.tlm">
+    <Connection Delay="1e-4" alpha="0.9" From="load.tlm" Zfr="100" To="crane.tlm3D" Zf="10000">
       <Annotation Points="{{14,-20},{24,-20},{24,4},{12,4},{12,4}}"/>
+    </Connection>
+    <Connection Delay="1e-4" alpha="0.2" From="piston.Output1DOUT" To="controller.Input1DIN" Zfr="100" Zf="10000">
+      <Annotation Points="{{-22,0},{-14,0},{-14,40},{-36,40},{-36,40}}"/>
+    </Connection>
+    <Connection Delay="1e-4" alpha="0.2" From="controller.Output1DOUT" To="piston.Input1DIN" Zfr="100" Zf="10000">
+      <Annotation Points="{{-36,36},{-18,36},{-18,4},{-22,4},{-22,4}}"/>
     </Connection>
   </Connections>
   <!-- Parameters for the simulation -->
