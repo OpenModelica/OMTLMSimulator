@@ -2,6 +2,7 @@
 #define COMMON_H
 
 #include "TLMErrorLog.h"
+#include "TLMPlugin.h"
 
 static const char* TLM_CONFIG_FILE_NAME = "tlm.config";
 static const char* TLM_DEBUG_FILE_NAME = "tlmmodelica.log";

@@ -10,11 +10,11 @@
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    width="103.861"
-   height="34.347"
+   height="50.061287"
    id="svg2"
    version="1.1"
    inkscape:version="0.48.4 r9939"
-   sodipodi:docname="TLMPluginInterfaceSignalInput.svg">
+   sodipodi:docname="TLMPluginHandler.svg">
   <defs
      id="defs4">
     <linearGradient
@@ -36,9 +36,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="1.4"
-     inkscape:cx="-126.9742"
-     inkscape:cy="-7.4460822"
+     inkscape:zoom="0.98994949"
+     inkscape:cx="-510.66579"
+     inkscape:cy="-39.585257"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
@@ -67,37 +67,41 @@
      inkscape:label="Layer 1"
      inkscape:groupmode="layer"
      id="layer1"
-     transform="translate(-65.674438,-371.44662)">
+     transform="translate(-65.674438,-355.73236)">
     <rect
-       y="372.19662"
+       y="356.48236"
        x="66.424438"
-       height="32.847"
+       height="48.561287"
        width="102.361"
        id="rect2987"
-       style="fill:#40bf4d;fill-opacity:1;stroke:#000000;stroke-width:1.50000000000000000;stroke-linecap:square;stroke-linejoin:round;stroke-miterlimit:3.61956525000000000;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0" />
+       style="fill:#3f69bf;fill-opacity:1;stroke:#000000;stroke-width:1.5;stroke-linecap:square;stroke-linejoin:round;stroke-miterlimit:3.61956525;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0" />
     <g
        style="font-size:20px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#ffffff;fill-opacity:1;stroke:none;font-family:Sans;-inkscape-font-specification:Sans"
-       id="text3757">
+       id="text2992">
       <path
-         d="m 90.588333,395.77832 0,-12.62695 -4.716797,0 0,-1.68946 11.347657,0 0,1.68946 -4.736329,0 0,12.62695 z"
+         d="m 103.30318,387.9212 0,-12.62695 -4.7168,0 0,-1.68945 11.34766,0 0,1.68945 -4.73633,0 0,12.62695 z"
          style="fill:#ffffff;fill-opacity:1"
-         id="path3757" />
+         id="path3778" />
       <path
-         d="m 99.094193,395.77832 0,-14.31641 1.894527,0 0,12.62696 7.05079,0 0,1.68945 z"
+         d="m 111.80904,387.9212 0,-14.3164 1.89453,0 0,12.62695 7.05078,0 0,1.68945 z"
          style="fill:#ffffff;fill-opacity:1"
-         id="path3759" />
+         id="path3780" />
       <path
-         d="m 110.24654,395.77832 0,-14.31641 2.85156,0 3.38867,10.13672 c 0.31249,0.94402 0.54036,1.6504 0.68359,2.11914 0.16276,-0.52083 0.41666,-1.2858 0.76172,-2.29492 l 3.42774,-9.96094 2.54883,0 0,14.31641 -1.82618,0 0,-11.98242 -4.16015,11.98242 -1.70899,0 -4.14062,-12.1875 0,12.1875 z"
+         d="m 122.96138,387.9212 0,-14.3164 2.85156,0 3.38867,10.13672 c 0.3125,0.94401 0.54036,1.65039 0.6836,2.11914 0.16275,-0.52083 0.41666,-1.28581 0.76172,-2.29493 l 3.42773,-9.96093 2.54883,0 0,14.3164 -1.82617,0 0,-11.98242 -4.16016,11.98242 -1.70898,0 -4.14063,-12.1875 0,12.1875 z"
          style="fill:#ffffff;fill-opacity:1"
-         id="path3761" />
-      <path
-         d="m 132.85396,395.77832 0,-14.31641 1.89453,0 0,14.31641 z"
-         style="fill:#ffffff;fill-opacity:1"
-         id="path3763" />
-      <path
-         d="m 138.05904,395.77832 0,-14.31641 1.94336,0 7.51953,11.24024 0,-11.24024 1.8164,0 0,14.31641 -1.94336,0 -7.51953,-11.25 0,11.25 z"
-         style="fill:#ffffff;fill-opacity:1"
-         id="path3765" />
+         id="path3782" />
     </g>
+    <text
+       xml:space="preserve"
+       style="font-size:20px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans;-inkscape-font-specification:Sans"
+       x="44.166828"
+       y="324.05841"
+       id="text2992-1"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         id="tspan2994-7"
+         x="44.166828"
+         y="324.05841"
+         style="fill:#000000;fill-opacity:1">TLM</tspan></text>
   </g>
 </svg>

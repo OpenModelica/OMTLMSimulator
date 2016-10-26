@@ -22,93 +22,88 @@
  For author and contributor information see the AUTHORS file
 -----------------------------------------------------------------------------*/
 
-#ifndef TLMPLUGININTERFACEOUTPUT_HPP_INCLUDED
-#define TLMPLUGININTERFACEOUTPUT_HPP_INCLUDED
+#ifndef TLMPLUGINHANDLER_HPP_INCLUDED
+#define TLMPLUGINHANDLER_HPP_INCLUDED
 
 #include "common.h"
 #include "ComponentEssentials.h"
 #include "ComponentUtilities.h"
 #include "ComponentSystem.h"
-#include "TLMPluginHandler.hpp"
-
-#include <iostream>
-#include <fstream>
-#include <string>
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <cstdio>
-#include <cstdlib>
-#include <unistd.h>
-#include <vector>
-#include <fstream>
 
 // TLMPlugin includes
 #include "TLMPlugin.h"
 
 namespace hopsan {
 
-    class TLMPluginInterfaceSignalOutput : public ComponentC
+    class TLMPluginHandler : public ComponentC
     {
     private:
         //Constants
         bool mDebug;
 
-        //Power port node data pointers
-        double *mpP1_x;
-
-        TLMPlugin* mpPlugin;
         std::ofstream mDebugOutFile;
-        size_t mInterfaceId;
+
+        TLMPlugin *mpPlugin;
 
     public:
         static Component *Creator()
         {
-            return new TLMPluginInterfaceSignalOutput();
+            return new TLMPluginHandler();
         }
 
         void configure()
         {
             //Register constant parameters
             addConstant("Debug", "", "", false, mDebug);
-
-            //Add power ports
-            addInputVariable("in", "Input", "", 0, &mpP1_x);
         }
 
+
+        bool preInitialize()
+        {
+            // Read from TLM configuration file
+            tlmConfig_t tlmConfig = readTlmConfigFile(findFilePath(HString(TLM_CONFIG_FILE_NAME)).c_str());
+
+
+            // Instnatiate TLM Plugin
+            mpPlugin = TLMPlugin::CreateInstance();
+
+            // Initialize TLM Plugin
+            mpPlugin->Init(tlmConfig.model,
+                           tlmConfig.tstart,
+                           tlmConfig.tend,
+                           tlmConfig.hmax,
+                           tlmConfig.server);
+
+            // Open debug file if debug is enabled
+            if(mDebug && !mDebugOutFile.is_open() ){
+                mDebugOutFile.open(TLM_DEBUG_FILE_NAME);
+
+                if( mDebugOutFile.good()){
+                    TLMErrorLog::SetOutStream(mDebugOutFile);
+                }
+
+                TLMErrorLog::SetDebugOut(true);
+            }
+
+            return (mpPlugin != 0);
+        }
 
         void initialize()
         {
-            bool foundHandler = false;
-            for(size_t i=0; i<mpSystemParent->getSubComponents().size(); ++i)
-            {
-                if(mpSystemParent->getSubComponents()[i]->getTypeName() == "TLMPluginHandler")
-                {
-                    mpPlugin = dynamic_cast<TLMPluginHandler*>(mpSystemParent->getSubComponents()[i])->getPlugin();
-                    foundHandler = true;
-                }
-            }
-
-            if(!foundHandler)
-            {
-                this->stopSimulation("No TLMHandler component found!");
-                return;
-            }
-
-            // Register TLM Interface
-            mInterfaceId = mpPlugin->RegisteTLMInterface(this->getName().c_str(), "SignalOutput");
-        }
+         }
 
 
-        void simulateOneTimestep()
-        {
-            // Set motion in TLM interface
-            mpPlugin->SetValueSignal(mInterfaceId,mTime,*mpP1_x);
-        }
+        void simulateOneTimestep() {}
 
 
         void finalize()
         {
             delete mpPlugin;
+        }
+
+        TLMPlugin *getPlugin()
+        {
+            return mpPlugin;
         }
     };
 }
