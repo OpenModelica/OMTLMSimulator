@@ -29,6 +29,7 @@
 #include "ComponentEssentials.h"
 #include "ComponentUtilities.h"
 #include "ComponentSystem.h"
+#include "TLMPluginHandler.hpp"
 
 #include <iostream>
 #include <fstream>
@@ -54,8 +55,7 @@ namespace hopsan {
 
         //Power port node data pointers
         double *mpP1_x;
-
-        TLMPlugin* mpPlugin;
+        TLMPlugin *mpPlugin;
         std::ofstream mDebugOutFile;
         size_t mInterfaceId;
 
@@ -77,32 +77,24 @@ namespace hopsan {
 
         void initialize()
         {
-            // Read from TLM configuration file
-            tlmConfig_t tlmConfig = readTlmConfigFile(findFilePath(HString(TLM_CONFIG_FILE_NAME)).c_str());
-
-            // Open debug file if debug is enabled
-            if(mDebug && !mDebugOutFile.is_open() ){
-                mDebugOutFile.open(TLM_DEBUG_FILE_NAME);
-
-                if( mDebugOutFile.good()){
-                    TLMErrorLog::SetOutStream(mDebugOutFile);
+            bool foundHandler = false;
+            for(size_t i=0; i<mpSystemParent->getSubComponents().size(); ++i)
+            {
+                if(mpSystemParent->getSubComponents()[i]->getTypeName() == "TLMPluginHandler")
+                {
+                    mpPlugin = dynamic_cast<TLMPluginHandler*>(mpSystemParent->getSubComponents()[i])->getPlugin();
+                    foundHandler = true;
                 }
-
-                TLMErrorLog::SetDebugOut(true);
             }
 
-            // Instnatiate TLM Plugin
-            mpPlugin = TLMPlugin::CreateInstance();
-
-            // Initialize TLM Plugin
-            mpPlugin->Init(tlmConfig.model,
-                           tlmConfig.tstart,
-                           tlmConfig.tend,
-                           tlmConfig.hmax,
-                           tlmConfig.server);
+            if(!foundHandler)
+            {
+                this->stopSimulation("No TLMHandler component found!");
+                return;
+            }
 
             // Register TLM Interface
-            mInterfaceId = mpPlugin->RegisteTLMInterface(this->getName().c_str(), "1D");
+            mInterfaceId = mpPlugin->RegisteTLMInterface(this->getName().c_str(), "SignalInput");
         }
 
 

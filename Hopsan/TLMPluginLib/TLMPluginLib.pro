@@ -61,7 +61,8 @@ HEADERS += \
     TLMPluginInterface1D.hpp \
     TLMPluginInterfaceSignalInput.hpp \
     TLMPluginInterfaceSignalOutput.hpp \
-    common.h
+    common.h \
+    TLMPluginHandler.hpp
 
 OTHER_FILES += \
     hopsanDebugReleaseCompile.prf \
@@ -74,4 +75,6 @@ DISTFILES += \
     TLMPluginInterfaceSignalOutput.xml \
     TLMPluginInterfaceSignalInput.svg \
     TLMPluginInterfaceSignalOutput.svg \
-    TLMPluginLib.xml
+    TLMPluginLib.xml \
+    TLMPluginHandler.xml \
+    TLMPluginHandler.svg
