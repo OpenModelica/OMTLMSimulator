@@ -95,6 +95,21 @@ void MetaModelReader::ReadTLMInterfaceNodes(xmlNode* node, int ComponentID) {
                name[name.size()-1] == 'D') {
                 type = "1D";
             }
+            else if(name.size() > 3 &&                            //Temporary hack: if name of interface ends
+               name[name.size()-4] == '1' &&                      //with "1DIN" it is a signal input interface
+               name[name.size()-3] == 'D' &&
+               name[name.size()-2] == 'I' &&
+                name[name.size()-1] == 'N') {
+                type = "SignalInput";
+            }
+            else if(name.size() > 4 &&                            //Temporary hack: if name of interface ends
+               name[name.size()-5] == '1' &&                      //with "1DOUT" it is a signal output interface
+               name[name.size()-4] == 'D' &&
+               name[name.size()-3] == 'O' &&
+               name[name.size()-2] == 'U' &&
+               name[name.size()-1] == 'T') {
+                type = "SignalOutput";
+            }
             if(curAttrVal) {                                      //Now check for XML attribute
               type = ((const char*)curAttrVal->content);
             }

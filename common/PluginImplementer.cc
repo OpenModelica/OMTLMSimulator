@@ -144,40 +144,48 @@ bool PluginImplementer::Init( std::string model,
 // and returns the ID for the interface. '-1' is returned if
 // the interface is not connected in the MetaModel.
 int  PluginImplementer::RegisteTLMInterface( std::string name , std::string type ) {
-  TLMErrorLog::Log(string("Register Interface (kanin) ") + name );
+    TLMErrorLog::Log(string("Register Interface (kanin) ") + name );
 
-  TLMInterface *ifc;
-  if(type=="3D") {
-    TLMErrorLog::Log("Registers TLM interface of type 3D");
-    ifc = new TLMInterface3D( ClientComm, name, StartTime );
-  }
-  else if(type == "1D") {
-    TLMErrorLog::Log("Registers TLM interface of type 1D");
-    ifc = new TLMInterface1D( ClientComm, name, StartTime );
-  }
-  else {
-    TLMErrorLog::FatalError("Unknown interface type.");
-  }
+    TLMInterface *ifc;
+    if(type=="3D") {
+        TLMErrorLog::Log("Registers TLM interface of type 3D");
+        ifc = new TLMInterface3D( ClientComm, name, StartTime );
+    }
+    else if(type == "1D") {
+        TLMErrorLog::Log("Registers TLM interface of type 1D");
+        ifc = new TLMInterface1D( ClientComm, name, StartTime );
+    }
+    else if(type == "SignalInput") {
+        TLMErrorLog::Log("Registers TLM interface of type SignalInput");
+        ifc = new TLMInterfaceSignal( ClientComm, name, StartTime, true );
+    }
+    else if(type == "SignalOutput") {
+        TLMErrorLog::Log("Registers TLM interface of type SignalOutput");
+        ifc = new TLMInterfaceSignal( ClientComm, name, StartTime, false );
+    }
+    else {
+        TLMErrorLog::FatalError("Unknown interface type.");
+    }
 
-  int id = ifc->GetInterfaceID();
+    int id = ifc->GetInterfaceID();
 
-  TLMErrorLog::Log(string("Got interface ID: ") + TLMErrorLog::ToStdStr(id));
+    TLMErrorLog::Log(string("Got interface ID: ") + TLMErrorLog::ToStdStr(id));
 
-  // Check that this interface is connected
-  if(id < 0) {
-    // no need for the interface object that is not connected
-    delete ifc;
+    // Check that this interface is connected
+    if(id < 0) {
+        // no need for the interface object that is not connected
+        delete ifc;
+        return id;
+    }
+
+    // The index of the new interface:
+    int idx = Interfaces.size();
+
+    Interfaces.push_back(ifc);
+
+    MapID2Ind[id] = idx;
+
     return id;
-  }
-
-  // The index of the new interface:
-  int idx = Interfaces.size();
-
-  Interfaces.push_back(ifc);
-
-  MapID2Ind[id] = idx;
-
-  return id;
 }
 
 
@@ -198,7 +206,7 @@ void PluginImplementer::ReceiveTimeData(TLMInterface* reqIfc, double time)  {
 
     double allowedMaxTime = reqIfc->GetLastSendTime() + reqIfc->GetConnParams().Delay;
 
-    if(allowedMaxTime < time) {
+    if(allowedMaxTime < time && reqIfc->GetType() != "Signal") {
       string mess("WARNING: Interface ");
       TLMErrorLog::Log(mess + reqIfc->GetName() +
                        " is NOT ALLOWED to ask data after time= " + TLMErrorLog::ToStdStr(allowedMaxTime) +

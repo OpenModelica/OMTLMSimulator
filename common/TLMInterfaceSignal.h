@@ -8,7 +8,7 @@ class TLMTimeData1D;
 class TLMInterfaceSignal : public TLMInterface
 {
 public:
-  TLMInterfaceSignal(TLMClientComm &theComm, std::string &aName, double StartTime);
+  TLMInterfaceSignal(TLMClientComm &theComm, std::string &aName, double StartTime, bool input = true);
 
   //! Destructor. Sends the rest of the data if necessary.
   ~TLMInterfaceSignal();
@@ -56,6 +56,11 @@ public:
   // Remove the data that is not needed (Simulation time moved forward)
   // We leave two time points intact, so that interpolation work
   static void clean_time_queue(std::deque<TLMTimeDataSignal> &Data, double CleanTime);
+
+  bool IsInput() { return Input; }
+
+protected:
+  bool Input;
 };
 
 #endif // TLMINTERFACESIGNAL_H

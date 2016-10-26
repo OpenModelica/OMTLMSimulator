@@ -33,6 +33,9 @@ class TLMInterface {
     //! Get name of the interface
     const std::string& GetName() const { return Name; }
 
+    //! Get type of the interface
+    const std::string& GetType() const { return Type; }
+
     //! Send out motion data from the DataToSend vector
     virtual void SendAllData() = 0;
 
