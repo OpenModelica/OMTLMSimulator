@@ -74,6 +74,7 @@ TLMPlugin* initializeTLMConnection(MetaModel& model, std::string& serverName)
 void MonitorTimeStep(TLMPlugin* TLMlink,
                      MetaModel& model,
                      double SimTime,
+                     std::map<int, TLMTimeDataSignal>& dataStorageSignal,
                      std::map<int, TLMTimeData1D>& dataStorage1D,
                      std::map<int, TLMTimeData3D>& dataStorage3D) {
     if( TLMlink != 0 ){
@@ -120,6 +121,10 @@ void MonitorTimeStep(TLMPlugin* TLMlink,
 
                 //Apply damping factor, since this can not be done in GetTimeData (DampedTimeData is not available for monitor)
                 CurTimeData.GenForce = CurTimeData.GenForce*(1-alpha) + PrevTimeData.GenForce*alpha;
+              }
+              else if(type == "SignalOutput"){
+                TLMTimeDataSignal& CurTimeData = dataStorageSignal[interfaceID];
+                TLMlink->GetTimeDataSignal(interfaceID, SimTime, CurTimeData);
               }
               //No need to check for erroneous interface type, we can simply log nothing instead /robbr
 #else
@@ -171,13 +176,27 @@ void printHeader(MetaModel& model, std::ofstream& dataFile)
 
               nActiveInterfaces++;
             }
+            else if(interfaceProxy.GetType() == "SignalOutput") {
+              // Comma between interfaces
+              if(nActiveInterfaces > 0) dataFile << ",";
+
+              // Add variable names for all active interfaces
+              std::string name = component.GetName() + "." + interfaceProxy.GetName();
+              dataFile << "\"" << name << "\""; // Value
+
+              nActiveInterfaces++;
+            }
         }
     }
 
     dataFile << std::endl;
 }
 
-void printData(MetaModel& model, std::ofstream& dataFile, std::map<int, TLMTimeData1D>& dataStorage1D, std::map<int, TLMTimeData3D> &dataStorage3D)
+void printData(MetaModel& model,
+               std::ofstream& dataFile,
+               std::map<int, TLMTimeDataSignal> &dataStorageSignal,
+               std::map<int, TLMTimeData1D>& dataStorage1D,
+               std::map<int, TLMTimeData3D> &dataStorage3D)
 {
     // Get data from TLM-Manager here!
     int nTLMInterfaces = model.GetInterfacesNum();
@@ -235,7 +254,7 @@ void printData(MetaModel& model, std::ofstream& dataFile, std::map<int, TLMTimeD
 
                 nActiveInterfaces++;
             }
-            else {    //1D
+            else if(interfaceProxy.GetType() == "1D") {
               TLMTimeData1D& timeData = dataStorage1D.at(interfaceProxy.GetID());
 
               // Print time only once, that is, for the first entry.
@@ -258,6 +277,22 @@ void printData(MetaModel& model, std::ofstream& dataFile, std::map<int, TLMTimeD
               dataFile << timeData.Position << ",";
               dataFile << timeData.Velocity << ",";
               dataFile << force;
+
+              nActiveInterfaces++;
+            }
+            else if(interfaceProxy.GetType() == "SignalOutput") {
+              TLMTimeDataSignal& timeData = dataStorageSignal.at(interfaceProxy.GetID());
+
+              // Print time only once, that is, for the first entry.
+              if( printTimeFlg ){
+                  dataFile << timeData.time << ",";
+                  printTimeFlg = false;
+              }
+
+              // Comma between interfaces
+              if(nActiveInterfaces > 0) dataFile << ",";
+
+              dataFile << timeData.Value;
 
               nActiveInterfaces++;
             }
@@ -414,16 +449,17 @@ int main(int argc, char* argv[]) {
         if( simTime > endTime ) simTime = endTime;
 
         // Data structure for data logging
+        std::map<int, TLMTimeDataSignal> dataSignal;
         std::map<int, TLMTimeData1D> data1D;
         std::map<int, TLMTimeData3D> data3D;
 
         // Get data for next time step.
         TM_Start(&tInfo);
-        MonitorTimeStep(thePlugin, theModel, simTime, data1D, data3D);
+        MonitorTimeStep(thePlugin, theModel, simTime, dataSignal, data1D, data3D);
         TM_Stop(&tInfo);
 
         // Print data row
-        printData(theModel, outdataFile, data1D, data3D);
+        printData(theModel, outdataFile, dataSignal, data1D, data3D);
 
         // Update run status
         printRunStatus(theModel, runFile, tInfo, simTime);
