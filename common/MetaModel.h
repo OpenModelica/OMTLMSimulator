@@ -139,6 +139,8 @@ class TLMComponentProxy {
     //! solver mode used in the component (Exact time equidistant steps supported)
     bool SolverMode;
 
+    std::string GeometryFile;
+
     //! socket used to communicate between proxy and the component on the Client
     int SocketHandle;
 
@@ -165,11 +167,13 @@ public:
     TLMComponentProxy(const std::string& aName,
                       const std::string& aStartCommand,
                       const std::string& aModelName,
-                      bool aSolverMode):
+                      bool aSolverMode,
+		      const std::string& aGeometryFile):
         Name(aName),
         StartCommand(aStartCommand),
         ModelName(aModelName),
         SolverMode(aSolverMode),
+	GeometryFile(aGeometryFile),
         SocketHandle(-1),
         ReadyToSim(false)
       //cX_R_cG_cG,
@@ -203,7 +207,7 @@ public:
     //! SetSocketHandle assigns a socket handle used for communications with the component.
     void SetSocketHandle(int hdl) {
         if((SocketHandle != -1)  && (hdl != -1)) {
-            TLMErrorLog::FatalError(std::string("Component") +  Name + "is already connected");
+            TLMErrorLog::FatalError(std::string("Component ") +  Name + " is already connected");
         }
         SocketHandle = hdl;
     }
@@ -228,6 +232,10 @@ public:
     //! equidistant steps or not)
     bool GetSolverMode() const {
         return SolverMode;
+    }
+
+    std::string& GetGeometryFile() {
+      return GeometryFile;
     }
 
     //! Set position and orientation of the component inertial system relative the
@@ -417,7 +425,8 @@ public:
     int RegisterTLMComponentProxy(const std::string& Name,
                                   const std::string& StartCommand,
                                   const std::string& ModelName,
-                                  int SolverMode);
+                                  int SolverMode,
+				  const std::string& GeometryFile);
 
     //! Return ComponentProxy for the specified ID.
     TLMComponentProxy& GetTLMComponentProxy(const int ID) {

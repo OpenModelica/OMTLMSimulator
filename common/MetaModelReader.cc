@@ -38,12 +38,19 @@ void MetaModelReader::ReadComponents(xmlNode *node, bool skipInterfaces=false) {
             // This means that the step size in the submodel is limited to the full
             // TLM time delay instead of half, since no interpolation is required.
             // It does not seem to work properly for some reason.
-            curAttrVal = FindAttributeByName(curNode, "ExactStep");
-            bool SolverMode = (curAttrVal->content[0] == '1');
+            curAttrVal = FindAttributeByName(curNode, "ExactStep", false);
+            bool SolverMode = false;
+            if (curAttrVal != NULL) {
+              SolverMode = (curAttrVal->content[0] == '1');
+              if(!SolverMode && (curAttrVal->content[0] == '1')) {
+                TLMErrorLog::FatalError("Unexpected value of ExactStep attribute. Must be 0 or 1.");
+              }
+            }
 
-            if(!SolverMode && (curAttrVal->content[0] == '1')) {
-                TLMErrorLog::FatalError("Unexpected value of ExactStep attribute."
-                                        " Must be 0 or 1.");
+            curAttrVal = FindAttributeByName(curNode, "GeometryFile", false);
+            string GeometryFile = "";
+            if (curAttrVal != NULL) {
+              GeometryFile = (const char*)curAttrVal->content;
             }
 
             // Now we're registering a proxy for the new component
@@ -52,7 +59,8 @@ void MetaModelReader::ReadComponents(xmlNode *node, bool skipInterfaces=false) {
                     TheModel.RegisterTLMComponentProxy(Name,
                                                        StartCommand,
                                                        ModelFile,
-                                                       SolverMode);
+                                                       SolverMode,
+						       GeometryFile);
 
             TLMComponentProxy& cp = TheModel.GetTLMComponentProxy(compID);
 

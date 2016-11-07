@@ -24,6 +24,14 @@
 #include <getopt.h>
 #endif
 
+#ifdef WIN32
+#include <windows.h>
+#include <algorithm>
+#else
+#include <limits.h>
+#include <stdlib.h>
+#endif
+
 using std::string;
 using namespace tlmMisc;
 
@@ -111,6 +119,225 @@ void MonitorTimeStep(TLMPlugin* TLMlink, MetaModel& model, double SimTime, std::
     }
 }
 
+void writeVisualXMLFile(MetaModel& model, std::string &baseFileName, std::string &path)
+{
+  // Get data from TLM-Manager here!
+  bool canWriteVisualXMLFile = false;
+  int nTLMComponents = model.GetComponentsNum();
+  for (int i = 0 ; i < nTLMComponents ; i++) {
+    TLMComponentProxy& component = model.GetTLMComponentProxy(i);
+    if (!component.GetGeometryFile().empty()) {
+      canWriteVisualXMLFile = true;
+    }
+  }
+  // write the visual xml file
+  if (canWriteVisualXMLFile) {
+    std::ofstream visualFile((baseFileName + "_visual.xml").c_str());
+    if (!visualFile.good()) {
+      TLMErrorLog::FatalError("Failed to open outfile " + baseFileName + "_visual.xml, give up.");
+      return;
+    }
+    visualFile << "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n";
+    visualFile << "<visualization>\n";
+
+    visualFile << "  <shape>\n";
+    visualFile << "    <ident>x-axis</ident>\n";
+    visualFile << "    <type>cylinder</type>\n";
+    visualFile << "    <T>\n";
+    visualFile << "      <exp>1.0</exp>\n";
+    visualFile << "      <exp>0.0</exp>\n";
+    visualFile << "      <exp>0.0</exp>\n";
+    visualFile << "      <exp>0.0</exp>\n";
+    visualFile << "      <exp>1.0</exp>\n";
+    visualFile << "      <exp>0.0</exp>\n";
+    visualFile << "      <exp>0.0</exp>\n";
+    visualFile << "      <exp>0.0</exp>\n";
+    visualFile << "      <exp>1.0</exp>\n";
+    visualFile << "    </T>\n";
+    visualFile << "    <r>\n";
+    visualFile << "      <exp>0.0</exp>\n";
+    visualFile << "      <exp>0.0</exp>\n";
+    visualFile << "      <exp>0.0</exp>\n";
+    visualFile << "    </r>\n";
+    visualFile << "    <r_shape>\n";
+    visualFile << "      <exp>0.0</exp>\n";
+    visualFile << "      <exp>0.0</exp>\n";
+    visualFile << "      <exp>0.0</exp>\n";
+    visualFile << "    </r_shape>\n";
+    visualFile << "    <lengthDir>\n";
+    visualFile << "      <exp>1.0</exp>\n";
+    visualFile << "      <exp>0.0</exp>\n";
+    visualFile << "      <exp>0.0</exp>\n";
+    visualFile << "    </lengthDir>\n";
+    visualFile << "    <widthDir>\n";
+    visualFile << "      <exp>0.0</exp>\n";
+    visualFile << "      <exp>1.0</exp>\n";
+    visualFile << "      <exp>0.0</exp>\n";
+    visualFile << "    </widthDir>\n";
+    visualFile << "    <length><exp>0.4375</exp></length>\n";
+    visualFile << "    <width><exp>0.0125</exp></width>\n";
+    visualFile << "    <height><exp>0.0125</exp></height>\n";
+    visualFile << "    <extra><exp>0.0</exp></extra>\n";
+    visualFile << "    <color>\n";
+    visualFile << "      <exp>0.0</exp>\n";
+    visualFile << "      <exp>0.0</exp>\n";
+    visualFile << "      <exp>255.0</exp>\n";
+    visualFile << "    </color>\n";
+    visualFile << "    <specCoeff><exp>0.0</exp></specCoeff>\n";
+    visualFile << "  </shape>\n";
+
+    visualFile << "  <shape>\n";
+    visualFile << "    <ident>y-axis</ident>\n";
+    visualFile << "    <type>cylinder</type>\n";
+    visualFile << "    <T>\n";
+    visualFile << "      <exp>1.0</exp>\n";
+    visualFile << "      <exp>0.0</exp>\n";
+    visualFile << "      <exp>0.0</exp>\n";
+    visualFile << "      <exp>0.0</exp>\n";
+    visualFile << "      <exp>1.0</exp>\n";
+    visualFile << "      <exp>0.0</exp>\n";
+    visualFile << "      <exp>0.0</exp>\n";
+    visualFile << "      <exp>0.0</exp>\n";
+    visualFile << "      <exp>1.0</exp>\n";
+    visualFile << "    </T>\n";
+    visualFile << "    <r>\n";
+    visualFile << "      <exp>0.0</exp>\n";
+    visualFile << "      <exp>0.0</exp>\n";
+    visualFile << "      <exp>0.0</exp>\n";
+    visualFile << "    </r>\n";
+    visualFile << "    <r_shape>\n";
+    visualFile << "      <exp>0.0</exp>\n";
+    visualFile << "      <exp>0.0</exp>\n";
+    visualFile << "      <exp>0.0</exp>\n";
+    visualFile << "    </r_shape>\n";
+    visualFile << "    <lengthDir>\n";
+    visualFile << "      <exp>0.0</exp>\n";
+    visualFile << "      <exp>1.0</exp>\n";
+    visualFile << "      <exp>0.0</exp>\n";
+    visualFile << "    </lengthDir>\n";
+    visualFile << "    <widthDir>\n";
+    visualFile << "      <exp>1.0</exp>\n";
+    visualFile << "      <exp>0.0</exp>\n";
+    visualFile << "      <exp>0.0</exp>\n";
+    visualFile << "    </widthDir>\n";
+    visualFile << "    <length><exp>0.4375</exp></length>\n";
+    visualFile << "    <width><exp>0.0125</exp></width>\n";
+    visualFile << "    <height><exp>0.0125</exp></height>\n";
+    visualFile << "    <extra><exp>0.0</exp></extra>\n";
+    visualFile << "    <color>\n";
+    visualFile << "      <exp>255.0</exp>\n";
+    visualFile << "      <exp>0.0</exp>\n";
+    visualFile << "      <exp>0.0</exp>\n";
+    visualFile << "    </color>\n";
+    visualFile << "    <specCoeff><exp>0.0</exp></specCoeff>\n";
+    visualFile << "  </shape>\n";
+
+    visualFile << "  <shape>\n";
+    visualFile << "    <ident>z-axis</ident>\n";
+    visualFile << "    <type>cylinder</type>\n";
+    visualFile << "    <T>\n";
+    visualFile << "      <exp>1.0</exp>\n";
+    visualFile << "      <exp>0.0</exp>\n";
+    visualFile << "      <exp>0.0</exp>\n";
+    visualFile << "      <exp>0.0</exp>\n";
+    visualFile << "      <exp>1.0</exp>\n";
+    visualFile << "      <exp>0.0</exp>\n";
+    visualFile << "      <exp>0.0</exp>\n";
+    visualFile << "      <exp>0.0</exp>\n";
+    visualFile << "      <exp>1.0</exp>\n";
+    visualFile << "    </T>\n";
+    visualFile << "    <r>\n";
+    visualFile << "      <exp>0.0</exp>\n";
+    visualFile << "      <exp>0.0</exp>\n";
+    visualFile << "      <exp>0.0</exp>\n";
+    visualFile << "    </r>\n";
+    visualFile << "    <r_shape>\n";
+    visualFile << "      <exp>0.0</exp>\n";
+    visualFile << "      <exp>0.0</exp>\n";
+    visualFile << "      <exp>0.0</exp>\n";
+    visualFile << "    </r_shape>\n";
+    visualFile << "    <lengthDir>\n";
+    visualFile << "      <exp>0.0</exp>\n";
+    visualFile << "      <exp>0.0</exp>\n";
+    visualFile << "      <exp>1.0</exp>\n";
+    visualFile << "    </lengthDir>\n";
+    visualFile << "    <widthDir>\n";
+    visualFile << "      <exp>0.0</exp>\n";
+    visualFile << "      <exp>1.0</exp>\n";
+    visualFile << "      <exp>0.0</exp>\n";
+    visualFile << "    </widthDir>\n";
+    visualFile << "    <length><exp>0.4375</exp></length>\n";
+    visualFile << "    <width><exp>0.0125</exp></width>\n";
+    visualFile << "    <height><exp>0.0125</exp></height>\n";
+    visualFile << "    <extra><exp>0.0</exp></extra>\n";
+    visualFile << "    <color>\n";
+    visualFile << "      <exp>0.0</exp>\n";
+    visualFile << "      <exp>255.0</exp>\n";
+    visualFile << "      <exp>0.0</exp>\n";
+    visualFile << "    </color>\n";
+    visualFile << "    <specCoeff><exp>0.0</exp></specCoeff>\n";
+    visualFile << "  </shape>\n";
+
+    int nTLMInterfaces = model.GetInterfacesNum();
+    for (int i = 0 ; i < nTLMInterfaces ; i++) {
+      TLMInterfaceProxy& interfaceProxy = model.GetTLMInterfaceProxy(i);
+      TLMComponentProxy& component = model.GetTLMComponentProxy(interfaceProxy.GetComponentID());
+      if (interfaceProxy.GetConnectionID() >= 0) {
+        // Add all TLM variable names for all active interfaces
+        std::string name = component.GetName() + "." + interfaceProxy.GetName();
+        visualFile << "  <shape>\n";
+        visualFile << "    <ident>" << name << "</ident>\n";
+        visualFile << "    <type>file://" << path << "/" << component.GetName() << "/" << component.GetGeometryFile() << "</type>\n";
+        visualFile << "    <T>\n";
+        visualFile << "      <cref>" << name << ".A(0,0)</cref>\n";
+        visualFile << "      <cref>" << name << ".A(0,1)</cref>\n";
+        visualFile << "      <cref>" << name << ".A(0,2)</cref>\n";
+        visualFile << "      <cref>" << name << ".A(1,0)</cref>\n";
+        visualFile << "      <cref>" << name << ".A(1,1)</cref>\n";
+        visualFile << "      <cref>" << name << ".A(1,2)</cref>\n";
+        visualFile << "      <cref>" << name << ".A(2,0)</cref>\n";
+        visualFile << "      <cref>" << name << ".A(2,1)</cref>\n";
+        visualFile << "      <cref>" << name << ".A(2,2)</cref>\n";
+        visualFile << "    </T>\n";
+        visualFile << "    <r>\n";
+        visualFile << "      <cref>" << name << ".R[cG][cG](1)</cref>\n";
+        visualFile << "      <cref>" << name << ".R[cG][cG](2)</cref>\n";
+        visualFile << "      <cref>" << name << ".R[cG][cG](3)</cref>\n";
+        visualFile << "    </r>\n";
+        visualFile << "    <r_shape>\n";
+        visualFile << "      <cref></cref>\n";
+        visualFile << "      <cref></cref>\n";
+        visualFile << "      <cref></cref>\n";
+        visualFile << "    </r_shape>\n";
+        visualFile << "    <lengthDir>\n";
+        visualFile << "      <exp>1.0</exp>\n";
+        visualFile << "      <exp>0.0</exp>\n";
+        visualFile << "      <exp>0.0</exp>\n";
+        visualFile << "    </lengthDir>\n";
+        visualFile << "    <widthDir>\n";
+        visualFile << "      <exp>0.0</exp>\n";
+        visualFile << "      <exp>1.0</exp>\n";
+        visualFile << "      <exp>0.0</exp>\n";
+        visualFile << "    </widthDir>\n";
+        visualFile << "    <length><exp>1.0</exp></length>\n";
+        visualFile << "    <width><exp>1.0</exp></width>\n";
+        visualFile << "    <height><exp>1.0</exp></height>\n";
+        visualFile << "    <extra><exp>0.0</exp></extra>\n";
+        visualFile << "    <color>\n";
+        visualFile << "      <exp>0.0</exp>\n";
+        visualFile << "      <exp>0.0</exp>\n";
+        visualFile << "      <exp>0.0</exp>\n";
+        visualFile << "    </color>\n";
+        visualFile << "    <specCoeff>\n";
+        visualFile << "      <exp>0.7</exp>\n";
+        visualFile << "    </specCoeff>\n";
+        visualFile << "  </shape>\n";
+      }
+    }
+    visualFile << "</visualization>";
+  }
+}
+
 void printHeader(MetaModel& model, std::ofstream& dataFile)
 {
     // Get data from TLM-Manager here!
@@ -132,6 +359,9 @@ void printHeader(MetaModel& model, std::ofstream& dataFile)
             std::string name = component.GetName() + "." + interfaceProxy.GetName();
             dataFile << "\"" << name << ".R[cG][cG](1)\",\"" << name << ".R[cG][cG](2)\",\"" << name << ".R[cG][cG](3)\","; // Position vector
             dataFile << "\"" << name << ".phi[cG](1)\",\"" << name << ".phi[cG](2)\",\"" << name << ".phi[cG](3)\","; // Orientation vector (three angles)
+            dataFile << "\"" << name << ".A(0,0)\",\"" << name << ".A(0,1)\",\"" << name << ".A(0,2)\",\""
+                             << name << ".A(1,0)\",\"" << name << ".A(1,1)\",\"" << name << ".A(1,2)\",\""
+                             << name << ".A(2,0)\",\"" << name << ".A(2,1)\",\"" << name << ".A(2,2)\","; // Transformation matrix
             dataFile << "\"" << name << ".vR[cG][cG,cG](1)\",\"" << name << ".vR[cG][cG,cG](2)\",\"" << name << ".vR[cG][cG,cG](3)\","; // velocity
             dataFile << "\"" << name << ".Omega[cG][cG](1)\",\"" << name << ".Omega[cG][cG](2)\",\"" << name << ".Omega[cG][cG](3)\","; // angular velocity
             dataFile << "\"" << name << ".F_tie[cG](1)\",\"" << name << ".F_tie[cG](2)\",\"" << name << ".F_tie[cG](3)\","; // force vector
@@ -195,6 +425,9 @@ void printData(MetaModel& model, std::ofstream& dataFile, std::map<int, TLMTimeD
 
             dataFile << timeData.Position[0] << "," << timeData.Position[1] << "," << timeData.Position[2] << ",";
             dataFile << phi(1)               << "," << phi(2)               << "," << phi(3)               << ",";
+            dataFile << A(0,0)               << "," << A(0,1)               << "," << A(0,2)               << ",";
+            dataFile << A(1,0)               << "," << A(1,1)               << "," << A(1,2)               << ",";
+            dataFile << A(2,0)               << "," << A(2,1)               << "," << A(2,2)               << ",";
             dataFile << timeData.Velocity[0] << "," << timeData.Velocity[1] << "," << timeData.Velocity[2] << ",";
             dataFile << timeData.Velocity[3] << "," << timeData.Velocity[4] << "," << timeData.Velocity[5] << ",";
             dataFile << force(1)             << "," << force(2)             << "," << force(3)             << ",";
@@ -285,6 +518,19 @@ int main(int argc, char* argv[]) {
     // Get input strings, server name and meta-model XML file.
     std::string serverStr(argv[optind]);
     std::string inFile(argv[optind+1]);
+    std::string path;
+#ifdef WIN32
+    TCHAR full_path[MAX_PATH];
+    GetFullPathName(inFile.c_str(), MAX_PATH, full_path, NULL);
+    path = full_path;
+    std::size_t found = path.find_last_of("/\\");
+    path = path.substr(0, found);
+    std::replace(path.begin(), path.end(), '\\', '/');
+#else
+    char full_path[PATH_MAX];
+    realpath(inFile.c_str(), full_path);
+    path = full_path;
+#endif
     std::string baseFileName = inFile.substr(0, inFile.rfind('.'));
 
     // Create the meta model object
@@ -336,7 +582,7 @@ int main(int argc, char* argv[]) {
         }
     }
 
-
+    writeVisualXMLFile(theModel, baseFileName, path);
     // Print/log the header information
     printHeader(theModel, outdataFile);
 
