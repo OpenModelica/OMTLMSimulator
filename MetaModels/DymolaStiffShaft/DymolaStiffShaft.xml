@@ -1,0 +1,20 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!-- The root node is the meta-model -->
+<Model Name="DymolaStiffShaft">
+  <!-- List of connected sub-models -->
+  <SubModels>
+    <SubModel Angle321="0,0,-3.20888e-13" Name="Shaft" ExactStep="false" StartCommand="StartTLMDym" Position="0,2.14026e-13,0" ModelFile="Shaft">
+      <Annotation Extent="{-10,-10,10,10}" Visible="true" Origin="{-52,10}" Rotation="0"/>
+      <InterfacePoint Angle321="0,0,1.80521e-019" Name="tlm2" Position="1,-1.07013e-013,0"/>
+      <InterfacePoint Angle321="0,0,-1.60444e-013" Name="tlm1" Position="1,-1.60444e-013,0"/>
+    </SubModel>
+  </SubModels>
+  <!-- List of TLM connections -->
+  <Connections>
+    <Connection alpha="0.2" Zf="1000000" Delay="5e-4" To="Shaft.tlm1" From="Shaft.tlm2" Zfr="100000">
+      <Annotation Points="{{-40,18},{-18,18},{-18,14},{-40,14},{-40,14}}"/>
+    </Connection>
+  </Connections>
+  <!-- Parameters for the simulation -->
+  <SimulationParams StopTime="10" StartTime="0"/>
+</Model>

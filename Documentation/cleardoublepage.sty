@@ -1,0 +1,6 @@
+\let\cleardouble@page\cleardoublepage
+\AtBeginDocument{%
+  \ifx\cleardouble@page\cleardoublepage
+    \def\cleardoublepage{\clearpage{\pagestyle{empty}\cleardouble@page}}
+  \fi
+}
