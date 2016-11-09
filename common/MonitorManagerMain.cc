@@ -175,15 +175,15 @@ void writeVisualXMLFile(MetaModel& model, std::string &baseFileName, std::string
     visualFile << "      <exp>0.0</exp>\n";
     visualFile << "    </widthDir>\n";
     visualFile << "    <length><exp>0.4375</exp></length>\n";
-    visualFile << "    <width><exp>0.0125</exp></width>\n";
-    visualFile << "    <height><exp>0.0125</exp></height>\n";
+    visualFile << "    <width><exp>0.005</exp></width>\n";
+    visualFile << "    <height><exp>0.005</exp></height>\n";
     visualFile << "    <extra><exp>0.0</exp></extra>\n";
     visualFile << "    <color>\n";
     visualFile << "      <exp>0.0</exp>\n";
     visualFile << "      <exp>0.0</exp>\n";
     visualFile << "      <exp>255.0</exp>\n";
     visualFile << "    </color>\n";
-    visualFile << "    <specCoeff><exp>0.0</exp></specCoeff>\n";
+    visualFile << "    <specCoeff><exp>0.7</exp></specCoeff>\n";
     visualFile << "  </shape>\n";
 
     visualFile << "  <shape>\n";
@@ -221,15 +221,15 @@ void writeVisualXMLFile(MetaModel& model, std::string &baseFileName, std::string
     visualFile << "      <exp>0.0</exp>\n";
     visualFile << "    </widthDir>\n";
     visualFile << "    <length><exp>0.4375</exp></length>\n";
-    visualFile << "    <width><exp>0.0125</exp></width>\n";
-    visualFile << "    <height><exp>0.0125</exp></height>\n";
+    visualFile << "    <width><exp>0.005</exp></width>\n";
+    visualFile << "    <height><exp>0.005</exp></height>\n";
     visualFile << "    <extra><exp>0.0</exp></extra>\n";
     visualFile << "    <color>\n";
     visualFile << "      <exp>255.0</exp>\n";
     visualFile << "      <exp>0.0</exp>\n";
     visualFile << "      <exp>0.0</exp>\n";
     visualFile << "    </color>\n";
-    visualFile << "    <specCoeff><exp>0.0</exp></specCoeff>\n";
+    visualFile << "    <specCoeff><exp>0.7</exp></specCoeff>\n";
     visualFile << "  </shape>\n";
 
     visualFile << "  <shape>\n";
@@ -267,15 +267,15 @@ void writeVisualXMLFile(MetaModel& model, std::string &baseFileName, std::string
     visualFile << "      <exp>0.0</exp>\n";
     visualFile << "    </widthDir>\n";
     visualFile << "    <length><exp>0.4375</exp></length>\n";
-    visualFile << "    <width><exp>0.0125</exp></width>\n";
-    visualFile << "    <height><exp>0.0125</exp></height>\n";
+    visualFile << "    <width><exp>0.005</exp></width>\n";
+    visualFile << "    <height><exp>0.005</exp></height>\n";
     visualFile << "    <extra><exp>0.0</exp></extra>\n";
     visualFile << "    <color>\n";
     visualFile << "      <exp>0.0</exp>\n";
     visualFile << "      <exp>255.0</exp>\n";
     visualFile << "      <exp>0.0</exp>\n";
     visualFile << "    </color>\n";
-    visualFile << "    <specCoeff><exp>0.0</exp></specCoeff>\n";
+    visualFile << "    <specCoeff><exp>0.7</exp></specCoeff>\n";
     visualFile << "  </shape>\n";
 
     int nTLMInterfaces = model.GetInterfacesNum();
@@ -289,15 +289,24 @@ void writeVisualXMLFile(MetaModel& model, std::string &baseFileName, std::string
         visualFile << "    <ident>" << name << "</ident>\n";
         visualFile << "    <type>file://" << path << "/" << component.GetName() << "/" << component.GetGeometryFile() << "</type>\n";
         visualFile << "    <T>\n";
-        visualFile << "      <cref>" << name << ".A(0,0)</cref>\n";
-        visualFile << "      <cref>" << name << ".A(0,1)</cref>\n";
-        visualFile << "      <cref>" << name << ".A(0,2)</cref>\n";
-        visualFile << "      <cref>" << name << ".A(1,0)</cref>\n";
         visualFile << "      <cref>" << name << ".A(1,1)</cref>\n";
         visualFile << "      <cref>" << name << ".A(1,2)</cref>\n";
-        visualFile << "      <cref>" << name << ".A(2,0)</cref>\n";
+        visualFile << "      <cref>" << name << ".A(1,3)</cref>\n";
         visualFile << "      <cref>" << name << ".A(2,1)</cref>\n";
         visualFile << "      <cref>" << name << ".A(2,2)</cref>\n";
+        visualFile << "      <cref>" << name << ".A(2,3)</cref>\n";
+        visualFile << "      <cref>" << name << ".A(3,1)</cref>\n";
+        visualFile << "      <cref>" << name << ".A(3,2)</cref>\n";
+        visualFile << "      <cref>" << name << ".A(3,3)</cref>\n";
+//        visualFile << "      <exp>1.0</exp>\n";
+//        visualFile << "      <exp>0.0</exp>\n";
+//        visualFile << "      <exp>0.0</exp>\n";
+//        visualFile << "      <exp>0.0</exp>\n";
+//        visualFile << "      <exp>1.0</exp>\n";
+//        visualFile << "      <exp>0.0</exp>\n";
+//        visualFile << "      <exp>0.0</exp>\n";
+//        visualFile << "      <exp>0.0</exp>\n";
+//        visualFile << "      <exp>1.0</exp>\n";
         visualFile << "    </T>\n";
         visualFile << "    <r>\n";
         visualFile << "      <cref>" << name << ".R[cG][cG](1)</cref>\n";
@@ -305,9 +314,9 @@ void writeVisualXMLFile(MetaModel& model, std::string &baseFileName, std::string
         visualFile << "      <cref>" << name << ".R[cG][cG](3)</cref>\n";
         visualFile << "    </r>\n";
         visualFile << "    <r_shape>\n";
-        visualFile << "      <cref></cref>\n";
-        visualFile << "      <cref></cref>\n";
-        visualFile << "      <cref></cref>\n";
+        visualFile << "      <exp>0.0</exp>\n";
+        visualFile << "      <exp>0.0</exp>\n";
+        visualFile << "      <exp>0.0</exp>\n";
         visualFile << "    </r_shape>\n";
         visualFile << "    <lengthDir>\n";
         visualFile << "      <exp>1.0</exp>\n";
@@ -319,18 +328,16 @@ void writeVisualXMLFile(MetaModel& model, std::string &baseFileName, std::string
         visualFile << "      <exp>1.0</exp>\n";
         visualFile << "      <exp>0.0</exp>\n";
         visualFile << "    </widthDir>\n";
-        visualFile << "    <length><exp>1.0</exp></length>\n";
-        visualFile << "    <width><exp>1.0</exp></width>\n";
-        visualFile << "    <height><exp>1.0</exp></height>\n";
+        visualFile << "    <length><exp>0.0</exp></length>\n";
+        visualFile << "    <width><exp>0.0</exp></width>\n";
+        visualFile << "    <height><exp>0.0</exp></height>\n";
         visualFile << "    <extra><exp>0.0</exp></extra>\n";
         visualFile << "    <color>\n";
-        visualFile << "      <exp>0.0</exp>\n";
-        visualFile << "      <exp>0.0</exp>\n";
-        visualFile << "      <exp>0.0</exp>\n";
+        visualFile << "      <exp>128.0</exp>\n";
+        visualFile << "      <exp>128.0</exp>\n";
+        visualFile << "      <exp>128.0</exp>\n";
         visualFile << "    </color>\n";
-        visualFile << "    <specCoeff>\n";
-        visualFile << "      <exp>0.7</exp>\n";
-        visualFile << "    </specCoeff>\n";
+        visualFile << "    <specCoeff><exp>0.7</exp></specCoeff>\n";
         visualFile << "  </shape>\n";
       }
     }
@@ -359,9 +366,9 @@ void printHeader(MetaModel& model, std::ofstream& dataFile)
             std::string name = component.GetName() + "." + interfaceProxy.GetName();
             dataFile << "\"" << name << ".R[cG][cG](1)\",\"" << name << ".R[cG][cG](2)\",\"" << name << ".R[cG][cG](3)\","; // Position vector
             dataFile << "\"" << name << ".phi[cG](1)\",\"" << name << ".phi[cG](2)\",\"" << name << ".phi[cG](3)\","; // Orientation vector (three angles)
-            dataFile << "\"" << name << ".A(0,0)\",\"" << name << ".A(0,1)\",\"" << name << ".A(0,2)\",\""
-                             << name << ".A(1,0)\",\"" << name << ".A(1,1)\",\"" << name << ".A(1,2)\",\""
-                             << name << ".A(2,0)\",\"" << name << ".A(2,1)\",\"" << name << ".A(2,2)\","; // Transformation matrix
+            dataFile << "\"" << name << ".A(1,1)\",\"" << name << ".A(1,2)\",\"" << name << ".A(1,3)\",\""
+                             << name << ".A(2,1)\",\"" << name << ".A(2,2)\",\"" << name << ".A(2,3)\",\""
+                             << name << ".A(3,1)\",\"" << name << ".A(3,2)\",\"" << name << ".A(3,3)\","; // Transformation matrix
             dataFile << "\"" << name << ".vR[cG][cG,cG](1)\",\"" << name << ".vR[cG][cG,cG](2)\",\"" << name << ".vR[cG][cG,cG](3)\","; // velocity
             dataFile << "\"" << name << ".Omega[cG][cG](1)\",\"" << name << ".Omega[cG][cG](2)\",\"" << name << ".Omega[cG][cG](3)\","; // angular velocity
             dataFile << "\"" << name << ".F_tie[cG](1)\",\"" << name << ".F_tie[cG](2)\",\"" << name << ".F_tie[cG](3)\","; // force vector
@@ -425,9 +432,9 @@ void printData(MetaModel& model, std::ofstream& dataFile, std::map<int, TLMTimeD
 
             dataFile << timeData.Position[0] << "," << timeData.Position[1] << "," << timeData.Position[2] << ",";
             dataFile << phi(1)               << "," << phi(2)               << "," << phi(3)               << ",";
-            dataFile << A(0,0)               << "," << A(0,1)               << "," << A(0,2)               << ",";
-            dataFile << A(1,0)               << "," << A(1,1)               << "," << A(1,2)               << ",";
-            dataFile << A(2,0)               << "," << A(2,1)               << "," << A(2,2)               << ",";
+            dataFile << A(1,1)               << "," << A(1,2)               << "," << A(1,3)               << ",";
+            dataFile << A(2,1)               << "," << A(2,2)               << "," << A(2,3)               << ",";
+            dataFile << A(3,1)               << "," << A(3,2)               << "," << A(3,3)               << ",";
             dataFile << timeData.Velocity[0] << "," << timeData.Velocity[1] << "," << timeData.Velocity[2] << ",";
             dataFile << timeData.Velocity[3] << "," << timeData.Velocity[4] << "," << timeData.Velocity[5] << ",";
             dataFile << force(1)             << "," << force(2)             << "," << force(3)             << ",";
