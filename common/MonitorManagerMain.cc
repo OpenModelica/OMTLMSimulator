@@ -43,6 +43,17 @@ void usage(){
     exit(1);
 }
 
+struct Color {
+  double r;
+  double g;
+  double b;
+  Color(double rr, double gg, double bb) {
+    r = rr;
+    g = gg;
+    b = bb;
+  }
+};
+
 TLMPlugin* initializeTLMConnection(MetaModel& model, std::string& serverName)
 {
     TLMPlugin* TLMlink = MonitoringPluginImplementer::CreateInstance();
@@ -175,8 +186,8 @@ void writeVisualXMLFile(MetaModel& model, std::string &baseFileName, std::string
     visualFile << "      <exp>0.0</exp>\n";
     visualFile << "    </widthDir>\n";
     visualFile << "    <length><exp>0.4375</exp></length>\n";
-    visualFile << "    <width><exp>0.005</exp></width>\n";
-    visualFile << "    <height><exp>0.005</exp></height>\n";
+    visualFile << "    <width><exp>0.0025</exp></width>\n";
+    visualFile << "    <height><exp>0.0025</exp></height>\n";
     visualFile << "    <extra><exp>0.0</exp></extra>\n";
     visualFile << "    <color>\n";
     visualFile << "      <exp>0.0</exp>\n";
@@ -221,8 +232,8 @@ void writeVisualXMLFile(MetaModel& model, std::string &baseFileName, std::string
     visualFile << "      <exp>0.0</exp>\n";
     visualFile << "    </widthDir>\n";
     visualFile << "    <length><exp>0.4375</exp></length>\n";
-    visualFile << "    <width><exp>0.005</exp></width>\n";
-    visualFile << "    <height><exp>0.005</exp></height>\n";
+    visualFile << "    <width><exp>0.0025</exp></width>\n";
+    visualFile << "    <height><exp>0.0025</exp></height>\n";
     visualFile << "    <extra><exp>0.0</exp></extra>\n";
     visualFile << "    <color>\n";
     visualFile << "      <exp>255.0</exp>\n";
@@ -267,8 +278,8 @@ void writeVisualXMLFile(MetaModel& model, std::string &baseFileName, std::string
     visualFile << "      <exp>0.0</exp>\n";
     visualFile << "    </widthDir>\n";
     visualFile << "    <length><exp>0.4375</exp></length>\n";
-    visualFile << "    <width><exp>0.005</exp></width>\n";
-    visualFile << "    <height><exp>0.005</exp></height>\n";
+    visualFile << "    <width><exp>0.0025</exp></width>\n";
+    visualFile << "    <height><exp>0.0025</exp></height>\n";
     visualFile << "    <extra><exp>0.0</exp></extra>\n";
     visualFile << "    <color>\n";
     visualFile << "      <exp>0.0</exp>\n";
@@ -278,12 +289,30 @@ void writeVisualXMLFile(MetaModel& model, std::string &baseFileName, std::string
     visualFile << "    <specCoeff><exp>0.7</exp></specCoeff>\n";
     visualFile << "  </shape>\n";
 
+    // colors vector
+    std::vector<Color> colors;
+    Color color = Color(128.0, 128.0, 128.0); // Gray
+    colors.push_back(color);
+    color = Color(255.0, 255.0, 0.0); // Yellow
+    colors.push_back(color);
+    color = Color(0.0, 255.0, 255.0); // Cyan
+    colors.push_back(color);
+    color = Color(255.0, 0.0, 255.0); // Magenta / Fuchsia
+    colors.push_back(color);
+    color = Color(128.0, 0.0, 0.0); // Maroon
+    colors.push_back(color);
+
+    // components vector
+    std::vector<std::string> components;
     int nTLMInterfaces = model.GetInterfacesNum();
     for (int i = 0 ; i < nTLMInterfaces ; i++) {
       TLMInterfaceProxy& interfaceProxy = model.GetTLMInterfaceProxy(i);
       TLMComponentProxy& component = model.GetTLMComponentProxy(interfaceProxy.GetComponentID());
       if (interfaceProxy.GetConnectionID() >= 0) {
-        // Add all TLM variable names for all active interfaces
+        if (std::find(components.begin(), components.end(), component.GetName()) != components.end()) {
+          continue;
+        }
+        components.push_back(component.GetName());
         std::string name = component.GetName() + "." + interfaceProxy.GetName();
         visualFile << "  <shape>\n";
         visualFile << "    <ident>" << name << "</ident>\n";
@@ -298,15 +327,6 @@ void writeVisualXMLFile(MetaModel& model, std::string &baseFileName, std::string
         visualFile << "      <cref>" << name << ".A(3,1)</cref>\n";
         visualFile << "      <cref>" << name << ".A(3,2)</cref>\n";
         visualFile << "      <cref>" << name << ".A(3,3)</cref>\n";
-//        visualFile << "      <exp>1.0</exp>\n";
-//        visualFile << "      <exp>0.0</exp>\n";
-//        visualFile << "      <exp>0.0</exp>\n";
-//        visualFile << "      <exp>0.0</exp>\n";
-//        visualFile << "      <exp>1.0</exp>\n";
-//        visualFile << "      <exp>0.0</exp>\n";
-//        visualFile << "      <exp>0.0</exp>\n";
-//        visualFile << "      <exp>0.0</exp>\n";
-//        visualFile << "      <exp>1.0</exp>\n";
         visualFile << "    </T>\n";
         visualFile << "    <r>\n";
         visualFile << "      <cref>" << name << ".R[cG][cG](1)</cref>\n";
@@ -314,9 +334,9 @@ void writeVisualXMLFile(MetaModel& model, std::string &baseFileName, std::string
         visualFile << "      <cref>" << name << ".R[cG][cG](3)</cref>\n";
         visualFile << "    </r>\n";
         visualFile << "    <r_shape>\n";
-        visualFile << "      <exp>0.0</exp>\n";
-        visualFile << "      <exp>0.0</exp>\n";
-        visualFile << "      <exp>0.0</exp>\n";
+        visualFile << "      <exp>" << -interfaceProxy.getTime0Data().Position[0] << "</exp>\n";
+        visualFile << "      <exp>" << -interfaceProxy.getTime0Data().Position[1] << "</exp>\n";
+        visualFile << "      <exp>" << -interfaceProxy.getTime0Data().Position[2] << "</exp>\n";
         visualFile << "    </r_shape>\n";
         visualFile << "    <lengthDir>\n";
         visualFile << "      <exp>1.0</exp>\n";
@@ -333,9 +353,9 @@ void writeVisualXMLFile(MetaModel& model, std::string &baseFileName, std::string
         visualFile << "    <height><exp>0.0</exp></height>\n";
         visualFile << "    <extra><exp>0.0</exp></extra>\n";
         visualFile << "    <color>\n";
-        visualFile << "      <exp>128.0</exp>\n";
-        visualFile << "      <exp>128.0</exp>\n";
-        visualFile << "      <exp>128.0</exp>\n";
+        visualFile << "      <exp>" << colors[i % colors.size()].r << "</exp>\n";
+        visualFile << "      <exp>" << colors[i % colors.size()].g << "</exp>\n";
+        visualFile << "      <exp>" << colors[i % colors.size()].b << "</exp>\n";
         visualFile << "    </color>\n";
         visualFile << "    <specCoeff><exp>0.7</exp></specCoeff>\n";
         visualFile << "  </shape>\n";
