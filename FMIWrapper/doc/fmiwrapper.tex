@@ -1,26 +1,134 @@
-\documentclass[11pt,a4paper]{report}
-\usepackage{inputenc} 
-\usepackage[english]{babel} 
-\usepackage{graphicx}
-\usepackage{a4wide}
-\usepackage[dvipsnames]{xcolor}
+\PassOptionsToPackage{dvipsnames}{xcolor}
+\documentclass[a4paper,12pt]{include/opencpsreport}
+%\usepackage{inputenc} 
+%\usepackage[english]{babel} 
+%\usepackage{graphicx}
+%\usepackage{a4wide}
+%\usepackage[dvipsnames]{xcolor}
 \usepackage{tikz}
 \usepackage{lipsum}
 \usepackage{listings}
 \usepackage{cleveref}
 \usepackage[section]{placeins}
+\usepackage{lineno}
+\usepackage[utf8]{luainputenc}  % utf8 input encoding that should work for both pdflatex and lualatex
 
-%Remove trailing zero in section numbering
-\renewcommand{\thesection}{\arabic{section}}
+\linenumbers
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%% Document variables that need to be set
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\reportnumber{D2.4}
+\reporttitle{Wrapper for FMI in TLM-based Asynchronous Co-Simulation}
+\shortreporttitle{Wrapper for FMI in TLM-based Co-simulation}  % Title appearing at right side of header
 
-%\lstset{
-%  basicstyle=\ttfamily,
-%  keywordstyle=\textcolor{blue},
-%  language=XML,
-%  morekeywords={<ScalarVariable,Real}
-%}
+%%% Set document release class as appropriate
+%%% Access classification as per definitions in PCA;
+%%% PU = Public, CO = Confidential.
+%%% Access classification per deliverable stated in FPP
+\reportaccess{PU}
 
-\renewcommand{\ttdefault}{pcr}
+%%% Deliverable type according to FPP, note that all non-report deliverables
+%%% must be accompanied by a deliverable report.
+\deliverabletype{Report}
+
+%%% Version number of the report
+\version{1.0}
+
+%%% Due month(s) according to FPP.
+\duedate{M24}
+
+%%% It is mandatory to provide an executive summary for each deliverable.
+\executivesummary{
+Provide short summary/abstract here.
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%% Definition of Deliverable Contributors and History
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\def\deliverableContributors{
+  \renewcommand{\arraystretch}{1.3} % increase space between rows
+  \textbf{\sffamily Deliverable Contributors:}
+  \begin{center}
+    \hypersetup{hidelinks}  % don't color footnote marks to match Word template
+    \footnotesize\sffamily  % mimic Arial font used in Word template
+    \begin{tabularx}{\linewidth}[h!]{p{2.2cm}|X|p{3.8cm}|p{2.4cm}|p{1.4cm}|}
+    \hhline{~----}
+    & \cellcolor[gray]{0.95}Name &
+      \cellcolor[gray]{0.95}Organisation &
+      \cellcolor[gray]{0.95}Primary role in project &
+      \cellcolor[gray]{0.95}Main \mbox{Author(s)}\footnote{\scriptsize Indicate Main Author(s) with an “X” in this column.}\\
+    \hline
+    \multicolumn{1}{|p{2.2cm}|}{\cellcolor[gray]{0.95}Deliverable Leader\footnote{\scriptsize Deliverable leader according to FPP, role definition in PCA.}} &
+      Robert Braun & SICS East Swedish ICT & T2.4 member  & \centerline X\\
+    \hline
+    %%% CONTRIBUTING AUTHOR(s)
+    \multicolumn{1}{|p{2.2cm}|}{\cellcolor[gray]{0.95}} &
+       & &  & \\
+    \cline{2-5}
+    \multicolumn{1}{|p{2.2cm}|}{\cellcolor[gray]{0.95}} &
+      & & & \\
+    \cline{2-5}
+    \multicolumn{1}{|p{2.2cm}|}{\cellcolor[gray]{0.95}} &
+      & & & \\
+    \cline{2-5}
+    \multicolumn{1}{|p{2.2cm}|}{\cellcolor[gray]{0.95}\multirow{-4}{2.2cm}{Contributing Author(s)\footnote{\scriptsize Person(s) from contributing partners for the deliverable, expected contributing partners stated in FPP.}}} &
+      & & & \\
+    \hline
+    %%% INTERNAL REVIEWERS
+    \multicolumn{1}{|p{2.2cm}|}{\cellcolor[gray]{0.95}} &
+      Dag Fritzson & SKF & T2.4 member & \\
+    \cline{2-5}
+    \multicolumn{1}{|p{2.2cm}|}{\cellcolor[gray]{0.95}} &
+      Adeel Ashgar & SICS East Swedish ICT & T2.4 member & \\
+    \cline{2-5}
+    \multicolumn{1}{|p{2.2cm}|}{\cellcolor[gray]{0.95}} &
+      & & & \\
+    \cline{2-5}
+    \multicolumn{1}{|p{2.2cm}|}{\cellcolor[gray]{0.95}\multirow{-4}{2.2cm}{Internal Reviewer(s)\footnote{\scriptsize Typically person(s) with appropriate expertise to assess deliverable structure and quality.}}} &
+      & & & \\
+    \hline
+    \end{tabularx}
+  \end{center}
+  \renewcommand{\arraystretch}{1.0} % set it back to default value
+}
+
+\def\deliverableHistory{
+ \renewcommand{\arraystretch}{1.3} % increase space between rows
+
+ \textbf{\sffamily Document History:}
+ \begin{center}
+ \footnotesize\sffamily
+ \begin{tabularx}{\linewidth}[h!]{| l | l | X | l |}
+ \rowcolor[gray]{.95}\hline
+ Version & Date & Reason for change & Status\footnote{\scriptsize Status = “Draft”, “In Review”, “Released”.}\\
+ \hline
+  0.1 & 17/10/2016 & First Draft Version & Draft\\
+  \hline
+  0.2 & 20/10/2016 & Second Draft Version & Draft\\
+  \hline
+  & & &\\
+  \hline
+  & & &\\
+ \hline
+ \end{tabularx}
+ \end{center}
+ \renewcommand{\arraystretch}{1.0} % set it back to default value
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%% Additional packages to be used in the document
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%% Bibliography
+% Prefer biblatex because: (a) supports an ``alpha'' like citation style, (b) supports DOIs and URLs
+% However, requires biber to be installed. Not all may have it, so we introduce a flag:
+\usepackage{ifthen}
+\newboolean{HaveBiber} \setboolean{HaveBiber}{false}
+\ifthenelse{\boolean{HaveBiber}}{
+\usepackage[backend=biber,style=alphabetic,natbib=true]{biblatex}
+\addbibresource{example-report.bib} % Add the biblatex file
+}{}
+
 
 \lstdefinelanguage{XML}
 {
@@ -38,12 +146,36 @@
 }
 
 \begin{document}
-
-\title{Wrapper for Functional Mock-up Interface in TLM-based Asynchronous Co-Simulation}
-\author{Robert Braun}
-
 \maketitle
+\deliverableContributors
+\vspace{1.0cm}
+\deliverableHistory
+\clearpage
 
+
+%%%% Document table of contents page %%%%
+\tableofcontents
+
+\section*{Abbreviations}
+\addcontentsline{toc}{section}{Abbreviations}
+List of abbreviations/acronyms used in document:
+
+\begin{tabbing}
+\textbf{Abbreviation}$\quad$ \= \textbf{Definition}\\
+FMI			  \>  Functional Mock-up Interface\\
+FMU			  \>  Functional Mock-up Unit\\
+TLM		      \>  Transmission Line Modelling\\
+\end{tabbing}
+
+\clearpage
+
+
+
+\input{listings-modelica.cfg}
+
+
+
+\clearpage
 \section{Introduction}
 Functional Mock-up Interface (FMI) is a tool-independent standard for connecting simulation tools \cite{blochwitz2009}. 
 One tool can export a model as a Functional Mockup Unit (FMU), a ZIP package with the file extension FMU. 
@@ -55,6 +187,9 @@ There are two versions of the FMI standard: FMI for Co-Simulation and FMI for Mo
 The main difference is that FMUs for Co-Simulation contain their own built-in solvers, and only exchange data at predefined communication points.
 FMUs for Model Exchange require a solver in the master simulation tool.
 
+The TLM framework is able to simulate aggregated systems of connected sub-models using asynchronous TLM communication. 
+Currently, only 3D multi-body mechanical sub-models are supported.
+Other physical domains, 1D connections and causal signal communication is intended to be implemented in the future.
 Including FMUs in the TLM framework requires a wrapper.
 \texttt{FMIWrapper} is a generic wrapper for connecting functional mockup units (FMUs) to the TLM framework.
 It uses the FMI Library from Modelon \cite{modelon2015} to load an FMU, and the TLMPlugin for socket communication with the framework, see \cref{fig:overview}.
@@ -105,7 +240,7 @@ It uses the FMI Library from Modelon \cite{modelon2015} to load an FMU, and the 
 \draw[thick,->,very thick] (tp1) edge[bend left] (tp2);
 \draw[thick,<-,very thick] (tp1) edge[bend right] (tp2);
 \end{tikzpicture}
-\caption{Blabla...}
+\caption{FMIWrapper uses FMILibrary to import FMUs and TLMPlugin for socket communication.}
 \label{fig:overview}
 \end{figure}
 
@@ -113,10 +248,11 @@ Both FMI for co-simulation and FMI for model exchange are supported.
 Model exchange requires a solver in the wrapper executable.
 For this reason, two solvers from the Sundials package are included.
 
+\clearpage
 \section{Setting up a simulation}
 \label{sec:setting_up}
 The FMI wrapper is started by the StartTLMFMIWrapper startup script.
-This script generates the \texttt{tlm.config} fileand calls the FMIWrapper executable.
+This script generates the \texttt{tlm.config} file and calls the FMIWrapper executable.
 The executable takes the following arguments:\\
 
 \noindent \verb|FMIWrapper <path> <fmufile> <solver> <debug>|\\
@@ -126,7 +262,8 @@ Example:\\
 \noindent \verb|FMIWrapper C:\temp\folder mymodel.fmu solver=CVODE -d|\\
 
 The last to arguments are optional.
-Available solvers are \texttt{Euler}, \texttt{CVODE} and \texttt{IDA}.
+Available solvers are \texttt{Euler}, \texttt{RungeKutta}, \texttt{CVODE} and \texttt{IDA}.
+\Cref{sec:fmi_me} contains more details about the different solvers.
 These can currently only be changed by modifying the startup script, i.e. not from the graphical interface.
 
 An FMU keep track of its variables by integer numbers called \texttt{value references}.
@@ -134,7 +271,29 @@ However, it does not provide any information about the mapping between its varia
 Hence, this information must be provided by the user.
 A configuration file called \texttt{fmi.config} is used for this purpose, see \cref{lst:fmiconfig}.
 
-\begin{lstlisting}[basicstyle=\ttfamily,floatplacement=ht,caption=A configuration file maps value references to TLM variables,label=lst:fmiconfig]
+\lstdefinelanguage{fmiconfig}
+{
+  % list of keywords
+  keywords={
+    substeps,
+    name
+  },
+  keywords=[2]{
+    position,
+    orientation,
+    speed,
+    ang_speed,
+    force
+  },
+  keywordstyle=\ttfamily\bfseries\textcolor{blue},
+  keywordstyle=[2]\ttfamily\bfseries
+ % sensitive=false, % keywords are not case-sensitive
+ % morecomment=[l]{//}, % l is for line comment
+ % morecomment=[s]{/*}{*/}, % s is for start and end delimiter
+ % morestring=[b]" % defines that strings are enclosed in double quotes
+}
+
+\begin{lstlisting}[language=fmiconfig,basicstyle=\ttfamily,floatplacement=ht,caption=A configuration file maps value references to TLM variables,label=lst:fmiconfig]
 substeps,100
 name,tlm1
 position,6,7,8
@@ -143,9 +302,13 @@ speed,9,10,11
 ang_speed,145,146,147
 force,133,134,135,167,168,169
 name,tlm2
-position,...
+position,12,13,14
+orientation,145,146,147,148,149,150,151,152,153
+speed,15,16,17
+ang_speed,154,155,156
+force,136,137,138,170,171,172
 \end{lstlisting}
-
+\newpage
 As can be seen, data is stored in a comma-separated format.
 The first line specifies the number of substeps used for FMI for Co-Simulation (see \cref{sec:fmi_cs}).
 After this comes the port information.
@@ -156,7 +319,7 @@ These can be obtained by analyzing the \texttt{modelDescription.xml} file.
 The variable first torque component has the value reference 167.
 Hence, this number should be inserted as number four on the "force" line in \texttt{fmi.config}.
 
-\begin{lstlisting}[language=XML,floatplacement=ht,caption=Value references for variables are obtained from \texttt{modelDescription.xml},label=lst:modeldescription]
+\begin{lstlisting}[language=XML,float,floatplacement=ht,caption=Value references for variables are obtained from \texttt{modelDescription.xml},label=lst:modeldescription]
   <ScalarVariable
     name="fMITLMInterface3D1.t[1]"
     valueReference="167"
@@ -168,6 +331,7 @@ Hence, this number should be inserted as number four on the "force" line in \tex
 \end{lstlisting}
 
 
+\clearpage
 \section{FMI for Co-Simulation}
 \label{sec:fmi_cs}
 With FMI for Co-Simulation the solver is embedded within the FMU.
@@ -177,11 +341,12 @@ Keeping the force constant during the entire communication interval may, however
 For this reason it is possible to divide each communication interval into a fixed number of \textit{sub steps}, as defined in the \texttt{fmi.config}.
 In this way the forces can at least be updated in the FMU at more fine-grained intervals.
 Pseudo-code for the simulation loop in the wrapper is shown in \cref{lst:wrapper_cs}.
+The real code also contains error handling, but it has been excluded here to enhance readability.
 
 \lstset{emph={fmu},emphstyle={\color{red}\bfseries},
         emph={[2]TLMPlugin},emphstyle={[2]\color{blue}\bfseries}
 }
-\begin{lstlisting}[float, language=c++, basicstyle=\ttfamily\small,floatplacement=htb,caption=Pseudo code for the simulation loop with FMI for co-simulation,label=lst:wrapper_cs]
+\begin{lstlisting}[language=c++, basicstyle=\ttfamily\small,floatplacement=htb,caption=Pseudo code for the simulation loop with FMI for co-simulation,label=lst:wrapper_cs]
 while (tcur < tend) {
     double hsub = hmax/nSubSteps;
     for(size_t i=0; i<nSubSteps; ++i) {
@@ -211,16 +376,18 @@ The reason for this is that \texttt{SetMotion()} requires updated input variable
 
 \vspace{0cm}
 
+\clearpage
 \section{FMI for model exchange}
+\label{sec:fmi_me}
 With model exchange, the wrapper must provide a solver for the FMU.
-Three solvers are available: explicit Euler, Runge-Kutta, and the CVODE and IDA solvers from Sundials \cite{hindmarsh2005}.
+Three solvers are available: explicit Euler, 4th order explicit Runge-Kutta, and the CVODE and IDA solvers from Sundials \cite{hindmarsh2005}.
 \Cref{lst:wrapper_me} shows pseudo code for one major step (i.e. one communication interval) with the IDA solver.
 Note that the solver is used with one step mode.
 This means that it takes one step at a time, until its internal time exceeds the next communication interval.
 The CVODE solver requires a callback function for obtaining derivatives of state variables (i.e. "right-hand side").
 The IDA solver requires a similar callback for obtaining the residuals.
 
-\begin{lstlisting}[float, language=c++, basicstyle=\ttfamily\small,floatplacement=ht,caption=Pseudo code for the simulation loop with FMI for model exchange,label=lst:wrapper_me]
+\begin{lstlisting}[language=c++, basicstyle=\ttfamily\small,floatplacement=h,caption=Pseudo code for the simulation loop with FMI for model exchange,label=lst:wrapper_me]
 double position[3],orientation[9],speed[3],ang_speed[3],force[6];
 
 x = fmu.get_real(x_vr,3);
@@ -242,10 +409,11 @@ while(tc < tcur){
 fmu.set_continuous_states(y);
 \end{lstlisting}
 
+\clearpage
 \section{Example: Double Pendulum with Dymola and OpenModelica}
 This section will explain how to build a meta model of a double pendulum using FMUs exported from Dymola and OpenModelica.
 \Cref{fig:double_pendulum} shows a sketch of the model.
-The resulting meta model is found in the \linebreak\texttt{/MetaModels/FmuFmuPendulum} folder.
+The resulting meta model is found in the \texttt{/MetaModels/FmuFmuPendulum} folder.
 One FMU for Co-simulation and one for Model Exchange will be used.
 Both models use a custom Modelica library called FMILIB for the TLM interfaces.
 This library is shipped together with the FMI wrapper.
@@ -261,22 +429,30 @@ This library is shipped together with the FMI wrapper.
 
 \draw[thick,dashed] (-1cm,1.5cm) -- node[below] () {Dymola} (2cm,1.5cm) -- (2cm,-0.0cm) -- (-0.0cm,-2cm) -- (-1cm,-2cm) -- (-1cm,1.5cm);
 
-\draw[thick,dashed] (0.1cm,-2.1cm) -- (2.1cm,-0.1cm) --node[below] () {OpenModelica} (5cm,-0.1cm) -- (5.2cm,-4.1cm) -- (0.1cm,-4.1cm) -- (0.1cm,-2.1cm);
+\draw[thick,dashed] (0.1cm,-2.1cm) -- (2.1cm,-0.1cm) --node[below] () {OpenModelica} (5.2cm,-0.1cm) -- (5.2cm,-4.1cm) -- (0.1cm,-4.1cm) -- (0.1cm,-2.1cm);
 \end{tikzpicture}
 \caption{A double pendulum is simulated using FMUs exported from Dymola and OpenModelica}
 \label{fig:double_pendulum}
 \end{figure}
 
+\subsection{Preparing Dymola FMU of first part pendulum}
+
 The Dymola model consists of half the first pendulum and the fixed attachment to the inertial system, see figure \cref{fig:model_dymola}.
+It is normally advisable to decouple a model at its weakest point, which in this case would be at the joint between the two pendulum arms.
+In this case the model is decoupled in the middle of the first pendulum only to demonstrate the possibilities.
 Force and torque variables must be specified as input variables at the top level of the model, in order to get the correct number of equations and variables.
 Hence, we need to add the equations shown in \cref{lst:dymola_equations}.
 
-\begin{lstlisting}[basicstyle=\small\ttfamily, floatplacement=ht,label=lst:dymola_equations,caption=Input variables must be specified on top level in the Modelica models]
+\begin{lstlisting}[float, language=Modelica,basicstyle=\small\ttfamily, floatplacement=ht,label=lst:dymola_equations,caption=Input variables must be specified on top level in the Modelica models]
   [...]
+  //Define FMI interface model
   FMITLM.FMITLM_Interface_3D.FMITLMInterface3D fMITLMInterface3D;
+  
+  //Define input force and input torque
   input Real f[3](start = zeros(3));
   input Real t[3](start = zeros(3));
 equation
+  //Assign force and torque in interface model with input variables
   fMITLMInterface3D.f = f;
   fMITLMInterface3D3D.t = t;
   [...]
@@ -285,7 +461,7 @@ equation
 \begin{figure}[ht]
 \centering
 \includegraphics[width=0.65\textwidth]{gfx/model_dymola.png}
-\caption{}
+\caption{The first half of the first beam is modelled in Dymola}
 \label{fig:model_dymola}
 \end{figure}
 
@@ -308,6 +484,8 @@ Now it is time to export the model so it can be used with the framework.
               See section \cref{sec:setting_up} for more information.              
 \end{enumerate}
 
+\subsection{Preparing OpenModelica FMU of second part of pendulum}
+\FloatBarrier
 The OpenModelica model as shown in \cref{fig:model_omedit} consists of the second half of the first beam and the second beam.
 The export process is exaclty the same as for Dymola, except that the FMU exported should be for model exchange.
 
@@ -318,11 +496,14 @@ The export process is exaclty the same as for Dymola, except that the FMU export
 \label{fig:model_omedit}
 \end{figure}
 
+\FloatBarrier
+\subsection{Building co-simulation system model}
+
 When both FMUs have been generated together with one \texttt{fmi.config} file each, it is time to build the meta model.
 \begin{enumerate}
 \item \textbf{Create a new meta model.}\\
              Either by hand or by using the graphical user interface.
-\item \textbf{Add the FMUs as submodels.}\\
+\item \textbf{Add the FMUs as sub-models.}\\
               Use \texttt{StartTLMFmiWrapper} as start command.
 \item \textbf{Fetch TLM interfaces.}
 \item \textbf{Add a connection between the two models.}\\
@@ -333,10 +514,11 @@ When both FMUs have been generated together with one \texttt{fmi.config} file ea
               Use for example \texttt{solver=CVODE} or \texttt{solver=IDA}.
 \end{enumerate}
 
-When done, the meta model XML file should look similar to \cref{lst:metamodel}.
+When done, the meta model XML file should look similar to \cref{lst:metamodel_xml}.
+In the graphical interface, the meta model should look like \cref{fig:metamodel_omedit}.
 The model is now ready to be simulated!
 
-\begin{lstlisting}[language=xml,float,floatplacement=ht,label={lst:metamodel},caption=XML description of the complete meta model]
+\begin{lstlisting}[language=xml,float,floatplacement=ht,label={lst:metamodel_xml},caption=XML description of the complete meta model]
 <?xml version='1.0' encoding='ISO-8859-1'?>
 <Model Name="doublePendulum">
   <SubModels>
@@ -371,14 +553,27 @@ The model is now ready to be simulated!
   <SimulationParams ManagerPort="11113" StopTime="3" StartTime="0"/>
 </Model>
 \end{lstlisting}
-%Koppla ihop modellerna
-%Aligna OpenModelicas pendel till Dymolas
-%Välj lösare för model exchange i StartTLMFMIWrapper.bat, t.ex. CVODE eller IDA
-%Kör simuleringen!
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=0.9\textwidth]{gfx/metamodel.png}
+\caption{Graphical view of the complete meta model}
+\label{fig:metamodel_omedit}
+\end{figure}
 
 
-\bibliographystyle{plain}
+
+
+
+%%%% Bibliography %%%%
+\clearpage
+\ifthenelse{\boolean{HaveBiber}}{
+\printbibliography % Use biblatex instead of old bibtex
+}{ % Use bibtex
+\bibliographystyle{alphaurl} % Use an http://nxg.me.uk/dist/urlbst/ enabled hyperref version of ``alpha''
 \bibliography{references}
+}
+\addcontentsline{toc}{section}{References}
 
 
 \end{document}

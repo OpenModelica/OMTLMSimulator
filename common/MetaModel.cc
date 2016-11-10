@@ -177,8 +177,9 @@ MetaModel::~MetaModel() {
 int MetaModel::RegisterTLMComponentProxy(const string& Name, 
 					 const string& StartCommand, 
 					 const string& ModelName, 
-					 int SolverMode){
-    TLMComponentProxy* comp = new TLMComponentProxy(Name, StartCommand, ModelName, SolverMode);
+					 int SolverMode,
+					 const string& GeometryFile){
+    TLMComponentProxy* comp = new TLMComponentProxy(Name, StartCommand, ModelName, SolverMode, GeometryFile);
     Components.insert(Components.end(), comp);
     return Components.size() - 1;
 }
