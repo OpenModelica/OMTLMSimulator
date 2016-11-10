@@ -174,7 +174,7 @@ void set_tlm_motion(void* in_TLMPluginStructObj,
         int id = MarkerIDmap[interfaceID];
 
         if( id >= 0 ){
-            TLMPluginStructObj->Plugin->SetMotion(id,          // Send data to the Plugin
+            TLMPluginStructObj->Plugin->SetMotion3D(id,          // Send data to the Plugin
 						  simTime,
 						  position,
 						  orientation,
@@ -187,6 +187,31 @@ void set_tlm_motion(void* in_TLMPluginStructObj,
         TLMErrorLog::Warning( "set_tlm_motion(...), called for non initialized interface " + std::string(interfaceID));
     }
 }
+
+
+void set_tlm_motion_1d(void* in_TLMPluginStructObj,
+            const char* interfaceID,   // The calling marker ID
+                    double simTime,    // Current simulation time
+                    double position, // Marker position data
+                    double speed)      // Marker translational velocity
+{
+    TLMPluginStruct* TLMPluginStructObj = (TLMPluginStruct*)in_TLMPluginStructObj;
+    if( MarkerIDmap.find(interfaceID) != MarkerIDmap.end() ){
+        int id = MarkerIDmap[interfaceID];
+
+        if( id >= 0 ){
+            TLMPluginStructObj->Plugin->SetMotion1D(id,          // Send data to the Plugin
+                          simTime,
+                          position,
+                          speed);
+        }
+
+    }
+    else {
+        TLMErrorLog::Warning( "set_tlm_motion_1d(...), called for non initialized interface " + std::string(interfaceID));
+    }
+}
+
 
 // The calc_tlm_force function is called directly from the Modelica interface function
 // It needs special declaration
@@ -209,23 +234,14 @@ void calc_tlm_force(void* in_TLMPluginStructObj,
     extern int RHSFinalFlag;
     static bool firstFinalStepReached = false;
 
-#ifdef ALWAYSCALLSETMOTION
-    double setMotionThreshold = 1e-5;
-    if(RHSFinalFlag || simTime-lastSetMotionTime > setMotionThreshold) {
-      set_tlm_motion(TLMPluginStructObj, interfaceID, simTime, position, orientation, speed, ang_speed);
-      firstFinalStepReached=true;
-      lastSetMotionTime = simTime;
-    }
-#else
     if( RHSFinalFlag ){
       set_tlm_motion(TLMPluginStructObj, interfaceID, simTime, position, orientation, speed, ang_speed);
       firstFinalStepReached = true;
     }
-#endif
 
     // Check if interface is registered. If it's not, register it
     if( MarkerIDmap.find(interfaceID) == MarkerIDmap.end() ){
-        MarkerIDmap[interfaceID] = TLMPluginStructObj->Plugin->RegisteTLMInterface(interfaceID);
+        MarkerIDmap[interfaceID] = TLMPluginStructObj->Plugin->RegisteTLMInterface(interfaceID, "3D");
     }
 
     // Interface force ID in TLM manager
@@ -236,7 +252,7 @@ void calc_tlm_force(void* in_TLMPluginStructObj,
     // This gives a well defined start condition where all forces and moments are 0.0
     if( id >= 0 && firstFinalStepReached ){
         // Call the plugin to get reaction force
-	TLMPluginStructObj->Plugin->GetForce(id,
+	TLMPluginStructObj->Plugin->GetForce3D(id,
 					     simTime,
 					     position,
 					     orientation,
@@ -258,6 +274,63 @@ void calc_tlm_force(void* in_TLMPluginStructObj,
     for( f=0 ; f<3 ; f++ ) force[f] = -forceOut[f];
     for( t=0 ; t<3 ; t++ ) torque[t] = -forceOut[t+3];
 }
+
+
+// The calc_tlm_force function is called directly from the Modelica interface function
+// It needs special declaration
+void calc_tlm_force_1d(void* in_TLMPluginStructObj,
+            const char* interfaceID,   // The calling marker ID
+                    double simTime,    // Current simulation time
+                    //double lastConvergedTime, // Last converged time
+                    double position, // Marker position data
+                    double speed,      // Marker translational velocity
+                    double force[])   // Output force
+{
+    TLMPluginStruct* TLMPluginStructObj = (TLMPluginStruct*)in_TLMPluginStructObj;
+    double forceOut[1];
+
+    // defined in OpenModelica dassl.c
+    extern int RHSFinalFlag;
+    static bool firstFinalStepReached = false;
+
+    if( RHSFinalFlag ){
+      set_tlm_motion_1d(TLMPluginStructObj, interfaceID, simTime, position, speed);
+      firstFinalStepReached = true;
+    }
+
+    // Check if interface is registered. If it's not, register it
+    if( MarkerIDmap.find(interfaceID) == MarkerIDmap.end() ){
+        MarkerIDmap[interfaceID] = TLMPluginStructObj->Plugin->RegisteTLMInterface(interfaceID, "1D");
+    }
+
+    // Interface force ID in TLM manager
+    int id = MarkerIDmap[interfaceID];
+
+    // Note, we make sure that we do not use the interface before the first final RHS
+    // so that all interfaces are registered before we start exchanging data. Also
+    // This gives a well defined start condition where all forces and moments are 0.0
+    if( id >= 0 && firstFinalStepReached ){
+        // Call the plugin to get reaction force
+    TLMPluginStructObj->Plugin->GetForce1D(id,
+                         simTime,
+                         position,
+                         speed,
+                         forceOut);
+    }
+    else {
+        /* Not connected */
+        forceOut[0] = 0.0;
+
+    }
+
+
+    // Copy results
+    // NOTE, Modelica wants, for some reason, inverted forces???????
+    //      (This might be a bug in the Modelica TLM implementation as well)
+   force[0] = -forceOut[0];
+}
+
+
 #ifdef __cplusplus
 }
 #endif

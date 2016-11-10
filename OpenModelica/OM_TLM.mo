@@ -44,6 +44,18 @@ package TLM
       annotation(Icon(coordinateSystem(extent = {{-100, -100}, {100, 100}}, preserveAspectRatio = true, initialScale = 0.1, grid = {10, 10}), graphics = {Rectangle(visible = true, fillColor = {255, 85, 0}, fillPattern = FillPattern.Solid, extent = {{-100, -100}, {100, 100}}, radius = 20), Text(visible = true, origin = {3.13, 5}, textColor = {255, 255, 255}, extent = {{-66.87, -65}, {66.87, 65}}, textString = "F")}));
     end TLMGetForce;
 
+    function TLMGetForce1D
+      input TLMPlugin tlmPlugin;
+      input String name "Name of the interface";
+      input Real time_in "Simulation time";
+      input Real x "Position";
+      input Real v "Velocity";
+      output Real f "Force";
+    
+      external "C" calc_tlm_force_1d(tlmPlugin, name, time_in, x, v, f) annotation(Include = "#include<tlmforce.h>", Library = "tlmopenmodelica", IncludeDirectory = "modelica://TLM/Resources/Include", LibraryDirectory = "modelica://TLM/Resources/Library");
+      annotation(Icon(coordinateSystem(extent = {{-100, -100}, {100, 100}}, preserveAspectRatio = true, initialScale = 0.1, grid = {10, 10}), graphics = {Rectangle(visible = true, fillColor = {255, 85, 0}, fillPattern = FillPattern.Solid, extent = {{-100, -100}, {100, 100}}, radius = 20), Text(visible = true, origin = {3.13, 5}, textColor = {255, 255, 255}, extent = {{-66.87, -65}, {66.87, 65}}, textString = "F")}));
+    end TLMGetForce1D;
+
     function TLMGetDelay
       input String name "Name of the interface";
       output Real TLMdelay "The TLM delay for the secific interface";
@@ -134,19 +146,19 @@ package TLM
       assert(tlmDelay > 0.0, "Bad TLM delay in" + interfaceName + ", give up");
       TLM_Functions.TLMSetDebugMode(debugFlg);
     equation
-      //
-      // World to frame transformation matrix
+//
+// World to frame transformation matrix
       A = frame_a.R.T;
-      //
-      // Frame to world transformation matrix
+//
+// Frame to world transformation matrix
       AT = transpose(frame_a.R.T);
-      //
-      // Transform motion into world system
+//
+// Transform motion into world system
       r = frame_a.r_0;
       v = der(frame_a.r_0);
       w = M.resolve2(AT, frame_a.R.w);
-      //
-      // Transform force and moment into local system
+//
+// Transform force and moment into local system
       frame_a.f = M.resolve2(A, f);
       frame_a.t = M.resolve2(A, t);
     algorithm
@@ -155,6 +167,51 @@ package TLM
     end TLMInterface3D;
     annotation(Icon(coordinateSystem(extent = {{-100, -100}, {100, 100}}, preserveAspectRatio = true, initialScale = 0.1, grid = {10, 10}), graphics = {Rectangle(visible = true, fillColor = {0, 170, 0}, fillPattern = FillPattern.Solid, extent = {{-100, -100}, {100, 100}}, radius = 20), Text(visible = true, origin = {-3.808, 3.341}, textColor = {255, 255, 255}, extent = {{-78.774, -56.659}, {78.774, 56.659}}, textString = "3D")}), Diagram(coordinateSystem(extent = {{-148.5, -105}, {148.5, 105}}, preserveAspectRatio = true, initialScale = 0.1, grid = {5, 5})));
   end TLM_Interface_3D;
+
+  package TLM_Interface_1D_to_3D
+    model TLMInterface1Dto3D
+      TLM_Functions.TLMPlugin tlmPlugin = TLM_Functions.TLMPlugin();
+      import F = Modelica.Mechanics.MultiBody.Frames;
+      import M = Modelica.Mechanics.MultiBody.Frames.TransformationMatrices;
+      parameter String interfaceName = "tlm";
+      parameter Boolean debugFlg = false;
+      output Real x;
+      output Real v;
+      input Real f;
+      Real r[3];
+      Real ft[3];
+      Real Aa[3, 3];
+      Real Ab[3, 3];
+      //  Real AT[3, 3];
+      Real tlmDelay = TLM_Functions.TLMGetDelay(interfaceName);
+      Modelica.Mechanics.MultiBody.Interfaces.Frame_a frame_a annotation(Placement(visible = true, transformation(origin = {-67.9907, -3.03738}, extent = {{-12, -12}, {12, 12}}, rotation = 0), iconTransformation(origin = {-70, 0}, extent = {{-12, -12}, {12, 12}}, rotation = 0)));
+      Modelica.Mechanics.MultiBody.Interfaces.Frame_b frame_b annotation(Placement(visible = true, transformation(origin = {-17.9907, 46.9626}, extent = {{-12, -12}, {12, 12}}, rotation = 0), iconTransformation(origin = {82.009, -3.0374}, extent = {{-12, -12}, {12, 12}}, rotation = 0)));
+    initial algorithm
+      assert(tlmDelay > 0.0, "Bad TLM delay in" + interfaceName + ", give up");
+      TLM_Functions.TLMSetDebugMode(debugFlg);
+    equation
+//
+// World to frame transformation matrix
+      Aa = frame_a.R.T;
+      Ab = frame_b.R.T;
+//
+// Transform motion into world system
+      r = frame_b.r_0 - frame_a.r_0;
+      x = Modelica.Math.Vectors.length(r);
+      v = der(x);
+      ft = f * r / x;
+//
+// Transform force and moment into local system
+      frame_a.f = M.resolve2(Aa, ft);
+      frame_a.t = zeros(3);
+      frame_b.f = M.resolve2(Ab, ft);
+      frame_b.t = zeros(3);
+    algorithm
+      f := TLM_Functions.TLMGetForce1D(tlmPlugin, interfaceName, time, x, v);
+      annotation(Diagram, Icon(coordinateSystem(preserveAspectRatio = false, initialScale = 0.1, grid = {10, 10}), graphics = {Rectangle(origin = {10, 0}, fillColor = {0, 170, 0}, fillPattern = FillPattern.Sphere, extent = {{-80, 70}, {70, -80}}), Text(origin = {5, -5}, extent = {{-65, 65}, {65, -65}}, textString = "TLM", fontName = "MS Shell Dlg 2")}));
+    end TLMInterface1Dto3D;
+    annotation(Icon(coordinateSystem(extent = {{-100, -100}, {100, 100}}, preserveAspectRatio = true, initialScale = 0.1, grid = {10, 10}), graphics = {Rectangle(visible = true, fillColor = {0, 170, 0}, fillPattern = FillPattern.Solid, extent = {{-100, -100}, {100, 100}}, radius = 20), Text(visible = true, origin = {-3.808, 3.341}, textColor = {255, 255, 255}, extent = {{-78.774, -56.659}, {78.774, 56.659}}, textString = "3D")}), Diagram(coordinateSystem(extent = {{-148.5, -105}, {148.5, 105}}, preserveAspectRatio = true, initialScale = 0.1, grid = {5, 5})));
+  end TLM_Interface_1D_to_3D;
 
   package TLM_Sensors
     model TLMSensor

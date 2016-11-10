@@ -51,25 +51,77 @@ TLMClientComm::~TLMClientComm()
 }
 
 
+// Fill in TLMMessage with the information from TLMTimeData vector
+// coming to given InterfaceID. This function is called by TLMPlugin
+//  when constructing messages with time-stamped data.
+void TLMClientComm::PackTimeDataMessageSignal(int InterfaceID,
+                                              std::vector<TLMTimeDataSignal> &Data,
+                                              TLMMessage &out_mess) {
+    out_mess.Header.MessageType =  TLMMessageTypeConst::TLM_TIME_DATA;
+    out_mess.Header.TLMInterfaceID = InterfaceID;
+    out_mess.Header.SourceIsBigEndianSystem = TLMMessageHeader::IsBigEndianSystem;
+    out_mess.Header.DataSize = Data.size() * sizeof(TLMTimeDataSignal);
+    out_mess.Data.clear();
+    out_mess.Data.resize( out_mess.Header.DataSize );
+    memcpy(& out_mess.Data[0], & Data[0], out_mess.Header.DataSize);
+}
+
+
 // Fill in TLMMessage with the information from TLMTimeData vector 
 // coming to given InterfaceID. This function is called by TLMPlugin
 //  when constructing messages with time-stamped data.
-void TLMClientComm::PackTimeDataMessage(int InterfaceID, vector<TLMTimeData>& Data, 
-                                        TLMMessage& out_mess) {
-                                            out_mess.Header.MessageType =  TLMMessageTypeConst::TLM_TIME_DATA;
-                                            out_mess.Header.TLMInterfaceID = InterfaceID;
-                                            out_mess.Header.SourceIsBigEndianSystem = TLMMessageHeader::IsBigEndianSystem;
-                                            out_mess.Header.DataSize = Data.size() * sizeof(TLMTimeData);
-                                            out_mess.Data.clear();
-                                            out_mess.Data.resize( out_mess.Header.DataSize );
-                                            memcpy(& out_mess.Data[0], & Data[0], out_mess.Header.DataSize);
+void TLMClientComm::PackTimeDataMessage3D(int InterfaceID,
+                                          std::vector<TLMTimeData3D> &Data,
+                                          TLMMessage& out_mess) {
+    out_mess.Header.MessageType =  TLMMessageTypeConst::TLM_TIME_DATA;
+    out_mess.Header.TLMInterfaceID = InterfaceID;
+    out_mess.Header.SourceIsBigEndianSystem = TLMMessageHeader::IsBigEndianSystem;
+    out_mess.Header.DataSize = Data.size() * sizeof(TLMTimeData3D);
+    out_mess.Data.clear();
+    out_mess.Data.resize( out_mess.Header.DataSize );
+    memcpy(& out_mess.Data[0], & Data[0], out_mess.Header.DataSize);
 }
 
-// Unpack TLMTimeData from TLMMessage into Data queue
-void TLMClientComm::UnpackTimeDataMessage(TLMMessage& mess, deque<TLMTimeData>& Data) {
+// Fill in TLMMessage with the information from TLMTimeData vector
+// coming to given InterfaceID. This function is called by TLMPlugin
+//  when constructing messages with time-stamped data.
+void TLMClientComm::PackTimeDataMessage1D(int InterfaceID,
+                                          std::vector<TLMTimeData1D> &Data,
+                                          TLMMessage& out_mess) {
+    out_mess.Header.MessageType =  TLMMessageTypeConst::TLM_TIME_DATA;
+    out_mess.Header.TLMInterfaceID = InterfaceID;
+    out_mess.Header.SourceIsBigEndianSystem = TLMMessageHeader::IsBigEndianSystem;
+    out_mess.Header.DataSize = Data.size() * sizeof(TLMTimeData1D);
+    out_mess.Data.clear();
+    out_mess.Data.resize( out_mess.Header.DataSize );
+    memcpy(& out_mess.Data[0], & Data[0], out_mess.Header.DataSize);
+}
+
+
+// Unpack TLMTimeData from TLMMessage3D into Data queue
+void TLMClientComm::UnpackTimeDataMessageSignal(TLMMessage &mess, std::deque<TLMTimeDataSignal> &Data) {
 
     // since mess.Data is continious we can just convert the pointer
-    TLMTimeData* Next = (TLMTimeData*)(&mess.Data[0]);
+    TLMTimeDataSignal* Next = (TLMTimeDataSignal*)(&mess.Data[0]);
+
+    // check if we have byte order missmatch in the message and perform
+    // swapping if necessary
+    bool switch_byte_order =
+        (TLMMessageHeader::IsBigEndianSystem != mess.Header.SourceIsBigEndianSystem);
+    if (switch_byte_order)
+        TLMCommUtil::ByteSwap(Next, sizeof(double),  mess.Header.DataSize/sizeof(double));
+
+    for(unsigned i = 0; i < mess.Header.DataSize/sizeof(TLMTimeDataSignal); i++, Next++) {
+        TLMErrorLog::Log(" RECV for time= " + TLMErrorLog::ToStdStr(Next->time));
+        Data.push_back(*Next);
+    }
+}
+
+// Unpack TLMTimeData from TLMMessage3D into Data queue
+void TLMClientComm::UnpackTimeDataMessage3D(TLMMessage& mess, deque<TLMTimeData3D>& Data) {
+
+    // since mess.Data is continious we can just convert the pointer
+    TLMTimeData3D* Next = (TLMTimeData3D*)(&mess.Data[0]);
 
     // check if we have byte order missmatch in the message and perform
     // swapping if necessary
@@ -78,11 +130,29 @@ void TLMClientComm::UnpackTimeDataMessage(TLMMessage& mess, deque<TLMTimeData>& 
     if (switch_byte_order) 
         TLMCommUtil::ByteSwap(Next, sizeof(double),  mess.Header.DataSize/sizeof(double));
 
-    for(unsigned i = 0; i < mess.Header.DataSize/sizeof(TLMTimeData); i++, Next++) {
+    for(unsigned i = 0; i < mess.Header.DataSize/sizeof(TLMTimeData3D); i++, Next++) {
         TLMErrorLog::Log(" RECV for time= " + TLMErrorLog::ToStdStr(Next->time));
         Data.push_back(*Next);
     }
+}
 
+// Unpack TLMTimeData from TLMMessage1D into Data queue
+void TLMClientComm::UnpackTimeDataMessage1D(TLMMessage& mess, deque<TLMTimeData1D>& Data) {
+
+    // since mess.Data is continious we can just convert the pointer
+    TLMTimeData1D* Next = (TLMTimeData1D*)(&mess.Data[0]);
+
+    // check if we have byte order missmatch in the message and perform
+    // swapping if necessary
+    bool switch_byte_order =
+        (TLMMessageHeader::IsBigEndianSystem != mess.Header.SourceIsBigEndianSystem);
+    if (switch_byte_order)
+        TLMCommUtil::ByteSwap(Next, sizeof(double),  mess.Header.DataSize/sizeof(double));
+
+    for(unsigned i = 0; i < mess.Header.DataSize/sizeof(TLMTimeData1D); i++, Next++) {
+        TLMErrorLog::Log(" RECV for time= " + TLMErrorLog::ToStdStr(Next->time));
+        Data.push_back(*Next);
+    }
 }
 
 // ConnectManager function tries to establish a TCP/IP connection
@@ -186,11 +256,13 @@ void TLMClientComm::CreateComponentRegMessage(std::string& Name, TLMMessage& mes
     memcpy(&mess.Data[0], Name.c_str(), Name.length());
 }
 
-void TLMClientComm::CreateInterfaceRegMessage(std::string& Name, TLMMessage& mess) {
+void TLMClientComm::CreateInterfaceRegMessage(std::string& Name, std::string type, TLMMessage& mess) {
     mess.Header.MessageType = TLMMessageTypeConst::TLM_REG_INTERFACE;
-    mess.Header.DataSize = Name.length();
-    mess.Data.resize(Name.length());
-    memcpy(&mess.Data[0], Name.c_str(), Name.length());
+    std::string nameAndType = Name+":"+type;
+    TLMErrorLog::Log("Client sends nameAndType: "+nameAndType);
+    mess.Header.DataSize = nameAndType.length();
+    mess.Data.resize(nameAndType.length());
+    memcpy(&mess.Data[0], nameAndType.c_str(), nameAndType.length());
 }
 
 void TLMClientComm::UnpackRegInterfaceMessage(TLMMessage& mess, TLMConnectionParams& param) {

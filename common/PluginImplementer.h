@@ -9,6 +9,9 @@
 #include <map>
 #include "TLMClientComm.h"
 #include "TLMInterface.h"
+#include "TLMInterfaceSignal.h"
+#include "TLMInterface1D.h"
+#include "TLMInterface3D.h"
 #include "TLMPlugin.h"
 
 
@@ -79,7 +82,8 @@ protected:
     //! Register TLM interface sends a registration request to TLMManager
     //! and returns the ID for the interface. '-1' is returned if
     //! the interface is not connected in the MetaModel.
-    int RegisteTLMInterface( std::string name);
+    int RegisteTLMInterface1D(std::string name);
+    int RegisteTLMInterface(std::string name, std::string type="3D" );
 
     //! ReceiveTimeData receives time-stamped data from coupled simulations
     //! if the specified interface needs more data for the given time..
@@ -106,35 +110,52 @@ protected:
     //!    \param force - returns 6 doubles giving force & torque at the interface.
     //!  \note Global coordinate system common for the whole meta model is assumed
     //!   for all vectors.
-    void GetForce(int interfaceID,
-		  double time,
-		  double position[],
-		  double orientation[],
-		  double speed[],
-		  double ang_speed[],
-		  double* force) ;
+    void GetValueSignal(int interfaceID,
+                        double time,
+                        double *value);
+    void GetForce1D(int interfaceID,
+                    double time,
+                    double position,
+                    double speed,
+                    double* force);
+    void GetForce3D(int interfaceID,
+                    double time,
+                    double position[],
+                    double orientation[],
+                    double speed[],
+                    double ang_speed[],
+                    double* force);
 
     //! Set the motion of a TLM interface after a successful integration step.
     //! The information is eventually sent to the TLM manager and forwarded
     //! to the coupled simulation.
     //! Input:
     //!  See comments to GetForce method
-    void SetMotion(int forceID,
-		   double time,
-		   double position[],
-		   double orientation[],
-		   double speed[],
-		   double ang_speed[]);
+    void SetValueSignal(int valueID,
+                        double time,
+                        double value);
+    void SetMotion1D(int forceID,
+                     double time,
+                     double position,
+                     double speed);
+    void SetMotion3D(int forceID,
+                     double time,
+                     double position[],
+                     double orientation[],
+                     double speed[],
+                     double ang_speed[]);
 
     //! GetConnectionParams returnes the ConnectionParams for
     //! the specified interface ID. Interface must be registered
     //! first.
-    virtual void GetConnectionParams(int interfaceID, TLMConnectionParams& ParamsOut);
+    void GetConnectionParams(int interfaceID, TLMConnectionParams& ParamsOut);
 
     //! GetTimeData returnes the necessary time stamped information needed
     //! for the calculation of the reaction force at a given time.
     //! The function might result in a request sent to TLM manager.
-    virtual void GetTimeData(int interfaceID, double time, TLMTimeData& DataOut);
+    void GetTimeDataSignal(int interfaceID, double time, TLMTimeDataSignal& DataOut);
+    void GetTimeData1D(int interfaceID, double time, TLMTimeData1D& DataOut);
+    void GetTimeData3D(int interfaceID, double time, TLMTimeData3D& DataOut);
 
  protected:
 

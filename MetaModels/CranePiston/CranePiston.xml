@@ -3,26 +3,68 @@
 <Model Name="CranePiston">
   <!-- List of connected sub-models -->
   <SubModels>
-    <SubModel Angle321="0,0,0" ModelFile="crane.fmu" StartCommand="StartTLMFmiWrapper" Position="0,0,0" Name="crane" ExactStep="0">
-      <InterfacePoint Angle321="0,0,0" Position="0,0.736802,0.736802" Name="tlm1"/>
-      <InterfacePoint Angle321="0,0,0" Position="0,1.473604,1.473604" Name="tlm2"/>
+    <SubModel Angle321="0,0,0" ExactStep="0" StartCommand="StartTLMOpenModelica" ModelFile="arm1.mo" Position="0,0,0" Name="arm1">
+      <Annotation Extent="{-10,-10,10,10}" Origin="{-70,4}" Visible="true" Rotation="0"/>
+      <InterfacePoint Angle321="-0.785398,0,0" Position="0,2,-2.06823e-013" Name="tlm2"/>
+      <InterfacePoint Angle321="-1.03473e-013,0,0" Position="0,3,-3.10235e-013" Name="tlm1"/>
+      <InterfacePoint Angle321="1.5708,-1.5708,-0.0116366" Position="1.11803,0,0" Name="tlm1D"/>
     </SubModel>
-    <SubModel Angle321="0,0,0" ModelFile="piston.hmf" StartCommand="StartTLMHopsan" Position="0,0.736802,0.736802" Name="piston" ExactStep="0">
-      <Annotation Rotation="0" Visible="true" Extent="{-10,-10,10,10}" Origin="{-34,0}"/>
-      <InterfacePoint Angle321="0,0,0" Position="0,0,0" Name="TLM_Plugin_Inerface"/>
+    <SubModel Angle321="-1.03473e-13,0,0" ExactStep="0" StartCommand="StartTLMOpenModelica" ModelFile="arm2.mo" Position="0,3,-3.10235e-13" Name="arm2">
+      <Annotation Extent="{-10,-10,10,10}" Origin="{8,4}" Visible="true" Rotation="0"/>
+      <InterfacePoint Angle321="-0.785398,0,0" Position="0,-3.0581e-013,1" Name="tlm3"/>
+      <InterfacePoint Angle321="0,0,0" Position="0,-3.0581e-013,0" Name="tlm1"/>
     </SubModel>
-    <SubModel Angle321="0,0,0" ModelFile="load.mo" StartCommand="StartTLMOpenModelica" Position="0,1.4736,1.4736" Name="load" ExactStep="0">
-      <Annotation Rotation="0" Visible="true" Extent="{-10,-10,10,10}" Origin="{2,-28}"/>
-      <InterfacePoint Angle321="0,0,0" Position="0,-3.0581e-013,0" Name="tlm"/>
+    <SubModel Angle321="-0.785398,0,0" ExactStep="0" StartCommand="StartTLMOpenModelica" ModelFile="piston.mo" Position="0,2,2.35558e-06" Name="piston2">
+      <Annotation Extent="{-10,-10,10,10}" Origin="{-28,4}" Visible="true" Rotation="0"/>
+      <InterfacePoint Angle321="0,0,0" Position="0,0,1.41421" Name="tlm2"/>
+      <InterfacePoint Angle321="1.57061,-1.5708,-1.07453" Position="1.41421,0,0" Name="tlm1D"/>
+      <InterfacePoint Angle321="0,0,0" Position="0,0,0" Name="tlm1"/>
+    </SubModel>
+    <SubModel Angle321="0,0,0" ExactStep="0" StartCommand="StartTLMHopsan" ModelFile="controller.hmf" Position="0,0,0" Name="controller">
+      <Annotation Extent="{-10,-10,10,10}" Origin="{-74,38}" Visible="true" Rotation="0"/>
+      <InterfacePoint Angle321="0,0,0" Position="0.00707111,0,-1.28848e-231" Name="Output2_1DOUT"/>
+      <InterfacePoint Angle321="3.84025e-050,0,3.9045e-227" Position="0.00368397,0,-4.31092e-312" Name="Output1_1DOUT"/>
+      <InterfacePoint Angle321="1.54366,0,0" Position="0,0,-4.31092e-312" Name="Input2_1DIN"/>
+      <InterfacePoint Angle321="0,0,0" Position="0,0,-4.31092e-312" Name="Input1_1DIN"/>
+    </SubModel>
+    <SubModel Angle321="-1.12649,0.671133,2.22409" ExactStep="0" StartCommand="StartTLMHopsan" ModelFile="hydraulics.hmf" Position="2.08735,1.12055,0.879463" Name="hydraulics">
+      <Annotation Extent="{-10,-10,10,10}" Origin="{-16,42}" Visible="true" Rotation="0"/>
+      <InterfacePoint Angle321="0,-5e-005,-1.5708" Position="1.41421,0,0" Name="TLM2_1D"/>
+      <InterfacePoint Angle321="1.5708,-1.5708,-0.0116366" Position="1.11803,0,0" Name="TLM1_1D"/>
+      <InterfacePoint Angle321="1.74852e-307,0,0" Position="1.41421,8.6249e-320,-4.31092e-312" Name="Output2_1DOUT"/>
+      <InterfacePoint Angle321="0,0,0" Position="0.736802,4.5603e-308,-3.7865e-270" Name="Output1_1DOUT"/>
+      <InterfacePoint Angle321="0,-4.5603e-308,0.800175" Position="0,0,-6.98486e-251" Name="Input2_1DIN"/>
+      <InterfacePoint Angle321="1.64559e-008,0,1.57076" Position="0,0,-1.28848e-231" Name="Input1_1DIN"/>
     </SubModel>
   </SubModels>
   <!-- List of TLM connections -->
   <Connections>
-    <Connection Zfr="100" From="crane.tlm1" Zf="10000" alpha="0.9" Delay="1e-4" To="piston.TLM_Plugin_Inerface">
-      <Annotation Points="{{12,8},{20,8},{20,16},{-22,16},{-22,8},{-22,8}}"/>
+    <Connection Zfr="0" To="controller.Input1_1DIN" Zf="0" alpha="0.2" Delay="1e-4" From="hydraulics.Output1_1DOUT">
+      <Annotation Points="{{-5,38},{16,38},{16,58},{-40,58},{-40,34},{-63,34}}"/>
     </Connection>
-    <Connection Zfr="100" From="load.tlm" Zf="10000" alpha="0.9" Delay="1e-4" To="crane.tlm2">
-      <Annotation Points="{{14,-20},{24,-20},{24,4},{12,4},{12,4}}"/>
+    <Connection Zfr="0" To="controller.Input2_1DIN" Zf="0" alpha="0.2" Delay="1e-4" From="hydraulics.Output2_1DOUT">
+      <Annotation Points="{{-5,42},{12,42},{12,54},{-36,54},{-36,38},{-63,38}}"/>
+    </Connection>
+    <Connection Zfr="0" To="controller.Output2_1DOUT" Zf="0" alpha="0.2" Delay="1e-4" From="hydraulics.Input2_1DIN">
+      <Annotation Points="{{-5,34},{6,34},{6,62},{-42,62},{-42,46},{-63,46}}"/>
+    </Connection>
+    <Connection Zfr="0" To="controller.Output1_1DOUT" Zf="0" alpha="0.2" Delay="1e-4" From="hydraulics.Input1_1DIN">
+      <Annotation Points="{{-5,30},{10,30},{10,66},{-34,66},{-34,42},{-63,42}}"/>
+    </Connection>
+    <Connection Zfr="0" To="arm2.tlm1" Zf="100000" alpha="0.9" Delay="1e-4" From="arm1.tlm1">
+      <Annotation Points="{{-59,8},{-46.5,8},{-46.5,-26},{35.5,-26},{35.5,0},{19,0}}"/>
+    </Connection>
+    <Connection Zfr="0" To="piston2.tlm1" Zf="100000" alpha="0.9" Delay="1e-4" From="arm1.tlm2">
+      <Annotation Points="{{-59,12},{-46,12},{-46,20},{-10,20},{-10,4},{-16,4}}"/>
+    </Connection>
+    <Connection Zfr="0" To="arm2.tlm3" Zf="100000" alpha="0.9" Delay="1e-4" From="piston2.tlm2">
+      <Annotation Points="{{-16,12},{-6,12},{-6,20},{24,20},{24,8},{20,8},{20,8}}"/>
+    </Connection>
+    <Connection Zfr="0" To="piston2.tlm1D" Zf="100000" alpha="0.9" Delay="1e-4" From="hydraulics.TLM2_1D">
+      <Annotation Points="{{-4,50},{4,50},{4,24},{-14,24},{-14,8},{-16,8},{-16,8}}"/>
+    </Connection>
+    <Connection Zfr="0" To="hydraulics.TLM1_1D" Zf="100000" alpha="0.9" Delay="1e-4" From="arm1.tlm1D">
+      <Annotation Points="{{-58,4},{-50,4},{-50,26},{0,26},{0,46},{-4,46},{-4,46}}"/>
     </Connection>
   </Connections>
   <!-- Parameters for the simulation -->
