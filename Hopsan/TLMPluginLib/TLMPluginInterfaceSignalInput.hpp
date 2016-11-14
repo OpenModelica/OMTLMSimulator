@@ -107,7 +107,7 @@ namespace hopsan {
 
         void finalize()
         {
-            delete mpPlugin;
+            //delete mpPlugin;
         }
     };
 }
