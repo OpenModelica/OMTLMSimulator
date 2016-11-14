@@ -312,6 +312,26 @@ void writeVisualXMLFile(MetaModel& model, std::string &baseFileName, std::string
         if (std::find(components.begin(), components.end(), component.GetName()) != components.end()) {
           continue;
         }
+
+        double33Mat T(-interfaceProxy.getTime0Data().RotMatrix[0],
+                      -interfaceProxy.getTime0Data().RotMatrix[1],
+                      -interfaceProxy.getTime0Data().RotMatrix[2],
+                      -interfaceProxy.getTime0Data().RotMatrix[3],
+                      -interfaceProxy.getTime0Data().RotMatrix[4],
+                      -interfaceProxy.getTime0Data().RotMatrix[5],
+                      -interfaceProxy.getTime0Data().RotMatrix[6],
+                      -interfaceProxy.getTime0Data().RotMatrix[7],
+                      -interfaceProxy.getTime0Data().RotMatrix[8]);
+
+        double3Vec r_shape(-interfaceProxy.getTime0Data().Position[0],
+                           -interfaceProxy.getTime0Data().Position[1],
+                           -interfaceProxy.getTime0Data().Position[2]);
+        r_shape = -T*r_shape;
+        double3Vec lengthDir(1,0,0);
+        lengthDir = -T*lengthDir;
+        double3Vec widthDir(0,1,0);
+        widthDir = -T*widthDir;
+
         components.push_back(component.GetName());
         std::string name = component.GetName() + "." + interfaceProxy.GetName();
         visualFile << "  <shape>\n";
@@ -334,19 +354,19 @@ void writeVisualXMLFile(MetaModel& model, std::string &baseFileName, std::string
         visualFile << "      <cref>" << name << ".R[cG][cG](3)</cref>\n";
         visualFile << "    </r>\n";
         visualFile << "    <r_shape>\n";
-        visualFile << "      <exp>" << -interfaceProxy.getTime0Data().Position[0] << "</exp>\n";
-        visualFile << "      <exp>" << -interfaceProxy.getTime0Data().Position[1] << "</exp>\n";
-        visualFile << "      <exp>" << -interfaceProxy.getTime0Data().Position[2] << "</exp>\n";
+        visualFile << "      <exp>" << r_shape(1) << "</exp>\n";
+        visualFile << "      <exp>" << r_shape(2) << "</exp>\n";
+        visualFile << "      <exp>" << r_shape(3) << "</exp>\n";
         visualFile << "    </r_shape>\n";
         visualFile << "    <lengthDir>\n";
-        visualFile << "      <exp>1.0</exp>\n";
-        visualFile << "      <exp>0.0</exp>\n";
-        visualFile << "      <exp>0.0</exp>\n";
+        visualFile << "      <exp>" << lengthDir(1) << "</exp>\n";
+        visualFile << "      <exp>" << lengthDir(2) << "</exp>\n";
+        visualFile << "      <exp>" << lengthDir(3) << "</exp>\n";
         visualFile << "    </lengthDir>\n";
         visualFile << "    <widthDir>\n";
-        visualFile << "      <exp>0.0</exp>\n";
-        visualFile << "      <exp>1.0</exp>\n";
-        visualFile << "      <exp>0.0</exp>\n";
+        visualFile << "      <exp>" << widthDir(1) << "</exp>\n";
+        visualFile << "      <exp>" << widthDir(2) << "</exp>\n";
+        visualFile << "      <exp>" << widthDir(3) << "</exp>\n";
         visualFile << "    </widthDir>\n";
         visualFile << "    <length><exp>0.0</exp></length>\n";
         visualFile << "    <width><exp>0.0</exp></width>\n";
