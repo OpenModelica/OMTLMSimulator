@@ -3,19 +3,19 @@
 <Model Name="doublePendulum">
   <!-- List of connected sub-models -->
   <SubModels>
-    <SubModel ExactStep="1" Name="doublePendulum1" ModelFile="doublePendulum1.mo" StartCommand="StartTLMOpenModelica">
+    <SubModel Position="0,-3.56779e-13,0" ExactStep="0" ModelFile="doublePendulum1.mo" StartCommand="StartTLMOpenModelica" Angle321="0,0,8.61706e-15" Name="doublePendulum1" GeometryFile="doublePendulum1.stl">
       <!-- TLM interface points for SubModel A -->
-      <InterfacePoint Name="tlm"/>
+      <InterfacePoint Position="0.25,-2.15426e-015,0" Angle321="0,0,-8.61706e-015" Name="tlm"/>
     </SubModel>
-    <SubModel ExactStep="1" Name="doublePendulum2" ModelFile="doublePendulum2.mo" StartCommand="StartTLMOpenModelica">
+    <SubModel ExactStep="0" ModelFile="doublePendulum2.mo" StartCommand="StartTLMOpenModelica" Name="doublePendulum2" GeometryFile="doublePendulum2.stl">
       <!-- TLM interface points for SubModel C -->
-      <InterfacePoint Name="tlm"/>
+      <InterfacePoint Position="0.25,-3.56779e-013,0" Angle321="0,0,0" Name="tlm"/>
     </SubModel>
   </SubModels>
   <!-- List of TLM connections -->
   <Connections>
     <!-- Some more physical values: Delay="1e-5" Zf="8e4" Zfr="400" alpha="0.2" -->
-    <Connection Zfr="1" From="doublePendulum1.tlm" alpha="0.9" To="doublePendulum2.tlm" Zf="2000" Delay="2e-4"/>
+    <Connection Zf="2000" alpha="0.9" Zfr="1" To="doublePendulum2.tlm" Delay="2e-4" From="doublePendulum1.tlm"/>
   </Connections>
   <!-- Parameters for the simulation -->
   <SimulationParams StartTime="0" StopTime="3" ManagerPort="11113"/>
