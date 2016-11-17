@@ -25,14 +25,6 @@
 #include <getopt.h>
 #endif
 
-#ifdef WIN32
-#include <windows.h>
-#include <algorithm>
-#else
-#include <limits.h>
-#include <stdlib.h>
-#endif
-
 using std::string;
 using namespace tlmMisc;
 
@@ -663,19 +655,6 @@ int main(int argc, char* argv[]) {
     // Get input strings, server name and meta-model XML file.
     std::string serverStr(argv[optind]);
     std::string inFile(argv[optind+1]);
-    std::string path;
-#ifdef WIN32
-    TCHAR full_path[MAX_PATH];
-    GetFullPathName(inFile.c_str(), MAX_PATH, full_path, NULL);
-    path = full_path;
-    std::size_t found = path.find_last_of("/\\");
-    path = path.substr(0, found);
-    std::replace(path.begin(), path.end(), '\\', '/');
-#else
-    char full_path[PATH_MAX];
-    realpath(inFile.c_str(), full_path);
-    path = full_path;
-#endif
     std::string baseFileName = inFile.substr(0, inFile.rfind('.'));
 
     // Create the meta model object
@@ -727,7 +706,6 @@ int main(int argc, char* argv[]) {
         }
     }
 
-    writeVisualXMLFile(theModel, baseFileName, path);
     // Print/log the header information
     printHeader(theModel, outdataFile);
 
