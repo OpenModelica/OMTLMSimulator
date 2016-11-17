@@ -94,11 +94,36 @@ void MetaModelReader::ReadTLMInterfaceNodes(xmlNode* node, int ComponentID) {
             // For every InterfacePoint element that we find read its name
 
             xmlNode* curAttrVal = FindAttributeByName(curNode, "Name");
-
             string name((const char*)curAttrVal->content);
 
-            TLMErrorLog::Log(string("Registering TLM interface ") + name);
-            int ipID = TheModel.RegisterTLMInterfaceProxy(ComponentID, name);
+            curAttrVal = FindAttributeByName(curNode, "Type");    //This does not work with OMEdit, since attribute is not allowed
+            string type="3D";                                     //Default is 3D
+            if(name.size() > 1 &&                                 //Temporary hack: if name of interface ends
+               name[name.size()-2] == '1' &&                      //with "1D" it is a 1D connection
+               name[name.size()-1] == 'D') {
+                type = "1D";
+            }
+            else if(name.size() > 3 &&                            //Temporary hack: if name of interface ends
+               name[name.size()-4] == '1' &&                      //with "1DIN" it is a signal input interface
+               name[name.size()-3] == 'D' &&
+               name[name.size()-2] == 'I' &&
+                name[name.size()-1] == 'N') {
+                type = "SignalInput";
+            }
+            else if(name.size() > 4 &&                            //Temporary hack: if name of interface ends
+               name[name.size()-5] == '1' &&                      //with "1DOUT" it is a signal output interface
+               name[name.size()-4] == 'D' &&
+               name[name.size()-3] == 'O' &&
+               name[name.size()-2] == 'U' &&
+               name[name.size()-1] == 'T') {
+                type = "SignalOutput";
+            }
+            if(curAttrVal) {                                      //Now check for XML attribute
+              type = ((const char*)curAttrVal->content);
+            }
+
+            TLMErrorLog::Log(string("Registering TLM interface ") + name + string(" of type ") + type);
+            int ipID = TheModel.RegisterTLMInterfaceProxy(ComponentID, name, type);
 
             // Get/Set position and orientation if available in XML file.
             TLMInterfaceProxy& ip = TheModel.GetTLMInterfaceProxy(ipID);
@@ -231,7 +256,7 @@ xmlNode* MetaModelReader::FindAttributeByName(xmlNode* node, const char* name, b
         }
     }
     if(required) {
-        TLMErrorLog::FatalError(string("Cannot find attribute ") +  name);
+        TLMErrorLog::Warning(string("Cannot find attribute ") +  name);
     }
     return NULL;
 }

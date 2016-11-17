@@ -11,8 +11,8 @@ TARGET = TLMPluginLib
 DESTDIR = $${PWD}/
 
 #TLMPLugin include paths
-INCLUDEPATH += c:/users/robbr48/Documents/Mercurial/TLMPlugin/common
-INCLUDEPATH += c:/users/robbr48/Documents/Mercurial/TLMPlugin/extralibs/misc/include
+INCLUDEPATH += ../../common
+INCLUDEPATH += ../../extralibs/misc/include
 
 unix {
 LIBS += -ldl
@@ -43,20 +43,38 @@ include(hopsanDebugReleaseCompile.prf)
 # -------------------------------------------------
 SOURCES += \
     TLMPluginLib.cc \
-    c:/users/robbr48/Documents/Mercurial/TLMPlugin/common/PluginImplementer.cc \
-    c:/users/robbr48/Documents/Mercurial/TLMPlugin/common/TLMClientComm.cc \
-    c:/users/robbr48/Documents/Mercurial/TLMPlugin/common/TLMCommUtil.cc \
-    c:/users/robbr48/Documents/Mercurial/TLMPlugin/common/TLMErrorLog.cc \
-    c:/users/robbr48/Documents/Mercurial/TLMPlugin/common/TLMInterface.cc \
-    c:/users/robbr48/Documents/Mercurial/TLMPlugin/common/TLMPlugin.cc \
-    c:/users/robbr48/Documents/Mercurial/TLMPlugin/extralibs/misc/src/strConv.cc \
-    c:/users/robbr48/Documents/Mercurial/TLMPlugin/extralibs/misc/src/coordTrans.cc \
-    c:/users/robbr48/Documents/Mercurial/TLMPlugin/extralibs/misc/src/double3Vec.cc \
-    c:/users/robbr48/Documents/Mercurial/TLMPlugin/extralibs/misc/src/double33Mat.cc
+    ../../common/PluginImplementer.cc \
+    ../../common/TLMClientComm.cc \
+    ../../common/TLMCommUtil.cc \
+    ../../common/TLMErrorLog.cc \
+    ../../common/TLMInterface.cc \
+    ../../common/TLMPlugin.cc \
+    ../../extralibs/misc/src/strConv.cc \
+    ../../extralibs/misc/src/coordTrans.cc \
+    ../../extralibs/misc/src/double3Vec.cc \
+    ../../extralibs/misc/src/double33Mat.cc \
+    ../../common/TLMInterfaceSignal.cc \
+    ../../common/TLMInterface1D.cc \
+    ../../common/TLMInterface3D.cc
 
 HEADERS += \
-    TLMPluginInterface.hpp
+    TLMPluginInterface1D.hpp \
+    TLMPluginInterfaceSignalInput.hpp \
+    TLMPluginInterfaceSignalOutput.hpp \
+    common.h \
+    TLMPluginHandler.hpp
 
 OTHER_FILES += \
     hopsanDebugReleaseCompile.prf \
     myLocalPaths.prf
+
+DISTFILES += \
+    TLMPluginInterface1D.xml \
+    TLMPluginInterface1D.svg \
+    TLMPluginInterfaceSignalInput.xml \
+    TLMPluginInterfaceSignalOutput.xml \
+    TLMPluginInterfaceSignalInput.svg \
+    TLMPluginInterfaceSignalOutput.svg \
+    TLMPluginLib.xml \
+    TLMPluginHandler.xml \
+    TLMPluginHandler.svg

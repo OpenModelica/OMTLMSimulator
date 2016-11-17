@@ -234,7 +234,23 @@ void ManagerCommHandler::ProcessRegInterfaceMessage(int compID, TLMMessage& mess
     }
 
     // First, find the interface in the meta model
-    string aName ((const char*)(& mess.Data[0]), mess.Header.DataSize);
+    string aNameAndType ((const char*)(& mess.Data[0]), mess.Header.DataSize);
+
+    TLMErrorLog::Log("Manager received nameAndType: "+aNameAndType);
+
+    string aName, type;
+    bool readingType=false;
+    for(size_t i=0; i<aNameAndType.size(); ++i) {
+        if(aNameAndType[i] == ':') {
+            readingType = true;
+        }
+        if(readingType) {
+            type += aNameAndType[i];
+        }
+        else {
+            aName += aNameAndType[i];
+        }
+    }
 
     int IfcID = TheModel.GetTLMInterfaceID(compID, aName);    
 
@@ -245,7 +261,8 @@ void ManagerCommHandler::ProcessRegInterfaceMessage(int compID, TLMMessage& mess
 
     if(IfcID < 0 && CommMode == InterfaceRequestMode) {
         // interface not found, create it
-        TheModel.RegisterTLMInterfaceProxy(compID, aName);
+        //std::string type = "1D";                                //HARD-CODED /robbr
+        TheModel.RegisterTLMInterfaceProxy(compID, aName, type);
         IfcID = TheModel.GetTLMInterfaceID(compID, aName);        
     }
 
@@ -305,7 +322,7 @@ void ManagerCommHandler::SetupInterfaceConnectionMessage(int IfcID, std::string&
     TheModel.GetTLMComponentProxy(CompId).GetInertialTranformation(param.cX_R_cG_cG, param.cX_A_cG);
 
     // Send initial interface position
-    TLMTimeData& td = ifc.getTime0Data();
+    TLMTimeData3D& td = ifc.getTime0Data();
     for(int i=0 ; i<3 ; i++ ) param.Nom_cI_R_cX_cX[i] = td.Position[i];
     for(int i=0 ; i<9 ; i++ ) param.Nom_cI_A_cX[i] = td.RotMatrix[i];
 
@@ -424,6 +441,7 @@ void ManagerCommHandler::WriterThreadRun() {
 void ManagerCommHandler::MarshalMessage(TLMMessage& message) {
 
     if(message.Header.MessageType !=   TLMMessageTypeConst::TLM_TIME_DATA) {
+        TLMErrorLog::Log("Interface ID: "+TLMErrorLog::ToStdStr(message.Header.TLMInterfaceID));
         TLMErrorLog::FatalError("Unexpected message received " + tlmMisc::ToStr(message.Header.MessageType));
     };
 
@@ -458,7 +476,7 @@ void ManagerCommHandler::UnpackAndStoreTimeData(TLMMessage& message)
     };
 
     // since mess.Data is continious we can just convert the pointer
-    TLMTimeData* Next = (TLMTimeData*)(&message.Data[0]);
+    TLMTimeData3D* Next = (TLMTimeData3D*)(&message.Data[0]);
 
     // check if we have byte order missmatch in the message and perform
     // swapping if necessary
@@ -469,7 +487,7 @@ void ManagerCommHandler::UnpackAndStoreTimeData(TLMMessage& message)
 
     // forward the time data
     TLMInterfaceProxy& src = TheModel.GetTLMInterfaceProxy(message.Header.TLMInterfaceID);
-    TLMTimeData& data = src.getTime0Data();
+    TLMTimeData3D& data = src.getTime0Data();
 
     TLMErrorLog::Log("Unpack and store time data for " + src.GetName() ); 
     
@@ -484,8 +502,21 @@ int ManagerCommHandler::ProcessInterfaceMonitoringMessage(TLMMessage& message)
     }
     
     // First, find the interface in the meta model
-    string aName ((const char*)(& message.Data[0]), message.Header.DataSize);            
-    
+    string aNameAndType ((const char*)(& message.Data[0]), message.Header.DataSize);
+    string aName, type;
+    bool readingType=false;
+    for(size_t i=0; i<aNameAndType.size(); ++i) {
+        if(aNameAndType[i] == ':') {
+            readingType = true;
+        }
+        if(readingType) {
+            type += aNameAndType[i];
+        }
+        else {
+            aName += aNameAndType[i];
+        }
+    }
+
     TLMErrorLog::Log( "Request for monitoring " + aName ); 
 
     // Here the full name, i.e., component.interface, is requered

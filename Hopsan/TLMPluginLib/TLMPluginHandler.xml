@@ -1,0 +1,9 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<hopsanobjectappearance version="0.3">
+    <modelobject sourcecode="TLMPluginHandler.hpp" typename="TLMPluginHandler" displayname="TLM Plugin Handler">
+        <icons>
+            <icon scale="1" path="TLMPluginHandler.svg" iconrotation="ON" type="user"/>
+        </icons>
+        <animation/>
+    </modelobject>
+</hopsanobjectappearance>

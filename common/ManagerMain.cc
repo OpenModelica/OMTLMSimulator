@@ -47,7 +47,7 @@ void print_interface_information(MetaModel& theModel)
       for(size_t idx=0 ; idx<theModel.GetInterfacesNum() ; idx++ ){
         TLMInterfaceProxy& intProx = theModel.GetTLMInterfaceProxy(idx);
         TLMComponentProxy& comProx = theModel.GetTLMComponentProxy(intProx.GetComponentID());
-        TLMTimeData& tlmData = intProx.getTime0Data();
+        TLMTimeData3D& tlmData = intProx.getTime0Data();
 
         double3Vec R(tlmData.Position[0], tlmData.Position[1], tlmData.Position[2]);
         double33Mat A( tlmData.RotMatrix[0], tlmData.RotMatrix[1], tlmData.RotMatrix[2],
@@ -75,7 +75,7 @@ void print_interface_information(MetaModel& theModel)
     for(size_t idx=0 ; idx<theModel.GetInterfacesNum() ; idx++ ){
         TLMInterfaceProxy& intProx = theModel.GetTLMInterfaceProxy(idx);
         TLMComponentProxy& comProx = theModel.GetTLMComponentProxy(intProx.GetComponentID());
-        TLMTimeData& tlmData = intProx.getTime0Data();
+        TLMTimeData3D& tlmData = intProx.getTime0Data();
 
         double3Vec R(tlmData.Position[0], tlmData.Position[1], tlmData.Position[2]);
         double33Mat A( tlmData.RotMatrix[0], tlmData.RotMatrix[1], tlmData.RotMatrix[2],
@@ -127,7 +127,7 @@ int main(int argc, char* argv[]) {
     }
 
     // Debug on?
-    if(debugFlg) {
+    if(debugFlg || comMode == ManagerCommHandler::InterfaceRequestMode) {       //Always enable debug for interface request /robbr
         TLMErrorLog::SetDebugOut(true);
     }
     

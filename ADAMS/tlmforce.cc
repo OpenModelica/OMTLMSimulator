@@ -189,7 +189,7 @@ void TLM_force::GetForce(bool derCalc, int markerID,
     }
 
     // Call the plugin to get reaction force
-    Plugin->GetForce(interfaceID,
+    Plugin->GetForce3D(interfaceID,
 		     param.Time,
 		     param.Position,
 		     param.Orientation,

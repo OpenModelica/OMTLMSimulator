@@ -17,6 +17,7 @@
 #include "double3Vec.h"
 #include "double33Mat.h"
 #include "timing.h"
+#include "coordTrans.h"
 
 #ifdef _MSC_VER
 #include "mygetopt.h"
@@ -68,7 +69,7 @@ TLMPlugin* initializeTLMConnection(MetaModel& model, std::string& serverName)
         TLMComponentProxy& component = model.GetTLMComponentProxy(interfaceProxy.GetComponentID());
 
         TLMErrorLog::Log( "Trying to register monitoring interface " + interfaceProxy.GetName() );
-        int TLMInterfaceID = TLMlink->RegisteTLMInterface( component.GetName() + "." + interfaceProxy.GetName() );
+        int TLMInterfaceID = TLMlink->RegisteTLMInterface( component.GetName() + "." + interfaceProxy.GetName(), interfaceProxy.GetType() );
 
         if(TLMInterfaceID >= 0) {
             TLMErrorLog::Log("Registration was successful");
@@ -82,8 +83,12 @@ TLMPlugin* initializeTLMConnection(MetaModel& model, std::string& serverName)
 }
 
 //! Evaluate the data needed for the current time step.
-void MonitorTimeStep(TLMPlugin* TLMlink, MetaModel& model, double SimTime, std::map<int, TLMTimeData>& dataStorage )
-{
+void MonitorTimeStep(TLMPlugin* TLMlink,
+                     MetaModel& model,
+                     double SimTime,
+                     std::map<int, TLMTimeDataSignal>& dataStorageSignal,
+                     std::map<int, TLMTimeData1D>& dataStorage1D,
+                     std::map<int, TLMTimeData3D>& dataStorage3D) {
     if( TLMlink != 0 ){
         // Get data from TLM-Manager here!
         int nTLMInterfaces = model.GetInterfacesNum();
@@ -92,27 +97,48 @@ void MonitorTimeStep(TLMPlugin* TLMlink, MetaModel& model, double SimTime, std::
             TLMInterfaceProxy& interfaceProxy = model.GetTLMInterfaceProxy(i);
             int interfaceID = interfaceProxy.GetID();
             int connectionID = interfaceProxy.GetConnectionID();
+            std::string type = interfaceProxy.GetType();
 
             TLMErrorLog::Log("Data request for " + interfaceProxy.GetName() + " for time " + ToStr(SimTime) + ", id: " + ToStr(interfaceID));
 
             if( connectionID >= 0 ){
 #define LOGGEDFORCEFIX
 #ifdef  LOGGEDFORCEFIX
-                TLMTimeData& PrevTimeData = dataStorage[interfaceID];
-                TLMTimeData& CurTimeData = dataStorage[interfaceID];
+              if(type == "3D") {
+                  TLMTimeData3D& PrevTimeData = dataStorage3D[interfaceID];
+                  TLMTimeData3D& CurTimeData = dataStorage3D[interfaceID];
 
-                TLMlink->GetTimeData(interfaceID, SimTime, CurTimeData);
+                  TLMlink->GetTimeData3D(interfaceID, SimTime, CurTimeData);
+
+                  double delay = model.GetTLMConnection(interfaceProxy.GetConnectionID()).GetParams().Delay;
+                  double alpha = model.GetTLMConnection(interfaceProxy.GetConnectionID()).GetParams().alpha;
+                  TLMlink->GetTimeData3D(interfaceID, SimTime-delay, PrevTimeData);
+
+                  //Apply damping factor, since this can not be done in GetTimeData (DampedTimeData is not available for monitor)
+                  for(int i = 0; i < 6; i++) {
+                    CurTimeData.GenForce[i] =
+                        CurTimeData.GenForce[i] * (1 - alpha)
+                        + PrevTimeData.GenForce[i] * alpha;
+                  }
+              }
+              else if(type == "1D"){
+                TLMTimeData1D& PrevTimeData = dataStorage1D[interfaceID];
+                TLMTimeData1D& CurTimeData = dataStorage1D[interfaceID];
+
+                TLMlink->GetTimeData1D(interfaceID, SimTime, CurTimeData);
 
                 double delay = model.GetTLMConnection(interfaceProxy.GetConnectionID()).GetParams().Delay;
                 double alpha = model.GetTLMConnection(interfaceProxy.GetConnectionID()).GetParams().alpha;
-                TLMlink->GetTimeData(interfaceID, SimTime-delay, PrevTimeData);
+                TLMlink->GetTimeData1D(interfaceID, SimTime-delay, PrevTimeData);
 
                 //Apply damping factor, since this can not be done in GetTimeData (DampedTimeData is not available for monitor)
-                for(int i = 0; i < 6; i++) {
-                    CurTimeData.GenForce[i] =
-                            CurTimeData.GenForce[i] * (1 - alpha)
-                            + PrevTimeData.GenForce[i] * alpha;
-                }
+                CurTimeData.GenForce = CurTimeData.GenForce*(1-alpha) + PrevTimeData.GenForce*alpha;
+              }
+              else if(type == "SignalOutput"){
+                TLMTimeDataSignal& CurTimeData = dataStorageSignal[interfaceID];
+                TLMlink->GetTimeDataSignal(interfaceID, SimTime, CurTimeData);
+              }
+              //No need to check for erroneous interface type, we can simply log nothing instead /robbr
 #else
                 TLMTimeData& CurTimeData = dataStorage[interfaceID];
                 TLMlink->GetTimeData(interfaceID, SimTime, CurTimeData);
@@ -120,6 +146,261 @@ void MonitorTimeStep(TLMPlugin* TLMlink, MetaModel& model, double SimTime, std::
             }
         }
     }
+}
+
+void writeVisualXMLFile(MetaModel& model, std::string &baseFileName, std::string &path)
+{
+  // Get data from TLM-Manager here!
+  bool canWriteVisualXMLFile = false;
+  int nTLMComponents = model.GetComponentsNum();
+  for (int i = 0 ; i < nTLMComponents ; i++) {
+    TLMComponentProxy& component = model.GetTLMComponentProxy(i);
+    if (!component.GetGeometryFile().empty()) {
+      canWriteVisualXMLFile = true;
+    }
+  }
+  // write the visual xml file
+  if (canWriteVisualXMLFile) {
+    std::ofstream visualFile((baseFileName + "_visual.xml").c_str());
+    if (!visualFile.good()) {
+      TLMErrorLog::FatalError("Failed to open outfile " + baseFileName + "_visual.xml, give up.");
+      return;
+    }
+    visualFile << "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n";
+    visualFile << "<visualization>\n";
+
+    visualFile << "  <shape>\n";
+    visualFile << "    <ident>x-axis</ident>\n";
+    visualFile << "    <type>cylinder</type>\n";
+    visualFile << "    <T>\n";
+    visualFile << "      <exp>1.0</exp>\n";
+    visualFile << "      <exp>0.0</exp>\n";
+    visualFile << "      <exp>0.0</exp>\n";
+    visualFile << "      <exp>0.0</exp>\n";
+    visualFile << "      <exp>1.0</exp>\n";
+    visualFile << "      <exp>0.0</exp>\n";
+    visualFile << "      <exp>0.0</exp>\n";
+    visualFile << "      <exp>0.0</exp>\n";
+    visualFile << "      <exp>1.0</exp>\n";
+    visualFile << "    </T>\n";
+    visualFile << "    <r>\n";
+    visualFile << "      <exp>0.0</exp>\n";
+    visualFile << "      <exp>0.0</exp>\n";
+    visualFile << "      <exp>0.0</exp>\n";
+    visualFile << "    </r>\n";
+    visualFile << "    <r_shape>\n";
+    visualFile << "      <exp>0.0</exp>\n";
+    visualFile << "      <exp>0.0</exp>\n";
+    visualFile << "      <exp>0.0</exp>\n";
+    visualFile << "    </r_shape>\n";
+    visualFile << "    <lengthDir>\n";
+    visualFile << "      <exp>1.0</exp>\n";
+    visualFile << "      <exp>0.0</exp>\n";
+    visualFile << "      <exp>0.0</exp>\n";
+    visualFile << "    </lengthDir>\n";
+    visualFile << "    <widthDir>\n";
+    visualFile << "      <exp>0.0</exp>\n";
+    visualFile << "      <exp>1.0</exp>\n";
+    visualFile << "      <exp>0.0</exp>\n";
+    visualFile << "    </widthDir>\n";
+    visualFile << "    <length><exp>0.4375</exp></length>\n";
+    visualFile << "    <width><exp>0.0025</exp></width>\n";
+    visualFile << "    <height><exp>0.0025</exp></height>\n";
+    visualFile << "    <extra><exp>0.0</exp></extra>\n";
+    visualFile << "    <color>\n";
+    visualFile << "      <exp>0.0</exp>\n";
+    visualFile << "      <exp>0.0</exp>\n";
+    visualFile << "      <exp>255.0</exp>\n";
+    visualFile << "    </color>\n";
+    visualFile << "    <specCoeff><exp>0.7</exp></specCoeff>\n";
+    visualFile << "  </shape>\n";
+
+    visualFile << "  <shape>\n";
+    visualFile << "    <ident>y-axis</ident>\n";
+    visualFile << "    <type>cylinder</type>\n";
+    visualFile << "    <T>\n";
+    visualFile << "      <exp>1.0</exp>\n";
+    visualFile << "      <exp>0.0</exp>\n";
+    visualFile << "      <exp>0.0</exp>\n";
+    visualFile << "      <exp>0.0</exp>\n";
+    visualFile << "      <exp>1.0</exp>\n";
+    visualFile << "      <exp>0.0</exp>\n";
+    visualFile << "      <exp>0.0</exp>\n";
+    visualFile << "      <exp>0.0</exp>\n";
+    visualFile << "      <exp>1.0</exp>\n";
+    visualFile << "    </T>\n";
+    visualFile << "    <r>\n";
+    visualFile << "      <exp>0.0</exp>\n";
+    visualFile << "      <exp>0.0</exp>\n";
+    visualFile << "      <exp>0.0</exp>\n";
+    visualFile << "    </r>\n";
+    visualFile << "    <r_shape>\n";
+    visualFile << "      <exp>0.0</exp>\n";
+    visualFile << "      <exp>0.0</exp>\n";
+    visualFile << "      <exp>0.0</exp>\n";
+    visualFile << "    </r_shape>\n";
+    visualFile << "    <lengthDir>\n";
+    visualFile << "      <exp>0.0</exp>\n";
+    visualFile << "      <exp>1.0</exp>\n";
+    visualFile << "      <exp>0.0</exp>\n";
+    visualFile << "    </lengthDir>\n";
+    visualFile << "    <widthDir>\n";
+    visualFile << "      <exp>1.0</exp>\n";
+    visualFile << "      <exp>0.0</exp>\n";
+    visualFile << "      <exp>0.0</exp>\n";
+    visualFile << "    </widthDir>\n";
+    visualFile << "    <length><exp>0.4375</exp></length>\n";
+    visualFile << "    <width><exp>0.0025</exp></width>\n";
+    visualFile << "    <height><exp>0.0025</exp></height>\n";
+    visualFile << "    <extra><exp>0.0</exp></extra>\n";
+    visualFile << "    <color>\n";
+    visualFile << "      <exp>255.0</exp>\n";
+    visualFile << "      <exp>0.0</exp>\n";
+    visualFile << "      <exp>0.0</exp>\n";
+    visualFile << "    </color>\n";
+    visualFile << "    <specCoeff><exp>0.7</exp></specCoeff>\n";
+    visualFile << "  </shape>\n";
+
+    visualFile << "  <shape>\n";
+    visualFile << "    <ident>z-axis</ident>\n";
+    visualFile << "    <type>cylinder</type>\n";
+    visualFile << "    <T>\n";
+    visualFile << "      <exp>1.0</exp>\n";
+    visualFile << "      <exp>0.0</exp>\n";
+    visualFile << "      <exp>0.0</exp>\n";
+    visualFile << "      <exp>0.0</exp>\n";
+    visualFile << "      <exp>1.0</exp>\n";
+    visualFile << "      <exp>0.0</exp>\n";
+    visualFile << "      <exp>0.0</exp>\n";
+    visualFile << "      <exp>0.0</exp>\n";
+    visualFile << "      <exp>1.0</exp>\n";
+    visualFile << "    </T>\n";
+    visualFile << "    <r>\n";
+    visualFile << "      <exp>0.0</exp>\n";
+    visualFile << "      <exp>0.0</exp>\n";
+    visualFile << "      <exp>0.0</exp>\n";
+    visualFile << "    </r>\n";
+    visualFile << "    <r_shape>\n";
+    visualFile << "      <exp>0.0</exp>\n";
+    visualFile << "      <exp>0.0</exp>\n";
+    visualFile << "      <exp>0.0</exp>\n";
+    visualFile << "    </r_shape>\n";
+    visualFile << "    <lengthDir>\n";
+    visualFile << "      <exp>0.0</exp>\n";
+    visualFile << "      <exp>0.0</exp>\n";
+    visualFile << "      <exp>1.0</exp>\n";
+    visualFile << "    </lengthDir>\n";
+    visualFile << "    <widthDir>\n";
+    visualFile << "      <exp>0.0</exp>\n";
+    visualFile << "      <exp>1.0</exp>\n";
+    visualFile << "      <exp>0.0</exp>\n";
+    visualFile << "    </widthDir>\n";
+    visualFile << "    <length><exp>0.4375</exp></length>\n";
+    visualFile << "    <width><exp>0.0025</exp></width>\n";
+    visualFile << "    <height><exp>0.0025</exp></height>\n";
+    visualFile << "    <extra><exp>0.0</exp></extra>\n";
+    visualFile << "    <color>\n";
+    visualFile << "      <exp>0.0</exp>\n";
+    visualFile << "      <exp>255.0</exp>\n";
+    visualFile << "      <exp>0.0</exp>\n";
+    visualFile << "    </color>\n";
+    visualFile << "    <specCoeff><exp>0.7</exp></specCoeff>\n";
+    visualFile << "  </shape>\n";
+
+    // colors vector
+    std::vector<Color> colors;
+    Color color = Color(128.0, 128.0, 128.0); // Gray
+    colors.push_back(color);
+    color = Color(255.0, 255.0, 0.0); // Yellow
+    colors.push_back(color);
+    color = Color(0.0, 255.0, 255.0); // Cyan
+    colors.push_back(color);
+    color = Color(255.0, 0.0, 255.0); // Magenta / Fuchsia
+    colors.push_back(color);
+    color = Color(128.0, 0.0, 0.0); // Maroon
+    colors.push_back(color);
+
+    // components vector
+    std::vector<std::string> components;
+    int nTLMInterfaces = model.GetInterfacesNum();
+    for (int i = 0 ; i < nTLMInterfaces ; i++) {
+      TLMInterfaceProxy& interfaceProxy = model.GetTLMInterfaceProxy(i);
+      TLMComponentProxy& component = model.GetTLMComponentProxy(interfaceProxy.GetComponentID());
+      if (interfaceProxy.GetConnectionID() >= 0) {
+        if (std::find(components.begin(), components.end(), component.GetName()) != components.end()) {
+          continue;
+        }
+
+        double33Mat T(-interfaceProxy.getTime0Data().RotMatrix[0],
+                      -interfaceProxy.getTime0Data().RotMatrix[1],
+                      -interfaceProxy.getTime0Data().RotMatrix[2],
+                      -interfaceProxy.getTime0Data().RotMatrix[3],
+                      -interfaceProxy.getTime0Data().RotMatrix[4],
+                      -interfaceProxy.getTime0Data().RotMatrix[5],
+                      -interfaceProxy.getTime0Data().RotMatrix[6],
+                      -interfaceProxy.getTime0Data().RotMatrix[7],
+                      -interfaceProxy.getTime0Data().RotMatrix[8]);
+
+        double3Vec r_shape(-interfaceProxy.getTime0Data().Position[0],
+                           -interfaceProxy.getTime0Data().Position[1],
+                           -interfaceProxy.getTime0Data().Position[2]);
+        r_shape = -T*r_shape;
+        double3Vec lengthDir(1,0,0);
+        lengthDir = -T*lengthDir;
+        double3Vec widthDir(0,1,0);
+        widthDir = -T*widthDir;
+
+        components.push_back(component.GetName());
+        std::string name = component.GetName() + "." + interfaceProxy.GetName();
+        visualFile << "  <shape>\n";
+        visualFile << "    <ident>" << name << "</ident>\n";
+        visualFile << "    <type>file://" << path << "/" << component.GetName() << "/" << component.GetGeometryFile() << "</type>\n";
+        visualFile << "    <T>\n";
+        visualFile << "      <cref>" << name << ".A(1,1)</cref>\n";
+        visualFile << "      <cref>" << name << ".A(1,2)</cref>\n";
+        visualFile << "      <cref>" << name << ".A(1,3)</cref>\n";
+        visualFile << "      <cref>" << name << ".A(2,1)</cref>\n";
+        visualFile << "      <cref>" << name << ".A(2,2)</cref>\n";
+        visualFile << "      <cref>" << name << ".A(2,3)</cref>\n";
+        visualFile << "      <cref>" << name << ".A(3,1)</cref>\n";
+        visualFile << "      <cref>" << name << ".A(3,2)</cref>\n";
+        visualFile << "      <cref>" << name << ".A(3,3)</cref>\n";
+        visualFile << "    </T>\n";
+        visualFile << "    <r>\n";
+        visualFile << "      <cref>" << name << ".R[cG][cG](1)</cref>\n";
+        visualFile << "      <cref>" << name << ".R[cG][cG](2)</cref>\n";
+        visualFile << "      <cref>" << name << ".R[cG][cG](3)</cref>\n";
+        visualFile << "    </r>\n";
+        visualFile << "    <r_shape>\n";
+        visualFile << "      <exp>" << r_shape(1) << "</exp>\n";
+        visualFile << "      <exp>" << r_shape(2) << "</exp>\n";
+        visualFile << "      <exp>" << r_shape(3) << "</exp>\n";
+        visualFile << "    </r_shape>\n";
+        visualFile << "    <lengthDir>\n";
+        visualFile << "      <exp>" << lengthDir(1) << "</exp>\n";
+        visualFile << "      <exp>" << lengthDir(2) << "</exp>\n";
+        visualFile << "      <exp>" << lengthDir(3) << "</exp>\n";
+        visualFile << "    </lengthDir>\n";
+        visualFile << "    <widthDir>\n";
+        visualFile << "      <exp>" << widthDir(1) << "</exp>\n";
+        visualFile << "      <exp>" << widthDir(2) << "</exp>\n";
+        visualFile << "      <exp>" << widthDir(3) << "</exp>\n";
+        visualFile << "    </widthDir>\n";
+        visualFile << "    <length><exp>0.0</exp></length>\n";
+        visualFile << "    <width><exp>0.0</exp></width>\n";
+        visualFile << "    <height><exp>0.0</exp></height>\n";
+        visualFile << "    <extra><exp>0.0</exp></extra>\n";
+        visualFile << "    <color>\n";
+        visualFile << "      <exp>" << colors[i % colors.size()].r << "</exp>\n";
+        visualFile << "      <exp>" << colors[i % colors.size()].g << "</exp>\n";
+        visualFile << "      <exp>" << colors[i % colors.size()].b << "</exp>\n";
+        visualFile << "    </color>\n";
+        visualFile << "    <specCoeff><exp>0.7</exp></specCoeff>\n";
+        visualFile << "  </shape>\n";
+      }
+    }
+    visualFile << "</visualization>";
+  }
 }
 
 void printHeader(MetaModel& model, std::ofstream& dataFile)
@@ -135,30 +416,57 @@ void printHeader(MetaModel& model, std::ofstream& dataFile)
         TLMInterfaceProxy& interfaceProxy = model.GetTLMInterfaceProxy(i);
         TLMComponentProxy& component = model.GetTLMComponentProxy(interfaceProxy.GetComponentID());
         if( interfaceProxy.GetConnectionID() >= 0 ){
+            if(interfaceProxy.GetType() == "3D") {
+                // Comma between interfaces
+                if(nActiveInterfaces > 0) dataFile << ",";
 
-            // Comma between interfaces
-            if(nActiveInterfaces > 0) dataFile << ",";
-
-            // Add all TLM variable names for all active interfaces
-            std::string name = component.GetName() + "." + interfaceProxy.GetName();
-            dataFile << "\"" << name << ".R[cG][cG](1)\",\"" << name << ".R[cG][cG](2)\",\"" << name << ".R[cG][cG](3)\","; // Position vector
-            dataFile << "\"" << name << ".phi[cG](1)\",\"" << name << ".phi[cG](2)\",\"" << name << ".phi[cG](3)\","; // Orientation vector (three angles)
+                // Add all TLM variable names for all active interfaces
+                std::string name = component.GetName() + "." + interfaceProxy.GetName();
+                dataFile << "\"" << name << ".R[cG][cG](1)\",\"" << name << ".R[cG][cG](2)\",\"" << name << ".R[cG][cG](3)\","; // Position vector
+                dataFile << "\"" << name << ".phi[cG](1)\",\"" << name << ".phi[cG](2)\",\"" << name << ".phi[cG](3)\","; // Orientation vector (three angles)
             dataFile << "\"" << name << ".A(1,1)\",\"" << name << ".A(1,2)\",\"" << name << ".A(1,3)\",\""
                              << name << ".A(2,1)\",\"" << name << ".A(2,2)\",\"" << name << ".A(2,3)\",\""
                              << name << ".A(3,1)\",\"" << name << ".A(3,2)\",\"" << name << ".A(3,3)\","; // Transformation matrix
-            dataFile << "\"" << name << ".vR[cG][cG,cG](1)\",\"" << name << ".vR[cG][cG,cG](2)\",\"" << name << ".vR[cG][cG,cG](3)\","; // velocity
-            dataFile << "\"" << name << ".Omega[cG][cG](1)\",\"" << name << ".Omega[cG][cG](2)\",\"" << name << ".Omega[cG][cG](3)\","; // angular velocity
-            dataFile << "\"" << name << ".F_tie[cG](1)\",\"" << name << ".F_tie[cG](2)\",\"" << name << ".F_tie[cG](3)\","; // force vector
-            dataFile << "\"" << name << ".M_tie[cG][cG](1)\",\"" << name << ".M_tie[cG][cG](2)\",\"" << name << ".M_tie[cG][cG](3)\""; // torque vector
+                dataFile << "\"" << name << ".vR[cG][cG,cG](1)\",\"" << name << ".vR[cG][cG,cG](2)\",\"" << name << ".vR[cG][cG,cG](3)\","; // velocity
+                dataFile << "\"" << name << ".Omega[cG][cG](1)\",\"" << name << ".Omega[cG][cG](2)\",\"" << name << ".Omega[cG][cG](3)\","; // angular velocity
+                dataFile << "\"" << name << ".F_tie[cG](1)\",\"" << name << ".F_tie[cG](2)\",\"" << name << ".F_tie[cG](3)\","; // force vector
+                dataFile << "\"" << name << ".M_tie[cG][cG](1)\",\"" << name << ".M_tie[cG][cG](2)\",\"" << name << ".M_tie[cG][cG](3)\""; // torque vector
 
-            nActiveInterfaces++;
+                nActiveInterfaces++;
+            }
+            else if(interfaceProxy.GetType() == "1D") {
+              // Comma between interfaces
+              if(nActiveInterfaces > 0) dataFile << ",";
+
+              // Add all TLM variable names for all active interfaces
+              std::string name = component.GetName() + "." + interfaceProxy.GetName();
+              dataFile << "\"" << name << ".x\","; // Position
+              dataFile << "\"" << name << ".v\","; // Speed
+              dataFile << "\"" << name << ".F\""; // Force
+
+              nActiveInterfaces++;
+            }
+            else if(interfaceProxy.GetType() == "SignalOutput") {
+              // Comma between interfaces
+              if(nActiveInterfaces > 0) dataFile << ",";
+
+              // Add variable names for all active interfaces
+              std::string name = component.GetName() + "." + interfaceProxy.GetName();
+              dataFile << "\"" << name << "\""; // Value
+
+              nActiveInterfaces++;
+            }
         }
     }
 
     dataFile << std::endl;
 }
 
-void printData(MetaModel& model, std::ofstream& dataFile, std::map<int, TLMTimeData>& dataStorage)
+void printData(MetaModel& model,
+               std::ofstream& dataFile,
+               std::map<int, TLMTimeDataSignal> &dataStorageSignal,
+               std::map<int, TLMTimeData1D>& dataStorage1D,
+               std::map<int, TLMTimeData3D> &dataStorage3D)
 {
     // Get data from TLM-Manager here!
     int nTLMInterfaces = model.GetInterfacesNum();
@@ -169,55 +477,98 @@ void printData(MetaModel& model, std::ofstream& dataFile, std::map<int, TLMTimeD
     for( int i=0 ; i<nTLMInterfaces ; i++ ){
         TLMInterfaceProxy& interfaceProxy = model.GetTLMInterfaceProxy(i);
         if( interfaceProxy.GetConnectionID() >= 0 ){
+            if(interfaceProxy.GetType() == "3D") {
+                TLMTimeData3D& timeData = dataStorage3D.at(interfaceProxy.GetID());
 
-            TLMTimeData& timeData = dataStorage.at(interfaceProxy.GetID());
+                // Print time only once, that is, for the first entry.
+                if( printTimeFlg ){
+                    dataFile << timeData.time << ",";
+                    printTimeFlg = false;
+                }
 
-            // Print time only once, that is, for the first entry.
-            if( printTimeFlg ){
-                dataFile << timeData.time << ",";
-                printTimeFlg = false;
-            }
+                // Comma between interfaces
+                if(nActiveInterfaces > 0) dataFile << ",";
 
-            // Comma between interfaces
-            if(nActiveInterfaces > 0) dataFile << ",";
+                // Convert orientation matrix to angles
 
-            // Convert orientation matrix to angles
+                // first convert the matrices into double33 format
+                double33Mat A(timeData.RotMatrix[0], timeData.RotMatrix[1], timeData.RotMatrix[2],
+                        timeData.RotMatrix[3], timeData.RotMatrix[4], timeData.RotMatrix[5],
+                        timeData.RotMatrix[6], timeData.RotMatrix[7], timeData.RotMatrix[8]);
 
-            // first convert the matrices into double33 format
-            double33Mat A(timeData.RotMatrix[0], timeData.RotMatrix[1], timeData.RotMatrix[2],
-                    timeData.RotMatrix[3], timeData.RotMatrix[4], timeData.RotMatrix[5],
-                    timeData.RotMatrix[6], timeData.RotMatrix[7], timeData.RotMatrix[8]);
+                // Then convert to angles
+                double3Vec phi = ATophi321(A);
 
-            // Then convert to angles
-            double3Vec phi = ATophi321(A);
+                // Backward calculation of force from TLM wave.
+                // This is done because the actual force send is the delayed force.
+                // The wave is: C = - Force + Impedance * Velocity -> F = -(C - Imp*Vel)
+                double3Vec force(0.0);
+                double3Vec torque(0.0);
+                TLMConnection& connection = model.GetTLMConnection(interfaceProxy.GetConnectionID());
+                for(int i = 0; i < 3; i++) {
+    #if 1
+                    force(i+1) =  -timeData.GenForce[i] + connection.GetParams().Zf * timeData.Velocity[i];
+                    torque(i+1) = -timeData.GenForce[i+3] + connection.GetParams().Zfr * timeData.Velocity[i+3];
+    #else
+                    force(i+1) =  timeData.GenForce[i];
+                    torque(i+1) = timeData.GenForce[i+3];
+    #endif
+                }
 
-            // Backward calculation of force from TLM wave.
-            // This is done because the actual force send is the delayed force.
-            // The wave is: C = - Force + Impedance * Velocity -> F = -(C - Imp*Vel)
-            double3Vec force(0.0);
-            double3Vec torque(0.0);
-            TLMConnection& connection = model.GetTLMConnection(interfaceProxy.GetConnectionID());
-            for(int i = 0; i < 3; i++) {
-#if 1
-                force(i+1) =  -timeData.GenForce[i] + connection.GetParams().Zf * timeData.Velocity[i];
-                torque(i+1) = -timeData.GenForce[i+3] + connection.GetParams().Zfr * timeData.Velocity[i+3];
-#else
-                force(i+1) =  timeData.GenForce[i];
-                torque(i+1) = timeData.GenForce[i+3];
-#endif
-            }
-
-            dataFile << timeData.Position[0] << "," << timeData.Position[1] << "," << timeData.Position[2] << ",";
-            dataFile << phi(1)               << "," << phi(2)               << "," << phi(3)               << ",";
+                dataFile << timeData.Position[0] << "," << timeData.Position[1] << "," << timeData.Position[2] << ",";
+                dataFile << phi(1)               << "," << phi(2)               << "," << phi(3)               << ",";
             dataFile << A(1,1)               << "," << A(1,2)               << "," << A(1,3)               << ",";
             dataFile << A(2,1)               << "," << A(2,2)               << "," << A(2,3)               << ",";
             dataFile << A(3,1)               << "," << A(3,2)               << "," << A(3,3)               << ",";
-            dataFile << timeData.Velocity[0] << "," << timeData.Velocity[1] << "," << timeData.Velocity[2] << ",";
-            dataFile << timeData.Velocity[3] << "," << timeData.Velocity[4] << "," << timeData.Velocity[5] << ",";
-            dataFile << force(1)             << "," << force(2)             << "," << force(3)             << ",";
-            dataFile << torque(1)            << "," << torque(2)            << "," << torque(3);
+                dataFile << timeData.Velocity[0] << "," << timeData.Velocity[1] << "," << timeData.Velocity[2] << ",";
+                dataFile << timeData.Velocity[3] << "," << timeData.Velocity[4] << "," << timeData.Velocity[5] << ",";
+                dataFile << force(1)             << "," << force(2)             << "," << force(3)             << ",";
+                dataFile << torque(1)            << "," << torque(2)            << "," << torque(3);
 
-            nActiveInterfaces++;
+                nActiveInterfaces++;
+            }
+            else if(interfaceProxy.GetType() == "1D") {
+              TLMTimeData1D& timeData = dataStorage1D.at(interfaceProxy.GetID());
+
+              // Print time only once, that is, for the first entry.
+              if( printTimeFlg ){
+                  dataFile << timeData.time << ",";
+                  printTimeFlg = false;
+              }
+
+              // Comma between interfaces
+              if(nActiveInterfaces > 0) dataFile << ",";
+
+              // Backward calculation of force from TLM wave.
+              // This is done because the actual force send is the delayed force.
+              // The wave is: C = - Force + Impedance * Velocity -> F = -(C - Imp*Vel)
+
+              TLMConnection& connection = model.GetTLMConnection(interfaceProxy.GetConnectionID());
+
+              double force =  -timeData.GenForce + connection.GetParams().Zf * timeData.Velocity;
+
+              dataFile << timeData.Position << ",";
+              dataFile << timeData.Velocity << ",";
+              dataFile << force;
+
+              nActiveInterfaces++;
+            }
+            else if(interfaceProxy.GetType() == "SignalOutput") {
+              TLMTimeDataSignal& timeData = dataStorageSignal.at(interfaceProxy.GetID());
+
+              // Print time only once, that is, for the first entry.
+              if( printTimeFlg ){
+                  dataFile << timeData.time << ",";
+                  printTimeFlg = false;
+              }
+
+              // Comma between interfaces
+              if(nActiveInterfaces > 0) dataFile << ",";
+
+              dataFile << timeData.Value;
+
+              nActiveInterfaces++;
+            }
         }
     }
     dataFile << std::endl;
@@ -257,6 +608,8 @@ void printRunStatus(MetaModel& model, std::ofstream& runFile, tTM_Info& tInfo, d
 }
 
 int main(int argc, char* argv[]) {
+
+  TLMErrorLog::Log("Starting monitor...");
 
 #ifndef USE_THREADS
 #warning TLM manager requires pthreads to be compiled in. Use -DUSE_THREADS in the Makefile.head if neeeded.    
@@ -369,15 +722,17 @@ int main(int argc, char* argv[]) {
         if( simTime > endTime ) simTime = endTime;
 
         // Data structure for data logging
-        std::map<int, TLMTimeData> data;
+        std::map<int, TLMTimeDataSignal> dataSignal;
+        std::map<int, TLMTimeData1D> data1D;
+        std::map<int, TLMTimeData3D> data3D;
 
         // Get data for next time step.
         TM_Start(&tInfo);
-        MonitorTimeStep(thePlugin, theModel, simTime, data);
+        MonitorTimeStep(thePlugin, theModel, simTime, dataSignal, data1D, data3D);
         TM_Stop(&tInfo);
 
         // Print data row
-        printData(theModel, outdataFile, data);
+        printData(theModel, outdataFile, dataSignal, data1D, data3D);
 
         // Update run status
         printRunStatus(theModel, runFile, tInfo, simTime);

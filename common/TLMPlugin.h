@@ -66,7 +66,7 @@ class TLMPlugin {
     //! and returns the ID for the interface. '-1' is returned if
     //! the interface is not connected in the MetaModel.
     //! \param name Name of the TLM interface
-    virtual int RegisteTLMInterface( std::string name) = 0;
+    virtual int RegisteTLMInterface( std::string name, std::string type="3D" ) = 0;
 
     //! Evaluate the reaction force from the TLM connection
     //! for a specified interface. This function might result in a request sent
@@ -82,25 +82,42 @@ class TLMPlugin {
     //!    \param force - returns 6 doubles giving force & torque at the interface.
     //!  \note Global coordinate system common for the whole meta model is assumed
     //!   for all vectors.
-    virtual void GetForce(int interfaceID,
-			  double time,
-			  double position[],
-			  double orientation[],
-			  double speed[],
-			  double ang_speed[],
-			  double* force)  = 0;
+    //!
+    virtual void GetValueSignal(int interfaceID,
+                                double time,
+                                double* value)  = 0;
+    virtual void GetForce1D(int interfaceID,
+                            double time,
+                            double position,
+                            double speed,
+                            double* force)  = 0;
+    virtual void GetForce3D(int interfaceID,
+                            double time,
+                            double position[],
+                            double orientation[],
+                            double speed[],
+                            double ang_speed[],
+                            double* force)  = 0;
 
     //! Set the motion of a TLM interface after a successful integration step.
     //! The information is eventually sent to the TLM manager and forwarded
     //! to the coupled simulation.
     //! Input:
     //!  See comments to GetForce method
-    virtual void SetMotion(int forceID,
-			   double time,
-			   double position[],
-			   double orientation[],
-			   double speed[],
-			   double ang_speed[]) = 0;
+    virtual void SetValueSignal(int valueID,
+                                double time,
+                                double value) = 0;
+    virtual void SetMotion1D(int forceID,
+                             double time,
+                             double position,
+                             double speed) = 0;
+    virtual void SetMotion3D(int forceID,
+                             double time,
+                             double position[],
+                             double orientation[],
+                             double speed[],
+                             double ang_speed[]) = 0;
+
 
     //! Check if the object is initialized (Init was called).
     bool IsInitialized() const { return Initialized; }
@@ -125,18 +142,29 @@ class TLMPlugin {
     //! GetTimeData returnes the necessary time stamped information needed
     //! for the calculation of the reaction force at a given time.
     //! The function might result in a request sent to TLM manager.
-    virtual void GetTimeData(int interfaceID, double time, TLMTimeData& DataOut) = 0;
+    virtual void GetTimeDataSignal(int interfaceID, double time, TLMTimeDataSignal& DataOut) = 0;
+    virtual void GetTimeData1D(int interfaceID, double time, TLMTimeData1D& DataOut) = 0;
+    virtual void GetTimeData3D(int interfaceID, double time, TLMTimeData3D& DataOut) = 0;
 
     //! The static GetForce function is a pure function that uses
     //! parameters as defined for the GetForce function above.
     //! Additional parameters are obtained with GetConnectionParams & GetTimeData
-    static void GetForce(double position[],
+    static void GetValueSignal(TLMTimeDataSignal& Data,
+                               TLMConnectionParams& Params,
+                               double *value);
+    static void GetForce1D(double position,
+                         double speed,
+                         TLMTimeData1D& Data,
+                         TLMConnectionParams& Params,
+                         double* force);
+    static void GetForce3D(double position[],
 			 double orientation[],
 			 double speed[],
 			 double ang_speed[],
-			 TLMTimeData& Data,
+			 TLMTimeData3D& Data,
 			 TLMConnectionParams& Params,
 			 double* force);    
+
 
     //! TIME_WITHOUT_DATA is a large negative constant used to
     //! indicate lack of data during simulation startup.
