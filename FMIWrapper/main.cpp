@@ -49,6 +49,7 @@ struct fmiConfig_t {
   std::vector<fmi2_value_reference_t*> speed_vr;
   std::vector<fmi2_value_reference_t*> ang_speed_vr;
   std::vector<fmi2_value_reference_t*> force_vr;
+  std::vector<fmi2_value_reference_t*> value_vr;
 };
 
 // TLM config data
@@ -122,6 +123,14 @@ void forceFromTlmToFmu(double tcur)
 
           // Write force to FMU
           fmistatus = fmi2_import_set_real(fmu,fmiConfig.force_vr[j],1,&force);
+        }
+        else if(fmiConfig.types[j] == "SignalInput") {
+            double value;
+
+            plugin->GetValueSignal(fmiConfig.interfaceIds[j], tcur, &value);
+
+            //Write value from FMU
+            fmistatus = fmi2_import_set_real(fmu,fmiConfig.value_vr[j],1,&value);
         }
     }
 }
@@ -322,9 +331,18 @@ int simulate_fmi2_cs()
             //Write force to FMU
             fmistatus = fmi2_import_set_real(fmu,fmiConfig.force_vr[j],1,&force);
           }
+          else if(fmiConfig.types[j] == "SignalInput") {
+              double value;
+
+              //Get value
+              plugin->GetValueSignal(fmiConfig.interfaceIds[j], tcur, &value);
+
+              fmistatus = fmi2_import_set_real(fmu,fmiConfig.value_vr[j],1,&value);
+          }
       }
 
       //Take one sub step
+      TLMErrorLog::Log("Taking step!");
       fmistatus = fmi2_import_do_step(fmu,tcur,hsub,fmi2_true);
 
       //Increment time
@@ -358,6 +376,15 @@ int simulate_fmi2_cs()
 
               //Write back motion for sub step
               plugin->SetMotion1D(fmiConfig.interfaceIds[j], tcur, position, speed);
+          }
+          else if(fmiConfig.types[j] == "SignalOutput") {
+              double value;
+
+              //Read value from FMU
+              fmistatus = fmi2_import_get_real(fmu,fmiConfig.value_vr[j],1,&value);
+
+              //Write back value for sub step
+              plugin->SetValueSignal(fmiConfig.interfaceIds[j], tcur, value);
           }
       }
     }
@@ -406,6 +433,13 @@ void motionFromFmuToTlm(double tcur)
       fmistatus = fmi2_import_get_real(fmu,fmiConfig.speed_vr[j],1,&speed);
 
       plugin->SetMotion1D(fmiConfig.interfaceIds[j], tcur, position, speed);
+    }
+    else if(fmiConfig.types[j] == "SignalOutput") {
+        double value;
+
+        fmistatus = fmi2_import_get_real(fmu,fmiConfig.value_vr[j],1,&value);
+
+        plugin->SetValueSignal(fmiConfig.interfaceIds[j], tcur, value);
     }
   }
 }
@@ -801,6 +835,7 @@ void readFmiConfigFile()
         fmiConfig.speed_vr.push_back(new fmi2_value_reference_t);
         fmiConfig.ang_speed_vr.push_back(new fmi2_value_reference_t);
         fmiConfig.force_vr.push_back(new fmi2_value_reference_t);
+        fmiConfig.value_vr.push_back(new fmi2_value_reference_t);
       }
       else if(word == "type") {
         getline(ss, word, ',');
@@ -830,6 +865,12 @@ void readFmiConfigFile()
       else if(word == "force" && fmiConfig.types[fmiConfig.types.size()-1] == "1D") {
         csvToIntArray(ss.str(),1,&(fmiConfig.force_vr.back()));
       }
+      else if(word == "value" && fmiConfig.types[fmiConfig.types.size()-1] == "SignalInput") {
+          csvToIntArray(ss.str(),1,&(fmiConfig.value_vr.back()));
+      }
+      else if(word == "value" && fmiConfig.types[fmiConfig.types.size()-1] == "SignalOutput") {
+          csvToIntArray(ss.str(),1,&(fmiConfig.value_vr.back()));
+      }
     }
 
     // Print log output
@@ -837,16 +878,23 @@ void readFmiConfigFile()
     TLMErrorLog::Log("Number of interfaces: "+TLMErrorLog::ToStdStr(fmiConfig.nInterfaces));
     for(size_t i=0; i<fmiConfig.nInterfaces; ++i) {
       TLMErrorLog::Log("Name: "+fmiConfig.interfaceNames[i]);
-      int nP,nO,nS,nA,nF;
+      int nP,nO,nS,nA,nF,nV;
       if(fmiConfig.types[i] == "3D") {
           nP = nS = nA = 3;
           nO = 9;
           nF = 6;
+          nV = 0;
       }
-      else/* if(fmiConfig.types[i] == "1D") */{
+      else if(fmiConfig.types[i] == "1D") {
           nP = nS = nF = 1;
           nA = nO = 0;
+          nV = 0;
       }
+      else /*if(fmiConfig.types[i] == "SignalInput" || fmiConfig.types[i] == "SignalOutput")*/ {
+          nP = nS = nF = nA = nO = 0;
+          nV = 1;
+      }
+
       std::stringstream output;
       output << "Position:";
       for(int j=0; j<nP; ++j) {
@@ -877,6 +925,13 @@ void readFmiConfigFile()
         output << " " << fmiConfig.force_vr[i][j];
       }
       TLMErrorLog::Log(output.str());
+      output.str("");
+      output << "Value:";
+      for(int j=0; j<nV; ++j) {
+        output << " " << fmiConfig.value_vr[i][j];
+      }
+      TLMErrorLog::Log(output.str());
+
     }
   }
   else {
