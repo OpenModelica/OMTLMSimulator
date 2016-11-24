@@ -62,6 +62,7 @@ default:  dirs $(ABIOBJS)
 
 install: default
 	cp tlmforce.mex* $(INSTDIR)
+	cp tlmsignal.mex* $(INSTDIR)
 	cp TLMLib.mdl $(INSTDIR)
 	chmod ug+w $(INSTDIR)/TLMLib.mdl
 

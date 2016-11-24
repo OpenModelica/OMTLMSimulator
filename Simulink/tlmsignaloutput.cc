@@ -147,7 +147,7 @@ extern "C" {
  * (i.e. replace sfuntmpl_basic with the name of your S-function).
  */
 
-#define S_FUNCTION_NAME  tlmforce
+#define S_FUNCTION_NAME  tlmsignaloutput
 #define S_FUNCTION_LEVEL 2
 
 /*
@@ -193,6 +193,8 @@ extern "C" {
  */
 static void mdlInitializeSizes(SimStruct *S)
 {
+    std::cout << "mdlInitializeSizes()";
+
     /* See sfuntmpl_doc.c for more details on the macros below */
 
     ssSetNumSFcnParams(S, 0);  /* Number of expected parameters */
@@ -206,24 +208,14 @@ static void mdlInitializeSizes(SimStruct *S)
     ssSetNumDiscStates(S, 1); /* We define one discrete state to force a call to mdlUpdate(...) */
 
     /* input ports are: */
-    /* position[3]      Interface position data */
-    /* orientation[3x3] Interface rotation matrix */
-    /* speed[3]         Interface translational velocity */
-    /* ang_speed[3]     Interface angular velocity */
-    if (!ssSetNumInputPorts(S, 4)) return;
+    /* u[1]      Input Signal */
+    if (!ssSetNumInputPorts(S, 1)) return;
 
     /* Set size of input arrays */
-    ssSetInputPortWidth(S, 0, 3); 
-    ssSetInputPortWidth(S, 1, 9); 
-    //ssSetInputPortMatrixDimensions(S, 1, 3, 3); 
-    ssSetInputPortWidth(S, 2, 3); 
-    ssSetInputPortWidth(S, 3, 3); 
+    ssSetInputPortWidth(S, 0, 1);
 
     /* Yes, we want contiguous memory allocation for the data arrays */
     ssSetInputPortRequiredContiguous(S, 0, true); /*direct input signal access*/
-    ssSetInputPortRequiredContiguous(S, 1, true); /*direct input signal access*/
-    ssSetInputPortRequiredContiguous(S, 2, true); /*direct input signal access*/
-    ssSetInputPortRequiredContiguous(S, 3, true); /*direct input signal access*/
 
     /*
      * Set direct feedthrough flag (1=yes, 0=no).
@@ -232,18 +224,11 @@ static void mdlInitializeSizes(SimStruct *S)
      * See matlabroot/simulink/src/sfuntmpl_directfeed.txt.
      */
     ssSetInputPortDirectFeedThrough(S, 0, 1);
-    ssSetInputPortDirectFeedThrough(S, 1, 1);
-    ssSetInputPortDirectFeedThrough(S, 2, 1);
-    ssSetInputPortDirectFeedThrough(S, 3, 1);
 
     /* output ports are: */
-    /* force[3]  Output force */
-    /* moment[3] Output moment */
-    if (!ssSetNumOutputPorts(S, 4)) return;
-    ssSetOutputPortWidth(S, 0, 3);
-    ssSetOutputPortWidth(S, 1, 3);
-    ssSetOutputPortWidth(S, 2, 3);
-    ssSetOutputPortWidth(S, 3, 9);
+    /* y[1]  Output signal */
+    if (!ssSetNumOutputPorts(S, 0)) return;
+
 
     /* Some default stuff ??? */
     ssSetNumSampleTimes(S, 2);
@@ -266,8 +251,9 @@ static void mdlInitializeSizes(SimStruct *S)
  */
 static void mdlInitializeSampleTimes(SimStruct *S)
 {
+    std::cout << "mdlInitializeSampleTimes()";
     double sTime, eTime, timeStep;
-    TLM_InterfaceReg::GetInstance(false)->GetSimParameters(sTime, eTime, timeStep);
+    TLM_InterfaceReg::GetInstance(true)->GetSimParameters(sTime, eTime, timeStep);
     // true or false in GetInstance(...) enables/disables debug output
 
     TLMErrorLog::Log("Set sample time to " + ToStr(timeStep));
@@ -313,9 +299,10 @@ static void mdlInitializeSampleTimes(SimStruct *S)
    */
   static void mdlStart(SimStruct *S)
   {
+      std::cout << "mdlStart()";
       //char* name = ssGetModelName(S);
       const char* name = ssGetPath(S);      
-      TLM_InterfaceReg::GetInstance()->RegisterInterface(name);
+      TLM_InterfaceReg::GetInstance()->RegisterInterface(name,"SignalOutput");
   }
 #endif /*  MDL_START */
 
@@ -328,92 +315,39 @@ static void mdlInitializeSampleTimes(SimStruct *S)
  */
 static void mdlOutputs(SimStruct *S, int_T tid)
 {
-    /* inputs: */
-    /* position[3]      Interface position data */
-    /* orientation[3x3] Interface rotation matrix */
-    /* speed[3]         Interface translational velocity */
-    /* ang_speed[3]     Interface angular velocity */
-    /*
-      InputRealPtrsType R = ssGetInputPortRealSignalPtrs(S,0);
-      InputRealPtrsType A = ssGetInputPortRealSignalPtrs(S,1);
-      InputRealPtrsType vR = ssGetInputPortRealSignalPtrs(S,2);
-      InputRealPtrsType Omega = ssGetInputPortRealSignalPtrs(S,3);
-    */
-    double *R = (double*)ssGetInputPortSignal(S,0);
-    double *A = (double*)ssGetInputPortSignal(S,1);
-    double *vR = (double*)ssGetInputPortSignal(S,2);
-    double *Omega = (double*)ssGetInputPortSignal(S,3);
+    std::cout << "mdlOutputs()";
+
+    double *u = (double*)ssGetInputPortSignal(S,0);
 
     const char* name = ssGetPath(S);          
     real_T time = ssGetT(S);
 
     int ifID = TLM_InterfaceReg::GetInstance()->GetInterfaceID(name);
 
-    /* output */
-    double force[6];
-    TLMTimeData3D CurTimeData;
 
     if( ifID >= 0 ) {
-        TLM_InterfaceReg::GetInstance()->GetPlugin()->GetForce3D(ifID,
-                                                               time,
-                                                               R,
-                                                               A,
-                                                               vR,
-                                                               Omega,
-                                                               force);
-        
-        
-        TLMErrorLog::Log("Got force for: " + std::string(name) );
+        TLM_InterfaceReg::GetInstance()->GetPlugin()->SetValueSignal(ifID,
+                                                                     time,
+                                                                     *u);
+
+        TLMErrorLog::Log("Set value for: " + std::string(name) );
         TLMErrorLog::Log("time: " + ToStr(time) );
-        TLMErrorLog::Log("F: " + ToStr(force[0]) + " " +  ToStr(force[1]) + " " + ToStr(force[2]) );
-        TLMErrorLog::Log("M: " + ToStr(force[3]) + " " +  ToStr(force[4]) + " " + ToStr(force[5]) );
-        
+        TLMErrorLog::Log("u: " + ToStr(*u));
+
+
 #ifdef DEBUGFLG
         if( isnan(force[0]) || isnan(force[1]) || isnan(force[2]) ){
-            TLMErrorLog::FatalError("Got not-a-number in reaction force.");
+            TLMErrorLog::FatalError("Got not-a-number value.");
             abort();
         }
 #endif
-        
-        /* Get Position and Orientation */
-        TLM_InterfaceReg::GetInstance()->GetPlugin()->GetTimeData3D(ifID, time, CurTimeData);        
 
-        TLMErrorLog::Log("Got position for: " + std::string(name) );
-        TLMErrorLog::Log("R: " + ToStr(CurTimeData.Position[0]) + " " +  ToStr(CurTimeData.Position[1]) + " " + ToStr(CurTimeData.Position[2]) );
-        
     }
     else {
         /* Not connected */
-        for( int i=0 ; i<6 ; i++ ) {
-            force[i] = 0.0;        
-        }
 
         /* CurTimeData is initialized in constructor */
     }
-
-
-    /* ------- store the result ------- */
-
-    /* Force & Moment */
-    real_T  *f = ssGetOutputPortRealSignal(S,0);
-    real_T  *m = ssGetOutputPortRealSignal(S,1);
-    
-    for( int i=0 ; i<3 ; i++ ){
-        f[i] = force[i];
-        m[i] = force[i+3];
-    }
-
-    /* Position & Orientation */
-    real_T  *R_TLM = ssGetOutputPortRealSignal(S,2);
-    real_T  *A_TLM = ssGetOutputPortRealSignal(S,3);
-    
-    for( int i=0 ; i<3 ; i++ ){
-        R_TLM[i] = CurTimeData.Position[i];
-        A_TLM[i] = CurTimeData.RotMatrix[i];
-        A_TLM[i+3] = CurTimeData.RotMatrix[i+3];
-        A_TLM[i+6] = CurTimeData.RotMatrix[i+6];
-    }
-
 }
 
 
@@ -430,17 +364,8 @@ static void mdlOutputs(SimStruct *S, int_T tid)
   static void mdlUpdate(SimStruct *S, int_T tid)
   {
       if( ssIsSampleHit(S, 1, tid) ){
-          /*
-            InputRealPtrsType R = ssGetInputPortRealSignalPtrs(S,0);
-            InputRealPtrsType A = ssGetInputPortRealSignalPtrs(S,1);
-            InputRealPtrsType vR = ssGetInputPortRealSignalPtrs(S,2);
-            InputRealPtrsType Omega = ssGetInputPortRealSignalPtrs(S,3);
-          */
-          
-          double *R = (double*)ssGetInputPortSignal(S,0);
-          double *A = (double*)ssGetInputPortSignal(S,1);
-          double *vR = (double*)ssGetInputPortSignal(S,2);
-          double *Omega = (double*)ssGetInputPortSignal(S,3);
+
+          double *u = (double*)ssGetInputPortSignal(S,0);
           
           const char* name = ssGetPath(S);          
           real_T time = ssGetT(S);
@@ -448,21 +373,13 @@ static void mdlOutputs(SimStruct *S, int_T tid)
           int ifID = TLM_InterfaceReg::GetInstance()->GetInterfaceID(name);
           
           if( ifID >= 0 ){          
-              TLMErrorLog::Log("Call SetMotion for: " + std::string(name) );
+              TLMErrorLog::Log("Call SetValueSignal for: " + std::string(name) );
               TLMErrorLog::Log("time: " + ToStr(time) );
-              TLMErrorLog::Log("R: " + ToStr(R[0]) + " " +  ToStr(R[1]) + " " + ToStr(R[2]) );
-              //TLMErrorLog::Log("A0: " + ToStr(A[0]) + " " +  ToStr(A[1]) + " " + ToStr(A[2]) );
-              //TLMErrorLog::Log("A1: " + ToStr(A[3]) + " " +  ToStr(A[4]) + " " + ToStr(A[5]) );
-              //TLMErrorLog::Log("A2: " + ToStr(A[6]) + " " +  ToStr(A[7]) + " " + ToStr(A[8]) );
-              TLMErrorLog::Log("vR: " + ToStr(vR[0]) + " " +  ToStr(vR[1]) + " " + ToStr(vR[2]) );
-              //TLMErrorLog::Log("Omega: " + ToStr(Omega[0]) + " " +  ToStr(Omega[1]) + " " + ToStr(Omega[2]) );
-              
-              TLM_InterfaceReg::GetInstance()->GetPlugin()->SetMotion3D(ifID,          // Send data to the Plugin
+              TLMErrorLog::Log("u: " + ToStr(*u) );
+
+              TLM_InterfaceReg::GetInstance()->GetPlugin()->SetValueSignal(ifID,          // Send data to the Plugin
                                                                       time,
-                                                                      R,
-                                                                      A,
-                                                                      vR,
-                                                                      Omega);
+                                                                      *u);
           }
       }
   }
