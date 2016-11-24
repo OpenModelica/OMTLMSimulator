@@ -59,7 +59,7 @@ class TLM_InterfaceReg {
 
     //! RegisterInterface registers an TLM interface with name ifID.
     //! Adds marker to internal map of ID's 
-    void RegisterInterface(std::string ifID);
+    void RegisterInterface(std::string ifID, std::string type="3D");
 
     //! Return the TLM interface ID for the specified interface.
     int GetInterfaceID(std::string ifID);
