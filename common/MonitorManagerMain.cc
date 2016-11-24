@@ -18,6 +18,7 @@
 #include "double33Mat.h"
 #include "timing.h"
 #include "coordTrans.h"
+#include <algorithm>
 
 #ifdef _MSC_VER
 #include "mygetopt.h"
