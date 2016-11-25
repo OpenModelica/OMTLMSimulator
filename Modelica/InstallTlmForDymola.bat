@@ -1,10 +1,13 @@
+cd C:\Users\robbr48\Documents\Mercurial\TLMPlugin\Modelica
+
 rem /////////////////////SET PATHS////////////////////////////////////////////////////
 rem set path to TLMPlugin (i.e. c:\TLMPlugin)
-setx TLMPluginPath %BEAST%\src\TLMPlugin
-set TLMPluginPath = %BEAST%\src\TLMPlugin
+rem ¤setx TLMPluginPath %BEAST%\src\TLMPlugin
+rem set TLMPluginPath = %BEAST%\src\TLMPlugin
+echo %TLMPluginPath%
 
 rem set path to Dymola installation folder
-set DymolaPath="c:\Program Files (x86)\Dymola 7.1"
+set DymolaPath="C:\Program Files (x86)\Dymola 2016 FD01"
 
 rem set path to Microsoft Visual Studio installation folder
 set VC32Path="c:\Program Files (x86)\Microsoft Visual Studio 9.0"
@@ -22,10 +25,13 @@ rmdir /s /q VC32
 nmake.exe -f MakeVcLib.vc default
 rem copy generated tlmmodelica.lib file to Dymola bin folder 
 copy %TLMPluginPath%\Modelica\%ABI%\tlmmodelica.lib %DymolaPath%\bin\lib
+copy %TLMPluginPath%\Modelica\%ABI%\tlmforce.lib %DymolaPath%\bin\lib
 rem copy generated tlmforce.h file to Dymola source folder
 copy %TLMPluginPath%\Modelica\tlmforce.h %DymolaPath%\Source\
 rem delete old VC32 folder
-rmdir /s /q VC32
+rem rmdir /s /q VC32
+
+pause
 
 rem /////////////////////COMPILE AND INSTALL TLM MANAGER//////////////////////////////
-call CompileTLMManager.bat
+rem call CompileTLMManager.bat
