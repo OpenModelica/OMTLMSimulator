@@ -271,23 +271,23 @@
     <specCoeff><exp>0.7</exp></specCoeff>
   </shape>
   <shape>
-    <ident>rope_fmu.tlm1</ident>
-    <type>file://C:/Users/robbr48/Documents/Mercurial/TLMPlugin/MetaModels/CranePiston/rope_fmu/rope.stl</type>
+    <ident>rope.tlm1</ident>
+    <type>file://C:/Users/robbr48/Documents/Mercurial/TLMPlugin/MetaModels/CranePiston/rope/rope.stl</type>
     <T>
-      <cref>rope_fmu.tlm1.A(1,1)</cref>
-      <cref>rope_fmu.tlm1.A(1,2)</cref>
-      <cref>rope_fmu.tlm1.A(1,3)</cref>
-      <cref>rope_fmu.tlm1.A(2,1)</cref>
-      <cref>rope_fmu.tlm1.A(2,2)</cref>
-      <cref>rope_fmu.tlm1.A(2,3)</cref>
-      <cref>rope_fmu.tlm1.A(3,1)</cref>
-      <cref>rope_fmu.tlm1.A(3,2)</cref>
-      <cref>rope_fmu.tlm1.A(3,3)</cref>
+      <cref>rope.tlm1.A(1,1)</cref>
+      <cref>rope.tlm1.A(1,2)</cref>
+      <cref>rope.tlm1.A(1,3)</cref>
+      <cref>rope.tlm1.A(2,1)</cref>
+      <cref>rope.tlm1.A(2,2)</cref>
+      <cref>rope.tlm1.A(2,3)</cref>
+      <cref>rope.tlm1.A(3,1)</cref>
+      <cref>rope.tlm1.A(3,2)</cref>
+      <cref>rope.tlm1.A(3,3)</cref>
     </T>
     <r>
-      <cref>rope_fmu.tlm1.R[cG][cG](1)</cref>
-      <cref>rope_fmu.tlm1.R[cG][cG](2)</cref>
-      <cref>rope_fmu.tlm1.R[cG][cG](3)</cref>
+      <cref>rope.tlm1.R[cG][cG](1)</cref>
+      <cref>rope.tlm1.R[cG][cG](2)</cref>
+      <cref>rope.tlm1.R[cG][cG](3)</cref>
     </r>
     <r_shape>
       <exp>0</exp>
@@ -316,23 +316,113 @@
     <specCoeff><exp>0.7</exp></specCoeff>
   </shape>
   <shape>
-    <ident>load_fmu.tlm</ident>
-    <type>file://C:/Users/robbr48/Documents/Mercurial/TLMPlugin/MetaModels/CranePiston/load_fmu/load.stl</type>
+    <ident>load.tlm</ident>
+    <type>file://C:/Users/robbr48/Documents/Mercurial/TLMPlugin/MetaModels/CranePiston/load/load.stl</type>
     <T>
-      <cref>load_fmu.tlm.A(1,1)</cref>
-      <cref>load_fmu.tlm.A(1,2)</cref>
-      <cref>load_fmu.tlm.A(1,3)</cref>
-      <cref>load_fmu.tlm.A(2,1)</cref>
-      <cref>load_fmu.tlm.A(2,2)</cref>
-      <cref>load_fmu.tlm.A(2,3)</cref>
-      <cref>load_fmu.tlm.A(3,1)</cref>
-      <cref>load_fmu.tlm.A(3,2)</cref>
-      <cref>load_fmu.tlm.A(3,3)</cref>
+      <cref>load.tlm.A(1,1)</cref>
+      <cref>load.tlm.A(1,2)</cref>
+      <cref>load.tlm.A(1,3)</cref>
+      <cref>load.tlm.A(2,1)</cref>
+      <cref>load.tlm.A(2,2)</cref>
+      <cref>load.tlm.A(2,3)</cref>
+      <cref>load.tlm.A(3,1)</cref>
+      <cref>load.tlm.A(3,2)</cref>
+      <cref>load.tlm.A(3,3)</cref>
     </T>
     <r>
-      <cref>load_fmu.tlm.R[cG][cG](1)</cref>
-      <cref>load_fmu.tlm.R[cG][cG](2)</cref>
-      <cref>load_fmu.tlm.R[cG][cG](3)</cref>
+      <cref>load.tlm.R[cG][cG](1)</cref>
+      <cref>load.tlm.R[cG][cG](2)</cref>
+      <cref>load.tlm.R[cG][cG](3)</cref>
+    </r>
+    <r_shape>
+      <exp>0</exp>
+      <exp>3.0581e-013</exp>
+      <exp>0</exp>
+    </r_shape>
+    <lengthDir>
+      <exp>1</exp>
+      <exp>0</exp>
+      <exp>0</exp>
+    </lengthDir>
+    <widthDir>
+      <exp>0</exp>
+      <exp>1</exp>
+      <exp>0</exp>
+    </widthDir>
+    <length><exp>0.0</exp></length>
+    <width><exp>0.0</exp></width>
+    <height><exp>0.0</exp></height>
+    <extra><exp>0.0</exp></extra>
+    <color>
+      <exp>255</exp>
+      <exp>0</exp>
+      <exp>0</exp>
+    </color>
+    <specCoeff><exp>0.7</exp></specCoeff>
+  </shape>
+  <shape>
+    <ident>rope.tlm1</ident>
+    <type>file://C:/Users/robbr48/Documents/Mercurial/TLMPlugin/MetaModels/CranePiston/rope/rope.stl</type>
+    <T>
+      <cref>rope.tlm1.A(1,1)</cref>
+      <cref>rope.tlm1.A(1,2)</cref>
+      <cref>rope.tlm1.A(1,3)</cref>
+      <cref>rope.tlm1.A(2,1)</cref>
+      <cref>rope.tlm1.A(2,2)</cref>
+      <cref>rope.tlm1.A(2,3)</cref>
+      <cref>rope.tlm1.A(3,1)</cref>
+      <cref>rope.tlm1.A(3,2)</cref>
+      <cref>rope.tlm1.A(3,3)</cref>
+    </T>
+    <r>
+      <cref>rope.tlm1.R[cG][cG](1)</cref>
+      <cref>rope.tlm1.R[cG][cG](2)</cref>
+      <cref>rope.tlm1.R[cG][cG](3)</cref>
+    </r>
+    <r_shape>
+      <exp>0</exp>
+      <exp>0</exp>
+      <exp>0</exp>
+    </r_shape>
+    <lengthDir>
+      <exp>1</exp>
+      <exp>0</exp>
+      <exp>0</exp>
+    </lengthDir>
+    <widthDir>
+      <exp>0</exp>
+      <exp>1</exp>
+      <exp>0</exp>
+    </widthDir>
+    <length><exp>0.0</exp></length>
+    <width><exp>0.0</exp></width>
+    <height><exp>0.0</exp></height>
+    <extra><exp>0.0</exp></extra>
+    <color>
+      <exp>128</exp>
+      <exp>0</exp>
+      <exp>0</exp>
+    </color>
+    <specCoeff><exp>0.7</exp></specCoeff>
+  </shape>
+  <shape>
+    <ident>load.tlm1</ident>
+    <type>file://C:/Users/robbr48/Documents/Mercurial/TLMPlugin/MetaModels/CranePiston/load/load.stl</type>
+    <T>
+      <cref>load.tlm1.A(1,1)</cref>
+      <cref>load.tlm1.A(1,2)</cref>
+      <cref>load.tlm1.A(1,3)</cref>
+      <cref>load.tlm1.A(2,1)</cref>
+      <cref>load.tlm1.A(2,2)</cref>
+      <cref>load.tlm1.A(2,3)</cref>
+      <cref>load.tlm1.A(3,1)</cref>
+      <cref>load.tlm1.A(3,2)</cref>
+      <cref>load.tlm1.A(3,3)</cref>
+    </T>
+    <r>
+      <cref>load.tlm1.R[cG][cG](1)</cref>
+      <cref>load.tlm1.R[cG][cG](2)</cref>
+      <cref>load.tlm1.R[cG][cG](3)</cref>
     </r>
     <r_shape>
       <exp>0</exp>
