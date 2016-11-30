@@ -1,5 +1,5 @@
-# FORMAT-12.1
-# BEAST_VERSION: [12.1 - Dec  3 2015 15:16:51] Linked [Thu Dec 03 15:46:53 2015] in [F:\Beast\ProductRepPC_12.1\src\Beast] 
+# FORMAT-13.0
+# BEAST_VERSION: [13.0 - Nov 23 2016 12:38:13] Linked [Wed Nov 23 14:55:48 2016] in [C:\home\ProductRepPC_13.0\src\Beauty13] 
 
 environment type=Environment
   uservar_section type=UserVariableSection name=General
@@ -18,8 +18,9 @@ environment type=Environment
   def StartStateWhat=1;
   def WriteThisOften=10;
   def WriteTimeStep=0.001 unit="s";
-  def AnimFreq_WriteThisOften=0;
-  def AnimFreq_WriteTimeStep=1;
+  def SurfaceFreq_WriteThisOften=0;
+  def SurfaceFreq_WriteTimeStep=1;
+  def UserVariableMode=0;
   def ModelID="BML-Ball_nsIR_nsER_1sCP";
   def MaxTimeStep=0.001 unit="s";
   def Solver="CVODE";
@@ -58,9 +59,31 @@ environment type=Environment
   def EHLInletShearHeatingFlg=0;
   implicit_coordinate_system type=ImplicitCoordSystem name=cG;
   implicit_coordinate_system type=ImplicitCoordSystem name=cB
-    def R_Func[cG][cG].DefinedFlg=0;
-    def phi_Func[cG].DefinedFlg=0;
     def phiSequence[cG]=0;
+    multi_term type=MultiTermTimeFunc3 name=R_Func functionTerms="" 
+      def isMultiTermDefined=0;
+    end multi_term; /* cB`R_Func:MultiTermTimeFunc3 */ 
+    multi_term type=MultiTermTimeFunc1 name=R_Func_1 functionTerms="" 
+      def isMultiTermDefined=0;
+    end multi_term; /* cB`R_Func_1:MultiTermTimeFunc1 */ 
+    multi_term type=MultiTermTimeFunc1 name=R_Func_2 functionTerms="" 
+      def isMultiTermDefined=0;
+    end multi_term; /* cB`R_Func_2:MultiTermTimeFunc1 */ 
+    multi_term type=MultiTermTimeFunc1 name=R_Func_3 functionTerms="" 
+      def isMultiTermDefined=0;
+    end multi_term; /* cB`R_Func_3:MultiTermTimeFunc1 */ 
+    multi_term type=MultiTermTimeFunc3 name=phi_Func functionTerms="" 
+      def isMultiTermDefined=0;
+    end multi_term; /* cB`phi_Func:MultiTermTimeFunc3 */ 
+    multi_term type=MultiTermTimeFunc1 name=phi_Func_1 functionTerms="" 
+      def isMultiTermDefined=0;
+    end multi_term; /* cB`phi_Func_1:MultiTermTimeFunc1 */ 
+    multi_term type=MultiTermTimeFunc1 name=phi_Func_2 functionTerms="" 
+      def isMultiTermDefined=0;
+    end multi_term; /* cB`phi_Func_2:MultiTermTimeFunc1 */ 
+    multi_term type=MultiTermTimeFunc1 name=phi_Func_3 functionTerms="" 
+      def isMultiTermDefined=0;
+    end multi_term; /* cB`phi_Func_3:MultiTermTimeFunc1 */ 
   end implicit_coordinate_system; /* cB:ImplicitCoordSystem */ 
   model type=SModel name=""
     uservar_section type=UserVariableSection name=General
@@ -170,15 +193,12 @@ environment type=Environment
       def cg`phi_nom[cc]={0 , 0 , 0 }  unit="rad";
       def cg`phiSequence_nom[cc]=0;
       def cg`phiSequence[cB]=0;
-      def Dr_phi.DefinedFlg=0;
-      def dDrdz_phi.DefinedFlg=0;
-      def Dz_phi.DefinedFlg=0;
-      def dDzdr_phi.DefinedFlg=0;
       def ThermalDeformationFlg=0;
       def T_init=tempIR unit="C";
       def T_bulk=50 unit="C";
       def FlexThermalType=0;
       def MeshResolutionControl=1;
+      def UtilizeMeshLogic=1;
       def cm`R[cg][cg]={0 , 0 , 0 }  unit="m";
       implicit_coordinate_system type=ImplicitCoordSystem name=cg;
       implicit_coordinate_system type=ImplicitCoordSystem name=cm;
@@ -207,6 +227,7 @@ environment type=Environment
         def UseStaticTemperatureModeShapes=0;
         def UseStaticHeatFluxModeShapes=0;
         def SData`Gap.DefinedFlg=0;
+        def SData`BoundaryFricFrac.DefinedFlg=0;
         def SData`hc.DefinedFlg=0;
         def SData`MassFlow.DefinedFlg=0;
         def SData`V_slip.DefinedFlg=0;
@@ -238,13 +259,22 @@ environment type=Environment
         def SegmentResolutionFactor_v=1;
         def UseSegmentMeshParameters=0;
         def cr`x=IRD20/2 unit="m";
-        def cr`Dx.DefinedFlg=0;
         def cr`z=0 unit="m";
-        def cr`Dz.DefinedFlg=0;
         def cr`phi=0 unit="rad";
         def kappa_u=1/IRR01 unit="1/m";
         def RotateProfile=0;
-        def DeltaS.DefinedFlg=0;
+        multi_term type=MultiTermFunc2 name=DeltaS functionTerms="" 
+          def isMultiTermDefined=0;
+        end multi_term; /* bIR`s1`DeltaS:MultiTermFunc2 */ 
+        multi_term type=MultiTermFunc2 name=RoughnessFunc functionTerms="" 
+          def isMultiTermDefined=0;
+        end multi_term; /* bIR`s1`RoughnessFunc:MultiTermFunc2 */ 
+        multi_term type=MultiTermFunc1 name=cr_Dx functionTerms="" 
+          def isMultiTermDefined=0;
+        end multi_term; /* bIR`s1`cr_Dx:MultiTermFunc1 */ 
+        multi_term type=MultiTermFunc1 name=cr_Dz functionTerms="" 
+          def isMultiTermDefined=0;
+        end multi_term; /* bIR`s1`cr_Dz:MultiTermFunc1 */ 
       end surface; /* bIR`s1:RotSeg */ 
       surface type=RotSeg name=s2
         def Description="";
@@ -257,6 +287,7 @@ environment type=Environment
         def UseStaticTemperatureModeShapes=0;
         def UseStaticHeatFluxModeShapes=0;
         def SData`Gap.DefinedFlg=0;
+        def SData`BoundaryFricFrac.DefinedFlg=0;
         def SData`hc.DefinedFlg=0;
         def SData`MassFlow.DefinedFlg=0;
         def SData`V_slip.DefinedFlg=0;
@@ -288,13 +319,22 @@ environment type=Environment
         def SegmentResolutionFactor_v=1;
         def UseSegmentMeshParameters=0;
         def cr`x=IRD30/2 unit="m";
-        def cr`Dx.DefinedFlg=0;
         def cr`z=-IRL01/2 unit="m";
-        def cr`Dz.DefinedFlg=0;
         def cr`phi=0 unit="rad";
         def kappa_u=0 unit="1/m";
         def RotateProfile=0;
-        def DeltaS.DefinedFlg=0;
+        multi_term type=MultiTermFunc2 name=DeltaS functionTerms="" 
+          def isMultiTermDefined=0;
+        end multi_term; /* bIR`s2`DeltaS:MultiTermFunc2 */ 
+        multi_term type=MultiTermFunc2 name=RoughnessFunc functionTerms="" 
+          def isMultiTermDefined=0;
+        end multi_term; /* bIR`s2`RoughnessFunc:MultiTermFunc2 */ 
+        multi_term type=MultiTermFunc1 name=cr_Dx functionTerms="" 
+          def isMultiTermDefined=0;
+        end multi_term; /* bIR`s2`cr_Dx:MultiTermFunc1 */ 
+        multi_term type=MultiTermFunc1 name=cr_Dz functionTerms="" 
+          def isMultiTermDefined=0;
+        end multi_term; /* bIR`s2`cr_Dz:MultiTermFunc1 */ 
       end surface; /* bIR`s2:RotSeg */ 
       surface type=RotSeg name=s3
         def Description="";
@@ -305,6 +345,7 @@ environment type=Environment
         def UseStaticTemperatureModeShapes=0;
         def UseStaticHeatFluxModeShapes=0;
         def SData`Gap.DefinedFlg=0;
+        def SData`BoundaryFricFrac.DefinedFlg=0;
         def SData`hc.DefinedFlg=0;
         def SData`MassFlow.DefinedFlg=0;
         def SData`V_slip.DefinedFlg=0;
@@ -336,13 +377,22 @@ environment type=Environment
         def SegmentResolutionFactor_v=1;
         def UseSegmentMeshParameters=0;
         def cr`x=(IRD30+IRD01)/4 unit="m";
-        def cr`Dx.DefinedFlg=0;
         def cr`z=-IRL01/2 unit="m";
-        def cr`Dz.DefinedFlg=0;
         def cr`phi=pi/2 unit="rad";
         def kappa_u=0 unit="1/m";
         def RotateProfile=0;
-        def DeltaS.DefinedFlg=0;
+        multi_term type=MultiTermFunc2 name=DeltaS functionTerms="" 
+          def isMultiTermDefined=0;
+        end multi_term; /* bIR`s3`DeltaS:MultiTermFunc2 */ 
+        multi_term type=MultiTermFunc2 name=RoughnessFunc functionTerms="" 
+          def isMultiTermDefined=0;
+        end multi_term; /* bIR`s3`RoughnessFunc:MultiTermFunc2 */ 
+        multi_term type=MultiTermFunc1 name=cr_Dx functionTerms="" 
+          def isMultiTermDefined=0;
+        end multi_term; /* bIR`s3`cr_Dx:MultiTermFunc1 */ 
+        multi_term type=MultiTermFunc1 name=cr_Dz functionTerms="" 
+          def isMultiTermDefined=0;
+        end multi_term; /* bIR`s3`cr_Dz:MultiTermFunc1 */ 
       end surface; /* bIR`s3:RotSeg */ 
       surface type=RotSeg name=s4
         def Description="";
@@ -353,6 +403,7 @@ environment type=Environment
         def UseStaticTemperatureModeShapes=0;
         def UseStaticHeatFluxModeShapes=0;
         def SData`Gap.DefinedFlg=0;
+        def SData`BoundaryFricFrac.DefinedFlg=0;
         def SData`hc.DefinedFlg=0;
         def SData`MassFlow.DefinedFlg=0;
         def SData`V_slip.DefinedFlg=0;
@@ -384,13 +435,22 @@ environment type=Environment
         def SegmentResolutionFactor_v=1;
         def UseSegmentMeshParameters=0;
         def cr`x=IRD01/2 unit="m";
-        def cr`Dx.DefinedFlg=0;
         def cr`z=0 unit="m";
-        def cr`Dz.DefinedFlg=0;
         def cr`phi=pi unit="rad";
         def kappa_u=0 unit="1/m";
         def RotateProfile=0;
-        def DeltaS.DefinedFlg=0;
+        multi_term type=MultiTermFunc2 name=DeltaS functionTerms="" 
+          def isMultiTermDefined=0;
+        end multi_term; /* bIR`s4`DeltaS:MultiTermFunc2 */ 
+        multi_term type=MultiTermFunc2 name=RoughnessFunc functionTerms="" 
+          def isMultiTermDefined=0;
+        end multi_term; /* bIR`s4`RoughnessFunc:MultiTermFunc2 */ 
+        multi_term type=MultiTermFunc1 name=cr_Dx functionTerms="" 
+          def isMultiTermDefined=0;
+        end multi_term; /* bIR`s4`cr_Dx:MultiTermFunc1 */ 
+        multi_term type=MultiTermFunc1 name=cr_Dz functionTerms="" 
+          def isMultiTermDefined=0;
+        end multi_term; /* bIR`s4`cr_Dz:MultiTermFunc1 */ 
       end surface; /* bIR`s4:RotSeg */ 
       surface type=RotSeg name=s5
         def Description="";
@@ -401,6 +461,7 @@ environment type=Environment
         def UseStaticTemperatureModeShapes=0;
         def UseStaticHeatFluxModeShapes=0;
         def SData`Gap.DefinedFlg=0;
+        def SData`BoundaryFricFrac.DefinedFlg=0;
         def SData`hc.DefinedFlg=0;
         def SData`MassFlow.DefinedFlg=0;
         def SData`V_slip.DefinedFlg=0;
@@ -432,13 +493,22 @@ environment type=Environment
         def SegmentResolutionFactor_v=1;
         def UseSegmentMeshParameters=0;
         def cr`x=(IRD30+IRD01)/4 unit="m";
-        def cr`Dx.DefinedFlg=0;
         def cr`z=IRL01/2 unit="m";
-        def cr`Dz.DefinedFlg=0;
         def cr`phi=-pi/2 unit="rad";
         def kappa_u=0 unit="1/m";
         def RotateProfile=0;
-        def DeltaS.DefinedFlg=0;
+        multi_term type=MultiTermFunc2 name=DeltaS functionTerms="" 
+          def isMultiTermDefined=0;
+        end multi_term; /* bIR`s5`DeltaS:MultiTermFunc2 */ 
+        multi_term type=MultiTermFunc2 name=RoughnessFunc functionTerms="" 
+          def isMultiTermDefined=0;
+        end multi_term; /* bIR`s5`RoughnessFunc:MultiTermFunc2 */ 
+        multi_term type=MultiTermFunc1 name=cr_Dx functionTerms="" 
+          def isMultiTermDefined=0;
+        end multi_term; /* bIR`s5`cr_Dx:MultiTermFunc1 */ 
+        multi_term type=MultiTermFunc1 name=cr_Dz functionTerms="" 
+          def isMultiTermDefined=0;
+        end multi_term; /* bIR`s5`cr_Dz:MultiTermFunc1 */ 
       end surface; /* bIR`s5:RotSeg */ 
       surface type=RotSeg name=s6
         def Description="";
@@ -451,6 +521,7 @@ environment type=Environment
         def UseStaticTemperatureModeShapes=0;
         def UseStaticHeatFluxModeShapes=0;
         def SData`Gap.DefinedFlg=0;
+        def SData`BoundaryFricFrac.DefinedFlg=0;
         def SData`hc.DefinedFlg=0;
         def SData`MassFlow.DefinedFlg=0;
         def SData`V_slip.DefinedFlg=0;
@@ -482,14 +553,35 @@ environment type=Environment
         def SegmentResolutionFactor_v=1;
         def UseSegmentMeshParameters=0;
         def cr`x=IRD30/2 unit="m";
-        def cr`Dx.DefinedFlg=0;
         def cr`z=IRL01/2 unit="m";
-        def cr`Dz.DefinedFlg=0;
         def cr`phi=0 unit="rad";
         def kappa_u=0 unit="1/m";
         def RotateProfile=0;
-        def DeltaS.DefinedFlg=0;
+        multi_term type=MultiTermFunc2 name=DeltaS functionTerms="" 
+          def isMultiTermDefined=0;
+        end multi_term; /* bIR`s6`DeltaS:MultiTermFunc2 */ 
+        multi_term type=MultiTermFunc2 name=RoughnessFunc functionTerms="" 
+          def isMultiTermDefined=0;
+        end multi_term; /* bIR`s6`RoughnessFunc:MultiTermFunc2 */ 
+        multi_term type=MultiTermFunc1 name=cr_Dx functionTerms="" 
+          def isMultiTermDefined=0;
+        end multi_term; /* bIR`s6`cr_Dx:MultiTermFunc1 */ 
+        multi_term type=MultiTermFunc1 name=cr_Dz functionTerms="" 
+          def isMultiTermDefined=0;
+        end multi_term; /* bIR`s6`cr_Dz:MultiTermFunc1 */ 
       end surface; /* bIR`s6:RotSeg */ 
+      multi_term type=MultiTermFunc1 name=Dr_phi functionTerms="" 
+        def isMultiTermDefined=0;
+      end multi_term; /* bIR`Dr_phi:MultiTermFunc1 */ 
+      multi_term type=MultiTermFunc1 name=dDrdz_phi functionTerms="" 
+        def isMultiTermDefined=0;
+      end multi_term; /* bIR`dDrdz_phi:MultiTermFunc1 */ 
+      multi_term type=MultiTermFunc1 name=Dz_phi functionTerms="" 
+        def isMultiTermDefined=0;
+      end multi_term; /* bIR`Dz_phi:MultiTermFunc1 */ 
+      multi_term type=MultiTermFunc1 name=dDzdr_phi functionTerms="" 
+        def isMultiTermDefined=0;
+      end multi_term; /* bIR`dDzdr_phi:MultiTermFunc1 */ 
     end body; /* bIR:Ring */ 
     body type=Ring name=bER numRotSegs=6
       def Description="";
@@ -506,15 +598,12 @@ environment type=Environment
       def cg`phi_nom[cc]={0 , 0 , 0 }  unit="rad";
       def cg`phiSequence_nom[cc]=0;
       def cg`phiSequence[cB]=0;
-      def Dr_phi.DefinedFlg=0;
-      def dDrdz_phi.DefinedFlg=0;
-      def Dz_phi.DefinedFlg=0;
-      def dDzdr_phi.DefinedFlg=0;
       def ThermalDeformationFlg=0;
       def T_init=tempER unit="C";
       def T_bulk=50 unit="C";
       def FlexThermalType=0;
       def MeshResolutionControl=1;
+      def UtilizeMeshLogic=1;
       def cm`R[cg][cg]={5.65318440889571e-19 , -2.58500312714462e-18 , -3.38224708224529e-20 }  unit="m";
       implicit_coordinate_system type=ImplicitCoordSystem name=cg;
       implicit_coordinate_system type=ImplicitCoordSystem name=cm;
@@ -543,6 +632,7 @@ environment type=Environment
         def UseStaticTemperatureModeShapes=0;
         def UseStaticHeatFluxModeShapes=0;
         def SData`Gap.DefinedFlg=0;
+        def SData`BoundaryFricFrac.DefinedFlg=0;
         def SData`hc.DefinedFlg=0;
         def SData`MassFlow.DefinedFlg=0;
         def SData`V_slip.DefinedFlg=0;
@@ -574,13 +664,22 @@ environment type=Environment
         def SegmentResolutionFactor_v=1;
         def UseSegmentMeshParameters=0;
         def cr`x=ORD20/2 unit="m";
-        def cr`Dx.DefinedFlg=0;
         def cr`z=0 unit="m";
-        def cr`Dz.DefinedFlg=0;
         def cr`phi=pi unit="rad";
         def kappa_u=1/ORR01 unit="1/m";
         def RotateProfile=0;
-        def DeltaS.DefinedFlg=0;
+        multi_term type=MultiTermFunc2 name=DeltaS functionTerms="" 
+          def isMultiTermDefined=0;
+        end multi_term; /* bER`s1`DeltaS:MultiTermFunc2 */ 
+        multi_term type=MultiTermFunc2 name=RoughnessFunc functionTerms="" 
+          def isMultiTermDefined=0;
+        end multi_term; /* bER`s1`RoughnessFunc:MultiTermFunc2 */ 
+        multi_term type=MultiTermFunc1 name=cr_Dx functionTerms="" 
+          def isMultiTermDefined=0;
+        end multi_term; /* bER`s1`cr_Dx:MultiTermFunc1 */ 
+        multi_term type=MultiTermFunc1 name=cr_Dz functionTerms="" 
+          def isMultiTermDefined=0;
+        end multi_term; /* bER`s1`cr_Dz:MultiTermFunc1 */ 
       end surface; /* bER`s1:RotSeg */ 
       surface type=RotSeg name=s2
         def Description="";
@@ -593,6 +692,7 @@ environment type=Environment
         def UseStaticTemperatureModeShapes=0;
         def UseStaticHeatFluxModeShapes=0;
         def SData`Gap.DefinedFlg=0;
+        def SData`BoundaryFricFrac.DefinedFlg=0;
         def SData`hc.DefinedFlg=0;
         def SData`MassFlow.DefinedFlg=0;
         def SData`V_slip.DefinedFlg=0;
@@ -624,13 +724,22 @@ environment type=Environment
         def SegmentResolutionFactor_v=1;
         def UseSegmentMeshParameters=0;
         def cr`x=ORD30/2 unit="m";
-        def cr`Dx.DefinedFlg=0;
         def cr`z=ORL01/2 unit="m";
-        def cr`Dz.DefinedFlg=0;
         def cr`phi=pi unit="rad";
         def kappa_u=0 unit="1/m";
         def RotateProfile=0;
-        def DeltaS.DefinedFlg=0;
+        multi_term type=MultiTermFunc2 name=DeltaS functionTerms="" 
+          def isMultiTermDefined=0;
+        end multi_term; /* bER`s2`DeltaS:MultiTermFunc2 */ 
+        multi_term type=MultiTermFunc2 name=RoughnessFunc functionTerms="" 
+          def isMultiTermDefined=0;
+        end multi_term; /* bER`s2`RoughnessFunc:MultiTermFunc2 */ 
+        multi_term type=MultiTermFunc1 name=cr_Dx functionTerms="" 
+          def isMultiTermDefined=0;
+        end multi_term; /* bER`s2`cr_Dx:MultiTermFunc1 */ 
+        multi_term type=MultiTermFunc1 name=cr_Dz functionTerms="" 
+          def isMultiTermDefined=0;
+        end multi_term; /* bER`s2`cr_Dz:MultiTermFunc1 */ 
       end surface; /* bER`s2:RotSeg */ 
       surface type=RotSeg name=s3
         def Description="";
@@ -641,6 +750,7 @@ environment type=Environment
         def UseStaticTemperatureModeShapes=0;
         def UseStaticHeatFluxModeShapes=0;
         def SData`Gap.DefinedFlg=0;
+        def SData`BoundaryFricFrac.DefinedFlg=0;
         def SData`hc.DefinedFlg=0;
         def SData`MassFlow.DefinedFlg=0;
         def SData`V_slip.DefinedFlg=0;
@@ -672,13 +782,22 @@ environment type=Environment
         def SegmentResolutionFactor_v=1;
         def UseSegmentMeshParameters=0;
         def cr`x=(ORD30+ORD10)/4 unit="m";
-        def cr`Dx.DefinedFlg=0;
         def cr`z=ORL01/2 unit="m";
-        def cr`Dz.DefinedFlg=0;
         def cr`phi=-pi/2 unit="rad";
         def kappa_u=0 unit="1/m";
         def RotateProfile=0;
-        def DeltaS.DefinedFlg=0;
+        multi_term type=MultiTermFunc2 name=DeltaS functionTerms="" 
+          def isMultiTermDefined=0;
+        end multi_term; /* bER`s3`DeltaS:MultiTermFunc2 */ 
+        multi_term type=MultiTermFunc2 name=RoughnessFunc functionTerms="" 
+          def isMultiTermDefined=0;
+        end multi_term; /* bER`s3`RoughnessFunc:MultiTermFunc2 */ 
+        multi_term type=MultiTermFunc1 name=cr_Dx functionTerms="" 
+          def isMultiTermDefined=0;
+        end multi_term; /* bER`s3`cr_Dx:MultiTermFunc1 */ 
+        multi_term type=MultiTermFunc1 name=cr_Dz functionTerms="" 
+          def isMultiTermDefined=0;
+        end multi_term; /* bER`s3`cr_Dz:MultiTermFunc1 */ 
       end surface; /* bER`s3:RotSeg */ 
       surface type=RotSeg name=s4
         def Description="";
@@ -689,6 +808,7 @@ environment type=Environment
         def UseStaticTemperatureModeShapes=0;
         def UseStaticHeatFluxModeShapes=0;
         def SData`Gap.DefinedFlg=0;
+        def SData`BoundaryFricFrac.DefinedFlg=0;
         def SData`hc.DefinedFlg=0;
         def SData`MassFlow.DefinedFlg=0;
         def SData`V_slip.DefinedFlg=0;
@@ -720,13 +840,22 @@ environment type=Environment
         def SegmentResolutionFactor_v=1;
         def UseSegmentMeshParameters=0;
         def cr`x=ORD10/2 unit="m";
-        def cr`Dx.DefinedFlg=0;
         def cr`z=0 unit="m";
-        def cr`Dz.DefinedFlg=0;
         def cr`phi=0 unit="rad";
         def kappa_u=0 unit="1/m";
         def RotateProfile=0;
-        def DeltaS.DefinedFlg=0;
+        multi_term type=MultiTermFunc2 name=DeltaS functionTerms="" 
+          def isMultiTermDefined=0;
+        end multi_term; /* bER`s4`DeltaS:MultiTermFunc2 */ 
+        multi_term type=MultiTermFunc2 name=RoughnessFunc functionTerms="" 
+          def isMultiTermDefined=0;
+        end multi_term; /* bER`s4`RoughnessFunc:MultiTermFunc2 */ 
+        multi_term type=MultiTermFunc1 name=cr_Dx functionTerms="" 
+          def isMultiTermDefined=0;
+        end multi_term; /* bER`s4`cr_Dx:MultiTermFunc1 */ 
+        multi_term type=MultiTermFunc1 name=cr_Dz functionTerms="" 
+          def isMultiTermDefined=0;
+        end multi_term; /* bER`s4`cr_Dz:MultiTermFunc1 */ 
       end surface; /* bER`s4:RotSeg */ 
       surface type=RotSeg name=s5
         def Description="";
@@ -737,6 +866,7 @@ environment type=Environment
         def UseStaticTemperatureModeShapes=0;
         def UseStaticHeatFluxModeShapes=0;
         def SData`Gap.DefinedFlg=0;
+        def SData`BoundaryFricFrac.DefinedFlg=0;
         def SData`hc.DefinedFlg=0;
         def SData`MassFlow.DefinedFlg=0;
         def SData`V_slip.DefinedFlg=0;
@@ -768,13 +898,22 @@ environment type=Environment
         def SegmentResolutionFactor_v=1;
         def UseSegmentMeshParameters=0;
         def cr`x=(ORD30+ORD10)/4 unit="m";
-        def cr`Dx.DefinedFlg=0;
         def cr`z=-ORL01/2 unit="m";
-        def cr`Dz.DefinedFlg=0;
         def cr`phi=pi/2 unit="rad";
         def kappa_u=0 unit="1/m";
         def RotateProfile=0;
-        def DeltaS.DefinedFlg=0;
+        multi_term type=MultiTermFunc2 name=DeltaS functionTerms="" 
+          def isMultiTermDefined=0;
+        end multi_term; /* bER`s5`DeltaS:MultiTermFunc2 */ 
+        multi_term type=MultiTermFunc2 name=RoughnessFunc functionTerms="" 
+          def isMultiTermDefined=0;
+        end multi_term; /* bER`s5`RoughnessFunc:MultiTermFunc2 */ 
+        multi_term type=MultiTermFunc1 name=cr_Dx functionTerms="" 
+          def isMultiTermDefined=0;
+        end multi_term; /* bER`s5`cr_Dx:MultiTermFunc1 */ 
+        multi_term type=MultiTermFunc1 name=cr_Dz functionTerms="" 
+          def isMultiTermDefined=0;
+        end multi_term; /* bER`s5`cr_Dz:MultiTermFunc1 */ 
       end surface; /* bER`s5:RotSeg */ 
       surface type=RotSeg name=s6
         def Description="";
@@ -787,6 +926,7 @@ environment type=Environment
         def UseStaticTemperatureModeShapes=0;
         def UseStaticHeatFluxModeShapes=0;
         def SData`Gap.DefinedFlg=0;
+        def SData`BoundaryFricFrac.DefinedFlg=0;
         def SData`hc.DefinedFlg=0;
         def SData`MassFlow.DefinedFlg=0;
         def SData`V_slip.DefinedFlg=0;
@@ -818,14 +958,35 @@ environment type=Environment
         def SegmentResolutionFactor_v=1;
         def UseSegmentMeshParameters=0;
         def cr`x=ORD30/2 unit="m";
-        def cr`Dx.DefinedFlg=0;
         def cr`z=-ORL01/2 unit="m";
-        def cr`Dz.DefinedFlg=0;
         def cr`phi=pi unit="rad";
         def kappa_u=0 unit="1/m";
         def RotateProfile=0;
-        def DeltaS.DefinedFlg=0;
+        multi_term type=MultiTermFunc2 name=DeltaS functionTerms="" 
+          def isMultiTermDefined=0;
+        end multi_term; /* bER`s6`DeltaS:MultiTermFunc2 */ 
+        multi_term type=MultiTermFunc2 name=RoughnessFunc functionTerms="" 
+          def isMultiTermDefined=0;
+        end multi_term; /* bER`s6`RoughnessFunc:MultiTermFunc2 */ 
+        multi_term type=MultiTermFunc1 name=cr_Dx functionTerms="" 
+          def isMultiTermDefined=0;
+        end multi_term; /* bER`s6`cr_Dx:MultiTermFunc1 */ 
+        multi_term type=MultiTermFunc1 name=cr_Dz functionTerms="" 
+          def isMultiTermDefined=0;
+        end multi_term; /* bER`s6`cr_Dz:MultiTermFunc1 */ 
       end surface; /* bER`s6:RotSeg */ 
+      multi_term type=MultiTermFunc1 name=Dr_phi functionTerms="" 
+        def isMultiTermDefined=0;
+      end multi_term; /* bER`Dr_phi:MultiTermFunc1 */ 
+      multi_term type=MultiTermFunc1 name=dDrdz_phi functionTerms="" 
+        def isMultiTermDefined=0;
+      end multi_term; /* bER`dDrdz_phi:MultiTermFunc1 */ 
+      multi_term type=MultiTermFunc1 name=Dz_phi functionTerms="" 
+        def isMultiTermDefined=0;
+      end multi_term; /* bER`Dz_phi:MultiTermFunc1 */ 
+      multi_term type=MultiTermFunc1 name=dDzdr_phi functionTerms="" 
+        def isMultiTermDefined=0;
+      end multi_term; /* bER`dDzdr_phi:MultiTermFunc1 */ 
     end body; /* bER:Ring */ 
     connection type=BodyBodyConnection name=bIR:bER from=bIR to=bER
       def Description="";
@@ -845,6 +1006,7 @@ environment type=Environment
         def dMdphi_system=1;
         def phiSequence=1;
         def ConLoc12=0.5;
+        def DeactivateFlg=0;
       end tie; /* bIR:bER`cs_bER:cs_bIR_SD:StiffDampTie */ 
     end connection; /* bIR:bER:BodyBodyConnection */ 
   end model; /* "":SModel */ 
