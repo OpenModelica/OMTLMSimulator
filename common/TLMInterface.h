@@ -1,6 +1,6 @@
 //!
 //! \file TLMInterface.h
-//! 
+//!
 //! Provides a definition for the TLMInterface class
 //!
 //!
@@ -15,9 +15,9 @@
 #include "TLMCommUtil.h"
 #include "TLMClientComm.h"
 
-//! 
+//!
 //! TLMInterface provides the client side functionality for a single TLM interface
-//! 
+//!
 class TLMInterface {
 
  public:
@@ -44,7 +44,7 @@ class TLMInterface {
 
     //! Unpack time data from a Message
     virtual void UnpackTimeData(TLMMessage& mess) = 0;
-    
+
     //! Get the last possible time for interpolation
     double GetNextRecvTime() const { return NextRecvTime; }
 
@@ -55,13 +55,13 @@ class TLMInterface {
     const TLMConnectionParams& GetConnParams() const { return Params; }
 
  protected:
-    
+
     //! Linear interpolation (can be used for linear extrapolation as well)
     //! returns f(time) = ((time - t[0]) * f[1] - (time - t[1]) * f[0]) /( t[1] - t[0])
-    inline static double linear_interpolate(double time, 
-					    double t0, double t1, 
-					    double f0, double f1){
-	return ((time - t0) * f1 - (time - t1) * f0) / ( t1 - t0);
+    inline static double linear_interpolate(double time,
+                        double t0, double t1,
+                        double f0, double f1){
+    return ((time - t0) * f1 - (time - t1) * f0) / ( t1 - t0);
     }
 
 

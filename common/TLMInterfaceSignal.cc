@@ -9,10 +9,10 @@
 //TODO: This is used both by 1D and 3D, should probably be defined in one place. /robbr
 static const double TLM_DAMP_DELAY = 1.5;
 
-TLMInterfaceSignal::TLMInterfaceSignal(TLMClientComm &theComm, std::string &aName, double StartTime, bool input)
+TLMInterfaceSignal::TLMInterfaceSignal(TLMClientComm &theComm, std::string &aName, double StartTime, SignalCausality causality)
     : TLMInterface(theComm, aName, StartTime, "Signal")
 {
-    Input = input;
+    Causality = causality;
 }
 
 TLMInterfaceSignal::~TLMInterfaceSignal() {

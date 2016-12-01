@@ -157,11 +157,11 @@ int  PluginImplementer::RegisteTLMInterface( std::string name , std::string type
     }
     else if(type == "SignalInput") {
         TLMErrorLog::Log("Registers TLM interface of type SignalInput");
-        ifc = new TLMInterfaceSignal( ClientComm, name, StartTime, true );
+        ifc = new TLMInterfaceSignal( ClientComm, name, StartTime, Input );
     }
     else if(type == "SignalOutput") {
         TLMErrorLog::Log("Registers TLM interface of type SignalOutput");
-        ifc = new TLMInterfaceSignal( ClientComm, name, StartTime, false );
+        ifc = new TLMInterfaceSignal( ClientComm, name, StartTime, Output );
     }
     else {
         TLMErrorLog::FatalError("Unknown interface type.");
