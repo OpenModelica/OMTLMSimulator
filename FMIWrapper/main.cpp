@@ -991,7 +991,14 @@ int main(int argc, char* argv[])
   TLMErrorLog::SetWarningOut(true);
 
   if(argc < 2) {
-    cout << "Too few arguments to FMIWrapper (should be at least 3)." << endl;
+    cout << "Too few arguments." << endl << endl;
+    cout << "Usage:" << endl;
+    cout << "  FMIWrapper [path] [fmu file] [additional arguments]" << endl << endl;
+    cout << "Additional arguments:" << endl;
+    cout << "  solver=[solver]    Set numerical solver (Euler, RungeKutta, CVODE or IDA)" << endl;
+    cout << "  -d                 Enable additional debug output" << endl << endl;
+    cout << "Example:" << endl;
+    cout << "  FMIWrapper c:\\path\\to\\fmu model.fmu solver=CVODE -d" << endl;
     TLMErrorLog::FatalError("Too few arguments!");
     return -1;
   }
@@ -1020,6 +1027,13 @@ int main(int argc, char* argv[])
       cout << "Activating debug output" << endl;
     }
   }
+
+  cout << "Starting FMIWrapper. Debug output will be written to \"TLMlogfile.log\"." << endl;
+
+//  for(int i=0; i<argc; ++i) {
+//    TLMErrorLog::Log("Hello!");
+//    TLMErrorLog::Log(argv[i]);
+//  }
 
   TLMErrorLog::Log("---Arguments---");
   TLMErrorLog::Log("FMU file: "+FMUPath+"");
