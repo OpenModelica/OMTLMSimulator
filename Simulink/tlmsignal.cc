@@ -123,7 +123,7 @@ void TLM_InterfaceReg::RegisterInterface(std::string ifID, std::string type) {
 	TLMErrorLog::FatalError( "Try to register same interface twice " + ifID );
     }
   
-    int interfaceID = Plugin->RegisteTLMInterface(ifID, type);
+    int interfaceID = Plugin->RegisteTLMInterface(ifID, str2type(type));
     
     InterfaceIDmap[ifID] = interfaceID;
     NumInterfaces++;

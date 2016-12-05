@@ -34,6 +34,7 @@
 // TLMPlugin includes
 #include "TLMPlugin.h"
 #include "TLMErrorLog.h"
+#include "common.h"
 
 using namespace std;
 
@@ -1067,7 +1068,7 @@ int main(int argc, char* argv[])
   // Register TLM interfaces
   for(size_t i=0; i<fmiConfig.interfaceNames.size(); ++i) {
     TLMErrorLog::Log("Registers interface "+fmiConfig.interfaceNames[i]+" of type "+fmiConfig.types[i]);
-    fmiConfig.interfaceIds[i] = plugin->RegisteTLMInterface(fmiConfig.interfaceNames[i], fmiConfig.types[i]);
+    fmiConfig.interfaceIds[i] = plugin->RegisteTLMInterface(fmiConfig.interfaceNames[i], str2type(fmiConfig.types[i]));
   }
 
   jm_callbacks callbacks;
@@ -1125,4 +1126,6 @@ int main(int argc, char* argv[])
 
   return 0;
 }
+
+
 

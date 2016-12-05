@@ -60,6 +60,8 @@ EXT_OBJS = PluginImplementer.o \
 	TLMCommUtil.o \
 	TLMInterface.o \
 	TLMInterfaceSignal.o \
+    TLMInterfaceSignalInput.o \
+    TLMInterfaceSignalOutput.o \
 	TLMInterface1D.o \
 	TLMInterface3D.o \
 	TLMErrorLog.o \

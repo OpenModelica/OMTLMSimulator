@@ -55,7 +55,7 @@ string SimulationParams::GetServerName() const {
 // aCompID - comonent ID of the owner
 // IfcID - ID of this interface
 // aName - name of this interface
-TLMInterfaceProxy::TLMInterfaceProxy(int CompID, int IfcID, string& aName, std::string &aType) :
+TLMInterfaceProxy::TLMInterfaceProxy(int CompID, int IfcID, string& aName, InterfaceType aType) :
     InterfaceID(IfcID),
     ComponentID(CompID),
     ConnectionID(-1),
@@ -209,7 +209,7 @@ int MetaModel::GetTLMInterfaceID(string& FullName) {
 }
 
 // Add TLM interface proxy with a given name to the Model, return its ID.
-int MetaModel::RegisterTLMInterfaceProxy(const int ComponentID, string& Name, string &Type) {
+int MetaModel::RegisterTLMInterfaceProxy(const int ComponentID, string& Name, InterfaceType Type) {
     TLMInterfaceProxy* ifc = 
         new TLMInterfaceProxy(ComponentID, Interfaces.size(), Name, Type);
 

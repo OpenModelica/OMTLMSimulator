@@ -14,6 +14,7 @@
 #include <string>
 #include "TLMCommUtil.h"
 #include "TLMClientComm.h"
+#include "common.h"
 
 //!
 //! TLMInterface provides the client side functionality for a single TLM interface
@@ -24,7 +25,7 @@ class TLMInterface {
 
     //! TLMInterface constructor. Sends a registration message to the TLM manager
     //! and prepares the object for simulation.
-    TLMInterface(TLMClientComm& theComm, std::string& aName, double StartTime, std::string type);
+    TLMInterface(TLMClientComm& theComm, std::string& aName, double StartTime, InterfaceType type);
     virtual ~TLMInterface();
     //! Indecates if the interface is finished and waits for shutdown.
     //! This is use for interface request mode and not simulation mode.
@@ -34,7 +35,7 @@ class TLMInterface {
     const std::string& GetName() const { return Name; }
 
     //! Get type of the interface
-    const std::string& GetType() const { return Type; }
+    const InterfaceType& GetType() const { return Type; }
 
     //! Send out motion data from the DataToSend vector
     virtual void SendAllData() = 0;
@@ -99,6 +100,6 @@ class TLMInterface {
     //! This is use for interface request mode and not simulation mode.
     bool waitForShutdownFlg;
 
-    std::string Type;
+    InterfaceType Type;
 };
 #endif

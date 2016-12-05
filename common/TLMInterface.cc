@@ -22,7 +22,7 @@ using std::ofstream;
 using namespace tlmMisc;
 
 
-TLMInterface::TLMInterface(TLMClientComm& theComm, std::string& aName, double StartTime, std::string type):
+TLMInterface::TLMInterface(TLMClientComm& theComm, std::string& aName, double StartTime, InterfaceType type):
     LastSendTime(StartTime),
     NextRecvTime(0.0),
     Message(),
