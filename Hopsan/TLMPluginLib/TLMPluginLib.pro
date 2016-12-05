@@ -54,6 +54,8 @@ SOURCES += \
     ../../extralibs/misc/src/double3Vec.cc \
     ../../extralibs/misc/src/double33Mat.cc \
     ../../common/TLMInterfaceSignal.cc \
+    ../../common/TLMInterfaceSignalInput.cc \
+    ../../common/TLMInterfaceSignalOutput.cc \
     ../../common/TLMInterface1D.cc \
     ../../common/TLMInterface3D.cc
 

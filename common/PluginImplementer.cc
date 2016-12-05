@@ -143,25 +143,25 @@ bool PluginImplementer::Init( std::string model,
 // Register TLM interface sends a registration request to TLMManager
 // and returns the ID for the interface. '-1' is returned if
 // the interface is not connected in the MetaModel.
-int  PluginImplementer::RegisteTLMInterface( std::string name , std::string type ) {
+int  PluginImplementer::RegisteTLMInterface( std::string name , InterfaceType type ) {
     TLMErrorLog::Log(string("Register Interface (kanin) ") + name );
 
     TLMInterface *ifc;
-    if(type=="3D") {
+    if(type==Interface3D) {
         TLMErrorLog::Log("Registers TLM interface of type 3D");
         ifc = new TLMInterface3D( ClientComm, name, StartTime );
     }
-    else if(type == "1D") {
+    else if(type == Interface1D) {
         TLMErrorLog::Log("Registers TLM interface of type 1D");
         ifc = new TLMInterface1D( ClientComm, name, StartTime );
     }
-    else if(type == "SignalInput") {
+    else if(type == InterfaceSignalInput) {
         TLMErrorLog::Log("Registers TLM interface of type SignalInput");
-        ifc = new TLMInterfaceSignal( ClientComm, name, StartTime, Input );
+        ifc = new TLMInterfaceSignalInput( ClientComm, name, StartTime );
     }
-    else if(type == "SignalOutput") {
+    else if(type == InterfaceSignalOutput) {
         TLMErrorLog::Log("Registers TLM interface of type SignalOutput");
-        ifc = new TLMInterfaceSignal( ClientComm, name, StartTime, Output );
+        ifc = new TLMInterfaceSignalOutput( ClientComm, name, StartTime );
     }
     else {
         TLMErrorLog::FatalError("Unknown interface type.");
@@ -206,7 +206,7 @@ void PluginImplementer::ReceiveTimeData(TLMInterface* reqIfc, double time)  {
 
     double allowedMaxTime = reqIfc->GetLastSendTime() + reqIfc->GetConnParams().Delay;
 
-    if(allowedMaxTime < time && reqIfc->GetType() != "Signal") {
+    if(allowedMaxTime < time && reqIfc->GetType() != InterfaceSignalInput) {            //Why not for signal interfaces?
       string mess("WARNING: Interface ");
       TLMErrorLog::Log(mess + reqIfc->GetName() +
                        " is NOT ALLOWED to ask data after time= " + TLMErrorLog::ToStdStr(allowedMaxTime) +
@@ -250,7 +250,7 @@ void PluginImplementer::GetValueSignal(int interfaceID, double time, double *val
 
     // Use the ID to get to the right interface object
     int idx = GetInterfaceIndex(interfaceID);
-    TLMInterfaceSignal* ifc = dynamic_cast<TLMInterfaceSignal*>(Interfaces[idx]);
+    TLMInterfaceSignalInput* ifc = dynamic_cast<TLMInterfaceSignalInput*>(Interfaces[idx]);
 
     assert(!ifc || (ifc -> GetInterfaceID() == interfaceID));
 
@@ -268,7 +268,7 @@ void PluginImplementer::GetValueSignal(int interfaceID, double time, double *val
 
     // evaluate the reaction force from the TLM connection
     ifc->GetValue(time, value);
-    ifc->SetTimeData(time, *value);  //We need to write something as well
+    //ifc->SetTimeData(time, *value);  //We need to write something as well
 }
 
 void PluginImplementer::GetForce1D(int interfaceID, double time, double position, double speed, double *force) {
@@ -381,7 +381,7 @@ void PluginImplementer::SetValueSignal(int valueID,
     if(valueID < 0) return;
     // Find the interface object by its ID
     int idx = GetInterfaceIndex(valueID);
-    TLMInterfaceSignal* ifc = dynamic_cast<TLMInterfaceSignal*>(Interfaces[idx]);
+    TLMInterfaceSignalOutput* ifc = dynamic_cast<TLMInterfaceSignalOutput*>(Interfaces[idx]);
     assert(ifc -> GetInterfaceID() == valueID);
 
     if( !ifc->waitForShutdown() ){
@@ -461,21 +461,33 @@ void PluginImplementer::GetConnectionParams(int interfaceID, TLMConnectionParams
   ParamsOut = ifc->GetConnParams();
 }
 
-void PluginImplementer::GetTimeDataSignal(int interfaceID, double time, TLMTimeDataSignal &DataOut) {
+void PluginImplementer::GetTimeDataSignal(int interfaceID, double time, TLMTimeDataSignal &DataOut, bool monitoring) {
     if(!ModelChecked) CheckModel();
 
     // Use the ID to get to the right interface object
     int idx = GetInterfaceIndex(interfaceID);
-    TLMInterfaceSignal* ifc = dynamic_cast<TLMInterfaceSignal*>(Interfaces[idx]);
-    assert(ifc -> GetInterfaceID() == interfaceID);
 
-    // Check if the interface expects more data from the coupled simulation
-    // Receive if necessary .Note that potentially more that one receive is possible
-    ReceiveTimeData( ifc, time);
+    if(!monitoring) {
+        // Use the ID to get to the right interface object
+        TLMInterfaceSignalInput* ifc = dynamic_cast<TLMInterfaceSignalInput*>(Interfaces[idx]);
+        assert(ifc -> GetInterfaceID() == interfaceID);
+        // Check if the interface expects more data from the coupled simulation
+        // Receive if necessary .Note that potentially more that one receive is possible
+        ReceiveTimeData( ifc, time);
+        DataOut.time = time - ifc->GetConnParams().Delay;
 
-    DataOut.time = time - ifc->GetConnParams().Delay;
+        ifc->GetTimeData(DataOut);
+    }
+    else {          //Monitoring = receive ime data for output interface
+        TLMInterfaceSignalOutput* ifc = dynamic_cast<TLMInterfaceSignalOutput*>(Interfaces[idx]);
+        assert(ifc -> GetInterfaceID() == interfaceID);
+        // Check if the interface expects more data from the coupled simulation
+        // Receive if necessary .Note that potentially more that one receive is possible
+        ReceiveTimeData( ifc, time);
+        DataOut.time = time - ifc->GetConnParams().Delay;
 
-    ifc->GetTimeData(DataOut);
+        ifc->GetTimeData(DataOut);
+    }
 }
 
 void PluginImplementer::GetTimeData1D(int interfaceID, double time, TLMTimeData1D &DataOut) {

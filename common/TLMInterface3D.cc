@@ -12,7 +12,7 @@ static const double TLM_DAMP_DELAY = 1.5;
 using namespace tlmMisc;
 
 TLMInterface3D::TLMInterface3D(TLMClientComm &theComm, std::string &aName, double StartTime)
-    : TLMInterface(theComm, aName, StartTime, "3D")
+    : TLMInterface(theComm, aName, StartTime, Interface3D)
 {
 
 }

@@ -1,6 +1,7 @@
 #include "tlmforce.h"
 #include "TLMPlugin.h"
 #include "TLMErrorLog.h"
+#include "TLMInterface.h"
 #include <stdlib.h>
 #include <string>
 #include <fstream>
@@ -241,7 +242,7 @@ void calc_tlm_force(void* in_TLMPluginStructObj,
 
     // Check if interface is registered. If it's not, register it
     if( MarkerIDmap.find(interfaceID) == MarkerIDmap.end() ){
-        MarkerIDmap[interfaceID] = TLMPluginStructObj->Plugin->RegisteTLMInterface(interfaceID, "3D");
+        MarkerIDmap[interfaceID] = TLMPluginStructObj->Plugin->RegisteTLMInterface(interfaceID, Interface3D);
     }
 
     // Interface force ID in TLM manager
@@ -300,7 +301,7 @@ void calc_tlm_force_1d(void* in_TLMPluginStructObj,
 
     // Check if interface is registered. If it's not, register it
     if( MarkerIDmap.find(interfaceID) == MarkerIDmap.end() ){
-        MarkerIDmap[interfaceID] = TLMPluginStructObj->Plugin->RegisteTLMInterface(interfaceID, "1D");
+        MarkerIDmap[interfaceID] = TLMPluginStructObj->Plugin->RegisteTLMInterface(interfaceID, Interface1D);
     }
 
     // Interface force ID in TLM manager

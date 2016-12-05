@@ -6,6 +6,7 @@
 
 #include "MetaModelReader.h"
 #include "TLMErrorLog.h"
+#include "TLMInterface.h"
 #include "double3Vec.h"
 #include "double33Mat.h"
 #include <string>
@@ -96,19 +97,19 @@ void MetaModelReader::ReadTLMInterfaceNodes(xmlNode* node, int ComponentID) {
             xmlNode* curAttrVal = FindAttributeByName(curNode, "Name");
             string name((const char*)curAttrVal->content);
 
-            curAttrVal = FindAttributeByName(curNode, "Type");    //This does not work with OMEdit, since attribute is not allowed
-            string type="3D";                                     //Default is 3D
+//            curAttrVal = FindAttributeByName(curNode, "Type");    //This does not work with OMEdit, since attribute is not allowed
+            InterfaceType type=Interface3D;                                     //Default is 3D
             if(name.size() > 1 &&                                 //Temporary hack: if name of interface ends
                name[name.size()-2] == '1' &&                      //with "1D" it is a 1D connection
                name[name.size()-1] == 'D') {
-                type = "1D";
+                type = Interface1D;
             }
             else if(name.size() > 3 &&                            //Temporary hack: if name of interface ends
                name[name.size()-4] == '1' &&                      //with "1DIN" it is a signal input interface
                name[name.size()-3] == 'D' &&
                name[name.size()-2] == 'I' &&
                 name[name.size()-1] == 'N') {
-                type = "SignalInput";
+                type = InterfaceSignalInput;
             }
             else if(name.size() > 4 &&                            //Temporary hack: if name of interface ends
                name[name.size()-5] == '1' &&                      //with "1DOUT" it is a signal output interface
@@ -116,13 +117,13 @@ void MetaModelReader::ReadTLMInterfaceNodes(xmlNode* node, int ComponentID) {
                name[name.size()-3] == 'O' &&
                name[name.size()-2] == 'U' &&
                name[name.size()-1] == 'T') {
-                type = "SignalOutput";
+                type = InterfaceSignalOutput;
             }
-            if(curAttrVal) {                                      //Now check for XML attribute
-              type = ((const char*)curAttrVal->content);
-            }
+//            if(curAttrVal) {                                      //Now check for XML attribute
+//              type = ((const char*)curAttrVal->content);
+//            }
 
-            TLMErrorLog::Log(string("Registering TLM interface ") + name + string(" of type ") + type);
+            TLMErrorLog::Log(string("Registering TLM interface ") + name + string(" of type ") + type2str(type));
             int ipID = TheModel.RegisterTLMInterfaceProxy(ComponentID, name, type);
 
             // Get/Set position and orientation if available in XML file.

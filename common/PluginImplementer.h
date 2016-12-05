@@ -9,7 +9,8 @@
 #include <map>
 #include "TLMClientComm.h"
 #include "TLMInterface.h"
-#include "TLMInterfaceSignal.h"
+#include "TLMInterfaceSignalInput.h"
+#include "TLMInterfaceSignalOutput.h"
 #include "TLMInterface1D.h"
 #include "TLMInterface3D.h"
 #include "TLMPlugin.h"
@@ -83,7 +84,7 @@ protected:
     //! and returns the ID for the interface. '-1' is returned if
     //! the interface is not connected in the MetaModel.
     int RegisteTLMInterface1D(std::string name);
-    int RegisteTLMInterface(std::string name, std::string type="3D" );
+    int RegisteTLMInterface(std::string name, InterfaceType type=Interface3D );
 
     //! ReceiveTimeData receives time-stamped data from coupled simulations
     //! if the specified interface needs more data for the given time..
@@ -153,7 +154,7 @@ protected:
     //! GetTimeData returnes the necessary time stamped information needed
     //! for the calculation of the reaction force at a given time.
     //! The function might result in a request sent to TLM manager.
-    void GetTimeDataSignal(int interfaceID, double time, TLMTimeDataSignal& DataOut);
+    virtual void GetTimeDataSignal(int interfaceID, double time, TLMTimeDataSignal& DataOut, bool monitoring=false);
     void GetTimeData1D(int interfaceID, double time, TLMTimeData1D& DataOut);
     void GetTimeData3D(int interfaceID, double time, TLMTimeData3D& DataOut);
 

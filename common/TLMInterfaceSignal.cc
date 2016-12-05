@@ -9,21 +9,12 @@
 //TODO: This is used both by 1D and 3D, should probably be defined in one place. /robbr
 static const double TLM_DAMP_DELAY = 1.5;
 
-TLMInterfaceSignal::TLMInterfaceSignal(TLMClientComm &theComm, std::string &aName, double StartTime, SignalCausality causality)
-    : TLMInterface(theComm, aName, StartTime, "Signal")
-{
-    Causality = causality;
-}
+TLMInterfaceSignal::TLMInterfaceSignal(TLMClientComm &theComm, std::string &aName, double StartTime, InterfaceType Type)
+    : TLMInterface(theComm, aName, StartTime, Type)
+{}
 
-TLMInterfaceSignal::~TLMInterfaceSignal() {
-    if(DataToSend.size() != 0) {
-        TLMErrorLog::Log(std::string("Interface ") + GetName() + " sends rest of data for time= " +
-                         TLMErrorLog::ToStdStr(DataToSend.back().time));
+TLMInterfaceSignal::~TLMInterfaceSignal() {}
 
-        Comm.PackTimeDataMessageSignal(InterfaceID, DataToSend, Message);
-        TLMCommUtil::SendMessage(Message);
-    }
-}
 
 
 void TLMInterfaceSignal::UnpackTimeData(TLMMessage &mess)
@@ -33,6 +24,26 @@ void TLMInterfaceSignal::UnpackTimeData(TLMMessage &mess)
     NextRecvTime =  TimeData.back().time + Params.Delay;
 }
 
+void TLMInterfaceSignal::SendAllData() {
+    LastSendTime = DataToSend.back().time;
+
+    TLMErrorLog::Log(std::string("Interface ") + GetName() + " sends data for time= " +
+                     TLMErrorLog::ToStdStr(LastSendTime));
+
+    Comm.PackTimeDataMessageSignal(InterfaceID, DataToSend, Message);
+    TLMCommUtil::SendMessage(Message);
+    DataToSend.resize(0);
+
+    // In data request mode we shutdown after sending the first data package.
+    if( Params.mode > 0.0 ) waitForShutdownFlg = true;
+}
+
+void TLMInterfaceSignal::clean_time_queue(std::deque<TLMTimeDataSignal>& Data, double CleanTime) {
+    while( (Data.size() > 3) && (CleanTime > Data[2].time)) {
+        Data.pop_front();
+    }
+}
+
 
 
 // The GetTimeData methods read the Instance.time field and fills in
@@ -40,6 +51,7 @@ void TLMInterfaceSignal::UnpackTimeData(TLMMessage &mess)
 void TLMInterfaceSignal::GetTimeData(TLMTimeDataSignal& Instance) {
     GetTimeData(Instance, TimeData);
 }
+
 
 // The GetTimeData methods read the Instance.time field and fills in
 // the other field by interpolating/extrapolating the available data.
@@ -111,56 +123,6 @@ void TLMInterfaceSignal::GetTimeData(TLMTimeDataSignal& Instance, std::deque<TLM
 
 
 
-void TLMInterfaceSignal::GetValue( double time,
-                                   double* value) {
-    TLMTimeDataSignal request;
-    request.time = time - Params.Delay;
-    GetTimeData(request);
-
-    TLMPlugin::GetValueSignal(request, Params, value);
-}
-
-
-// Set motion data and communicate if necessary.
-void TLMInterfaceSignal::SetTimeData(double time,
-                                     double value) {
-    // put the variables into TLMTimeData structure and the end of  DataToSend vector
-    int lastInd = DataToSend.size();
-    DataToSend.resize( lastInd + 1);
-    TLMTimeDataSignal& item = DataToSend[lastInd];
-    item.time = time;
-    item.Value = value;
-
-    TLMErrorLog::Log(std::string("Interface ") + GetName() +
-                     " SET for time= " + TLMErrorLog::ToStdStr(time));
-
-    // Send the data if we past the synchronization point or are in data request mode.
-    if(time >= LastSendTime + Params.Delay / 2 || Params.mode > 0.0 ) {
-        SendAllData();
-    }
-
-    // Remove the data that is not needed (Simulation time moved forward)
-    // We leave two time points intact, so that interpolation work
-    clean_time_queue(TimeData, time - Params.Delay);
-    clean_time_queue(DampedTimeData,  time - Params.Delay * ( 1 + TLM_DAMP_DELAY));
-}
-
-
-void TLMInterfaceSignal::SendAllData() {
-    LastSendTime = DataToSend.back().time;
-
-    TLMErrorLog::Log(std::string("Interface ") + GetName() + " sends data for time= " +
-                     TLMErrorLog::ToStdStr(LastSendTime));
-
-    Comm.PackTimeDataMessageSignal(InterfaceID, DataToSend, Message);
-    TLMCommUtil::SendMessage(Message);
-    DataToSend.resize(0);
-
-    // In data request mode we shutdown after sending the first data package.
-    if( Params.mode > 0.0 ) waitForShutdownFlg = true;
-}
-
-
 // linear_interpolate is called with a vector containing 2 points
 // computes the interpolation (or extrapolation) point with the the linear
 // interpolation (extrapolation) The points are submitted using the p0 & p1
@@ -174,11 +136,4 @@ void TLMInterfaceSignal::linear_interpolate(TLMTimeDataSignal &Instance, TLMTime
 
     // interpolate value
     Instance.Value = TLMInterface::linear_interpolate(time, t0, t1, p0.Value, p1.Value);
-}
-
-
-void TLMInterfaceSignal::clean_time_queue(std::deque<TLMTimeDataSignal>& Data, double CleanTime) {
-    while( (Data.size() > 3) && (CleanTime > Data[2].time)) {
-        Data.pop_front();
-    }
 }

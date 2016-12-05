@@ -56,7 +56,9 @@ SOURCES += main.cpp \
     ida-2.9.0/src/ida/ida_io.c \
     ../common/TLMInterface1D.cc \
     ../common/TLMInterface3D.cc \
-    ../common/TLMInterfaceSignal.cc
+    ../common/TLMInterfaceSignal.cc \
+    ../common/TLMInterfaceSignalInput.cc \
+    ../common/TLMInterfaceSignalOutput.cc
 
 HEADERS += \
     FMILibrary-2.0.1/install/include/JM/jm_portability.h \

@@ -98,14 +98,14 @@ void MonitorTimeStep(TLMPlugin* TLMlink,
             TLMInterfaceProxy& interfaceProxy = model.GetTLMInterfaceProxy(i);
             int interfaceID = interfaceProxy.GetID();
             int connectionID = interfaceProxy.GetConnectionID();
-            std::string type = interfaceProxy.GetType();
+            InterfaceType type = interfaceProxy.GetType();
 
             TLMErrorLog::Log("Data request for " + interfaceProxy.GetName() + " for time " + ToStr(SimTime) + ", id: " + ToStr(interfaceID));
 
             if( connectionID >= 0 ){
 #define LOGGEDFORCEFIX
 #ifdef  LOGGEDFORCEFIX
-              if(type == "3D") {
+              if(type == Interface3D) {
                   TLMTimeData3D& PrevTimeData = dataStorage3D[interfaceID];
                   TLMTimeData3D& CurTimeData = dataStorage3D[interfaceID];
 
@@ -122,7 +122,7 @@ void MonitorTimeStep(TLMPlugin* TLMlink,
                         + PrevTimeData.GenForce[i] * alpha;
                   }
               }
-              else if(type == "1D"){
+              else if(type == Interface1D){
                 TLMTimeData1D& PrevTimeData = dataStorage1D[interfaceID];
                 TLMTimeData1D& CurTimeData = dataStorage1D[interfaceID];
 
@@ -135,9 +135,12 @@ void MonitorTimeStep(TLMPlugin* TLMlink,
                 //Apply damping factor, since this can not be done in GetTimeData (DampedTimeData is not available for monitor)
                 CurTimeData.GenForce = CurTimeData.GenForce*(1-alpha) + PrevTimeData.GenForce*alpha;
               }
-              else if(type == "SignalOutput"){
+              else if(type == InterfaceSignalOutput){
                 TLMTimeDataSignal& CurTimeData = dataStorageSignal[interfaceID];
-                TLMlink->GetTimeDataSignal(interfaceID, SimTime, CurTimeData);
+                TLMErrorLog::Log("Hare 1");
+                int linkedID = interfaceProxy.GetLinkedID();
+                TLMlink->GetTimeDataSignal(interfaceID, SimTime, CurTimeData, true);
+                TLMErrorLog::Log("Hare 2");
               }
               //No need to check for erroneous interface type, we can simply log nothing instead /robbr
 #else
@@ -417,7 +420,7 @@ void printHeader(MetaModel& model, std::ofstream& dataFile)
         TLMInterfaceProxy& interfaceProxy = model.GetTLMInterfaceProxy(i);
         TLMComponentProxy& component = model.GetTLMComponentProxy(interfaceProxy.GetComponentID());
         if( interfaceProxy.GetConnectionID() >= 0 ){
-            if(interfaceProxy.GetType() == "3D") {
+            if(interfaceProxy.GetType() == Interface3D) {
                 // Comma between interfaces
                 if(nActiveInterfaces > 0) dataFile << ",";
 
@@ -435,7 +438,7 @@ void printHeader(MetaModel& model, std::ofstream& dataFile)
 
                 nActiveInterfaces++;
             }
-            else if(interfaceProxy.GetType() == "1D") {
+            else if(interfaceProxy.GetType() == Interface1D) {
               // Comma between interfaces
               if(nActiveInterfaces > 0) dataFile << ",";
 
@@ -447,7 +450,7 @@ void printHeader(MetaModel& model, std::ofstream& dataFile)
 
               nActiveInterfaces++;
             }
-            else if(interfaceProxy.GetType() == "SignalOutput") {
+            else if(interfaceProxy.GetType() == InterfaceSignalOutput) {
               // Comma between interfaces
               if(nActiveInterfaces > 0) dataFile << ",";
 
@@ -478,7 +481,7 @@ void printData(MetaModel& model,
     for( int i=0 ; i<nTLMInterfaces ; i++ ){
         TLMInterfaceProxy& interfaceProxy = model.GetTLMInterfaceProxy(i);
         if( interfaceProxy.GetConnectionID() >= 0 ){
-            if(interfaceProxy.GetType() == "3D") {
+            if(interfaceProxy.GetType() == Interface3D) {
                 TLMTimeData3D& timeData = dataStorage3D.at(interfaceProxy.GetID());
 
                 // Print time only once, that is, for the first entry.
@@ -528,7 +531,7 @@ void printData(MetaModel& model,
 
                 nActiveInterfaces++;
             }
-            else if(interfaceProxy.GetType() == "1D") {
+            else if(interfaceProxy.GetType() == Interface1D) {
               TLMTimeData1D& timeData = dataStorage1D.at(interfaceProxy.GetID());
 
               // Print time only once, that is, for the first entry.
@@ -554,7 +557,7 @@ void printData(MetaModel& model,
 
               nActiveInterfaces++;
             }
-            else if(interfaceProxy.GetType() == "SignalOutput") {
+            else if(interfaceProxy.GetType() == InterfaceSignalOutput) {
               TLMTimeDataSignal& timeData = dataStorageSignal.at(interfaceProxy.GetID());
 
               // Print time only once, that is, for the first entry.

@@ -13,6 +13,7 @@
 
 #include "TLMCommUtil.h"
 #include "TLMErrorLog.h"
+#include "TLMInterface.h"
 
 // Classes defined later in this file
 class TLMComponentProxy;
@@ -42,7 +43,7 @@ public:
     //! aCompID - comonent ID of the owner
     //! IfcID - ID of this interface
     //! aName - name of this interface
-    TLMInterfaceProxy(int CompID, int IfcID, std::string& aName, std::string &aType) ;
+    TLMInterfaceProxy(int CompID, int IfcID, std::string& aName, InterfaceType aType) ;
 
     //! Get the name of this interface
     const std::string& GetName() const {
@@ -50,7 +51,7 @@ public:
     }
 
     //! Get the type of this interface
-    const std::string& GetType() const {
+    const InterfaceType GetType() const {
       return Type;
     }
 
@@ -119,7 +120,7 @@ private:
     std::string Name;
 
     //! Type of the interface (1D or 3D)
-    std::string Type;
+    InterfaceType Type;
 
     //! Flag telling if the simulating component is connected to the proxy.
     bool Connected;
@@ -460,7 +461,7 @@ public:
     int GetTLMInterfaceID(std::string& FullName) ;
 
     //! Add TLM interface proxy with a given name to the Model, return its ID.
-    int RegisterTLMInterfaceProxy(const int ComponentID, std::string& Name, std::string &Type);
+    int RegisterTLMInterfaceProxy(const int ComponentID, std::string& Name, InterfaceType Type);
 
     //! Return the TLMInterfaceProxy associated with the given ID.
     TLMInterfaceProxy& GetTLMInterfaceProxy(const int ID) {
