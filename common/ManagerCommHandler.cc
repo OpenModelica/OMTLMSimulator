@@ -238,22 +238,22 @@ void ManagerCommHandler::ProcessRegInterfaceMessage(int compID, TLMMessage& mess
 
     TLMErrorLog::Log("Manager received nameAndType: "+aSpecification);
 
-    string aName, dimensionality, causality, domain;
-    bool readingDimensionality=false;
+    string aName, dimStr, causality, domain;
+    bool readingDimensions=false;
     bool readingCausality=false;
     bool readingDomain=false;
     for(size_t i=0; i<aSpecification.size(); ++i) {
-        if(aSpecification[i] == ':' && !readingDimensionality) {
-            readingDimensionality = true;
+        if(aSpecification[i] == ':' && !readingDimensions) {
+            readingDimensions = true;
         }
-        else if(aSpecification[i] == ':' && readingDimensionality) {
+        else if(aSpecification[i] == ':' && readingDimensions) {
             readingCausality = true;
         }
         else if(aSpecification[i] == ':' && readingCausality) {
             readingDomain = true;
         }
-        if(readingDimensionality) {
-            dimensionality += aSpecification[i];
+        if(readingDimensions) {
+            dimStr += aSpecification[i];
         }
         else if(readingCausality) {
             causality += aSpecification[i];
@@ -265,6 +265,7 @@ void ManagerCommHandler::ProcessRegInterfaceMessage(int compID, TLMMessage& mess
             aName += aSpecification[i];
         }
     }
+    int dimensions = std::atoi(dimStr.c_str());
 
     int IfcID = TheModel.GetTLMInterfaceID(compID, aName);    
 
@@ -276,7 +277,7 @@ void ManagerCommHandler::ProcessRegInterfaceMessage(int compID, TLMMessage& mess
     if(IfcID < 0 && CommMode == InterfaceRequestMode) {
         // interface not found, create it
         //std::string type = "1D";                                //HARD-CODED /robbr
-        TheModel.RegisterTLMInterfaceProxy(compID, aName, str2dimensionality(dimensionality),
+        TheModel.RegisterTLMInterfaceProxy(compID, aName, dimensions,
                                            str2causality(causality), str2domain(domain));
         IfcID = TheModel.GetTLMInterfaceID(compID, aName);        
     }

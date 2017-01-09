@@ -1,23 +1,8 @@
 #ifndef TLM_COMMON_H
 #define TLM_COMMON_H
 
-enum InterfaceDimensionality { Dimensionality3D, Dimensionality1D, DimensionalitySignal};
 enum InterfaceDomain { DomainMechanical, DomainElectric, DomainHydraulic, DomainPneumatic, DomainUnspecified };
 enum InterfaceCausality { CausalityAcausal, CausalityInput, CausalityOutput };
-
-inline std::string dimensionality2str(InterfaceDimensionality ifDim) {
-    std::string strDim = "3D";
-    if(ifDim == Dimensionality1D) strDim = "1D";
-    else if(ifDim == DimensionalitySignal) strDim = "Signal";
-    return strDim;
-}
-
-inline InterfaceDimensionality str2dimensionality(std::string strDim) {
-    InterfaceDimensionality ifDim = Dimensionality3D;
-    if(strDim == "1D") ifDim = Dimensionality1D;
-    else if(strDim == "Signal") ifDim = DimensionalitySignal;
-    return ifDim;
-}
 
 inline std::string domain2str(InterfaceDomain ifDomain) {
     std::string strDomain = "Mechanical";

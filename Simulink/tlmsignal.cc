@@ -115,7 +115,7 @@ TLM_InterfaceReg* TLM_InterfaceReg::GetInstance(bool debugFlg)
 }
 
 
-void TLM_InterfaceReg::RegisterInterface(std::string ifID, std::string type) {
+void TLM_InterfaceReg::RegisterInterface(std::string ifID, int dimensions) {
     // No way to get the real marker name from the solver - using "M<ID>"
     TLMErrorLog::Log( "Trying to register interface " + ifID );
 
@@ -123,7 +123,7 @@ void TLM_InterfaceReg::RegisterInterface(std::string ifID, std::string type) {
 	TLMErrorLog::FatalError( "Try to register same interface twice " + ifID );
     }
   
-    int interfaceID = Plugin->RegisteTLMInterface(ifID, str2dimensionality(type));
+    int interfaceID = Plugin->RegisteTLMInterface(ifID, dimensions);
     
     InterfaceIDmap[ifID] = interfaceID;
     NumInterfaces++;

@@ -10,6 +10,7 @@
 #include "double3Vec.h"
 #include "double33Mat.h"
 #include <string>
+#include <sstream>
 using std::string;
 using namespace tlmMisc;
 
@@ -97,8 +98,8 @@ void MetaModelReader::ReadTLMInterfaceNodes(xmlNode* node, int ComponentID) {
             xmlNode* curAttrVal = FindAttributeByName(curNode, "Name");
             string Name((const char*)curAttrVal->content);
 
-            curAttrVal = FindAttributeByName(curNode, "Dimensionality");
-            string Dimensionality((const char*)curAttrVal->content);
+            curAttrVal = FindAttributeByName(curNode, "Dimensions");
+            int Dimensions = atoi((const char*)curAttrVal->content);
 
             curAttrVal = FindAttributeByName(curNode, "Causality");
             string Causality((const char*)curAttrVal->content);
@@ -130,8 +131,10 @@ void MetaModelReader::ReadTLMInterfaceNodes(xmlNode* node, int ComponentID) {
 //              type = ((const char*)curAttrVal->content);
 //            }
 
-            TLMErrorLog::Log(string("Registering TLM interface ") + Name + string(" of type ") + Dimensionality);
-            int ipID = TheModel.RegisterTLMInterfaceProxy(ComponentID, Name, str2dimensionality(Dimensionality), str2causality(Causality), str2domain(Domain));
+            std::stringstream ss;
+            ss << "Registering TLM interface " << Name << " with " << Dimensions << " dimensions.";
+            TLMErrorLog::Log(ss.str());
+            int ipID = TheModel.RegisterTLMInterfaceProxy(ComponentID, Name, Dimensions, str2causality(Causality), str2domain(Domain));
 
             // Get/Set position and orientation if available in XML file.
             TLMInterfaceProxy& ip = TheModel.GetTLMInterfaceProxy(ipID);

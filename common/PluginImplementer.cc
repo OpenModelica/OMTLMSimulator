@@ -143,24 +143,24 @@ bool PluginImplementer::Init( std::string model,
 // Register TLM interface sends a registration request to TLMManager
 // and returns the ID for the interface. '-1' is returned if
 // the interface is not connected in the MetaModel.
-int  PluginImplementer::RegisteTLMInterface( std::string name , InterfaceDimensionality dimensionality,
+int  PluginImplementer::RegisteTLMInterface( std::string name , int dimensions,
                                                  InterfaceCausality causality, InterfaceDomain domain ) {
     TLMErrorLog::Log(string("Register Interface (kanin) ") + name );
 
     TLMInterface *ifc;
-    if(dimensionality==Dimensionality3D) {
+    if(dimensions==6) {
         TLMErrorLog::Log("Registers TLM interface of type 3D");
         ifc = new TLMInterface3D( ClientComm, name, StartTime, domain );
     }
-    else if(dimensionality == Dimensionality1D) {
+    else if(dimensions == 1) {
         TLMErrorLog::Log("Registers TLM interface of type 1D");
         ifc = new TLMInterface1D( ClientComm, name, StartTime, domain );
     }
-    else if(dimensionality == DimensionalitySignal && causality == CausalityInput) {
+    else if(dimensions == 1 && causality == CausalityInput) {
         TLMErrorLog::Log("Registers TLM interface of type SignalInput");
         ifc = new TLMInterfaceInput( ClientComm, name, StartTime, domain );
     }
-    else if(dimensionality == DimensionalitySignal && causality == CausalityOutput) {
+    else if(dimensions == 1 && causality == CausalityOutput) {
         TLMErrorLog::Log("Registers TLM interface of type SignalOutput");
         ifc = new TLMInterfaceOutput( ClientComm, name, StartTime, domain );
     }
