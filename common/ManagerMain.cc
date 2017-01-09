@@ -55,7 +55,10 @@ void print_interface_information(MetaModel& theModel)
                     tlmData.RotMatrix[6], tlmData.RotMatrix[7], tlmData.RotMatrix[8]);
         double3Vec phi = ATophi321(A);
         
-        interfacefile << "\t<Interface model=\"" + comProx.GetName() + "\" Name=\"" + intProx.GetName() + "\"\n";
+        interfacefile << "\t<Interface model=\"" + comProx.GetName() +
+                         "\" Name=\"" + intProx.GetName() +
+                         "\" Type=\"" + type2str(intProx.GetType()) +
+                         "\" Domain=\"" + domain2str(intProx.GetDomain()) + "\"\n";
         interfacefile << "\t\tPosition=\"" << R(1) << "," << R(2) << "," << R(3) << "\"\n";
         interfacefile << "\t\tAngle321=\"" << phi(1) << "," << phi(2) << "," << phi(3) << "\"/>\n"; 
       }

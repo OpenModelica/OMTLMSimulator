@@ -257,9 +257,9 @@ void TLMClientComm::CreateComponentRegMessage(std::string& Name, TLMMessage& mes
     memcpy(&mess.Data[0], Name.c_str(), Name.length());
 }
 
-void TLMClientComm::CreateInterfaceRegMessage(std::string& Name, InterfaceType type, TLMMessage& mess) {
+void TLMClientComm::CreateInterfaceRegMessage(std::string& Name, InterfaceType type, InterfaceDomain domain, TLMMessage& mess) {
     mess.Header.MessageType = TLMMessageTypeConst::TLM_REG_INTERFACE;
-    std::string nameAndType = Name+":"+type2str(type);
+    std::string nameAndType = Name+":"+type2str(type)+":"+domain2str(domain);
     TLMErrorLog::Log("Client sends nameAndType: "+nameAndType);
     mess.Header.DataSize = nameAndType.length();
     mess.Data.resize(nameAndType.length());

@@ -43,7 +43,7 @@ public:
     //! aCompID - comonent ID of the owner
     //! IfcID - ID of this interface
     //! aName - name of this interface
-    TLMInterfaceProxy(int CompID, int IfcID, std::string& aName, InterfaceType aType) ;
+    TLMInterfaceProxy(int CompID, int IfcID, std::string& aName, InterfaceType aType, InterfaceDomain aDomain) ;
 
     //! Get the name of this interface
     const std::string& GetName() const {
@@ -53,6 +53,11 @@ public:
     //! Get the type of this interface
     const InterfaceType GetType() const {
       return Type;
+    }
+
+    //! Get the domain of this interface
+    const InterfaceDomain GetDomain() const {
+      return Domain;
     }
 
     //! Get ID of the interface
@@ -119,8 +124,11 @@ private:
     //! Name of the interface within the Component
     std::string Name;
 
-    //! Type of the interface (1D or 3D)
+    //! Type of the interface
     InterfaceType Type;
+
+    //! Physical domain of the interface
+    InterfaceDomain Domain;
 
     //! Flag telling if the simulating component is connected to the proxy.
     bool Connected;
@@ -461,7 +469,7 @@ public:
     int GetTLMInterfaceID(std::string& FullName) ;
 
     //! Add TLM interface proxy with a given name to the Model, return its ID.
-    int RegisterTLMInterfaceProxy(const int ComponentID, std::string& Name, InterfaceType Type);
+    int RegisterTLMInterfaceProxy(const int ComponentID, std::string& Name, InterfaceType Type, InterfaceDomain Domain);
 
     //! Return the TLMInterfaceProxy associated with the given ID.
     TLMInterfaceProxy& GetTLMInterfaceProxy(const int ID) {

@@ -3,13 +3,13 @@
 
 #include "TLMInterfaceSignal.h"
 
-class TLMInterfaceSignalOutput : public TLMInterfaceSignal
+class TLMInterfaceOutput : public TLMInterfaceSignal
 {
 public:
-  TLMInterfaceSignalOutput(TLMClientComm &theComm, std::string &aName, double StartTime);
+  TLMInterfaceOutput(TLMClientComm &theComm, std::string &aName, double StartTime, InterfaceDomain Domain=DomainSignal);
 
   //! Destructor. Sends the rest of the data if necessary.
-  ~TLMInterfaceSignalOutput();
+  ~TLMInterfaceOutput();
 
   void SetTimeData(double time, double value);
 };

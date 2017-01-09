@@ -67,7 +67,7 @@ class TLMPlugin {
     //! and returns the ID for the interface. '-1' is returned if
     //! the interface is not connected in the MetaModel.
     //! \param name Name of the TLM interface
-    virtual int RegisteTLMInterface( std::string name, InterfaceType type=Interface3D ) = 0;
+    virtual int RegisteTLMInterface( std::string name, InterfaceType type=Type3D, InterfaceDomain domain=DomainMechanical) = 0;
 
     //! Evaluate the reaction force from the TLM connection
     //! for a specified interface. This function might result in a request sent

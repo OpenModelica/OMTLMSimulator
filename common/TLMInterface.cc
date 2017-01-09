@@ -22,7 +22,7 @@ using std::ofstream;
 using namespace tlmMisc;
 
 
-TLMInterface::TLMInterface(TLMClientComm& theComm, std::string& aName, double StartTime, InterfaceType type):
+TLMInterface::TLMInterface(TLMClientComm& theComm, std::string& aName, double StartTime, InterfaceType type, InterfaceDomain domain):
     LastSendTime(StartTime),
     NextRecvTime(0.0),
     Message(),
@@ -32,9 +32,10 @@ TLMInterface::TLMInterface(TLMClientComm& theComm, std::string& aName, double St
     Comm(theComm),
     InterfaceID(-1),
     waitForShutdownFlg(false),
-    Type(type)
+    Type(type),
+    Domain(domain)
 { // TLMInterface constructor
-    Comm.CreateInterfaceRegMessage(aName, Type, Message);
+    Comm.CreateInterfaceRegMessage(aName, Type, Domain, Message);
     Message.SocketHandle = Comm.GetSocketHandle();
 
     TLMCommUtil::SendMessage(Message);

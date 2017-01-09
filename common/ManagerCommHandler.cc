@@ -234,21 +234,28 @@ void ManagerCommHandler::ProcessRegInterfaceMessage(int compID, TLMMessage& mess
     }
 
     // First, find the interface in the meta model
-    string aNameAndType ((const char*)(& mess.Data[0]), mess.Header.DataSize);
+    string aNameTypeAndDomain ((const char*)(& mess.Data[0]), mess.Header.DataSize);
 
-    TLMErrorLog::Log("Manager received nameAndType: "+aNameAndType);
+    TLMErrorLog::Log("Manager received nameAndType: "+aNameTypeAndDomain);
 
-    string aName, type;
+    string aName, type, domain;
     bool readingType=false;
-    for(size_t i=0; i<aNameAndType.size(); ++i) {
-        if(aNameAndType[i] == ':') {
+    bool readingDomain=false;
+    for(size_t i=0; i<aNameTypeAndDomain.size(); ++i) {
+        if(aNameTypeAndDomain[i] == ':' && !readingType) {
             readingType = true;
         }
+        else if(aNameTypeAndDomain[i] == ':' && readingType) {
+            readingDomain = true;
+        }
         if(readingType) {
-            type += aNameAndType[i];
+            type += aNameTypeAndDomain[i];
+        }
+        else if(readingDomain) {
+            domain += aNameTypeAndDomain[i];
         }
         else {
-            aName += aNameAndType[i];
+            aName += aNameTypeAndDomain[i];
         }
     }
 
@@ -262,7 +269,7 @@ void ManagerCommHandler::ProcessRegInterfaceMessage(int compID, TLMMessage& mess
     if(IfcID < 0 && CommMode == InterfaceRequestMode) {
         // interface not found, create it
         //std::string type = "1D";                                //HARD-CODED /robbr
-        TheModel.RegisterTLMInterfaceProxy(compID, aName, str2type(type));
+        TheModel.RegisterTLMInterfaceProxy(compID, aName, str2type(type), str2domain(domain));
         IfcID = TheModel.GetTLMInterfaceID(compID, aName);        
     }
 
