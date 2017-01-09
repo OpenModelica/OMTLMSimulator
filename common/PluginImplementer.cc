@@ -143,8 +143,8 @@ bool PluginImplementer::Init( std::string model,
 // Register TLM interface sends a registration request to TLMManager
 // and returns the ID for the interface. '-1' is returned if
 // the interface is not connected in the MetaModel.
-int  PluginImplementer::RegisteTLMInterface( std::string name , int dimensions,
-                                                 InterfaceCausality causality, InterfaceDomain domain ) {
+int  PluginImplementer::RegisteTLMInterface(std::string name , int dimensions,
+                                             std::string causality, InterfaceDomain domain ) {
     TLMErrorLog::Log(string("Register Interface (kanin) ") + name );
 
     TLMInterface *ifc;
@@ -156,11 +156,11 @@ int  PluginImplementer::RegisteTLMInterface( std::string name , int dimensions,
         TLMErrorLog::Log("Registers TLM interface of type 1D");
         ifc = new TLMInterface1D( ClientComm, name, StartTime, domain );
     }
-    else if(dimensions == 1 && causality == CausalityInput) {
+    else if(dimensions == 1 && causality == "Input") {
         TLMErrorLog::Log("Registers TLM interface of type SignalInput");
         ifc = new TLMInterfaceInput( ClientComm, name, StartTime, domain );
     }
-    else if(dimensions == 1 && causality == CausalityOutput) {
+    else if(dimensions == 1 && causality == "Output") {
         TLMErrorLog::Log("Registers TLM interface of type SignalOutput");
         ifc = new TLMInterfaceOutput( ClientComm, name, StartTime, domain );
     }
@@ -207,7 +207,7 @@ void PluginImplementer::ReceiveTimeData(TLMInterface* reqIfc, double time)  {
 
     double allowedMaxTime = reqIfc->GetLastSendTime() + reqIfc->GetConnParams().Delay;
 
-    if(allowedMaxTime < time && reqIfc->GetCausality() != CausalityInput) {            //Why not for signal interfaces?
+    if(allowedMaxTime < time && reqIfc->GetCausality() != "Input") {            //Why not for signal interfaces?
       string mess("WARNING: Interface ");
       TLMErrorLog::Log(mess + reqIfc->GetName() +
                        " is NOT ALLOWED to ask data after time= " + TLMErrorLog::ToStdStr(allowedMaxTime) +
