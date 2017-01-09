@@ -97,8 +97,11 @@ void MetaModelReader::ReadTLMInterfaceNodes(xmlNode* node, int ComponentID) {
             xmlNode* curAttrVal = FindAttributeByName(curNode, "Name");
             string Name((const char*)curAttrVal->content);
 
-            curAttrVal = FindAttributeByName(curNode, "Type");
-            string Type((const char*)curAttrVal->content);
+            curAttrVal = FindAttributeByName(curNode, "Dimensionality");
+            string Dimensionality((const char*)curAttrVal->content);
+
+            curAttrVal = FindAttributeByName(curNode, "Causality");
+            string Causality((const char*)curAttrVal->content);
 
             curAttrVal = FindAttributeByName(curNode, "Domain");
             string Domain((const char*)curAttrVal->content);
@@ -127,8 +130,8 @@ void MetaModelReader::ReadTLMInterfaceNodes(xmlNode* node, int ComponentID) {
 //              type = ((const char*)curAttrVal->content);
 //            }
 
-            TLMErrorLog::Log(string("Registering TLM interface ") + Name + string(" of type ") + Type);
-            int ipID = TheModel.RegisterTLMInterfaceProxy(ComponentID, Name, str2type(Type), str2domain(Domain));
+            TLMErrorLog::Log(string("Registering TLM interface ") + Name + string(" of type ") + Dimensionality);
+            int ipID = TheModel.RegisterTLMInterfaceProxy(ComponentID, Name, str2dimensionality(Dimensionality), str2causality(Causality), str2domain(Domain));
 
             // Get/Set position and orientation if available in XML file.
             TLMInterfaceProxy& ip = TheModel.GetTLMInterfaceProxy(ipID);

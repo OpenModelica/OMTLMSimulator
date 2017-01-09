@@ -143,23 +143,24 @@ bool PluginImplementer::Init( std::string model,
 // Register TLM interface sends a registration request to TLMManager
 // and returns the ID for the interface. '-1' is returned if
 // the interface is not connected in the MetaModel.
-int  PluginImplementer::RegisteTLMInterface( std::string name , InterfaceType type, InterfaceDomain domain ) {
+int  PluginImplementer::RegisteTLMInterface( std::string name , InterfaceDimensionality dimensionality,
+                                                 InterfaceCausality causality, InterfaceDomain domain ) {
     TLMErrorLog::Log(string("Register Interface (kanin) ") + name );
 
     TLMInterface *ifc;
-    if(type==Type3D) {
+    if(dimensionality==Dimensionality3D) {
         TLMErrorLog::Log("Registers TLM interface of type 3D");
         ifc = new TLMInterface3D( ClientComm, name, StartTime, domain );
     }
-    else if(type == Type1D) {
+    else if(dimensionality == Dimensionality1D) {
         TLMErrorLog::Log("Registers TLM interface of type 1D");
         ifc = new TLMInterface1D( ClientComm, name, StartTime, domain );
     }
-    else if(type == TypeInput) {
+    else if(dimensionality == DimensionalitySignal && causality == CausalityInput) {
         TLMErrorLog::Log("Registers TLM interface of type SignalInput");
         ifc = new TLMInterfaceInput( ClientComm, name, StartTime, domain );
     }
-    else if(type == TypeOutput) {
+    else if(dimensionality == DimensionalitySignal && causality == CausalityOutput) {
         TLMErrorLog::Log("Registers TLM interface of type SignalOutput");
         ifc = new TLMInterfaceOutput( ClientComm, name, StartTime, domain );
     }
@@ -206,7 +207,7 @@ void PluginImplementer::ReceiveTimeData(TLMInterface* reqIfc, double time)  {
 
     double allowedMaxTime = reqIfc->GetLastSendTime() + reqIfc->GetConnParams().Delay;
 
-    if(allowedMaxTime < time && reqIfc->GetType() != TypeInput) {            //Why not for signal interfaces?
+    if(allowedMaxTime < time && reqIfc->GetCausality() != CausalityInput) {            //Why not for signal interfaces?
       string mess("WARNING: Interface ");
       TLMErrorLog::Log(mess + reqIfc->GetName() +
                        " is NOT ALLOWED to ask data after time= " + TLMErrorLog::ToStdStr(allowedMaxTime) +

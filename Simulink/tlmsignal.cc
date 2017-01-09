@@ -123,7 +123,7 @@ void TLM_InterfaceReg::RegisterInterface(std::string ifID, std::string type) {
 	TLMErrorLog::FatalError( "Try to register same interface twice " + ifID );
     }
   
-    int interfaceID = Plugin->RegisteTLMInterface(ifID, str2type(type));
+    int interfaceID = Plugin->RegisteTLMInterface(ifID, str2dimensionality(type));
     
     InterfaceIDmap[ifID] = interfaceID;
     NumInterfaces++;
@@ -317,14 +317,14 @@ static void mdlInitializeSampleTimes(SimStruct *S)
           ss << "TLM" << i+1 << "_1DIN";
           std::string tmp = ss.str();
           const char* name = tmp.c_str();
-          TLM_InterfaceReg::GetInstance()->RegisterInterface(name,"SignalInput");
+          TLM_InterfaceReg::GetInstance()->RegisterInterface(name,"Input");
       }
       for(size_t i=0; i<N_OUTPUTS; ++i) {
           std::stringstream ss;
           ss << "TLM" << i+1 << "_1DOUT";
           std::string tmp = ss.str();
           const char* name = tmp.c_str();
-          TLM_InterfaceReg::GetInstance()->RegisterInterface(name,"SignalOutput");
+          TLM_InterfaceReg::GetInstance()->RegisterInterface(name,"Output");
       }
 
 
