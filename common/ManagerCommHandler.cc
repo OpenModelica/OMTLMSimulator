@@ -278,7 +278,7 @@ void ManagerCommHandler::ProcessRegInterfaceMessage(int compID, TLMMessage& mess
         // interface not found, create it
         //std::string type = "1D";                                //HARD-CODED /robbr
         TheModel.RegisterTLMInterfaceProxy(compID, aName, dimensions,
-                                           causality, str2domain(domain));
+                                           causality, domain);
         IfcID = TheModel.GetTLMInterfaceID(compID, aName);        
     }
 

@@ -144,7 +144,7 @@ bool PluginImplementer::Init( std::string model,
 // and returns the ID for the interface. '-1' is returned if
 // the interface is not connected in the MetaModel.
 int  PluginImplementer::RegisteTLMInterface(std::string name , int dimensions,
-                                             std::string causality, InterfaceDomain domain ) {
+                                             std::string causality, std::string domain ) {
     TLMErrorLog::Log(string("Register Interface (kanin) ") + name );
 
     TLMInterface *ifc;
