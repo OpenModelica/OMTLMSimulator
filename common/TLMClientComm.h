@@ -60,7 +60,7 @@ class TLMClientComm {
 
     //! CreateInterfaceRegMessage packs interface name into a message
     //! to be sent to the TLM manager
-    void CreateInterfaceRegMessage(std::string& Name, InterfaceType type, TLMMessage& mess);
+    void CreateInterfaceRegMessage(std::string& Name, InterfaceType type, InterfaceDomain domain, TLMMessage& mess);
 
     //! UnpackRegInterfaceMessage unpacks the parameters for the connection
     //! attached to the specified interface

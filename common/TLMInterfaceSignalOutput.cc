@@ -9,10 +9,10 @@
 //TODO: This is used both by 1D and 3D, should probably be defined in one place. /robbr
 static const double TLM_DAMP_DELAY = 1.5;
 
-TLMInterfaceSignalOutput::TLMInterfaceSignalOutput(TLMClientComm &theComm, std::string &aName, double StartTime)
-    : TLMInterfaceSignal(theComm, aName, StartTime, InterfaceSignalOutput) {}
+TLMInterfaceOutput::TLMInterfaceOutput(TLMClientComm &theComm, std::string &aName, double StartTime, InterfaceDomain Domain)
+    : TLMInterfaceSignal(theComm, aName, StartTime, TypeOutput, Domain) {}
 
-TLMInterfaceSignalOutput::~TLMInterfaceSignalOutput() {
+TLMInterfaceOutput::~TLMInterfaceOutput() {
     if(DataToSend.size() != 0) {
         TLMErrorLog::Log(std::string("Interface ") + GetName() + " sends rest of data for time= " +
                          TLMErrorLog::ToStdStr(DataToSend.back().time));
@@ -27,7 +27,7 @@ TLMInterfaceSignalOutput::~TLMInterfaceSignalOutput() {
 
 
 // Set motion data and communicate if necessary.
-void TLMInterfaceSignalOutput::SetTimeData(double time,
+void TLMInterfaceOutput::SetTimeData(double time,
                                      double value) {
     // put the variables into TLMTimeData structure and the end of  DataToSend vector
     int lastInd = DataToSend.size();

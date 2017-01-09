@@ -83,8 +83,7 @@ protected:
     //! Register TLM interface sends a registration request to TLMManager
     //! and returns the ID for the interface. '-1' is returned if
     //! the interface is not connected in the MetaModel.
-    int RegisteTLMInterface1D(std::string name);
-    int RegisteTLMInterface(std::string name, InterfaceType type=Interface3D );
+    int RegisteTLMInterface(std::string name, InterfaceType type=Type3D , InterfaceDomain domain=DomainMechanical);
 
     //! ReceiveTimeData receives time-stamped data from coupled simulations
     //! if the specified interface needs more data for the given time..

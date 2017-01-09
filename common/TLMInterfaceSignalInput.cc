@@ -9,15 +9,15 @@
 //TODO: This is used both by 1D and 3D, should probably be defined in one place. /robbr
 static const double TLM_DAMP_DELAY = 1.5;
 
-TLMInterfaceSignalInput::TLMInterfaceSignalInput(TLMClientComm &theComm, std::string &aName, double StartTime)
-    : TLMInterfaceSignal(theComm, aName, StartTime, InterfaceSignalInput) {}
+TLMInterfaceInput::TLMInterfaceInput(TLMClientComm &theComm, std::string &aName, double StartTime, InterfaceDomain Domain)
+    : TLMInterfaceSignal(theComm, aName, StartTime, TypeInput, Domain) {}
 
-TLMInterfaceSignalInput::~TLMInterfaceSignalInput() {}
-
-
+TLMInterfaceInput::~TLMInterfaceInput() {}
 
 
-void TLMInterfaceSignalInput::GetValue( double time,
+
+
+void TLMInterfaceInput::GetValue( double time,
                                    double* value) {
     TLMTimeDataSignal request;
     request.time = time - Params.Delay;
