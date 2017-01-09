@@ -234,28 +234,35 @@ void ManagerCommHandler::ProcessRegInterfaceMessage(int compID, TLMMessage& mess
     }
 
     // First, find the interface in the meta model
-    string aNameTypeAndDomain ((const char*)(& mess.Data[0]), mess.Header.DataSize);
+    string aSpecification ((const char*)(& mess.Data[0]), mess.Header.DataSize);
 
-    TLMErrorLog::Log("Manager received nameAndType: "+aNameTypeAndDomain);
+    TLMErrorLog::Log("Manager received nameAndType: "+aSpecification);
 
-    string aName, type, domain;
-    bool readingType=false;
+    string aName, dimensionality, causality, domain;
+    bool readingDimensionality=false;
+    bool readingCausality=false;
     bool readingDomain=false;
-    for(size_t i=0; i<aNameTypeAndDomain.size(); ++i) {
-        if(aNameTypeAndDomain[i] == ':' && !readingType) {
-            readingType = true;
+    for(size_t i=0; i<aSpecification.size(); ++i) {
+        if(aSpecification[i] == ':' && !readingDimensionality) {
+            readingDimensionality = true;
         }
-        else if(aNameTypeAndDomain[i] == ':' && readingType) {
+        else if(aSpecification[i] == ':' && readingDimensionality) {
+            readingCausality = true;
+        }
+        else if(aSpecification[i] == ':' && readingCausality) {
             readingDomain = true;
         }
-        if(readingType) {
-            type += aNameTypeAndDomain[i];
+        if(readingDimensionality) {
+            dimensionality += aSpecification[i];
+        }
+        else if(readingCausality) {
+            causality += aSpecification[i];
         }
         else if(readingDomain) {
-            domain += aNameTypeAndDomain[i];
+            domain += aSpecification[i];
         }
         else {
-            aName += aNameTypeAndDomain[i];
+            aName += aSpecification[i];
         }
     }
 
@@ -269,7 +276,8 @@ void ManagerCommHandler::ProcessRegInterfaceMessage(int compID, TLMMessage& mess
     if(IfcID < 0 && CommMode == InterfaceRequestMode) {
         // interface not found, create it
         //std::string type = "1D";                                //HARD-CODED /robbr
-        TheModel.RegisterTLMInterfaceProxy(compID, aName, str2type(type), str2domain(domain));
+        TheModel.RegisterTLMInterfaceProxy(compID, aName, str2dimensionality(dimensionality),
+                                           str2causality(causality), str2domain(domain));
         IfcID = TheModel.GetTLMInterfaceID(compID, aName);        
     }
 

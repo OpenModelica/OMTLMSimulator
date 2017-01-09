@@ -242,7 +242,7 @@ void calc_tlm_force(void* in_TLMPluginStructObj,
 
     // Check if interface is registered. If it's not, register it
     if( MarkerIDmap.find(interfaceID) == MarkerIDmap.end() ){
-        MarkerIDmap[interfaceID] = TLMPluginStructObj->Plugin->RegisteTLMInterface(interfaceID, Type3D);
+        MarkerIDmap[interfaceID] = TLMPluginStructObj->Plugin->RegisteTLMInterface(interfaceID, Dimensionality3D);
     }
 
     // Interface force ID in TLM manager
@@ -301,7 +301,7 @@ void calc_tlm_force_1d(void* in_TLMPluginStructObj,
 
     // Check if interface is registered. If it's not, register it
     if( MarkerIDmap.find(interfaceID) == MarkerIDmap.end() ){
-        MarkerIDmap[interfaceID] = TLMPluginStructObj->Plugin->RegisteTLMInterface(interfaceID, Type1D);
+        MarkerIDmap[interfaceID] = TLMPluginStructObj->Plugin->RegisteTLMInterface(interfaceID, Dimensionality1D);
     }
 
     // Interface force ID in TLM manager

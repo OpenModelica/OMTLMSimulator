@@ -6,7 +6,8 @@
 class TLMInterfaceSignal : public TLMInterface
 {
 public:
-  TLMInterfaceSignal(TLMClientComm &theComm, std::string &aName, double StartTime, InterfaceType Type, InterfaceDomain Domain=DomainSignal);
+  TLMInterfaceSignal(TLMClientComm &theComm, std::string &aName, double StartTime, InterfaceDimensionality Dimensionality,
+                     InterfaceCausality Causality, InterfaceDomain Domain=DomainUnspecified);
 
   //! Destructor. Sends the rest of the data if necessary.
   virtual ~TLMInterfaceSignal();
