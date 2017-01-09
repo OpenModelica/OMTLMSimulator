@@ -101,7 +101,7 @@ void MonitorTimeStep(TLMPlugin* TLMlink,
             int interfaceID = interfaceProxy.GetID();
             int connectionID = interfaceProxy.GetConnectionID();
             int dimensions = interfaceProxy.GetDimensions();
-            InterfaceCausality causality = interfaceProxy.GetCausality();
+            string causality = interfaceProxy.GetCausality();
 
             TLMErrorLog::Log("Data request for " + interfaceProxy.GetName() + " for time " + ToStr(SimTime) + ", id: " + ToStr(interfaceID));
 
@@ -138,7 +138,7 @@ void MonitorTimeStep(TLMPlugin* TLMlink,
                 //Apply damping factor, since this can not be done in GetTimeData (DampedTimeData is not available for monitor)
                 CurTimeData.GenForce = CurTimeData.GenForce*(1-alpha) + PrevTimeData.GenForce*alpha;
               }
-              else if(dimensions == 1 && causality == CausalityOutput){
+              else if(dimensions == 1 && causality == "Output"){
                 TLMTimeDataSignal& CurTimeData = dataStorageSignal[interfaceID];
                 TLMErrorLog::Log("Hare 1");
                 int linkedID = interfaceProxy.GetLinkedID();
@@ -454,7 +454,7 @@ void printHeader(MetaModel& model, std::ofstream& dataFile)
               nActiveInterfaces++;
             }
             else if(interfaceProxy.GetDimensions() == 1 &&
-                    interfaceProxy.GetCausality() == CausalityOutput) {
+                    interfaceProxy.GetCausality() == "Output") {
               // Comma between interfaces
               if(nActiveInterfaces > 0) dataFile << ",";
 
@@ -562,7 +562,7 @@ void printData(MetaModel& model,
               nActiveInterfaces++;
             }
             else if(interfaceProxy.GetDimensions() == 1 &&
-                    interfaceProxy.GetCausality() == CausalityOutput) {
+                    interfaceProxy.GetCausality() == "Output") {
               TLMTimeDataSignal& timeData = dataStorageSignal.at(interfaceProxy.GetID());
 
               // Print time only once, that is, for the first entry.

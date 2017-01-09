@@ -134,7 +134,7 @@ void MetaModelReader::ReadTLMInterfaceNodes(xmlNode* node, int ComponentID) {
             std::stringstream ss;
             ss << "Registering TLM interface " << Name << " with " << Dimensions << " dimensions.";
             TLMErrorLog::Log(ss.str());
-            int ipID = TheModel.RegisterTLMInterfaceProxy(ComponentID, Name, Dimensions, str2causality(Causality), str2domain(Domain));
+            int ipID = TheModel.RegisterTLMInterfaceProxy(ComponentID, Name, Dimensions, Causality, str2domain(Domain));
 
             // Get/Set position and orientation if available in XML file.
             TLMInterfaceProxy& ip = TheModel.GetTLMInterfaceProxy(ipID);

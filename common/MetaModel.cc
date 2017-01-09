@@ -58,7 +58,7 @@ string SimulationParams::GetServerName() const {
 // aType - type of this interface (3D, 1D, SignalInput or SignalOutput)
 // aDomain - physical domain of this interface
 TLMInterfaceProxy::TLMInterfaceProxy(int CompID, int IfcID, string& aName, int aDimensions,
-                                     InterfaceCausality aCausality, InterfaceDomain aDomain) :
+                                     string& aCausality, InterfaceDomain aDomain) :
     InterfaceID(IfcID),
     ComponentID(CompID),
     ConnectionID(-1),
@@ -215,7 +215,7 @@ int MetaModel::GetTLMInterfaceID(string& FullName) {
 
 // Add TLM interface proxy with a given name to the Model, return its ID.
 int MetaModel::RegisterTLMInterfaceProxy(const int ComponentID, string& Name, int Dimensions,
-                                         InterfaceCausality Causality, InterfaceDomain Domain) {
+                                         string& Causality, InterfaceDomain Domain) {
     TLMInterfaceProxy* ifc = 
         new TLMInterfaceProxy(ComponentID, Interfaces.size(), Name, Dimensions, Causality, Domain);
 
