@@ -5,6 +5,7 @@
 
 #include <iostream>
 #include <string>
+#include <sstream>
 #include <cstdlib>
 #include <cstring>
 #include "TLMErrorLog.h"
@@ -55,9 +56,12 @@ void print_interface_information(MetaModel& theModel)
                     tlmData.RotMatrix[6], tlmData.RotMatrix[7], tlmData.RotMatrix[8]);
         double3Vec phi = ATophi321(A);
         
+        std::stringstream ss;
+        ss << intProx.GetDimensions();
+        std::string dimStr = ss.str();
         interfacefile << "\t<Interface model=\"" + comProx.GetName() +
                          "\" Name=\"" + intProx.GetName() +
-                         "\" Type=\"" + dimensionality2str(intProx.GetDimensionality()) +
+                         "\" Type=\"" + dimStr +
                          "\" Domain=\"" + domain2str(intProx.GetDomain()) + "\"\n";
         interfacefile << "\t\tPosition=\"" << R(1) << "," << R(2) << "," << R(3) << "\"\n";
         interfacefile << "\t\tAngle321=\"" << phi(1) << "," << phi(2) << "," << phi(3) << "\"/>\n"; 

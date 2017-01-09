@@ -71,7 +71,7 @@ TLMPlugin* initializeTLMConnection(MetaModel& model, std::string& serverName)
 
         TLMErrorLog::Log( "Trying to register monitoring interface " + interfaceProxy.GetName() );
         int TLMInterfaceID = TLMlink->RegisteTLMInterface( component.GetName() + "." + interfaceProxy.GetName(),
-                                                           interfaceProxy.GetDimensionality(), interfaceProxy.GetCausality(),
+                                                           interfaceProxy.GetDimensions(), interfaceProxy.GetCausality(),
                                                            interfaceProxy.GetDomain() );
 
         if(TLMInterfaceID >= 0) {
@@ -100,7 +100,7 @@ void MonitorTimeStep(TLMPlugin* TLMlink,
             TLMInterfaceProxy& interfaceProxy = model.GetTLMInterfaceProxy(i);
             int interfaceID = interfaceProxy.GetID();
             int connectionID = interfaceProxy.GetConnectionID();
-            InterfaceDimensionality dimensionality = interfaceProxy.GetDimensionality();
+            int dimensions = interfaceProxy.GetDimensions();
             InterfaceCausality causality = interfaceProxy.GetCausality();
 
             TLMErrorLog::Log("Data request for " + interfaceProxy.GetName() + " for time " + ToStr(SimTime) + ", id: " + ToStr(interfaceID));
@@ -108,7 +108,7 @@ void MonitorTimeStep(TLMPlugin* TLMlink,
             if( connectionID >= 0 ){
 #define LOGGEDFORCEFIX
 #ifdef  LOGGEDFORCEFIX
-              if(dimensionality == Dimensionality3D) {
+              if(dimensions == 6) {
                   TLMTimeData3D& PrevTimeData = dataStorage3D[interfaceID];
                   TLMTimeData3D& CurTimeData = dataStorage3D[interfaceID];
 
@@ -125,7 +125,7 @@ void MonitorTimeStep(TLMPlugin* TLMlink,
                         + PrevTimeData.GenForce[i] * alpha;
                   }
               }
-              else if(dimensionality == Dimensionality1D){
+              else if(dimensions == 1){
                 TLMTimeData1D& PrevTimeData = dataStorage1D[interfaceID];
                 TLMTimeData1D& CurTimeData = dataStorage1D[interfaceID];
 
@@ -138,7 +138,7 @@ void MonitorTimeStep(TLMPlugin* TLMlink,
                 //Apply damping factor, since this can not be done in GetTimeData (DampedTimeData is not available for monitor)
                 CurTimeData.GenForce = CurTimeData.GenForce*(1-alpha) + PrevTimeData.GenForce*alpha;
               }
-              else if(dimensionality == Dimensionality1D && causality == CausalityOutput){
+              else if(dimensions == 1 && causality == CausalityOutput){
                 TLMTimeDataSignal& CurTimeData = dataStorageSignal[interfaceID];
                 TLMErrorLog::Log("Hare 1");
                 int linkedID = interfaceProxy.GetLinkedID();
@@ -423,7 +423,7 @@ void printHeader(MetaModel& model, std::ofstream& dataFile)
         TLMInterfaceProxy& interfaceProxy = model.GetTLMInterfaceProxy(i);
         TLMComponentProxy& component = model.GetTLMComponentProxy(interfaceProxy.GetComponentID());
         if( interfaceProxy.GetConnectionID() >= 0 ){
-            if(interfaceProxy.GetDimensionality() == Dimensionality3D) {
+            if(interfaceProxy.GetDimensions() == 6) {
                 // Comma between interfaces
                 if(nActiveInterfaces > 0) dataFile << ",";
 
@@ -441,7 +441,7 @@ void printHeader(MetaModel& model, std::ofstream& dataFile)
 
                 nActiveInterfaces++;
             }
-            else if(interfaceProxy.GetDimensionality() == Dimensionality1D) {
+            else if(interfaceProxy.GetDimensions() == 1) {
               // Comma between interfaces
               if(nActiveInterfaces > 0) dataFile << ",";
 
@@ -453,7 +453,7 @@ void printHeader(MetaModel& model, std::ofstream& dataFile)
 
               nActiveInterfaces++;
             }
-            else if(interfaceProxy.GetDimensionality() == DimensionalitySignal &&
+            else if(interfaceProxy.GetDimensions() == 1 &&
                     interfaceProxy.GetCausality() == CausalityOutput) {
               // Comma between interfaces
               if(nActiveInterfaces > 0) dataFile << ",";
@@ -485,7 +485,7 @@ void printData(MetaModel& model,
     for( int i=0 ; i<nTLMInterfaces ; i++ ){
         TLMInterfaceProxy& interfaceProxy = model.GetTLMInterfaceProxy(i);
         if( interfaceProxy.GetConnectionID() >= 0 ){
-            if(interfaceProxy.GetDimensionality() == Dimensionality3D) {
+            if(interfaceProxy.GetDimensions() == 6) {
                 TLMTimeData3D& timeData = dataStorage3D.at(interfaceProxy.GetID());
 
                 // Print time only once, that is, for the first entry.
@@ -535,7 +535,7 @@ void printData(MetaModel& model,
 
                 nActiveInterfaces++;
             }
-            else if(interfaceProxy.GetDimensionality() == Dimensionality1D) {
+            else if(interfaceProxy.GetDimensions() == 1) {
               TLMTimeData1D& timeData = dataStorage1D.at(interfaceProxy.GetID());
 
               // Print time only once, that is, for the first entry.
@@ -561,7 +561,7 @@ void printData(MetaModel& model,
 
               nActiveInterfaces++;
             }
-            else if(interfaceProxy.GetDimensionality() == DimensionalitySignal &&
+            else if(interfaceProxy.GetDimensions() == 1 &&
                     interfaceProxy.GetCausality() == CausalityOutput) {
               TLMTimeDataSignal& timeData = dataStorageSignal.at(interfaceProxy.GetID());
 

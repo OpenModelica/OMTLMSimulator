@@ -12,7 +12,7 @@
 #include <deque>
 #include <string>
 #include <cstring>
-
+#include <sstream>
 #include <iostream>
 #include <fstream>
 using std::ofstream;
@@ -257,10 +257,12 @@ void TLMClientComm::CreateComponentRegMessage(std::string& Name, TLMMessage& mes
     memcpy(&mess.Data[0], Name.c_str(), Name.length());
 }
 
-void TLMClientComm::CreateInterfaceRegMessage(std::string& Name, InterfaceDimensionality dimensionality,
+void TLMClientComm::CreateInterfaceRegMessage(std::string& Name, int dimensions,
                                               InterfaceCausality causality, InterfaceDomain domain, TLMMessage& mess) {
     mess.Header.MessageType = TLMMessageTypeConst::TLM_REG_INTERFACE;
-    std::string specification = Name+":"+dimensionality2str(dimensionality)+":"+causality2str(causality)+":"+domain2str(domain);
+    std::stringstream ss;
+    ss << Name << ":" << dimensions << ":" << causality2str(causality) << ":" << domain2str(domain);
+    std::string specification = ss.str();
     TLMErrorLog::Log("Client sends nameAndType: "+specification);
     mess.Header.DataSize = specification.length();
     mess.Data.resize(specification.length());

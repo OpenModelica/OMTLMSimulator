@@ -25,7 +25,7 @@ class TLMInterface {
 
     //! TLMInterface constructor. Sends a registration message to the TLM manager
     //! and prepares the object for simulation.
-    TLMInterface(TLMClientComm& theComm, std::string& aName, double StartTime, InterfaceDimensionality dimensionality,
+    TLMInterface(TLMClientComm& theComm, std::string& aName, double StartTime, int dimensions,
                  InterfaceCausality causality, InterfaceDomain domain);
     virtual ~TLMInterface();
     //! Indecates if the interface is finished and waits for shutdown.
@@ -35,8 +35,8 @@ class TLMInterface {
     //! Get name of the interface
     const std::string& GetName() const { return Name; }
 
-    //! Get dimensionality of the interface
-    const InterfaceDimensionality& GetDimensionality() const { return Dimensionality; }
+    //! Get dimensions of the interface
+    const int& GetDimensions() const { return Dimensions; }
 
     //! Get causality of the interface
     const InterfaceCausality& GetCausality() const {return Causality; }
@@ -104,7 +104,7 @@ class TLMInterface {
     //! This is use for interface request mode and not simulation mode.
     bool waitForShutdownFlg;
 
-    InterfaceDimensionality Dimensionality;
+    int Dimensions;
     InterfaceCausality Causality;
     InterfaceDomain Domain;
 };

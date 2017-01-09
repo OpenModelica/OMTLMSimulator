@@ -10,7 +10,7 @@
 static const double TLM_DAMP_DELAY = 1.5;
 
 TLMInterfaceOutput::TLMInterfaceOutput(TLMClientComm &theComm, std::string &aName, double StartTime, InterfaceDomain Domain)
-    : TLMInterfaceSignal(theComm, aName, StartTime, DimensionalitySignal, CausalityOutput, Domain) {}
+    : TLMInterfaceSignal(theComm, aName, StartTime, 1, CausalityOutput, Domain) {}
 
 TLMInterfaceOutput::~TLMInterfaceOutput() {
     if(DataToSend.size() != 0) {

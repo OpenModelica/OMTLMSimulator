@@ -23,7 +23,7 @@ using namespace tlmMisc;
 
 
 TLMInterface::TLMInterface(TLMClientComm& theComm, std::string& aName, double StartTime,
-                           InterfaceDimensionality dimensionality, InterfaceCausality causality, InterfaceDomain domain):
+                           int dimensions, InterfaceCausality causality, InterfaceDomain domain):
     LastSendTime(StartTime),
     NextRecvTime(0.0),
     Message(),
@@ -33,11 +33,11 @@ TLMInterface::TLMInterface(TLMClientComm& theComm, std::string& aName, double St
     Comm(theComm),
     InterfaceID(-1),
     waitForShutdownFlg(false),
-    Dimensionality(dimensionality),
+    Dimensions(dimensions),
     Causality(causality),
     Domain(domain)
 { // TLMInterface constructor
-    Comm.CreateInterfaceRegMessage(aName, Dimensionality, Causality, Domain, Message);
+    Comm.CreateInterfaceRegMessage(aName, Dimensions, Causality, Domain, Message);
     Message.SocketHandle = Comm.GetSocketHandle();
 
     TLMCommUtil::SendMessage(Message);
