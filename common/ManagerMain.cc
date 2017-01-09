@@ -62,7 +62,7 @@ void print_interface_information(MetaModel& theModel)
         interfacefile << "\t<Interface model=\"" + comProx.GetName() +
                          "\" Name=\"" + intProx.GetName() +
                          "\" Type=\"" + dimStr +
-                         "\" Domain=\"" + domain2str(intProx.GetDomain()) + "\"\n";
+                         "\" Domain=\"" + intProx.GetDomain() + "\"\n";
         interfacefile << "\t\tPosition=\"" << R(1) << "," << R(2) << "," << R(3) << "\"\n";
         interfacefile << "\t\tAngle321=\"" << phi(1) << "," << phi(2) << "," << phi(3) << "\"/>\n"; 
       }

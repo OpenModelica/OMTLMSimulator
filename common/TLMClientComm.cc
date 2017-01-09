@@ -258,10 +258,10 @@ void TLMClientComm::CreateComponentRegMessage(std::string& Name, TLMMessage& mes
 }
 
 void TLMClientComm::CreateInterfaceRegMessage(std::string& Name, int dimensions,
-                                              string& causality, InterfaceDomain domain, TLMMessage& mess) {
+                                              string& causality, std::string domain, TLMMessage& mess) {
     mess.Header.MessageType = TLMMessageTypeConst::TLM_REG_INTERFACE;
     std::stringstream ss;
-    ss << Name << ":" << dimensions << ":" << causality << ":" << domain2str(domain);
+    ss << Name << ":" << dimensions << ":" << causality << ":" << domain;
     std::string specification = ss.str();
     TLMErrorLog::Log("Client sends nameAndType: "+specification);
     mess.Header.DataSize = specification.length();

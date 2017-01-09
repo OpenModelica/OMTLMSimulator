@@ -68,7 +68,7 @@ class TLMPlugin {
     //! the interface is not connected in the MetaModel.
     //! \param name Name of the TLM interface
     virtual int RegisteTLMInterface( std::string name, int dimensions=6,
-                                     std::string causality="Bidirectional", InterfaceDomain domain=DomainMechanical) = 0;
+                                     std::string causality="Bidirectional", std::string domain="Mechanical") = 0;
 
     //! Evaluate the reaction force from the TLM connection
     //! for a specified interface. This function might result in a request sent

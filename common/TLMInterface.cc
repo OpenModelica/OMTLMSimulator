@@ -23,7 +23,7 @@ using namespace tlmMisc;
 
 
 TLMInterface::TLMInterface(TLMClientComm& theComm, std::string& aName, double StartTime,
-                           int dimensions, std::string causality, InterfaceDomain domain):
+                           int dimensions, std::string causality, std::string domain):
     LastSendTime(StartTime),
     NextRecvTime(0.0),
     Message(),

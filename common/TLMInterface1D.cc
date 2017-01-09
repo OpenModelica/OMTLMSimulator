@@ -9,7 +9,7 @@
 //TODO: This is used both by 1D and 3D, should probably be defined in one place. /robbr
 static const double TLM_DAMP_DELAY = 1.5;
 
-TLMInterface1D::TLMInterface1D(TLMClientComm &theComm, std::string &aName, double StartTime, InterfaceDomain Domain)
+TLMInterface1D::TLMInterface1D(TLMClientComm &theComm, std::string &aName, double StartTime, std::string Domain)
     : TLMInterface(theComm, aName, StartTime, 1, "Bidirectional", Domain){}
 
 TLMInterface1D::~TLMInterface1D() {
