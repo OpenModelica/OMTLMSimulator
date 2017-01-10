@@ -116,7 +116,6 @@ protected:
                         double *value);
     void GetForce1D(int interfaceID,
                     double time,
-                    double position,
                     double speed,
                     double* force);
     void GetForce3D(int interfaceID,

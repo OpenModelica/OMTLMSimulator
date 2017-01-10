@@ -120,15 +120,14 @@ void TLMInterface1D::GetTimeData(TLMTimeData1D& Instance, std::deque<TLMTimeData
 
 
 
-void TLMInterface1D::GetForce( double time,
-                             double position,
-                             double speed,
-                             double* force) {
+void TLMInterface1D::GetForce(double time,
+                              double speed,
+                              double* force) {
     TLMTimeData1D request;
     request.time = time - Params.Delay;
     GetTimeData(request);
 
-    TLMPlugin::GetForce1D(position, speed, request, Params, force);
+    TLMPlugin::GetForce1D(speed, request, Params, force);
 
 
 }
@@ -156,7 +155,7 @@ void TLMInterface1D::SetTimeData(double time,
         DampedTimeData.push_back(request);
     }
 
-    TLMPlugin::GetForce1D(position, speed, request, Params, &item.GenForce);
+    TLMPlugin::GetForce1D(speed, request, Params, &item.GenForce);
 
     // The wave to send is: (- Force + Impedance * Velocity)
     double oldForce = item.GenForce;

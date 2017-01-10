@@ -272,7 +272,7 @@ void PluginImplementer::GetValueSignal(int interfaceID, double time, double *val
     //ifc->SetTimeData(time, *value);  //We need to write something as well
 }
 
-void PluginImplementer::GetForce1D(int interfaceID, double time, double position, double speed, double *force) {
+void PluginImplementer::GetForce1D(int interfaceID, double time, double speed, double *force) {
   if(!ModelChecked) CheckModel();
 
   // Use the ID to get to the right interface object
@@ -294,7 +294,7 @@ void PluginImplementer::GetForce1D(int interfaceID, double time, double position
   ReceiveTimeData(ifc, time);
 
   // evaluate the reaction force from the TLM connection
-  ifc->GetForce(time, position, speed, force);
+  ifc->GetForce(time, speed, force);
 }
 
 
