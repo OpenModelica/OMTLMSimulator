@@ -272,6 +272,12 @@ void PluginImplementer::GetValueSignal(int interfaceID, double time, double *val
     //ifc->SetTimeData(time, *value);  //We need to write something as well
 }
 
+//This function is for backwards compatibility, remove when position variables has been removed from all wrappers
+void PluginImplementer::GetForce1D(int interfaceID, double time, double position, double speed, double *force) {
+    (void)position; //Unused
+    this->GetForce1D(interfaceID,time,speed,force);
+}
+
 void PluginImplementer::GetForce1D(int interfaceID, double time, double speed, double *force) {
   if(!ModelChecked) CheckModel();
 
