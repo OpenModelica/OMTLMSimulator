@@ -60,11 +60,12 @@ SOURCES += \
     ../../common/TLMInterface3D.cc
 
 HEADERS += \
-    TLMPluginInterface1D.hpp \
     TLMPluginInterfaceSignalInput.hpp \
     TLMPluginInterfaceSignalOutput.hpp \
     common.h \
-    TLMPluginHandler.hpp
+    TLMPluginHandler.hpp \
+    TLMPluginInterfaceMechanical1D.hpp \
+    TLMPluginInterfaceHydraulic1D.hpp
 
 OTHER_FILES += \
     hopsanDebugReleaseCompile.prf \

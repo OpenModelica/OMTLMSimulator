@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <hopsanobjectappearance version="0.3">
-    <modelobject sourcecode="TLMPluginInterface1D.hpp" typename="TLMPluginInterface1D" displayname="TLM Plugin Interface 1D">
+    <modelobject sourcecode="TLMPluginInterfaceHydraulic1D.hpp" typename="TLMPluginInterfaceHydraulic1D" displayname="TLM Plugin Interface Hydraulic 1D">
         <icons>
             <icon scale="1" path="TLMPluginInterface1D.svg" iconrotation="ON" type="user"/>
         </icons>

@@ -314,7 +314,6 @@ void calc_tlm_force_1d(void* in_TLMPluginStructObj,
         // Call the plugin to get reaction force
     TLMPluginStructObj->Plugin->GetForce1D(id,
                          simTime,
-                         position,
                          speed,
                          forceOut);
     }
