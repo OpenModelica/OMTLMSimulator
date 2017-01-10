@@ -31,7 +31,7 @@ public:
 
   void GetTimeData(TLMTimeData1D &Instance);
   void GetTimeData(TLMTimeData1D &Instance, std::deque<TLMTimeData1D> &Data, bool OnlyForce);
-  void GetForce(double time, double position, double speed, double *force);
+  void GetForce(double time, double speed, double *force);
   void SetTimeData(double time, double position, double speed);
   void SendAllData();
 

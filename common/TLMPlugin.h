@@ -90,7 +90,6 @@ class TLMPlugin {
                                 double* value)  = 0;
     virtual void GetForce1D(int interfaceID,
                             double time,
-                            double position,
                             double speed,
                             double* force)  = 0;
     virtual void GetForce3D(int interfaceID,
@@ -154,8 +153,7 @@ class TLMPlugin {
     static void GetValueSignal(TLMTimeDataSignal& Data,
                                TLMConnectionParams& Params,
                                double *value);
-    static void GetForce1D(double position,
-                         double speed,
+    static void GetForce1D(double speed,
                          TLMTimeData1D& Data,
                          TLMConnectionParams& Params,
                          double* force);

@@ -88,8 +88,7 @@ void TLMPlugin::GetValueSignal(TLMTimeDataSignal &Data,
     }
 }
 
-void TLMPlugin::GetForce1D(double position,
-                           double speed,
+void TLMPlugin::GetForce1D(double speed,
                            TLMTimeData1D &Data,
                            TLMConnectionParams &Params,
                            double *force)
