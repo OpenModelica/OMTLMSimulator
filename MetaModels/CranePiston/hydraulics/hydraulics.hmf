@@ -214,7 +214,7 @@
           </hopsanobjectappearance>
         </hopsangui>
       </component>
-      <component typename="HydraulicMultiPressureSourceC" name="C_type_Pressure_Source_2" locked="false" subtypename="MechatronicPressureSourceC" cqstype="C">
+      <component typename="HydraulicMultiPressureSourceC" name="C_type_Pressure_Source_2" locked="false" cqstype="C">
         <parameters>
           <parameter name="MP#Flow" type="double" unit="m^3/s" value="0"/>
           <parameter name="MP#Temperature" type="double" unit="K" value="293"/>
@@ -230,7 +230,7 @@
           <nametext visible="0" position="0"/>
           <animation hydraulicmaxpressure="20000000" flowspeed="100" hydraulicminpressure="0"/>
           <hopsanobjectappearance version="0.3">
-            <modelobject typename="HydraulicMultiPressureSourceC" displayname="C_type_Pressure_Source_2" subtypename="MechatronicPressureSourceC">
+            <modelobject typename="HydraulicMultiPressureSourceC" displayname="C_type_Pressure_Source_2">
               <ports/>
             </modelobject>
           </hopsanobjectappearance>
@@ -260,7 +260,7 @@
           </hopsanobjectappearance>
         </hopsangui>
       </component>
-      <component typename="HydraulicMultiTankC" name="C_type_Tank_2" locked="false" subtypename="MechatronicTankC" cqstype="C">
+      <component typename="HydraulicMultiTankC" name="C_type_Tank_2" locked="false" cqstype="C">
         <parameters>
           <parameter name="MP#Flow" type="double" unit="m^3/s" value="0"/>
           <parameter name="MP#Temperature" type="double" unit="K" value="293"/>
@@ -275,7 +275,7 @@
           <nametext visible="0" position="0"/>
           <animation hydraulicmaxpressure="20000000" flowspeed="100" hydraulicminpressure="0"/>
           <hopsanobjectappearance version="0.3">
-            <modelobject typename="HydraulicMultiTankC" displayname="C_type_Tank_2" subtypename="MechatronicTankC">
+            <modelobject typename="HydraulicMultiTankC" displayname="C_type_Tank_2">
               <ports/>
             </modelobject>
           </hopsanobjectappearance>
@@ -316,7 +316,7 @@
           </hopsanobjectappearance>
         </hopsangui>
       </component>
-      <component typename="HydraulicMultiTankC" name="C_type_Tank_1" locked="false" subtypename="MechatronicTankC" cqstype="C">
+      <component typename="HydraulicMultiTankC" name="C_type_Tank_1" locked="false" cqstype="C">
         <parameters>
           <parameter name="MP#Flow" type="double" unit="m^3/s" value="0"/>
           <parameter name="MP#Temperature" type="double" unit="K" value="293"/>
@@ -331,7 +331,7 @@
           <nametext visible="0" position="0"/>
           <animation hydraulicmaxpressure="20000000" flowspeed="100" hydraulicminpressure="0"/>
           <hopsanobjectappearance version="0.3">
-            <modelobject typename="HydraulicMultiTankC" displayname="C_type_Tank_1" subtypename="MechatronicTankC">
+            <modelobject typename="HydraulicMultiTankC" displayname="C_type_Tank_1">
               <ports/>
             </modelobject>
           </hopsanobjectappearance>
@@ -443,7 +443,7 @@
           </hopsanobjectappearance>
         </hopsangui>
       </component>
-      <component typename="HydraulicMultiPressureSourceC" name="C_type_Pressure_Source_1" locked="false" subtypename="MechatronicPressureSourceC" cqstype="C">
+      <component typename="HydraulicMultiPressureSourceC" name="C_type_Pressure_Source_1" locked="false" cqstype="C">
         <parameters>
           <parameter name="MP#Flow" type="double" unit="m^3/s" value="0"/>
           <parameter name="MP#Temperature" type="double" unit="K" value="293"/>
@@ -459,7 +459,7 @@
           <nametext visible="0" position="0"/>
           <animation hydraulicmaxpressure="20000000" flowspeed="100" hydraulicminpressure="0"/>
           <hopsanobjectappearance version="0.3">
-            <modelobject typename="HydraulicMultiPressureSourceC" displayname="C_type_Pressure_Source_1" subtypename="MechatronicPressureSourceC">
+            <modelobject typename="HydraulicMultiPressureSourceC" displayname="C_type_Pressure_Source_1">
               <ports/>
             </modelobject>
           </hopsanobjectappearance>

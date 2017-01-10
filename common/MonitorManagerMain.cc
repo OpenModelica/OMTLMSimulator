@@ -447,9 +447,15 @@ void printHeader(MetaModel& model, std::ofstream& dataFile)
 
               // Add all TLM variable names for all active interfaces
               std::string name = component.GetName() + "." + interfaceProxy.GetName();
-              dataFile << "\"" << name << ".x\","; // Position
-              dataFile << "\"" << name << ".v\","; // Speed
-              dataFile << "\"" << name << ".F\""; // Force
+              if(interfaceProxy.GetDomain() == "Hydraulic") {
+                  dataFile << "\"" << name << ".q\","; // Volume flow
+                  dataFile << "\"" << name << ".p\""; // Pressure
+              }
+              else if(interfaceProxy.GetDomain() == "Mechanical") {
+                dataFile << "\"" << name << ".x\","; // Position
+                dataFile << "\"" << name << ".v\","; // Speed
+                dataFile << "\"" << name << ".F\""; // Force
+              }
 
               nActiveInterfaces++;
             }
@@ -555,9 +561,14 @@ void printData(MetaModel& model,
 
               double force =  -timeData.GenForce + connection.GetParams().Zf * timeData.Velocity;
 
-              dataFile << timeData.Position << ",";
-              dataFile << timeData.Velocity << ",";
-              dataFile << force;
+              if(interfaceProxy.GetDomain() == "Hydraulic") {
+                  dataFile << timeData.Velocity << ",";     //Flow
+                  dataFile << force;                        //Pressure
+              } else if(interfaceProxy.GetDomain() == "Mechanical") {
+                  dataFile << timeData.Position << ",";
+                  dataFile << timeData.Velocity << ",";
+                  dataFile << force;
+              }
 
               nActiveInterfaces++;
             }

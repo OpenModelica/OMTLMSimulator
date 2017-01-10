@@ -28,7 +28,7 @@
 
 // Include component code files
 #include "TLMPluginHandler.hpp"
-#include "TLMPluginInterface1D.hpp"
+#include "TLMPluginInterfaceMechanical1D.hpp"
 #include "TLMPluginInterfaceSignalInput.hpp"
 #include "TLMPluginInterfaceSignalOutput.hpp"
 
@@ -39,7 +39,7 @@ extern "C" DLLEXPORT void register_contents(ComponentFactory* pComponentFactory,
 {
     // Register Components
     pComponentFactory->registerCreatorFunction("TLMPluginHandler", TLMPluginHandler::Creator);
-    pComponentFactory->registerCreatorFunction("TLMPluginInterface1D", TLMPluginInterface1D::Creator);
+    pComponentFactory->registerCreatorFunction("TLMPluginInterfaceMechanic1D", TLMPluginInterfaceMechanical1D::Creator);
     pComponentFactory->registerCreatorFunction("TLMPluginInterfaceSignalInput", TLMPluginInterfaceSignalInput::Creator);
     pComponentFactory->registerCreatorFunction("TLMPluginInterfaceSignalOutput", TLMPluginInterfaceSignalOutput::Creator);
 

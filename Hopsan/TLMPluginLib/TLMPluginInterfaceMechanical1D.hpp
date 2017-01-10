@@ -1,29 +1,5 @@
-/*-----------------------------------------------------------------------------
- This source file is a part of Hopsan
-
- Copyright (c) 2009 to present year, Hopsan Group
-
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
- For license details and information about the Hopsan Group see the files
- GPLv3 and HOPSANGROUP in the Hopsan source code root directory
-
- For author and contributor information see the AUTHORS file
------------------------------------------------------------------------------*/
-
-#ifndef TLMPLUGININTERFACE_HPP_INCLUDED
-#define TLMPLUGININTERFACE_HPP_INCLUDED
+#ifndef TLMPLUGININTERFACEMECHANICAL1D_HPP_INCLUDED
+#define TLMPLUGININTERFACEMECHANICAL1D_HPP_INCLUDED
 
 #include "common.h"
 #include "ComponentEssentials.h"
@@ -47,7 +23,7 @@
 
 namespace hopsan {
 
-    class TLMPluginInterface1D : public ComponentC
+    class TLMPluginInterfaceMechanical1D : public ComponentC
     {
     private:
         //Constants
@@ -63,7 +39,7 @@ namespace hopsan {
     public:
         static Component *Creator()
         {
-            return new TLMPluginInterface1D();
+            return new TLMPluginInterfaceMechanical1D();
         }
 
         void configure()
@@ -103,7 +79,7 @@ namespace hopsan {
             }
 
             // Register TLM Interface
-            mInterfaceId = mpPlugin->RegisteTLMInterface(this->getName().c_str(), Interface1D);
+            mInterfaceId = mpPlugin->RegisteTLMInterface(this->getName().c_str(),1,"Bidirectional","Mechanical");
         }
 
 
@@ -116,7 +92,7 @@ namespace hopsan {
             v = (*mpP1_v);  // Speed
 
             // Get force from TLM interface
-            mpPlugin->GetForce1D(mInterfaceId,mTime,x,v,&f);
+            mpPlugin->GetForce1D(mInterfaceId,mTime,v,&f);
 
             // Write output variables
             (*mpP1_c) = -f;
@@ -128,6 +104,6 @@ namespace hopsan {
     };
 }
 
-#endif //TLMPLUGININTERFACE_HPP_INCLUDED
+#endif //TLMPLUGININTERFACEMECHANICAL1D_HPP_INCLUDED
 
 
