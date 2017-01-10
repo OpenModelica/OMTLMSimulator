@@ -42,7 +42,9 @@ using namespace std;
 struct fmiConfig_t {
   size_t nSubSteps;
   size_t nInterfaces;
-  std::vector<std::string> types;
+  std::vector<int> dimensions;
+  std::vector<std::string> causalities;
+  std::vector<std::string> domains;
   std::vector<std::string> interfaceNames;
   std::vector<int> interfaceIds;
   std::vector<fmi2_value_reference_t*> position_vr;
@@ -92,7 +94,9 @@ void forceFromTlmToFmu(double tcur)
 {
     //Write interpolated force to FMU
     for(size_t j=0; j<fmiConfig.nInterfaces; ++j) {
-        if(fmiConfig.types[j] == "3D") {
+        if(fmiConfig.dimensions[j] == 6 &&
+           fmiConfig.domains[j] == "Mechanical" &&
+           fmiConfig.causalities[j] == "Bidirectional") {
             double position[3],orientation[9],speed[3],ang_speed[3],force[6];
             //Read position and speed from FMU
             fmistatus = fmi2_import_get_real(fmu,fmiConfig.position_vr[j],3,position);
@@ -110,7 +114,8 @@ void forceFromTlmToFmu(double tcur)
             // Write force to FMU
             fmistatus = fmi2_import_set_real(fmu,fmiConfig.force_vr[j],6,force);
         }
-        else if(fmiConfig.types[j] == "1D") {
+        else if(fmiConfig.dimensions[j] == 1  &&
+                fmiConfig.causalities[j] == "Bidirectional") {
           double position,speed,force;
 
           //Read position and speed from FMU
@@ -118,14 +123,15 @@ void forceFromTlmToFmu(double tcur)
           fmistatus = fmi2_import_get_real(fmu,fmiConfig.speed_vr[j],1,&speed);
 
           //Get interpolated force
-          plugin->GetForce1D(fmiConfig.interfaceIds[j], tcur, position,speed,&force);
+          plugin->GetForce1D(fmiConfig.interfaceIds[j], tcur, speed,&force);
 
           force = -force;
 
           // Write force to FMU
           fmistatus = fmi2_import_set_real(fmu,fmiConfig.force_vr[j],1,&force);
         }
-        else if(fmiConfig.types[j] == "SignalInput") {
+        else if(fmiConfig.dimensions[j] == 1 &&
+                fmiConfig.causalities[j] == "Input" ) {
             double value;
 
             plugin->GetValueSignal(fmiConfig.interfaceIds[j], tcur, &value);
@@ -298,7 +304,8 @@ int simulate_fmi2_cs()
     fmi2_real_t hsub = tlmConfig.hmax/fmiConfig.nSubSteps;
     for(size_t i=0; i<fmiConfig.nSubSteps; ++i) {
       for(size_t j=0; j<fmiConfig.nInterfaces; ++j) {
-          if(fmiConfig.types[j] == "3D") {
+          if(fmiConfig.dimensions[j] == 6 &&
+             fmiConfig.causalities[j] == "Bidirectional") {
               double position[3],orientation[9],speed[3],ang_speed[3],force[6];
 
               //Read position and speed from FMU
@@ -317,7 +324,8 @@ int simulate_fmi2_cs()
               //Write force to FMU
               fmistatus = fmi2_import_set_real(fmu,fmiConfig.force_vr[j],6,force);
           }
-          else if(fmiConfig.types[j] == "1D") {
+          else if(fmiConfig.dimensions[j] == 1 &&
+                  fmiConfig.causalities[j] == "Bidirectional") {
             double position,speed,force;
 
             //Read position and speed from FMU
@@ -325,14 +333,15 @@ int simulate_fmi2_cs()
             fmistatus = fmi2_import_get_real(fmu,fmiConfig.speed_vr[j],1,&speed);
 
             //Get interpolated force
-            plugin->GetForce1D(fmiConfig.interfaceIds[j], tcur, position,speed,&force);
+            plugin->GetForce1D(fmiConfig.interfaceIds[j], tcur, speed,&force);
 
             force = -force;
 
             //Write force to FMU
             fmistatus = fmi2_import_set_real(fmu,fmiConfig.force_vr[j],1,&force);
           }
-          else if(fmiConfig.types[j] == "SignalInput") {
+          else if(fmiConfig.dimensions[j] == 1 &&
+                  fmiConfig.causalities[j] == "Input") {
               double value;
 
               //Get value
@@ -350,7 +359,8 @@ int simulate_fmi2_cs()
       tcur+=hsub;
 
       for(size_t j=0; j<fmiConfig.nInterfaces; ++j) {
-          if(fmiConfig.types[j] == "3D") {
+          if(fmiConfig.dimensions[j] == 6 &&
+             fmiConfig.causalities[j] == "Bidirectional") {
               double force[6], position[3],orientation[9],speed[3],ang_speed[3];
 
               //Read position and speed from FMU
@@ -365,7 +375,8 @@ int simulate_fmi2_cs()
               //Write back motion for sub step
               plugin->SetMotion3D(fmiConfig.interfaceIds[j], tcur, position, orientation, speed, ang_speed);
           }
-          else if(fmiConfig.types[j] == "1D") {
+          else if(fmiConfig.dimensions[j] == 1 &&
+                  fmiConfig.causalities[j] == "Bidirectional") {
               double force, position, speed;
 
               //Read position and speed from FMU
@@ -373,12 +384,13 @@ int simulate_fmi2_cs()
               fmistatus = fmi2_import_get_real(fmu,fmiConfig.speed_vr[j],1,&speed);
 
               //Get interpolated force
-              plugin->GetForce1D(fmiConfig.interfaceIds[j], tcur, position,speed,&force);
+              plugin->GetForce1D(fmiConfig.interfaceIds[j], tcur, speed,&force);
 
               //Write back motion for sub step
               plugin->SetMotion1D(fmiConfig.interfaceIds[j], tcur, position, speed);
           }
-          else if(fmiConfig.types[j] == "SignalOutput") {
+          else if(fmiConfig.dimensions[j] == 1 &&
+                  fmiConfig.causalities[j] == "Output") {
               double value;
 
               //Read value from FMU
@@ -417,7 +429,8 @@ void do_event_iteration(fmi2_import_t *fmu, fmi2_event_info_t *eventInfo)
 void motionFromFmuToTlm(double tcur)
 {
   for(size_t j=0; j<fmiConfig.nInterfaces; ++j) {
-    if(fmiConfig.types[j] == "3D") {
+    if(fmiConfig.dimensions[j] == 6 &&
+       fmiConfig.causalities[j] == "Bidirectional") {
       double position[3],orientation[9],speed[3],ang_speed[3];
 
       fmistatus = fmi2_import_get_real(fmu,fmiConfig.position_vr[j],3,position);
@@ -427,7 +440,8 @@ void motionFromFmuToTlm(double tcur)
 
        plugin->SetMotion3D(fmiConfig.interfaceIds[j], tcur, position, orientation, speed, ang_speed);
     }
-    else if(fmiConfig.types[j] == "1D") {
+    else if(fmiConfig.dimensions[j] == 1 &&
+            fmiConfig.causalities[j] == "Bidirectional") {
       double position,speed;
 
       fmistatus = fmi2_import_get_real(fmu,fmiConfig.position_vr[j],1,&position);
@@ -435,7 +449,8 @@ void motionFromFmuToTlm(double tcur)
 
       plugin->SetMotion1D(fmiConfig.interfaceIds[j], tcur, position, speed);
     }
-    else if(fmiConfig.types[j] == "SignalOutput") {
+    else if(fmiConfig.dimensions[j] == 1 &&
+            fmiConfig.causalities[j] == "Output") {
         double value;
 
         fmistatus = fmi2_import_get_real(fmu,fmiConfig.value_vr[j],1,&value);
@@ -830,7 +845,9 @@ void readFmiConfigFile()
         fmiConfig.interfaceIds.resize(fmiConfig.nInterfaces);
         getline(ss, word, ',');
         fmiConfig.interfaceNames.push_back(word);
-        fmiConfig.types.push_back("3D");    //Assume 3D interface
+        fmiConfig.dimensions.push_back(6);                  //Default to 6D interface
+        fmiConfig.causalities.push_back("Bidirectional");   //Default to bidirectional interface
+        fmiConfig.domains.push_back("Mechanical");          //Default to mechanical domain
         fmiConfig.position_vr.push_back(new fmi2_value_reference_t);
         fmiConfig.orientation_vr.push_back(new fmi2_value_reference_t);
         fmiConfig.speed_vr.push_back(new fmi2_value_reference_t);
@@ -838,38 +855,62 @@ void readFmiConfigFile()
         fmiConfig.force_vr.push_back(new fmi2_value_reference_t);
         fmiConfig.value_vr.push_back(new fmi2_value_reference_t);
       }
-      else if(word == "type") {
+      else if(word == "dimensions") {
         getline(ss, word, ',');
-        fmiConfig.types[fmiConfig.types.size()-1] = word;
+        fmiConfig.dimensions[fmiConfig.dimensions.size()-1] = std::atoi(word.c_str());
       }
-      else if(word == "position" && fmiConfig.types[fmiConfig.types.size()-1] == "3D") {
+      else if(word == "causality") {
+          getline(ss, word, ',');
+          fmiConfig.causalities[fmiConfig.causalities.size()-1] = word.c_str();
+      }
+      else if(word == "domain") {
+          getline(ss, word, ',');
+          fmiConfig.domains[fmiConfig.domains.size()-1] = std::atoi(word.c_str());
+      }
+      else if(word == "position" &&
+              fmiConfig.dimensions[fmiConfig.dimensions.size()-1] == 6 &&
+              fmiConfig.causalities[fmiConfig.dimensions.size()-1] == "Bidirectional") {
         csvToIntArray(ss.str(),3,&(fmiConfig.position_vr.back()));
       }
-      else if(word == "position" && fmiConfig.types[fmiConfig.types.size()-1] == "1D") {
+      else if(word == "position" &&
+              fmiConfig.dimensions[fmiConfig.dimensions.size()-1] == 1 &&
+              fmiConfig.causalities[fmiConfig.dimensions.size()-1] == "Bidirectional") {
         csvToIntArray(ss.str(),1,&(fmiConfig.position_vr.back()));
       }
       else if(word == "orientation") {
         csvToIntArray(ss.str(),9,&(fmiConfig.orientation_vr.back()));
       }
-      else if(word == "speed" && fmiConfig.types[fmiConfig.types.size()-1] == "3D") {
+      else if(word == "speed" &&
+              fmiConfig.dimensions[fmiConfig.dimensions.size()-1] == 6 &&
+              fmiConfig.causalities[fmiConfig.dimensions.size()-1] == "Bidirectional") {
         csvToIntArray(ss.str(),3,&(fmiConfig.speed_vr.back()));
       }
-      else if(word == "speed" && fmiConfig.types[fmiConfig.types.size()-1] == "1D") {
+      else if(word == "speed" &&
+              fmiConfig.dimensions[fmiConfig.dimensions.size()-1] == 1 &&
+              fmiConfig.causalities[fmiConfig.dimensions.size()-1] == "Bidirectional") {
         csvToIntArray(ss.str(),1,&(fmiConfig.speed_vr.back()));
       }
       else if(word == "ang_speed") {
         csvToIntArray(ss.str(),3,&(fmiConfig.ang_speed_vr.back()));
       }
-      else if(word == "force" && fmiConfig.types[fmiConfig.types.size()-1] == "3D") {
+      else if(word == "force" &&
+              fmiConfig.dimensions[fmiConfig.dimensions.size()-1] == 6 &&
+              fmiConfig.causalities[fmiConfig.dimensions.size()-1] == "Bidirectional") {
         csvToIntArray(ss.str(),6,&(fmiConfig.force_vr.back()));
       }
-      else if(word == "force" && fmiConfig.types[fmiConfig.types.size()-1] == "1D") {
+      else if(word == "force" &&
+              fmiConfig.dimensions[fmiConfig.dimensions.size()-1] == 1 &&
+              fmiConfig.causalities[fmiConfig.dimensions.size()-1] == "Bidirectional") {
         csvToIntArray(ss.str(),1,&(fmiConfig.force_vr.back()));
       }
-      else if(word == "value" && fmiConfig.types[fmiConfig.types.size()-1] == "SignalInput") {
+      else if(word == "value" &&
+              fmiConfig.dimensions[fmiConfig.dimensions.size()-1] == 1 &&
+              fmiConfig.causalities[fmiConfig.dimensions.size()-1] == "Input") {
           csvToIntArray(ss.str(),1,&(fmiConfig.value_vr.back()));
       }
-      else if(word == "value" && fmiConfig.types[fmiConfig.types.size()-1] == "SignalOutput") {
+      else if(word == "value" &&
+              fmiConfig.dimensions[fmiConfig.dimensions.size()-1] == 1 &&
+              fmiConfig.causalities[fmiConfig.dimensions.size()-1] == "Output") {
           csvToIntArray(ss.str(),1,&(fmiConfig.value_vr.back()));
       }
     }
@@ -880,18 +921,20 @@ void readFmiConfigFile()
     for(size_t i=0; i<fmiConfig.nInterfaces; ++i) {
       TLMErrorLog::Log("Name: "+fmiConfig.interfaceNames[i]);
       int nP,nO,nS,nA,nF,nV;
-      if(fmiConfig.types[i] == "3D") {
+      if(fmiConfig.dimensions[i] == 6 &&
+         fmiConfig.causalities[i] == "Bidirectional") {
           nP = nS = nA = 3;
           nO = 9;
           nF = 6;
           nV = 0;
       }
-      else if(fmiConfig.types[i] == "1D") {
+      else if(fmiConfig.dimensions[i] == 1 &&
+              fmiConfig.causalities[i] == "Bidirectional") {
           nP = nS = nF = 1;
           nA = nO = 0;
           nV = 0;
       }
-      else /*if(fmiConfig.types[i] == "SignalInput" || fmiConfig.types[i] == "SignalOutput")*/ {
+      else /*if(fmiConfig.causalities[i] == "Input" || fmiConfig.causalities[i] == "Output")*/ {
           nP = nS = nF = nA = nO = 0;
           nV = 1;
       }
@@ -1067,8 +1110,16 @@ int main(int argc, char* argv[])
 
   // Register TLM interfaces
   for(size_t i=0; i<fmiConfig.interfaceNames.size(); ++i) {
-    TLMErrorLog::Log("Registers interface "+fmiConfig.interfaceNames[i]+" of type "+fmiConfig.types[i]);
-    fmiConfig.interfaceIds[i] = plugin->RegisteTLMInterface(fmiConfig.interfaceNames[i], str2type(fmiConfig.types[i]));
+    std::stringstream ss;
+    ss << "Registers interface " <<
+          fmiConfig.interfaceNames[i] <<
+          " of type " <<
+          fmiConfig.dimensions[i];
+    TLMErrorLog::Log(ss.str());
+    fmiConfig.interfaceIds[i] = plugin->RegisteTLMInterface(fmiConfig.interfaceNames[i],
+                                                            fmiConfig.dimensions[i],
+                                                            fmiConfig.causalities[i],
+                                                            fmiConfig.domains[i]);
   }
 
   jm_callbacks callbacks;

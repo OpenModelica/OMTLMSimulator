@@ -115,7 +115,7 @@ TLM_InterfaceReg* TLM_InterfaceReg::GetInstance(bool debugFlg)
 }
 
 
-void TLM_InterfaceReg::RegisterInterface(std::string ifID, int dimensions) {
+void TLM_InterfaceReg::RegisterInterface(std::string ifID, int dimensions, std::string causality, std::string domain) {
     // No way to get the real marker name from the solver - using "M<ID>"
     TLMErrorLog::Log( "Trying to register interface " + ifID );
 
@@ -123,7 +123,7 @@ void TLM_InterfaceReg::RegisterInterface(std::string ifID, int dimensions) {
 	TLMErrorLog::FatalError( "Try to register same interface twice " + ifID );
     }
   
-    int interfaceID = Plugin->RegisteTLMInterface(ifID, dimensions);
+    int interfaceID = Plugin->RegisteTLMInterface(ifID, dimensions, causality, domain);
     
     InterfaceIDmap[ifID] = interfaceID;
     NumInterfaces++;
@@ -317,14 +317,14 @@ static void mdlInitializeSampleTimes(SimStruct *S)
           ss << "TLM" << i+1 << "_1DIN";
           std::string tmp = ss.str();
           const char* name = tmp.c_str();
-          TLM_InterfaceReg::GetInstance()->RegisterInterface(name,"Input");
+          TLM_InterfaceReg::GetInstance()->RegisterInterface(name,1,"Input","Signal");
       }
       for(size_t i=0; i<N_OUTPUTS; ++i) {
           std::stringstream ss;
           ss << "TLM" << i+1 << "_1DOUT";
           std::string tmp = ss.str();
           const char* name = tmp.c_str();
-          TLM_InterfaceReg::GetInstance()->RegisterInterface(name,"Output");
+          TLM_InterfaceReg::GetInstance()->RegisterInterface(name,1,"Output","Signal");
       }
 
 

@@ -20,6 +20,8 @@ echo %4 >> %xname%.tlm
 
 
 echo Starting beast
+
 echo %BeastCmd% %xname%.in
 
 %BeastCmd% %xname%.in > %xname%.simlog
+

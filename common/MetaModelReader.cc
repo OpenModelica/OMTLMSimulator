@@ -139,8 +139,8 @@ void MetaModelReader::ReadTLMInterfaceNodes(xmlNode* node, int ComponentID) {
             // Get/Set position and orientation if available in XML file.
             TLMInterfaceProxy& ip = TheModel.GetTLMInterfaceProxy(ipID);
             ReadPositionAndOrientation(curNode,
-                                       ip.getTime0Data().Position,
-                                       ip.getTime0Data().RotMatrix);
+                                       ip.getTime0Data3D().Position,
+                                       ip.getTime0Data3D().RotMatrix);
         }
     }
 }

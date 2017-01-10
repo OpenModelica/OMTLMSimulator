@@ -43,8 +43,8 @@ public:
     //! aCompID - comonent ID of the owner
     //! IfcID - ID of this interface
     //! aName - name of this interface
-    TLMInterfaceProxy(int CompID, int IfcID, std::string& aName, int aDimensions,
-                      std::string& aCausality, std::string aDomain) ;
+    TLMInterfaceProxy(int CompID, int IfcID, std::string& aName, int aDimensions=6,
+                      std::string aCausality="Bidirectional", std::string aDomain="Mechanical") ;
 
     //! Get the name of this interface
     const std::string& GetName() const {
@@ -57,7 +57,7 @@ public:
     }
 
     //! Get the causality of this interface
-    const std::string& GetCausality() const {
+    const std::string GetCausality() const {
       return Causality;
     }
 
@@ -95,17 +95,25 @@ public:
     //! simulating compontent.
     void SetConnected() {
         Connected = true;
-    };
+    }
 
     //! Read the Connected flag. Returns 'true' if the proxy is connected
     //! to a simulating component.
     bool GetConnected() const {
         return Connected;
-    };
+    }
+
+//    TLMTimeDataSignal& getTime0DataSignal(){
+//        return time0DataSignal;
+//    }
+
+//    TLMTimeData1D& getTime0Data1D(){
+//        return time0Data1D;
+//    }
 
     //! Access data for simulation start time.
-    TLMTimeData3D& getTime0Data(){
-        return time0Data;
+    TLMTimeData3D& getTime0Data3D(){
+        return time0Data3D;
     }
 
 private:
@@ -134,7 +142,7 @@ private:
     int Dimensions;
 
     //! Causality of the interface
-    std::string& Causality;
+    std::string Causality;
 
     //! Physical domain of the interface
     std::string Domain;
@@ -144,7 +152,9 @@ private:
 
     //! Data at simulation start time.
     //! Used for data interface data request mode.
-    TLMTimeData3D time0Data;
+//    TLMTimeData3D time0DataSignal;
+//    TLMTimeData3D time0Data1D;
+    TLMTimeData3D time0Data3D;
 };
 
 
@@ -478,8 +488,8 @@ public:
     int GetTLMInterfaceID(std::string& FullName) ;
 
     //! Add TLM interface proxy with a given name to the Model, return its ID.
-    int RegisterTLMInterfaceProxy(const int ComponentID, std::string& Name, int Dimensions,
-                                  std::string& Causality, std::string Domain);
+    int RegisterTLMInterfaceProxy(const int ComponentID, std::string& Name, int Dimensions=6,
+                                  std::string Causality="Bidirectional", std::string Domain="Mechanical");
 
     //! Return the TLMInterfaceProxy associated with the given ID.
     TLMInterfaceProxy& GetTLMInterfaceProxy(const int ID) {

@@ -152,7 +152,7 @@ int  PluginImplementer::RegisteTLMInterface(std::string name , int dimensions,
         TLMErrorLog::Log("Registers TLM interface of type 3D");
         ifc = new TLMInterface3D( ClientComm, name, StartTime, domain );
     }
-    else if(dimensions == 1) {
+    else if(dimensions == 1 && causality == "Bidirectional") {
         TLMErrorLog::Log("Registers TLM interface of type 1D");
         ifc = new TLMInterface1D( ClientComm, name, StartTime, domain );
     }
@@ -363,7 +363,8 @@ void PluginImplementer::SetMotion3D(int forceID,
     // Check if all interfaces wait for shutdown
     std::vector<TLMInterface*>::iterator iter;
     for( iter=Interfaces.begin() ; iter!=Interfaces.end() ; iter++ ){
-      if( ! (*iter)->waitForShutdown() ) return;
+        if( (*iter)->GetCausality() == "Input") continue;
+        if( ! (*iter)->waitForShutdown()) return;
     }
 #ifdef _MSC_VER
     WSACleanup(); // BZ306 fixed here
@@ -385,7 +386,9 @@ void PluginImplementer::SetValueSignal(int valueID,
                                        double time,
                                        double value) {
     if(!ModelChecked) CheckModel();
+
     if(valueID < 0) return;
+
     // Find the interface object by its ID
     int idx = GetInterfaceIndex(valueID);
     TLMInterfaceOutput* ifc = dynamic_cast<TLMInterfaceOutput*>(Interfaces[idx]);
@@ -400,7 +403,8 @@ void PluginImplementer::SetValueSignal(int valueID,
       // Check if all interfaces wait for shutdown
       std::vector<TLMInterface*>::iterator iter;
       for( iter=Interfaces.begin() ; iter!=Interfaces.end() ; iter++ ){
-        if( ! (*iter)->waitForShutdown() ) return;
+        if( (*iter)->GetCausality() == "Input") continue;
+        if( ! (*iter)->waitForShutdown()) return;
       }
   #ifdef _MSC_VER
       WSACleanup(); // BZ306 fixed here
@@ -438,7 +442,8 @@ void PluginImplementer::SetMotion1D(int forceID,
     // Check if all interfaces wait for shutdown
     std::vector<TLMInterface*>::iterator iter;
     for( iter=Interfaces.begin() ; iter!=Interfaces.end() ; iter++ ){
-      if( ! (*iter)->waitForShutdown() ) return;
+        if( (*iter)->GetCausality() == "Input") continue;
+        if( ! (*iter)->waitForShutdown()) return;
     }
 #ifdef _MSC_VER     
     WSACleanup(); // BZ306 fixed here
