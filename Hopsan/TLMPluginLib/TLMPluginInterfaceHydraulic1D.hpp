@@ -83,6 +83,7 @@ namespace hopsan {
 
         void simulateOneTimestep()
         {
+            TLMErrorLog::Log("Hydraulic1D: Taking step!");
             // Read input variables (position and speed only)
             double x,q,p;
 
@@ -98,6 +99,7 @@ namespace hopsan {
             // Set motion in TLM interface
             x = 0;  //Dummy variable (no position in hydraulics)
             mpPlugin->SetMotion1D(mInterfaceId,mTime,x,q);
+            TLMErrorLog::Log("Hydraulic1D: Took step!");
         }
     };
 }

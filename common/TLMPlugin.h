@@ -88,6 +88,11 @@ class TLMPlugin {
     virtual void GetValueSignal(int interfaceID,
                                 double time,
                                 double* value)  = 0;
+    virtual void GetForce1D(int interfaceID,    //This function if for backwards compatibility. Remove later.
+                            double time,
+                            double position,
+                            double speed,
+                            double* force)  = 0;
     virtual void GetForce1D(int interfaceID,
                             double time,
                             double speed,

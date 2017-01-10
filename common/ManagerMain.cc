@@ -48,7 +48,7 @@ void print_interface_information(MetaModel& theModel)
       for(size_t idx=0 ; idx<theModel.GetInterfacesNum() ; idx++ ){
         TLMInterfaceProxy& intProx = theModel.GetTLMInterfaceProxy(idx);
         TLMComponentProxy& comProx = theModel.GetTLMComponentProxy(intProx.GetComponentID());
-        TLMTimeData3D& tlmData = intProx.getTime0Data();
+        TLMTimeData3D& tlmData = intProx.getTime0Data3D();
 
         double3Vec R(tlmData.Position[0], tlmData.Position[1], tlmData.Position[2]);
         double33Mat A( tlmData.RotMatrix[0], tlmData.RotMatrix[1], tlmData.RotMatrix[2],
@@ -61,7 +61,8 @@ void print_interface_information(MetaModel& theModel)
         std::string dimStr = ss.str();
         interfacefile << "\t<Interface model=\"" + comProx.GetName() +
                          "\" Name=\"" + intProx.GetName() +
-                         "\" Type=\"" + dimStr +
+                         "\" Dimensions=\"" + dimStr +
+                         "\" Causality=\"" + intProx.GetCausality() +
                          "\" Domain=\"" + intProx.GetDomain() + "\"\n";
         interfacefile << "\t\tPosition=\"" << R(1) << "," << R(2) << "," << R(3) << "\"\n";
         interfacefile << "\t\tAngle321=\"" << phi(1) << "," << phi(2) << "," << phi(3) << "\"/>\n"; 
@@ -82,7 +83,7 @@ void print_interface_information(MetaModel& theModel)
     for(size_t idx=0 ; idx<theModel.GetInterfacesNum() ; idx++ ){
         TLMInterfaceProxy& intProx = theModel.GetTLMInterfaceProxy(idx);
         TLMComponentProxy& comProx = theModel.GetTLMComponentProxy(intProx.GetComponentID());
-        TLMTimeData3D& tlmData = intProx.getTime0Data();
+        TLMTimeData3D& tlmData = intProx.getTime0Data3D();
 
         double3Vec R(tlmData.Position[0], tlmData.Position[1], tlmData.Position[2]);
         double33Mat A( tlmData.RotMatrix[0], tlmData.RotMatrix[1], tlmData.RotMatrix[2],

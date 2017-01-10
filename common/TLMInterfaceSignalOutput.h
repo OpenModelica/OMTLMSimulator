@@ -6,7 +6,7 @@
 class TLMInterfaceOutput : public TLMInterfaceSignal
 {
 public:
-  TLMInterfaceOutput(TLMClientComm &theComm, std::string &aName, double StartTime, std::string Domain="");
+  TLMInterfaceOutput(TLMClientComm &theComm, std::string &aName, double StartTime, std::string Domain="Signal");
 
   //! Destructor. Sends the rest of the data if necessary.
   ~TLMInterfaceOutput();

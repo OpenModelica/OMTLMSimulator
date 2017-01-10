@@ -338,19 +338,19 @@ void writeVisualXMLFile(MetaModel& model, std::string &baseFileName, std::string
           continue;
         }
 
-        double33Mat T(-interfaceProxy.getTime0Data().RotMatrix[0],
-                      -interfaceProxy.getTime0Data().RotMatrix[1],
-                      -interfaceProxy.getTime0Data().RotMatrix[2],
-                      -interfaceProxy.getTime0Data().RotMatrix[3],
-                      -interfaceProxy.getTime0Data().RotMatrix[4],
-                      -interfaceProxy.getTime0Data().RotMatrix[5],
-                      -interfaceProxy.getTime0Data().RotMatrix[6],
-                      -interfaceProxy.getTime0Data().RotMatrix[7],
-                      -interfaceProxy.getTime0Data().RotMatrix[8]);
+        double33Mat T(-interfaceProxy.getTime0Data3D().RotMatrix[0],
+                      -interfaceProxy.getTime0Data3D().RotMatrix[1],
+                      -interfaceProxy.getTime0Data3D().RotMatrix[2],
+                      -interfaceProxy.getTime0Data3D().RotMatrix[3],
+                      -interfaceProxy.getTime0Data3D().RotMatrix[4],
+                      -interfaceProxy.getTime0Data3D().RotMatrix[5],
+                      -interfaceProxy.getTime0Data3D().RotMatrix[6],
+                      -interfaceProxy.getTime0Data3D().RotMatrix[7],
+                      -interfaceProxy.getTime0Data3D().RotMatrix[8]);
 
-        double3Vec r_shape(-interfaceProxy.getTime0Data().Position[0],
-                           -interfaceProxy.getTime0Data().Position[1],
-                           -interfaceProxy.getTime0Data().Position[2]);
+        double3Vec r_shape(-interfaceProxy.getTime0Data3D().Position[0],
+                           -interfaceProxy.getTime0Data3D().Position[1],
+                           -interfaceProxy.getTime0Data3D().Position[2]);
         r_shape = -T*r_shape;
         double3Vec lengthDir(1,0,0);
         lengthDir = -T*lengthDir;

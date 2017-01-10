@@ -1,6 +1,7 @@
 #include "ManagerCommHandler.h"
 #include "strConv.h"
 #include <iostream>
+#include <sstream>
 #ifdef USE_THREADS
 #include <pthread.h>
 #endif
@@ -239,27 +240,36 @@ void ManagerCommHandler::ProcessRegInterfaceMessage(int compID, TLMMessage& mess
     TLMErrorLog::Log("Manager received nameAndType: "+aSpecification);
 
     string aName, dimStr, causality, domain;
+    if(aSpecification.find(':') == std::string::npos) {     //This is for backwards compatibility with BEAST.
+        dimStr = "6";                                         //Remove this later when  BEAST supports dimensions,
+        causality="Bidirectional";                          //causality and domain.
+        domain="Mechanical";
+    }
+    bool readingName=true;
     bool readingDimensions=false;
     bool readingCausality=false;
     bool readingDomain=false;
     for(size_t i=0; i<aSpecification.size(); ++i) {
-        if(aSpecification[i] == ':' && !readingDimensions) {
+        if(aSpecification[i] == ':' && readingName) {
+            readingName = false;
             readingDimensions = true;
         }
         else if(aSpecification[i] == ':' && readingDimensions) {
+            readingDimensions = false;
             readingCausality = true;
         }
         else if(aSpecification[i] == ':' && readingCausality) {
+            readingCausality = false;
             readingDomain = true;
         }
-        if(readingDimensions) {
-            dimStr += aSpecification[i];
+        else if(readingDomain) {
+            domain += aSpecification[i];
         }
         else if(readingCausality) {
             causality += aSpecification[i];
         }
-        else if(readingDomain) {
-            domain += aSpecification[i];
+        else if(readingDimensions) {
+            dimStr += aSpecification[i];
         }
         else {
             aName += aSpecification[i];
@@ -303,7 +313,7 @@ void ManagerCommHandler::ProcessRegInterfaceMessage(int compID, TLMMessage& mess
         TLMInterfaceProxy& ifc = TheModel.GetTLMInterfaceProxy(IfcID);
         ifc.SetConnected();
 
-        SetupInterfaceRequestMessage(mess);        
+        SetupInterfaceRequestMessage(mess);
     }
     else {
         TLMErrorLog::Warning("Wrong coomunication mode in ManagerCommHandler::ProcessRegInterfaceMessage(...)");
@@ -338,9 +348,25 @@ void ManagerCommHandler::SetupInterfaceConnectionMessage(int IfcID, std::string&
     TheModel.GetTLMComponentProxy(CompId).GetInertialTranformation(param.cX_R_cG_cG, param.cX_A_cG);
 
     // Send initial interface position
-    TLMTimeData3D& td = ifc.getTime0Data();
-    for(int i=0 ; i<3 ; i++ ) param.Nom_cI_R_cX_cX[i] = td.Position[i];
-    for(int i=0 ; i<9 ; i++ ) param.Nom_cI_A_cX[i] = td.RotMatrix[i];
+    //if(ifc.GetDimensions() == 9) {
+        TLMTimeData3D& td = ifc.getTime0Data3D();
+        for(int i=0 ; i<3 ; i++ ) param.Nom_cI_R_cX_cX[i] = td.Position[i];
+        for(int i=0 ; i<9 ; i++ ) param.Nom_cI_A_cX[i] = td.RotMatrix[i];
+    //}
+//    else if(ifc.GetDimensions() == 3 && ifc.GetCausality() == "Bidirectional") {
+//        TLMTimeData1D& td = ifc.getTime0Data1D();
+//        param.Nom_cI_R_cX_cX[0] = 0;        param.Nom_cI_R_cX_cX[1] = 0;    param.Nom_cI_R_cX_cX[2] = 0;
+//        param.Nom_cI_A_cX[0] = td.Position; param.Nom_cI_A_cX[1] = 0;       param.Nom_cI_A_cX[2] = 0;
+//        param.Nom_cI_A_cX[3] = 0;           param.Nom_cI_A_cX[4] = 1;       param.Nom_cI_A_cX[5] = 0;
+//        param.Nom_cI_A_cX[6] = 0;           param.Nom_cI_A_cX[7] = 0;       param.Nom_cI_A_cX[8] = 1;
+//    }
+//    else {
+//        TLMTimeData1D& td = ifc.getTime0DataSignal();
+//        param.Nom_cI_R_cX_cX[0] = 0;    param.Nom_cI_R_cX_cX[1] = 0;    param.Nom_cI_R_cX_cX[2] = 0;
+//        param.Nom_cI_A_cX[0] = 1;       param.Nom_cI_A_cX[1] = 0;       param.Nom_cI_A_cX[2] = 0;
+//        param.Nom_cI_A_cX[3] = 0;       param.Nom_cI_A_cX[4] = 1;       param.Nom_cI_A_cX[5] = 0;
+//        param.Nom_cI_A_cX[6] = 0;       param.Nom_cI_A_cX[7] = 0;       param.Nom_cI_A_cX[8] = 1;
+//    }
 
     mess.Header.DataSize = sizeof (TLMConnectionParams);
 
@@ -488,26 +514,81 @@ void ManagerCommHandler::MarshalMessage(TLMMessage& message) {
 void ManagerCommHandler::UnpackAndStoreTimeData(TLMMessage& message) 
 {
     if(message.Header.MessageType !=   TLMMessageTypeConst::TLM_TIME_DATA) {
-	TLMErrorLog::FatalError("Unexpected message received in ManagerCommHandler::UnpackAndStoreTimeData(...)");
+        std::stringstream ss;
+        ss << "Message type = " << int(message.Header.MessageType);
+        TLMErrorLog::Log(ss.str());
+        TLMErrorLog::FatalError("Unexpected message received in ManagerCommHandler::UnpackAndStoreTimeData(...)");
     };
 
-    // since mess.Data is continious we can just convert the pointer
-    TLMTimeData3D* Next = (TLMTimeData3D*)(&message.Data[0]);
+    TLMInterfaceProxy& ip = TheModel.GetTLMInterfaceProxy(message.Header.TLMInterfaceID);
 
-    // check if we have byte order missmatch in the message and perform
-    // swapping if necessary
-    bool switch_byte_order = 
-	(TLMMessageHeader::IsBigEndianSystem != message.Header.SourceIsBigEndianSystem);
-    if (switch_byte_order) 
-	TLMCommUtil::ByteSwap(Next, sizeof(double),  message.Header.DataSize/sizeof(double));
+    if(ip.GetDimensions() == 9 && ip.GetCausality() == "Bidirectional") {
+        // since mess.Data is continious we can just convert the pointer
+        TLMTimeData3D* Next = (TLMTimeData3D*)(&message.Data[0]);
 
-    // forward the time data
-    TLMInterfaceProxy& src = TheModel.GetTLMInterfaceProxy(message.Header.TLMInterfaceID);
-    TLMTimeData3D& data = src.getTime0Data();
+        // check if we have byte order missmatch in the message and perform
+        // swapping if necessary
+        bool switch_byte_order =
+        (TLMMessageHeader::IsBigEndianSystem != message.Header.SourceIsBigEndianSystem);
+        if (switch_byte_order)
+        TLMCommUtil::ByteSwap(Next, sizeof(double),  message.Header.DataSize/sizeof(double));
 
-    TLMErrorLog::Log("Unpack and store time data for " + src.GetName() ); 
-    
-    data = *Next;    
+        // forward the time data
+        TLMTimeData3D& data = ip.getTime0Data3D();
+
+        TLMErrorLog::Log("Unpack and store 3D time data for " + ip.GetName() );
+        data = *Next;
+    }
+    else if(ip.GetDimensions() == 1 && ip.GetCausality() == "Bidirectional") {
+        // since mess.Data is continious we can just convert the pointer
+        TLMTimeData1D* Next = (TLMTimeData1D*)(&message.Data[0]);
+
+        // check if we have byte order missmatch in the message and perform
+        // swapping if necessary
+        bool switch_byte_order =
+        (TLMMessageHeader::IsBigEndianSystem != message.Header.SourceIsBigEndianSystem);
+        if (switch_byte_order)
+        TLMCommUtil::ByteSwap(Next, sizeof(double),  message.Header.DataSize/sizeof(double));
+
+        // forward the time data
+        TLMTimeData3D& data = ip.getTime0Data3D();
+
+        TLMErrorLog::Log("Unpack and store 1D time data for " + ip.GetName() );
+
+        data.Position[0] = Next->Position; data.Position[1] = 0;   data.Position[2] = 0;
+
+        data.RotMatrix[0] = 1;  data.RotMatrix[1] = 0;  data.RotMatrix[2] = 0;
+        data.RotMatrix[3] = 0;  data.RotMatrix[4] = 1;  data.RotMatrix[5] = 0;
+        data.RotMatrix[6] = 0;  data.RotMatrix[7] = 0;  data.RotMatrix[8] = 1;
+
+        data.Velocity[0] = Next->Velocity; data.Velocity[1] = 0;   data.Velocity[2] = 0;
+        data.Velocity[3] = 0;               data.Velocity[4] = 0;   data.Velocity[5] = 0;
+    }
+    else {
+        // since mess.Data is continious we can just convert the pointer
+        TLMTimeDataSignal* Next = (TLMTimeDataSignal*)(&message.Data[0]);
+
+        // check if we have byte order missmatch in the message and perform
+        // swapping if necessary
+        bool switch_byte_order =
+        (TLMMessageHeader::IsBigEndianSystem != message.Header.SourceIsBigEndianSystem);
+        if (switch_byte_order)
+        TLMCommUtil::ByteSwap(Next, sizeof(double),  message.Header.DataSize/sizeof(double));
+
+        // forward the time data
+        TLMTimeData3D& data = ip.getTime0Data3D();
+
+        TLMErrorLog::Log("Unpack and store signal time data for " + ip.GetName() );
+
+        data.Position[0] = 1;   data.Position[1] = 0;   data.Position[2] = 0;
+
+        data.RotMatrix[0] = 1;  data.RotMatrix[1] = 0;  data.RotMatrix[2] = 0;
+        data.RotMatrix[3] = 0;  data.RotMatrix[4] = 1;  data.RotMatrix[5] = 0;
+        data.RotMatrix[6] = 0;  data.RotMatrix[7] = 0;  data.RotMatrix[8] = 1;
+
+        data.Velocity[0] = 0;   data.Velocity[1] = 0;   data.Velocity[2] = 0;
+        data.Velocity[3] = 0;   data.Velocity[4] = 0;   data.Velocity[5] = 0;
+    }
 }
 
 

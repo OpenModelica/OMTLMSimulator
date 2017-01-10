@@ -76,8 +76,10 @@ namespace hopsan {
 
         void simulateOneTimestep()
         {
+            TLMErrorLog::Log("SignalInput: Taking step!");
             // Get force from TLM interface
             mpPlugin->GetValueSignal(mInterfaceId,mTime,mpP1_x);
+            TLMErrorLog::Log("SignalInput: Took step!");
         }
 
 
