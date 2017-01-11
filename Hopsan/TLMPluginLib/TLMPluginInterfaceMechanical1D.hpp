@@ -35,6 +35,7 @@ namespace hopsan {
         std::ofstream mDebugOutFile;
         size_t mInterfaceId;
         TLMPlugin *mpPlugin;
+        bool mInvert;
 
     public:
         static Component *Creator()
@@ -46,7 +47,7 @@ namespace hopsan {
         {
             //Register constant parameters
             addConstant("Debug", "", "", false, mDebug);
-
+            addConstant("Invert", "", "", false, mInvert);
             //Add power ports
             mpP1 = addPowerPort("P1", "NodeMechanic", "");
         }
@@ -87,15 +88,33 @@ namespace hopsan {
 
         void simulateOneTimestep()
         {
-            TLMErrorLog::Log("Mechanical1D: Taking step!");
+            if(mInvert)
+            {
+                TLMErrorLog::Log("Mechanical1D: Taking inverted step!");
+            }
+            else
+            {
+                TLMErrorLog::Log("Mechanical1D: Taking step!");
+            }
             // Read input variables (position and speed only)
             double x,v,f;
 
             x = (*mpP1_x);  // Position
             v = (*mpP1_v);  // Speed
 
+            if(mInvert)
+            {
+                x = -x;
+                v = -v;
+            }
+
             // Get force from TLM interface
             mpPlugin->GetForce1D(mInterfaceId,mTime,v,&f);
+
+            if(mInvert)
+            {
+                f = -f;
+            }
 
             // Write output variables
             (*mpP1_c) = -f;
