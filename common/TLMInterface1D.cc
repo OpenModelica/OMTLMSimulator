@@ -127,7 +127,12 @@ void TLMInterface1D::GetForce(double time,
     request.time = time - Params.Delay;
     GetTimeData(request);
 
-    TLMPlugin::GetForce1D(speed, request, Params, force);
+    if(Domain == "Hydraulic") {
+        TLMPlugin::GetForce1D(-speed, request, Params, force);
+    }
+    else {
+        TLMPlugin::GetForce1D(speed, request, Params, force);
+    }
 
 
 }
@@ -155,11 +160,22 @@ void TLMInterface1D::SetTimeData(double time,
         DampedTimeData.push_back(request);
     }
 
-    TLMPlugin::GetForce1D(speed, request, Params, &item.GenForce);
+    if(Domain == "Hydraulic") {
+        TLMPlugin::GetForce1D(-speed, request, Params, &item.GenForce);
+    }
+    else {
+        TLMPlugin::GetForce1D(speed, request, Params, &item.GenForce);
+    }
 
     // The wave to send is: (- Force + Impedance * Velocity)
     double oldForce = item.GenForce;
-    item.GenForce   = -item.GenForce   +  Params.Zf * speed;
+    if(Domain=="Hydraulic") {
+        item.GenForce   = item.GenForce   +  Params.Zf * speed;
+    }
+    else {
+        item.GenForce   = -item.GenForce   +  Params.Zf * speed;
+    }
+
 
     TLMErrorLog::Log(std::string("Interface ") + GetName() +
                      " SET for time= " + TLMErrorLog::ToStdStr(time));
