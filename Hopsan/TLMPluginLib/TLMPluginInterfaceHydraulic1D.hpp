@@ -93,7 +93,7 @@ namespace hopsan {
             mpPlugin->GetForce1D(mInterfaceId,mTime,q,&p);
 
             // Write output variables
-            (*mpP1_c) = -p;
+            (*mpP1_c) = p;
             (*mpP1_Zc) = 0;     //Not needed, since already included in f
 
             // Set motion in TLM interface
