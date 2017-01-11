@@ -522,7 +522,7 @@ void ManagerCommHandler::UnpackAndStoreTimeData(TLMMessage& message)
 
     TLMInterfaceProxy& ip = TheModel.GetTLMInterfaceProxy(message.Header.TLMInterfaceID);
 
-    if(ip.GetDimensions() == 9 && ip.GetCausality() == "Bidirectional") {
+    if(ip.GetDimensions() == 6 && ip.GetCausality() == "Bidirectional") {
         // since mess.Data is continious we can just convert the pointer
         TLMTimeData3D* Next = (TLMTimeData3D*)(&message.Data[0]);
 
