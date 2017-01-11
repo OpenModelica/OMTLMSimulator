@@ -125,7 +125,7 @@ void MonitorTimeStep(TLMPlugin* TLMlink,
                         + PrevTimeData.GenForce[i] * alpha;
                   }
               }
-              else if(dimensions == 1){
+              else if(dimensions == 1 && causality == "Bidirectional"){
                 TLMTimeData1D& PrevTimeData = dataStorage1D[interfaceID];
                 TLMTimeData1D& CurTimeData = dataStorage1D[interfaceID];
 
@@ -441,7 +441,8 @@ void printHeader(MetaModel& model, std::ofstream& dataFile)
 
                 nActiveInterfaces++;
             }
-            else if(interfaceProxy.GetDimensions() == 1) {
+            else if(interfaceProxy.GetDimensions() == 1 &&
+                    interfaceProxy.GetCausality() == "Bidirectional") {
               // Comma between interfaces
               if(nActiveInterfaces > 0) dataFile << ",";
 
@@ -492,6 +493,10 @@ void printData(MetaModel& model,
         TLMInterfaceProxy& interfaceProxy = model.GetTLMInterfaceProxy(i);
         if( interfaceProxy.GetConnectionID() >= 0 ){
             if(interfaceProxy.GetDimensions() == 6) {
+                std::stringstream ss;
+                ss << "Printing data for 3D interface " << interfaceProxy.GetID();
+                TLMErrorLog::Log(ss.str());
+
                 TLMTimeData3D& timeData = dataStorage3D.at(interfaceProxy.GetID());
 
                 // Print time only once, that is, for the first entry.
@@ -541,7 +546,12 @@ void printData(MetaModel& model,
 
                 nActiveInterfaces++;
             }
-            else if(interfaceProxy.GetDimensions() == 1) {
+            else if(interfaceProxy.GetDimensions() == 1 &&
+                    interfaceProxy.GetCausality() == "Bidirectional") {
+                std::stringstream ss;
+                ss << "Printing data for 3D interface " << interfaceProxy.GetID();
+                TLMErrorLog::Log(ss.str());
+
               TLMTimeData1D& timeData = dataStorage1D.at(interfaceProxy.GetID());
 
               // Print time only once, that is, for the first entry.
@@ -559,7 +569,13 @@ void printData(MetaModel& model,
 
               TLMConnection& connection = model.GetTLMConnection(interfaceProxy.GetConnectionID());
 
-              double force =  -timeData.GenForce + connection.GetParams().Zf * timeData.Velocity;
+              double force;
+              if(interfaceProxy.GetDomain() == "Hydraulic") {
+                force =  timeData.GenForce + connection.GetParams().Zf * timeData.Velocity;
+              }
+              else {
+                force =  -timeData.GenForce + connection.GetParams().Zf * timeData.Velocity;
+              }
 
               if(interfaceProxy.GetDomain() == "Hydraulic") {
                   dataFile << timeData.Velocity << ",";     //Flow
@@ -574,6 +590,11 @@ void printData(MetaModel& model,
             }
             else if(interfaceProxy.GetDimensions() == 1 &&
                     interfaceProxy.GetCausality() == "Output") {
+
+                std::stringstream ss;
+                ss << "Printing data for 3D interface " << interfaceProxy.GetID();
+                TLMErrorLog::Log(ss.str());
+
               TLMTimeDataSignal& timeData = dataStorageSignal.at(interfaceProxy.GetID());
 
               // Print time only once, that is, for the first entry.
