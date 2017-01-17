@@ -107,9 +107,12 @@ int main(int argc, char* argv[]) {
     int serverPort = 0;
     int monitorPort = 0;
     ManagerCommHandler::CommunicationMode comMode=ManagerCommHandler::CoSimulationMode;
+    std::string singleModel;
+
+    std::cout << "Debug 1\n";
 
     char c;
-    while ((c = getopt (argc, argv, "dp:m:r")) != -1){
+    while ((c = getopt (argc, argv, "dp:m:rs:")) != -1){
         switch (c) {
         case 'd':
             debugFlg = true;
@@ -123,11 +126,15 @@ int main(int argc, char* argv[]) {
         case 'r':
             comMode = ManagerCommHandler::InterfaceRequestMode;
             break;
+        case 's':
+            singleModel = optarg;
+            break;
         default:
             usage();
             break;
         }
     }
+    std::cout << "singleModel = " << singleModel << "\n";
 
     // Check for existing model (XML) file argument.
     if( optind >= argc ){
@@ -150,7 +157,7 @@ int main(int argc, char* argv[]) {
 
         // read the XML file and build the model
         // Note: Skip loading connections in interface request mode in case an interface no longer exists
-        modelReader.ReadModel(inFile,comMode == ManagerCommHandler::InterfaceRequestMode);
+        modelReader.ReadModel(inFile,comMode == ManagerCommHandler::InterfaceRequestMode, singleModel);
     }
     
     // Set preferred network port

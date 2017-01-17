@@ -275,7 +275,21 @@ void ManagerCommHandler::ProcessRegInterfaceMessage(int compID, TLMMessage& mess
             aName += aSpecification[i];
         }
     }
-    int dimensions = std::atoi(dimStr.c_str());
+    TLMErrorLog::Log("dimStr = "+dimStr);
+    int dimensions;
+    if(dimStr == "3D") {        //Backwards compatibility
+        TLMErrorLog::Log("Setting dimensions to 6");
+        dimensions = 6;
+    }
+    else {
+        dimensions = std::atoi(dimStr.c_str());
+    }
+    if(causality == "") {
+        causality = "Bidirectional";
+    }
+    if(domain == "") {
+        domain = "Mechanical";
+    }
 
     int IfcID = TheModel.GetTLMInterfaceID(compID, aName);    
 

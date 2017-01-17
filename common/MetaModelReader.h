@@ -27,7 +27,7 @@ class MetaModelReader {
     //! Input: \param node - pointer to the "SubModels" element node
     //!   - parent to all the SubModels
     //! Input/Output: TheModel - structure is updated in the model representation
-    void ReadComponents(xmlNode *node, bool skipInterfaces);
+    void ReadComponents(xmlNode *node, bool skipInterfaces, std::string singleModel);
 
     //! ReadTLMInterfaceNodes method reads in TLM interface definitions for a
     //! given SubModel XML node and its ID (ComponentID).
@@ -87,7 +87,7 @@ class MetaModelReader {
     //! ReadModel method processes input XML file and creates MetaModel definition.
     //! Input: InputFile - input XML file name
     //! Input/Output: TheModel - model structure to be build.
-    void ReadModel(std::string& InputFile, bool SkipConnections=false);
+    void ReadModel(std::string& InputFile, bool SkipConnections=false, std::string singleModel="");
 
 };
 
