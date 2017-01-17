@@ -19,7 +19,7 @@ using namespace tlmMisc;
 // Input: node - pointer to the "SubModels" element node 
 //   - parent to all the SubModels
 // Input/Output: TheModel - structure is updated in the model representation
-void MetaModelReader::ReadComponents(xmlNode *node, bool skipInterfaces=false) {
+void MetaModelReader::ReadComponents(xmlNode *node, bool skipInterfaces=false, std::string singleModel="") {
     for(xmlNode* curNode = node->children; curNode; curNode = curNode->next) {
         if(    (XML_ELEMENT_NODE == curNode->type)
                // A SubModel Node found, read parameters
@@ -27,6 +27,11 @@ void MetaModelReader::ReadComponents(xmlNode *node, bool skipInterfaces=false) {
 
             xmlNode* curAttrVal = FindAttributeByName(curNode, "Name");
             string Name((const char *)curAttrVal->content);
+
+            if(skipInterfaces && singleModel != "" && Name != singleModel) {
+                std::cout << "Skipping model " << Name << "\n";
+                continue; //Don't load other models than the single model
+            }
 
             TLMErrorLog::Log(string("Processing SubModel ") + Name);
 
@@ -98,14 +103,25 @@ void MetaModelReader::ReadTLMInterfaceNodes(xmlNode* node, int ComponentID) {
             xmlNode* curAttrVal = FindAttributeByName(curNode, "Name");
             string Name((const char*)curAttrVal->content);
 
+            int Dimensions = 6;
             curAttrVal = FindAttributeByName(curNode, "Dimensions");
-            int Dimensions = atoi((const char*)curAttrVal->content);
+            if(curAttrVal) {
+                Dimensions = atoi((const char*)curAttrVal->content);
+            }
 
+            string Causality = "Bidirectional";
             curAttrVal = FindAttributeByName(curNode, "Causality");
-            string Causality((const char*)curAttrVal->content);
+            if(curAttrVal) {
+                Causality = (const char*)curAttrVal->content;
+                TLMErrorLog::Log("Reading causality: "+Causality);
+            }
 
+            string Domain="Mechanical";
             curAttrVal = FindAttributeByName(curNode, "Domain");
-            string Domain((const char*)curAttrVal->content);
+            if(curAttrVal) {
+                Domain = (const char*)curAttrVal->content;
+            }
+
 //            InterfaceType type=Type3D;                                     //Default is 3D
 //            if(name.size() > 1 &&                                 //Temporary hack: if name of interface ends
 //               name[name.size()-2] == '1' &&                      //with "1D" it is a 1D connection
@@ -354,7 +370,7 @@ void MetaModelReader::ReadTLMConnectionNode(xmlNode* node) {
 // ReadModel method processes input XML file and creates MetaModel definition.
 // Input: InputFile - input XML file name
 // Input/Output: TheModel - model structure to be build.
-void MetaModelReader::ReadModel(std::string &InputFile, bool InterfaceRequestMode) {
+void MetaModelReader::ReadModel(std::string &InputFile, bool InterfaceRequestMode, std::string singleModel) {
 
     xmlDoc* doc = xmlParseFile(InputFile.c_str()); // open XML & parse it
 
@@ -368,7 +384,7 @@ void MetaModelReader::ReadModel(std::string &InputFile, bool InterfaceRequestMod
 
     xmlNode *components = FindChildByName(model_element, "SubModels");  //Don't load interfaces in interface request mode
 
-    ReadComponents(components, InterfaceRequestMode);
+    ReadComponents(components, InterfaceRequestMode, singleModel);
 
     xmlNode *connections = FindChildByName(model_element, "Connections", false); // We allow models without connections for interface request mode.
 
