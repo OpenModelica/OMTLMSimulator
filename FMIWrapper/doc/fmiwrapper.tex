@@ -1,133 +1,28 @@
-\PassOptionsToPackage{dvipsnames}{xcolor}
-\documentclass[a4paper,12pt]{include/opencpsreport}
-%\usepackage{inputenc} 
-%\usepackage[english]{babel} 
-%\usepackage{graphicx}
+\documentclass[11pt,a4paper,english]{report}
+\usepackage{opencps}
+\usepackage{inputenc} 
+\usepackage[english]{babel} 
+\usepackage{graphicx}
 %\usepackage{a4wide}
-%\usepackage[dvipsnames]{xcolor}
+\usepackage[dvipsnames]{xcolor}
 \usepackage{tikz}
 \usepackage{lipsum}
 \usepackage{listings}
 \usepackage{cleveref}
 \usepackage[section]{placeins}
 \usepackage{lineno}
-\usepackage[utf8]{luainputenc}  % utf8 input encoding that should work for both pdflatex and lualatex
 
 \linenumbers
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%% Document variables that need to be set
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\reportnumber{D2.4}
-\reporttitle{Wrapper for FMI in TLM-based Asynchronous Co-Simulation}
-\shortreporttitle{Wrapper for FMI in TLM-based Co-simulation}  % Title appearing at right side of header
 
-%%% Set document release class as appropriate
-%%% Access classification as per definitions in PCA;
-%%% PU = Public, CO = Confidential.
-%%% Access classification per deliverable stated in FPP
-\reportaccess{PU}
+%Remove trailing zero in section numbering
 
-%%% Deliverable type according to FPP, note that all non-report deliverables
-%%% must be accompanied by a deliverable report.
-\deliverabletype{Report}
 
-%%% Version number of the report
-\version{1.0}
-
-%%% Due month(s) according to FPP.
-\duedate{M24}
-
-%%% It is mandatory to provide an executive summary for each deliverable.
-\executivesummary{
-Provide short summary/abstract here.
-}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%% Definition of Deliverable Contributors and History
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\def\deliverableContributors{
-  \renewcommand{\arraystretch}{1.3} % increase space between rows
-  \textbf{\sffamily Deliverable Contributors:}
-  \begin{center}
-    \hypersetup{hidelinks}  % don't color footnote marks to match Word template
-    \footnotesize\sffamily  % mimic Arial font used in Word template
-    \begin{tabularx}{\linewidth}[h!]{p{2.2cm}|X|p{3.8cm}|p{2.4cm}|p{1.4cm}|}
-    \hhline{~----}
-    & \cellcolor[gray]{0.95}Name &
-      \cellcolor[gray]{0.95}Organisation &
-      \cellcolor[gray]{0.95}Primary role in project &
-      \cellcolor[gray]{0.95}Main \mbox{Author(s)}\footnote{\scriptsize Indicate Main Author(s) with an “X” in this column.}\\
-    \hline
-    \multicolumn{1}{|p{2.2cm}|}{\cellcolor[gray]{0.95}Deliverable Leader\footnote{\scriptsize Deliverable leader according to FPP, role definition in PCA.}} &
-      Robert Braun & SICS East Swedish ICT & T2.4 member  & \centerline X\\
-    \hline
-    %%% CONTRIBUTING AUTHOR(s)
-    \multicolumn{1}{|p{2.2cm}|}{\cellcolor[gray]{0.95}} &
-       & &  & \\
-    \cline{2-5}
-    \multicolumn{1}{|p{2.2cm}|}{\cellcolor[gray]{0.95}} &
-      & & & \\
-    \cline{2-5}
-    \multicolumn{1}{|p{2.2cm}|}{\cellcolor[gray]{0.95}} &
-      & & & \\
-    \cline{2-5}
-    \multicolumn{1}{|p{2.2cm}|}{\cellcolor[gray]{0.95}\multirow{-4}{2.2cm}{Contributing Author(s)\footnote{\scriptsize Person(s) from contributing partners for the deliverable, expected contributing partners stated in FPP.}}} &
-      & & & \\
-    \hline
-    %%% INTERNAL REVIEWERS
-    \multicolumn{1}{|p{2.2cm}|}{\cellcolor[gray]{0.95}} &
-      Dag Fritzson & SKF & T2.4 member & \\
-    \cline{2-5}
-    \multicolumn{1}{|p{2.2cm}|}{\cellcolor[gray]{0.95}} &
-      Adeel Ashgar & SICS East Swedish ICT & T2.4 member & \\
-    \cline{2-5}
-    \multicolumn{1}{|p{2.2cm}|}{\cellcolor[gray]{0.95}} &
-      & & & \\
-    \cline{2-5}
-    \multicolumn{1}{|p{2.2cm}|}{\cellcolor[gray]{0.95}\multirow{-4}{2.2cm}{Internal Reviewer(s)\footnote{\scriptsize Typically person(s) with appropriate expertise to assess deliverable structure and quality.}}} &
-      & & & \\
-    \hline
-    \end{tabularx}
-  \end{center}
-  \renewcommand{\arraystretch}{1.0} % set it back to default value
-}
-
-\def\deliverableHistory{
- \renewcommand{\arraystretch}{1.3} % increase space between rows
-
- \textbf{\sffamily Document History:}
- \begin{center}
- \footnotesize\sffamily
- \begin{tabularx}{\linewidth}[h!]{| l | l | X | l |}
- \rowcolor[gray]{.95}\hline
- Version & Date & Reason for change & Status\footnote{\scriptsize Status = “Draft”, “In Review”, “Released”.}\\
- \hline
-  0.1 & 17/10/2016 & First Draft Version & Draft\\
-  \hline
-  0.2 & 20/10/2016 & Second Draft Version & Draft\\
-  \hline
-  & & &\\
-  \hline
-  & & &\\
- \hline
- \end{tabularx}
- \end{center}
- \renewcommand{\arraystretch}{1.0} % set it back to default value
-}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%% Additional packages to be used in the document
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-%%% Bibliography
-% Prefer biblatex because: (a) supports an ``alpha'' like citation style, (b) supports DOIs and URLs
-% However, requires biber to be installed. Not all may have it, so we introduce a flag:
-\usepackage{ifthen}
-\newboolean{HaveBiber} \setboolean{HaveBiber}{false}
-\ifthenelse{\boolean{HaveBiber}}{
-\usepackage[backend=biber,style=alphabetic,natbib=true]{biblatex}
-\addbibresource{example-report.bib} % Add the biblatex file
-}{}
+%\lstset{
+%  basicstyle=\ttfamily,
+%  keywordstyle=\textcolor{blue},
+%  language=XML,
+%  morekeywords={<ScalarVariable,Real}
+%}
 
 
 \lstdefinelanguage{XML}
@@ -146,34 +41,24 @@ Provide short summary/abstract here.
 }
 
 \begin{document}
-\maketitle
-\deliverableContributors
-\vspace{1.0cm}
-\deliverableHistory
-\clearpage
-
-
-%%%% Document table of contents page %%%%
-\tableofcontents
-
-\section*{Abbreviations}
-\addcontentsline{toc}{section}{Abbreviations}
-List of abbreviations/acronyms used in document:
-
-\begin{tabbing}
-\textbf{Abbreviation}$\quad$ \= \textbf{Definition}\\
-FMI			  \>  Functional Mock-up Interface\\
-FMU			  \>  Functional Mock-up Unit\\
-TLM		      \>  Transmission Line Modelling\\
-\end{tabbing}
-
-\clearpage
-
-
 
 \input{listings-modelica.cfg}
 
+\title{Wrapper for Functional Mock-up Interface in TLM-based Asynchronous Co-Simulation}
 
+%\title{Main Title}
+%\subtitle{Sub Title}
+
+\author{
+  Robert Braun, SICS East Swedish ICT
+}
+
+%\author{
+% First Author, Affiliation\\
+% Second Author, Affiliation
+%}
+
+\makefrontpage
 
 \clearpage
 \section{Introduction}
@@ -443,7 +328,7 @@ In this case the model is decoupled in the middle of the first pendulum only to 
 Force and torque variables must be specified as input variables at the top level of the model, in order to get the correct number of equations and variables.
 Hence, we need to add the equations shown in \cref{lst:dymola_equations}.
 
-\begin{lstlisting}[float, language=Modelica,basicstyle=\small\ttfamily, floatplacement=ht,label=lst:dymola_equations,caption=Input variables must be specified on top level in the Modelica models]
+\begin{lstlisting}[language=Modelica,basicstyle=\small\ttfamily, floatplacement=ht,label=lst:dymola_equations,caption=Input variables must be specified on top level in the Modelica models]
   [...]
   //Define FMI interface model
   FMITLM.FMITLM_Interface_3D.FMITLMInterface3D fMITLMInterface3D;
@@ -556,24 +441,15 @@ The model is now ready to be simulated!
 
 \begin{figure}[ht]
 \centering
-\includegraphics[width=0.9\textwidth]{gfx/metamodel.png}
+\includegraphics[width=0.75\textwidth]{gfx/metamodel.png}
 \caption{Graphical view of the complete meta model}
 \label{fig:metamodel_omedit}
 \end{figure}
 
 
 
-
-
-%%%% Bibliography %%%%
-\clearpage
-\ifthenelse{\boolean{HaveBiber}}{
-\printbibliography % Use biblatex instead of old bibtex
-}{ % Use bibtex
-\bibliographystyle{alphaurl} % Use an http://nxg.me.uk/dist/urlbst/ enabled hyperref version of ``alpha''
+\bibliographystyle{plain}
 \bibliography{references}
-}
-\addcontentsline{toc}{section}{References}
 
 
 \end{document}
