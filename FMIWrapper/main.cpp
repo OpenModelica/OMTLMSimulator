@@ -1019,7 +1019,7 @@ void createAndClearTempDirectory(std::string path)
 #ifdef WIN32
     std::string command = "rd /s /q \""+path+"\"";
 #else
-    std::string command = "rm -rf "+tmpPath;
+    std::string command = "rm -rf "+path;
 #endif
     system(command.c_str());
   }
