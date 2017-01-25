@@ -1,0 +1,148 @@
+ADAMS/View model name: Spindle
+!
+!-------------------------------- SYSTEM UNITS ---------------------------------
+!
+UNITS/FORCE = NEWTON, MASS = KILOGRAM, LENGTH = MILLIMETER, TIME = SECOND
+!
+!----------------------------------- PARTS -------------------------------------
+!
+!----------------------------------- Ground ------------------------------------
+!
+!                            adams_view_name='ground'
+PART/1, GROUND
+!
+!                           adams_view_name='MARKER_2'
+MARKER/2, PART = 1, QP = -500, 0, 0
+!
+!                           adams_view_name='MARKER_6'
+MARKER/6, PART = 1, REULER = 90D, 90D, 0D
+!
+!                          adams_view_name='FMARKER_7'
+MARKER/7, PART = 1, FLOATING
+!
+!                           adams_view_name='MARKER_9'
+MARKER/9, PART = 1, QP = -200, 0, 0, REULER = 90D, 90D, 0D
+!
+!                          adams_view_name='MARKER_11'
+MARKER/11, PART = 1, QP = -200, 0, 0, REULER = 90D, 90D, 0D
+!
+!------------------------------------ Part -------------------------------------
+!
+!                            adams_view_name='PART_2'
+PART/2, MASS = 0.0031415927, CM = 4, IP = 43.85139746, 43.85139746, 3.926990817
+!
+!                           adams_view_name='MARKER_1'
+MARKER/1, PART = 2, REULER = 270D, 90D, 180D
+!
+!                           adams_view_name='MARKER_3'
+MARKER/3, PART = 2, QP = -400, 0, 0
+!
+!                              adams_view_name='cm'
+MARKER/4, PART = 2, QP = -200, 3.673819061E-014, 0, REULER = 90D, 90D, 0D
+!
+!                           adams_view_name='MARKER_5'
+MARKER/5, PART = 2, REULER = 90D, 90D, 0D
+!
+!                           adams_view_name='MARKER_8'
+MARKER/8, PART = 2, QP = -200, 0, 0, REULER = 90D, 90D, 0D
+!
+!                          adams_view_name='MARKER_10'
+MARKER/10, PART = 2, QP = -200, 0, 0, REULER = 90D, 90D, 0D
+!
+!                          adams_view_name='CYLINDER_1'
+GRAPHICS/1, CYLINDER, CM = 1, LENGTH = 400, RADIUS = 50
+!
+!------------------------------ DYNAMIC GRAPHICS -------------------------------
+!
+!                   adams_view_name='GFORCE_1_force_graphic_1'
+GRAPHICS/2, FORCE, ETYPE = GFORCE, EID = 1, EMARKER = 5
+!
+!                      adams_view_name='SPRING_1_I_graphic'
+GRAPHICS/3, FORCE, ETYPE = SFORCE, EID = 1, EMARKER = 2
+!
+!                      adams_view_name='SPRING_1_J_graphic'
+GRAPHICS/4, FORCE, ETYPE = SFORCE, EID = 1, EMARKER = 3
+!
+!                   adams_view_name='SPRING_1_spring_graphic'
+GRAPHICS/5, SPDP, I = 2, J = 3, COILS = 10, DA = 20
+!
+!                   adams_view_name='SPRING_1_damper_graphic'
+GRAPHICS/6, SPDP, I = 2, J = 3, COILS = 0, DB = 10, DC = 8, LC = 67, LD = 67
+!
+!-------------------------------- CONSTRAINTS ----------------------------------
+!
+!                           adams_view_name='JOINT_1'
+!JOINT/1, REVOLUTE, I = 8, J = 9
+!
+!                           adams_view_name='JOINT_2'
+JOINT/2, TRANSLATIONAL, I = 10, J = 11
+!
+!                           adams_view_name='MOTION_1'
+!MOTION/1, ROTATIONAL, JOINT = 1, FUNCTION = 90.0d *sin(100* time)
+!
+!                           adams_view_name='MOTION_2'
+!MOTION/2, TRANSLATIONAL, JOINT = 2, FUNCTION = 100.0 * sin(4*PI*100*time)
+!
+!----------------------------------- FORCES ------------------------------------
+!
+!                       adams_view_name='SPRING_1_sforce'
+SFORCE/1, TRANSLATIONAL, I = 2, J = 3, FUNCTION =  - 10.0*(dm(2,3)-100.0)
+, - 2.5E-002*vr(2,3)
+, + 0.0
+!
+!                           adams_view_name='GFORCE_1'
+GFORCE/1, I = 5, JFLOAT = 7, RM = 6, FUNCTION = USER(5, 6, 6)\
+, ROUTINE = tlmadams::
+!
+!------------------------------ DATA STRUCTURES --------------------------------
+!
+!                     adams_view_name='SPRING_1_deformation'
+VARIABLE/1, FUNCTION = DM(2,3) - 100.0
+!
+!                adams_view_name='SPRING_1_deformation_velocity'
+VARIABLE/2, FUNCTION = VR(2,3)
+!
+!                        adams_view_name='SPRING_1_force'
+VARIABLE/3, FUNCTION = (DX(2,3)*FX(2,3) +
+, DY(2,3)*FY(2,3) +
+, DZ(2,3)*FZ(2,3))/
+, DM(2,3)
+!
+!                        adams_view_name='GFORCE_1_MEA_1'
+VARIABLE/4, FUNCTION = GFORCE(1,0,1,0)
+!
+!                        adams_view_name='GFORCE_1_MEA_2'
+VARIABLE/5, FUNCTION = GFORCE(1,0,4,0)
+!
+!                        adams_view_name='GFORCE_1_MEA_3'
+VARIABLE/6, FUNCTION = GFORCE(1,0,4,0)
+!
+!                        adams_view_name='GFORCE_1_MEA_4'
+VARIABLE/7, FUNCTION = GFORCE(1,0,1,0)
+!
+!                        adams_view_name='GFORCE_1_MEA_5'
+VARIABLE/8, FUNCTION = GFORCE(1,0,2,0)
+!
+!                        adams_view_name='GFORCE_1_MEA_6'
+VARIABLE/9, FUNCTION = GFORCE(1,0,4,0)
+!
+!                        adams_view_name='GFORCE_1_MEA_7'
+VARIABLE/10, FUNCTION = GFORCE(1,0,3,0)
+!
+!                        adams_view_name='GFORCE_1_MEA_8'
+VARIABLE/11, FUNCTION = GFORCE(1,0,2,0)
+!
+!                        adams_view_name='GFORCE_1_MEA_9'
+VARIABLE/12, FUNCTION = GFORCE(1,0,4,6)
+!
+!------------------------- GRAVITATIONAL ACCELERATION --------------------------
+!
+ACCGRAV/
+!
+!----------------------------- ANALYSIS SETTINGS -------------------------------
+!
+OUTPUT/REQSAVE, GRSAVE
+!
+RESULTS/
+!
+END

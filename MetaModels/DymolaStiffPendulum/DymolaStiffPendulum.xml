@@ -1,0 +1,20 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!-- The root node is the meta-model -->
+<Model Name="DymolaStiffPendulum">
+  <!-- List of connected sub-models -->
+  <SubModels>
+    <SubModel Name="Pendulum" ExactStep="false" StartCommand="StartTLMDym" ModelFile="Pendulum">
+      <Annotation Extent="{-10,-10,10,10}" Visible="true" Origin="{-34,16}" Rotation="0"/>
+      <InterfacePoint Angle321="0,0,0" Name="tlm2" Position="1.5,-1.22625e-008,0"/>
+      <InterfacePoint Angle321="0,0,-3.5716e-008" Name="tlm1" Position="1.5,-1.7858e-008,0"/>
+    </SubModel>
+  </SubModels>
+  <!-- List of TLM connections -->
+  <Connections>
+    <Connection alpha="0.2" Zf="10000" Delay="1e-4" To="Pendulum.tlm1" From="Pendulum.tlm2" Zfr="1000">
+      <Annotation Points="{{-22,24},{-14,24},{-14,20},{-22,20},{-22,20}}"/>
+    </Connection>
+  </Connections>
+  <!-- Parameters for the simulation -->
+  <SimulationParams StopTime="10" StartTime="0"/>
+</Model>

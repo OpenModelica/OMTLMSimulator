@@ -1,0 +1,24 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<Model Name="HopsanHopsanSignal">
+  <SubModels>
+    <SubModel ExactStep="0" Position="0,0,0" ModelFile="left.hmf" Name="left" Angle321="0,0,0" StartCommand="StartTLMHopsan">
+      <Annotation Extent="{-10,-10,10,10}" Rotation="0" Origin="{8,14}" Visible="true"/>
+      <InterfacePoint Position="0,0,0" Name="Input1DIN" Angle321="0,0,0"/>
+      <InterfacePoint Position="0,0,0" Name="Output1DOUT" Angle321="0,0,0"/>
+    </SubModel>
+    <SubModel ExactStep="0" Position="0,0,0" ModelFile="right.hmf" Name="right" Angle321="0,0,0" StartCommand="StartTLMHopsan">
+      <Annotation Extent="{-10,-10,10,10}" Rotation="0" Origin="{8,-14}" Visible="true"/>
+      <InterfacePoint Position="0,0,0" Name="Input1DIN" Angle321="0,0,0"/>
+      <InterfacePoint Position="0,0,0" Name="Output1DOUT" Angle321="0,0,0"/>
+    </SubModel>
+  </SubModels>
+  <Connections>
+    <Connection Delay="0.001" alpha="0.0" From="left.Input1DIN" Zfr="0" To="right.Output1DOUT" Zf="0">
+      <Annotation Points="{{19,22},{19,23},{37,23},{37,-10},{19,-10}}"/>
+    </Connection>
+    <Connection Delay="0.001" alpha="0.0" From="right.Input1DIN" Zfr="0" To="left.Output1DOUT" Zf="0">
+      <Annotation Points="{{19,-6},{32,-6},{32,18},{19,18}}"/>
+    </Connection>
+  </Connections>
+  <SimulationParams StartTime="0" StopTime="10"/>
+</Model>

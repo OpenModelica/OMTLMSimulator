@@ -1,0 +1,5 @@
+Shaft
+Shaft_out1
+INTEGRATOR/SI2, GSTIFF, ERROR=1.0E-4, HMAX=0.005, HINIT=1.0E-6, LIST 
+sim/dyn, end=1, steps=50
+stop

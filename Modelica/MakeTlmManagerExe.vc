@@ -1,0 +1,136 @@
+#################################################################################
+#
+#   @(#)Makefile	05/01
+#
+# Iakov Nakhimovski. Makefile for the tlmadams dynamic library
+
+#include $(MAKEFILEHEADHOME)/Makefile.head
+UP=../..
+
+# For microsoft and Dymola 
+#CC=mycl cl -DWIN32 -D_WIN32 -DXMSTATIC -DYY_NEVER_INTERACTIVE  /EHsc
+#cc=mycl cl -DWIN32 -D_WIN32 -DXMSTATIC -DYY_NEVER_INTERACTIVE  /EHsc
+
+CC=cl -DYY_NEVER_INTERACTIVE 
+cc=cl -DYY_NEVER_INTERACTIVE 
+
+#include $(UP)/Versions/Format.mak
+
+BINDIR=$(UP)/../bin/$(ABI)
+
+#################################################################################
+#
+# includes, try to do it good this time. previously everything
+# included everything. even though the slave doesn't need the solver
+# it needs the definition of the matrix, hence the slaves includes the
+# solver. 
+
+
+BNAME=tlmmanager.lib
+MISCHOME=misc
+INCLUDES=  -I. \
+	-I../common \
+	-Ilibxml2/include \
+	-Ithreadrun/include \
+	-Ipthread/include \
+	-Irtime \
+	-I$(MISCHOME)/include
+CFLAGS=$(INCLUDES) -DWIN32 -DUSE_THREADS /EHsc /MD
+LIBS= \
+     threadrun\lib\WINDOWS64\libthreadrun.a \
+	 pthread\lib\pthreadVC2.lib
+# Note threadrun/include,threadrun/include,-DUSE_THREADS
+# were needed for compiling the TLMManager
+
+#CC=c:\Data\Dymola5.2\egcs\bin\g++.exe
+#cc=c:\Data\Dymola5.2\egcs\bin\gcc.exe
+
+%.obj: %.c
+	$(cc) $(INCLUDES) -c $< -o $@
+
+%.obj: %.cc
+	$(CC) $(INCLUDES) -c $< -o $@ 
+
+%.obj: ../common/%.cc
+	$(CC) $(INCLUDES) -c $< -o $@ 
+
+%.obj: misc/src/%.cc
+	$(CC) $(INCLUDES) -c $< -o $@ 
+
+
+
+ABIOBJS=../common/PluginImplementer.obj \
+	../common/TLMClientComm.obj \
+	../common/TLMCommUtil.obj \
+	../common/TLMInterface.obj \
+	../common/TLMErrorLog.obj \
+	../common/TLMPlugin.obj \
+	../common/MetaModel.obj \
+	../common/MetaModelReader.obj \
+	../common/TLMMessageQueue.obj \
+	../common/ManagerCommHandler.obj \
+	../common/TLMManagerComm.obj \
+	misc/src/lightmat.obj \
+	misc/src/ErrorLog.obj \
+	misc/src/tostr.obj \
+	misc/src/Bstring.obj \
+	misc/src/double33s.obj \
+	misc/src/dsyevc3.obj \
+	misc/src/dsyevq3.obj \
+	misc/src/dsyevv3.obj \
+	misc/src/dsytrd3.obj
+
+
+default: lib exe
+lib:dirs $(ABIOBJS)  
+	lib /out:$(ABI)/$(BNAME) *.obj
+exe:dirs  ../common/ManagerMain.obj
+	link  $(ABI)/$(BNAME) ManagerMain.obj $(LIBS) /OUT:TLMManager.exe
+exe2:../common/ManagerMain.obj
+	link /nologo  /STACK:2000000,8000 /RELEASE \
+	/NODEFAULTLIB:libc.lib /NODEFAULTLIB:dfor.lib /NODEFAULTLIB:dfconsol.lib \
+	/NODEFAULTLIB:dfport.lib /OUT:WINDOWS32/tlmmanager.exe \
+	ManagerCommHandler.obj \
+	ManagerMain.obj \
+	tostr.obj\
+	Bstring.obj \
+	ErrorLog.obj\
+	MetaModel.obj MetaModelReader.obj \
+	TLMCommUtil.obj TLMManagerComm.obj \
+	TLMMessageQueue.obj TLMErrorLog.obj \
+	/LIBPATH:pthread\$(ABI)\lib \
+	\
+	/LIBPATH:threadrun/lib/WINDOWS32\
+	/LIBPATH:rtime/lib/WINDOWS32 \
+	libthreadrun.a librtime.a user32.lib shell32.lib ws2_32.lib Gdi32.lib \
+	pthreadVC2.lib  \
+	libxml2/WINDOWS32/lib/libxml2_a.lib
+	cd
+	copy pthread\$(ABI)\lib\pthreadVC2.dll $(ABI)
+
+	cd WINDOWS32 
+    cd
+	dir
+	mt.exe -manifest tlmmanager.exe.manifest -outputresource:tlmmanager.exe;1
+
+	
+	
+install:
+		copy pthread\$(ABI)\lib\pthreadVC2.dll $(ABI)
+
+.PHONY: dirs clean
+
+dirs:
+	echo OBJS=$(OBJS)
+	echo ABIOBJS=$(ABIOBJS)
+
+	-mkdir $(ABI)
+# Problem that MingW contains no shell to perform the "if" command.	
+dirs_unix:	
+	-if [ ! -d $(ABI) ] ; then \
+	mkdir $(ABI) ; fi ;
+
+clean:
+	del  $(ABI)\*  *.obj /Q
+	
+# DO NOT DELETE

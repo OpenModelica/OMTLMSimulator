@@ -1,0 +1,85 @@
+#################################################################################
+#
+#   @(#)Makefile	05/01
+#
+# Iakov Nakhimovski. Makefile for the tlmModelica dynamic library
+
+#include $(MAKEFILEHEADHOME)/Makefile.head
+UP=../..
+
+# For microsoft
+#CC=mycl cl -DWIN32 -D_WIN32 -DXMSTATIC -DYY_NEVER_INTERACTIVE  /EHsc
+#cc=mycl cl -DWIN32 -D_WIN32 -DXMSTATIC -DYY_NEVER_INTERACTIVE  /EHsc
+
+CC=cl -DYY_NEVER_INTERACTIVE 
+cc=cl -DYY_NEVER_INTERACTIVE 
+
+#include $(UP)/Versions/Format.mak
+
+BINDIR=$(UP)/../bin/$(ABI)
+
+#################################################################################
+#
+# includes, try to do it good this time. previously everything
+# included everything. even though the slave doesn't need the solver
+# it needs the definition of the matrix, hence the slaves includes the
+# solver. 
+
+
+BNAME=tlmmodelica.lib
+MISCHOME=../extralibs/misc
+INCLUDES=  -I. \
+	-I../common \
+	-I$(MISCHOME)/include
+CFLAGS=$(INCLUDES) -DWIN32
+
+#CC=c:\Data\Dymola5.2\egcs\bin\g++.exe
+#cc=c:\Data\Dymola5.2\egcs\bin\gcc.exe
+
+%.obj: %.c
+	$(cc) $(INCLUDES) -c $< -o $@
+
+%.obj: %.cc
+	$(CC) $(INCLUDES) -c $< -o $@ 
+
+%.obj: ../common/%.cc
+	$(CC) $(INCLUDES) -c $< -o $@ 
+
+%.obj: ../extralibs/misc/src/%.cc
+	$(CC) $(INCLUDES) -c $< -o $@ 
+
+OBJS=  tlmforce.o 
+
+ABIOBJS=tlmforce.obj ../common/PluginImplementer.obj \
+	../common/TLMClientComm.obj \
+	../common/TLMCommUtil.obj \
+	../common/TLMInterface.obj \
+    ../common/TLMInterfaceSignal.obj \
+    ../common/TLMInterface1D.obj \
+    ../common/TLMInterface3D.obj \
+	../common/TLMErrorLog.obj \
+	../common/TLMPlugin.obj  \
+    ../extralibs/misc/src/coordTrans.obj \
+    ../extralibs/misc/src/double3Vec.obj \
+    ../extralibs/misc/src/double33Mat.obj \
+    ../extralibs/misc/src/strConv.obj
+
+default: dirs $(ABIOBJS)
+	lib /out:$(ABI)/$(BNAME) *.obj
+
+.PHONY: dirs clean
+
+dirs:
+	echo OBJS=$(OBJS)
+	echo ABIOBJS=$(ABIOBJS)
+
+	-mkdir $(ABI)
+# Problem that MingW contains no shell to perform the "if" command.	
+dirs_unix:	
+	-if [ ! -d $(ABI) ] ; then \
+	mkdir $(ABI) ; fi ;
+
+clean:
+	del  $(ABI)\*  *.obj
+
+# DO NOT DELETE
