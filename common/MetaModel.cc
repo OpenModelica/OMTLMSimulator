@@ -4,6 +4,7 @@
  * Implementation of methods for classes defined in MetaModel.h
  */
 #include <string>
+#include <sstream>
 #include "MetaModel.h"
 #include "TLMCommUtil.h"
 //#include "portability.h"
@@ -20,7 +21,6 @@
 #else
 #include <process.h>
 #include <winsock2.h>
-#include <sstream>
 #endif
 
 using std::string;
