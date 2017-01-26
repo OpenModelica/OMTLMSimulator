@@ -65,7 +65,8 @@ HEADERS += \
     common.h \
     TLMPluginHandler.hpp \
     TLMPluginInterfaceMechanical1D.hpp \
-    TLMPluginInterfaceHydraulic1D.hpp
+    TLMPluginInterfaceHydraulic1D.hpp \
+    TLMPluginInterfaceRotational1D.hpp
 
 OTHER_FILES += \
     hopsanDebugReleaseCompile.prf \
@@ -80,4 +81,7 @@ DISTFILES += \
     TLMPluginInterfaceSignalOutput.svg \
     TLMPluginLib.xml \
     TLMPluginHandler.xml \
-    TLMPluginHandler.svg
+    TLMPluginHandler.svg \
+    TLMPluginInterfaceHydraulic1D.xml \
+    TLMPluginInterfaceMechanical1D.xml \
+    TLMPluginInterfaceRotational1D.xml
