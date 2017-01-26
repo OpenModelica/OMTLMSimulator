@@ -325,11 +325,65 @@ void calc_tlm_force_1d(void* in_TLMPluginStructObj,
 
     }
 
-
     // Copy results
     // NOTE, Modelica wants, for some reason, inverted forces???????
     //      (This might be a bug in the Modelica TLM implementation as well)
    force[0] = -forceOut[0];
+}
+
+
+// The calc_tlm_torque function is called directly from the Modelica interface function
+// It needs special declaration
+void calc_tlm_torque_1d(void* in_TLMPluginStructObj,
+            const char* interfaceID,   // The calling marker ID
+                    double simTime,    // Current simulation time
+                    //double lastConvergedTime, // Last converged time
+                    double angle, // Marker position data
+                    double speed,      // Marker translational velocity
+                    double torque[])   // Output force
+{
+    TLMPluginStruct* TLMPluginStructObj = (TLMPluginStruct*)in_TLMPluginStructObj;
+    double forceOut[1];
+
+    // defined in OpenModelica dassl.c
+    extern int RHSFinalFlag;
+    static bool firstFinalStepReached = false;
+
+    if( RHSFinalFlag ){
+      set_tlm_motion_1d(TLMPluginStructObj, interfaceID, simTime, angle, speed);
+      firstFinalStepReached = true;
+    }
+
+    // Check if interface is registered. If it's not, register it
+    if( MarkerIDmap.find(interfaceID) == MarkerIDmap.end() ){
+        MarkerIDmap[interfaceID] = TLMPluginStructObj->Plugin->RegisteTLMInterface(interfaceID, 1,
+                                                                                   "Bidirectional",
+                                                                                   "Rotational");
+    }
+
+    // Interface force ID in TLM manager
+    int id = MarkerIDmap[interfaceID];
+
+    // Note, we make sure that we do not use the interface before the first final RHS
+    // so that all interfaces are registered before we start exchanging data. Also
+    // This gives a well defined start condition where all forces and moments are 0.0
+    if( id >= 0 && firstFinalStepReached ){
+        // Call the plugin to get reaction force
+    TLMPluginStructObj->Plugin->GetForce1D(id,
+                         simTime,
+                         speed,
+                         forceOut);
+    }
+    else {
+        /* Not connected */
+        forceOut[0] = 0.0;
+
+    }
+
+    // Copy results
+    // NOTE, Modelica wants, for some reason, inverted forces???????
+    //      (This might be a bug in the Modelica TLM implementation as well)
+   torque[0] = -forceOut[0];
 }
 
 
