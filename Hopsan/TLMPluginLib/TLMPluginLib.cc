@@ -30,6 +30,7 @@
 #include "TLMPluginHandler.hpp"
 #include "TLMPluginInterfaceHydraulic1D.hpp"
 #include "TLMPluginInterfaceMechanical1D.hpp"
+#include "TLMPluginInterfaceRotational1D.hpp"
 #include "TLMPluginInterfaceSignalInput.hpp"
 #include "TLMPluginInterfaceSignalOutput.hpp"
 
@@ -42,6 +43,7 @@ extern "C" DLLEXPORT void register_contents(ComponentFactory* pComponentFactory,
     pComponentFactory->registerCreatorFunction("TLMPluginHandler", TLMPluginHandler::Creator);
     pComponentFactory->registerCreatorFunction("TLMPluginInterfaceHydraulic1D", TLMPluginInterfaceHydraulic1D::Creator);
     pComponentFactory->registerCreatorFunction("TLMPluginInterfaceMechanical1D", TLMPluginInterfaceMechanical1D::Creator);
+    pComponentFactory->registerCreatorFunction("TLMPluginInterfaceRotational1D", TLMPluginInterfaceRotational1D::Creator);
     pComponentFactory->registerCreatorFunction("TLMPluginInterfaceSignalInput", TLMPluginInterfaceSignalInput::Creator);
     pComponentFactory->registerCreatorFunction("TLMPluginInterfaceSignalOutput", TLMPluginInterfaceSignalOutput::Creator);
 
