@@ -56,6 +56,18 @@ package TLM
       annotation(Icon(coordinateSystem(extent = {{-100, -100}, {100, 100}}, preserveAspectRatio = true, initialScale = 0.1, grid = {10, 10}), graphics = {Rectangle(visible = true, fillColor = {255, 85, 0}, fillPattern = FillPattern.Solid, extent = {{-100, -100}, {100, 100}}, radius = 20), Text(visible = true, origin = {3.13, 5}, textColor = {255, 255, 255}, extent = {{-66.87, -65}, {66.87, 65}}, textString = "F")}));
     end TLMGetForce1D;
 
+    function TLMGetTorque1D
+      input TLMPlugin tlmPlugin;
+      input String name "Name of the interface";
+      input Real time_in "Simulation time";
+      input Real phi "Position";
+      input Real w "Velocity";
+      output Real t "Force";
+    
+      external "C" calc_tlm_torque_1d(tlmPlugin, name, time_in, phi, w, t) annotation(Include = "#include<tlmforce.h>", Library = "tlmopenmodelica", IncludeDirectory = "modelica://TLM/Resources/Include", LibraryDirectory = "modelica://TLM/Resources/Library");
+      annotation(Icon(coordinateSystem(extent = {{-100, -100}, {100, 100}}, preserveAspectRatio = true, initialScale = 0.1, grid = {10, 10}), graphics = {Rectangle(visible = true, fillColor = {255, 85, 0}, fillPattern = FillPattern.Solid, extent = {{-100, -100}, {100, 100}}, radius = 20), Text(visible = true, origin = {3.13, 5}, textColor = {255, 255, 255}, extent = {{-66.87, -65}, {66.87, 65}}, textString = "F")}));
+    end TLMGetTorque1D;
+  
     function TLMGetDelay
       input String name "Name of the interface";
       output Real TLMdelay "The TLM delay for the secific interface";
@@ -75,54 +87,46 @@ package TLM
 
   package TLM_Interface_1D
     model TLMTorque1D
-      TLMPlugin tlmPlugin = TLMPlugin();
+      TLM_Functions.TLMPlugin tlmPlugin = TLM_Functions.TLMPlugin();
       Modelica.Mechanics.Rotational.Interfaces.Flange_b flange_b annotation(Placement(visible = true, transformation(origin = {-76.77419999999999, -1.93548}, extent = {{-12, -12}, {12, 12}}, rotation = 0), iconTransformation(origin = {-76.77419999999999, -1.93548}, extent = {{-12, -12}, {12, 12}}, rotation = 0)));
       parameter String interfaceName = "tlm";
       parameter Boolean debugFlg = false;
-      constant Real vel[3] = zeros(3);
-      Real w[3](start = zeros(3));
-      constant Real r[3] = zeros(3);
-      constant Real A[3, 3] = identity(3);
-      Real f[3](start = zeros(3));
-      Real torque[3](start = zeros(3));
-      Real tlmDelay = TLMGetDelay(interfaceName);
+      Real w(start = 0);
+      constant Real phi = 0;
+      Real t(start = 0);
+      Real tlmDelay = TLM_Functions.TLMGetDelay(interfaceName);
     initial algorithm
       assert(tlmDelay > 0.0, "Bad TLM delay in" + interfaceName + ", give up");
-      TLMSetDebugMode(debugFlg);
+      TLM_Functions.TLMSetDebugMode(debugFlg);
     equation
-      w[1] = der(flange_b.phi);
-      w[2] = 0.0;
-      w[3] = 0.0;
-      flange_b.tau = torque[1];
+      w = der(flange_b.phi);
+      flange_b.tau = t;
     algorithm
-      (f, torque) := TLMGetForce(tlmPlugin, interfaceName, time, TLMTorque1D.r, TLMTorque1D.A, TLMTorque1D.vel, w);
+      t := TLM_Functions.TLMGetTorque1D(tlmPlugin, interfaceName, time, phi, w);
       annotation(Diagram, Icon(coordinateSystem(preserveAspectRatio = false, extent = {{-100, -100}, {100, 100}}, initialScale = 0.1, grid = {10, 10}), graphics = {Line(visible = true, points = {{-63.226, -2.581}, {-28.387, -2.581}}, color = {170, 0, 127}, thickness = 5), Rectangle(visible = true, lineColor = {128, 0, 128}, fillColor = {0, 0, 255}, fillPattern = FillPattern.HorizontalCylinder, extent = {{-29.548, -45.806}, {96.90300000000001, 42.581}}, radius = 20), Text(visible = true, origin = {35, -1.626}, textColor = {255, 255, 255}, extent = {{-55, -26.837}, {55, 26.837}}, textString = "1D Torque")}));
     end TLMTorque1D;
 
-    model TLMForce1D
-      TLMPlugin tlmPlugin = TLMPlugin();
-      Modelica.Mechanics.Translational.Interfaces.Flange_b flange_b annotation(Placement(visible = true, transformation(origin = {-76.77419999999999, -1.93548}, extent = {{-12, -12}, {12, 12}}, rotation = 0), iconTransformation(origin = {-76.77419999999999, -1.93548}, extent = {{-12, -12}, {12, 12}}, rotation = 0)));
-      parameter String interfaceName = "tlm";
-      parameter Boolean debugFlg = false;
-      Real vel[3](start = zeros(3));
-      constant Real w[3] = zeros(3);
-      constant Real r[3] = zeros(3);
-      constant Real A[3, 3] = identity(3);
-      Real force[3](start = zeros(3));
-      Real torque[3](start = zeros(3));
-      Real tlmDelay = TLMGetDelay(interfaceName);
-    initial algorithm
-      assert(tlmDelay > 0.0, "Bad TLM delay in" + interfaceName + ", give up");
-      TLMSetDebugMode(debugFlg);
-    equation
-      vel[1] = der(flange_b.s);
-      vel[2] = 0.0;
-      vel[3] = 0.0;
-      flange_b.f = force[1];
-    algorithm
-      (force, torque) := TLMGetForce(tlmPlugin, interfaceName, time, TLMForce1D.r, TLMForce1D.A, vel, TLMForce1D.w);
-      annotation(Diagram, Icon(coordinateSystem(preserveAspectRatio = false, extent = {{-100, -100}, {100, 100}}, initialScale = 0.1, grid = {10, 10}), graphics = {Rectangle(visible = true, lineColor = {128, 0, 128}, fillColor = {128, 0, 128}, fillPattern = FillPattern.HorizontalCylinder, extent = {{-29.548, -45.806}, {96.90300000000001, 42.581}}, radius = 20), Line(visible = true, points = {{-63.226, -2.581}, {-28.387, -2.581}}, color = {128, 0, 128}, thickness = 5), Text(visible = true, origin = {33.696, 0}, textColor = {255, 255, 255}, extent = {{-53.696, -30}, {53.696, 30}}, textString = "1D Force")}));
-    end TLMForce1D;
+model TLMForce1D
+  TLM_Functions.TLMPlugin tlmPlugin = TLM_Functions.TLMPlugin();
+  Modelica.Mechanics.Translational.Interfaces.Flange_b flange_b annotation(Placement(visible = true, transformation(origin = {-76.77419999999999, -1.93548}, extent = {{-12, -12}, {12, 12}}, rotation = 0), iconTransformation(origin = {-76.77419999999999, -1.93548}, extent = {{-12, -12}, {12, 12}}, rotation = 0)));
+  parameter String interfaceName = "tlm";
+  parameter Boolean debugFlg = false;
+  Real v(start = 0);
+  constant Real x = 0;
+  Real f(start = 0);
+  Real tlmDelay = TLM_Functions.TLMGetDelay(interfaceName);
+initial algorithm
+  assert(tlmDelay > 0.0, "Bad TLM delay in" + interfaceName + ", give up");
+  TLM_Functions.TLMSetDebugMode(debugFlg);
+equation
+  v = der(flange_b.s);
+  flange_b.f = f;
+algorithm
+  f := TLM_Functions.TLMGetForce1D(tlmPlugin, interfaceName, time, x, v);
+  annotation(Diagram, Icon(coordinateSystem(preserveAspectRatio = false, extent = {{-100, -100}, {100, 100}}, initialScale = 0.1, grid = {10, 10}), graphics = {Rectangle(visible = true, lineColor = {128, 0, 128}, fillColor = {128, 0, 128}, fillPattern = FillPattern.HorizontalCylinder, extent = {{-29.548, -45.806}, {96.90300000000001, 42.581}}, radius = 20), Line(visible = true, points = {{-63.226, -2.581}, {-28.387, -2.581}}, color = {128, 0, 128}, thickness = 5), Text(visible = true, origin = {33.696, 0}, textColor = {255, 255, 255}, extent = {{-53.696, -30}, {53.696, 30}}, textString = "1D Force")}));
+end TLMForce1D;
+
+
     annotation(Icon(coordinateSystem(extent = {{-100, -100}, {100, 100}}, preserveAspectRatio = true, initialScale = 0.1, grid = {10, 10}), graphics = {Rectangle(visible = true, fillColor = {170, 9, 95}, fillPattern = FillPattern.Solid, extent = {{-100, -100}, {100, 100}}, radius = 20), Text(visible = true, origin = {0, 2.861}, textColor = {255, 255, 255}, extent = {{-84.78700000000001, -62.861}, {84.78700000000001, 62.861}}, textString = "1D")}), Diagram(coordinateSystem(extent = {{-148.5, -105}, {148.5, 105}}, preserveAspectRatio = true, initialScale = 0.1, grid = {5, 5})));
   end TLM_Interface_1D;
 

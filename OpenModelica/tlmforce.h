@@ -54,7 +54,7 @@ void set_tlm_motion(void* in_TLMPluginStructObj,
 //! \retval force      The resulting force (x,y,z) acting in the interface. Three component vector/array.
 //! \retval torque     The resulting torque (x,y,z) acting in the interface. Three component vector/array.
 void calc_tlm_force(void* in_TLMPluginStructObj,
-		    const char* interfaceID, // The calling TLM interface (frame) ID
+                    const char* interfaceID, // The calling TLM interface (frame) ID
                     double simTime,          // Current simulation time
                     double position[],       // Interface position data
                     double orientation[],    // Interface rotation matrix
@@ -62,6 +62,21 @@ void calc_tlm_force(void* in_TLMPluginStructObj,
                     double ang_speed[],      // Interface angular/rotational velocity
                     double force[],          // Output 3-component force
                     double torque[]);        // Output 3-component torque
+
+
+void calc_tlm_force_1d(void* in_TLMPluginStructObj,
+                    const char* interfaceID,   // The calling marker ID
+                    double simTime,    // Current simulation time
+                    double position, // Marker position data
+                    double speed,      // Marker translational velocity
+                    double force[]);   // Output force
+
+void calc_tlm_torque_1d(void* in_TLMPluginStructObj,
+                    const char* interfaceID,   // The calling marker ID
+                    double simTime,    // Current simulation time
+                    double angle, // Marker position data
+                    double speed,      // Marker translational velocity
+                    double torque[]);   // Output force
 #ifdef __cplusplus
 }
 #endif
