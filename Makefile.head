@@ -1,0 +1,105 @@
+# Default Makefile.head
+# This file typically sets up the compiler and includes for the specific platform
+# Here we simply assume gcc and some GNU/Linux environment
+
+ifeq ($(ABI),)
+  # We need some machine environment 
+  $(error Please set the ABI environment variable, typical choices are: WINDOWS32, WINDOWS64, or LINUX64)
+endif
+
+ifeq ($(OMDEV),)
+  OMDEV = $(OPENMODELICAHOME)
+endif
+
+ifeq ($(ABI),WINDOWS64)
+  ifeq (MINGW64,$(findstring MINGW64,$(shell uname)))
+    CC=g++
+    cc=gcc
+    LINK=g++
+    AR=ar
+    CP=cp
+    FEXT=.exe
+    SHREXT=.dll
+    OMDEVMSYS=$(shell cygpath $$OMDEV)
+    CMAKE = $(OMDEVMSYS)/bin/cmake/bin/cmake
+    CMAKE_TARGET="MSYS Makefiles"
+    FMIL_FLAGS=-DFMILIB_FMI_PLATFORM=win64
+  else
+    CC=mycl cl64 /DMSC_VER /DWIN32 /D_WIN32 /EHsc /DNOMINMAX /GR
+    cc=mycl cl64
+    LINK=mycl link64
+    AR=ar
+    CP=cp
+    FEXT=.exe
+  endif
+else ifeq ($(ABI),WINDOWS32)
+  ifeq (MINGW32,$(findstring MINGW32,$(shell uname)))
+    CC=g++
+    cc=gcc
+    LINK=g++
+    AR=ar
+    CP=cp
+    FEXT=.exe
+    SHREXT=.dll
+    OMDEVMSYS=$(shell cygpath $$OMDEV)
+    CMAKE = $(OMDEVMSYS)/bin/cmake/bin/cmake
+    CMAKE_TARGET="MSYS Makefiles"
+    FMIL_FLAGS=-DFMILIB_FMI_PLATFORM=win32
+  else
+    $(error No compiler found to build for WINDOWS32)
+  endif
+else
+    CC=g++
+    cc=gcc
+    LINK=g++
+    AR=ar
+    CP=cp
+    SHREXT=.so
+    CMAKE=cmake
+    CMAKE_TARGET="Unix Makefiles"
+    FMIL_FLAGS=
+endif
+
+MISCHOME=$(UP)/extralibs/misc
+TIMEHOME=$(UP)/extralibs/rtime
+
+DEFINES= -DUSE_THREADS
+OPTFLAGS4=-O2
+
+ifeq (MINGW64,$(findstring MINGW64,$(shell uname)))
+  INCLXML-WINDOWS64=-I$(OMDEV)/tools/msys/mingw64/include/libxml2
+  LIBXML-WINDOWS64=-L$(OMDEV)/tools/msys/mingw64/bin -lxml2-2
+  CP-LIBXML-WINDOWS64=cp $(OMDEV)/tools/msys/mingw64/bin/libxml2-2.dll $(OMDEV)/tools/msys/mingw64/bin/libiconv-2.dll $(OMDEV)/tools/msys/mingw64/bin/zlib1.dll $(OMDEV)/tools/msys/mingw64/bin/libwinpthread-1.dll $(OMDEV)/tools/msys/mingw64/bin/libstdc++-6.dll $(OMDEV)/tools/msys/mingw64/bin/libgcc_s_seh-1.dll $(OMDEV)/tools/msys/mingw64/bin/liblzma-5.dll $(UP)/bin
+  INCLPTHREAD-WINDOWS64=
+  LIBPTHREAD-WINDOWS64=-L$(OMDEV)/tools/msys/mingw64/bin/ -lwinpthread-1
+  XTRLIBS-WINDOWS64=-lws2_32
+else
+  INCLXML-WINDOWS64=-I$(UP)/extralibs/libxml2/include 
+  LIBXML-WINDOWS64=-L$(UP)/extralibs/libxml2/$(ABI)/lib libxml2.lib
+  CP-LIBXML-WINDOWS64=
+  XTRLIBS-WINDOWS64=user32.lib shell32.lib ws2_32.lib Gdi32.lib pthreadVC2.lib
+  INCLPTHREAD-WINDOWS64=-I$(UP)/extralibs/pthread/include
+  LIBPTHREAD-WINDOWS64=-L$(UP)/extralibs/pthread/$(ABI)/lib pthreadVC2.lib
+endif
+
+INCLXML-WINDOWS32=-I$(OMDEV)/tools/msys/mingw32/include/libxml2
+LIBXML-WINDOWS32=-L$(OMDEV)/tools/msys/mingw32/bin -lxml2-2
+CP-LIBXML-WINDOWS32=cp $(OMDEV)/tools/msys/mingw32/bin/libxml2-2.dll $(OMDEV)/tools/msys/mingw32/bin/libiconv-2.dll $(OMDEV)/tools/msys/mingw32/bin/zlib1.dll $(OMDEV)/tools/msys/mingw32/bin/libwinpthread-1.dll $(OMDEV)/tools/msys/mingw32/bin/libstdc++-6.dll $(OMDEV)/tools/msys/mingw32/bin/libgcc_s_dw2-1.dll $(OMDEV)/tools/msys/mingw32/bin/liblzma-5.dll $(UP)/bin
+INCLPTHREAD-WINDOWS32=
+LIBPTHREAD-WINDOWS32=-L$(OMDEV)/tools/msys/mingw32/bin/ -lwinpthread-1
+XTRLIBS-WINDOWS32=-lws2_32
+
+INCLXML-LINUX64=-I/usr/include/libxml2
+LIBXML-LINUX64=-lxml2
+CP-LIBXML-LINUX64=
+XTRLIBS-LINUX64=-lrt
+LIBPTHREAD-LINUX64=-L$(UP)/extralibs/pthread/$(ABI)/lib -lpthread
+
+INCLXML=$(INCLXML-$(ABI))
+LIBXML=$(LIBXML-$(ABI))
+CP-LIBXML=$(CP-LIBXML-$(ABI))
+XTRLIBS=$(XTRLIBS-$(ABI))
+INCLPTHREAD=$(INCLPTHREAD-$(ABI))
+LIBPTHREAD=$(LIBPTHREAD-$(ABI))
+
+MEX=mex

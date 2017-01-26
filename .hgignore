@@ -1,0 +1,18 @@
+syntax: glob
+*.o
+bin/OpenModelica
+bin/tlmmanager.exe
+bin/tlmmonitor.exe
+bin/StartTLMOpenModelica*
+common/WINDOWS32/*
+common/WINDOWS64/*
+extralibs/misc/lib/WINDOWS32/*
+extralibs/misc/lib/WINDOWS64/*
+extralibs/misc/src/WINDOWS32/*
+extralibs/misc/src/WINDOWS64/*
+extralibs/rtime/WINDOWS32/*
+extralibs/rtime/WINDOWS64/*
+extralibs/rtime/lib/WINDOWS32/*
+extralibs/rtime/lib/WINDOWS64/*
+extralibs/threadrun/lib/WINDOWS32/*
+extralibs/threadrun/lib/WINDOWS64/*
