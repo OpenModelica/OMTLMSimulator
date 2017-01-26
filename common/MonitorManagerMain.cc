@@ -457,6 +457,11 @@ void printHeader(MetaModel& model, std::ofstream& dataFile)
                 dataFile << "\"" << name << ".v\","; // Speed
                 dataFile << "\"" << name << ".F\""; // Force
               }
+              else if(interfaceProxy.GetDomain() == "Rotational") {
+                dataFile << "\"" << name << ".phi\","; // Position
+                dataFile << "\"" << name << ".w\","; // Speed
+                dataFile << "\"" << name << ".T\""; // Force
+              }
 
               nActiveInterfaces++;
             }
@@ -585,6 +590,12 @@ void printData(MetaModel& model,
                   dataFile << timeData.Velocity << ",";
                   dataFile << force;
               }
+              else if(interfaceProxy.GetDomain() == "Rotational") {
+                  dataFile << timeData.Position << ",";   //Angle
+                  dataFile << timeData.Velocity << ",";   //Angular velocity
+                  dataFile << force;                      //Torque
+              }
+
 
               nActiveInterfaces++;
             }
