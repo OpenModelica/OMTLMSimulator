@@ -27,6 +27,8 @@ install:
 	cp TLMPluginLib/TLMPluginInterfaceMechanical1D.hpp $(LIBDIR)
 	cp TLMPluginLib/TLMPluginInterfaceHydraulic1D.xml $(LIBDIR)
 	cp TLMPluginLib/TLMPluginInterfaceHydraulic1D.hpp $(LIBDIR)
+	cp TLMPluginLib/TLMPluginInterfaceRotational1D.xml $(LIBDIR)
+	cp TLMPluginLib/TLMPluginInterfaceRotational1D.hpp $(LIBDIR)
 	cp TLMPluginLib/TLMPluginInterface1D.svg $(LIBDIR)    
 	cp TLMPluginLib/TLMPluginInterfaceSignalInput.svg $(LIBDIR)
 	cp TLMPluginLib/TLMPluginInterfaceSignalInput.hpp $(LIBDIR)
