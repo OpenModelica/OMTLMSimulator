@@ -140,10 +140,8 @@ void MonitorTimeStep(TLMPlugin* TLMlink,
               }
               else if(dimensions == 1 && causality == "Output"){
                 TLMTimeDataSignal& CurTimeData = dataStorageSignal[interfaceID];
-                TLMErrorLog::Log("Hare 1");
                 int linkedID = interfaceProxy.GetLinkedID();
                 TLMlink->GetTimeDataSignal(interfaceID, SimTime, CurTimeData, true);
-                TLMErrorLog::Log("Hare 2");
               }
               //No need to check for erroneous interface type, we can simply log nothing instead /robbr
 #else
@@ -488,6 +486,8 @@ void printData(MetaModel& model,
                std::map<int, TLMTimeData1D>& dataStorage1D,
                std::map<int, TLMTimeData3D> &dataStorage3D)
 {
+    double startTime = model.GetSimParams().GetStartTime();
+
     // Get data from TLM-Manager here!
     int nTLMInterfaces = model.GetInterfacesNum();
 
@@ -503,6 +503,10 @@ void printData(MetaModel& model,
                 TLMErrorLog::Log(ss.str());
 
                 TLMTimeData3D& timeData = dataStorage3D.at(interfaceProxy.GetID());
+
+                if(timeData.time < startTime) {
+                    timeData.time = startTime;
+                }
 
                 // Print time only once, that is, for the first entry.
                 if( printTimeFlg ){
@@ -559,6 +563,9 @@ void printData(MetaModel& model,
 
               TLMTimeData1D& timeData = dataStorage1D.at(interfaceProxy.GetID());
 
+              if(timeData.time < startTime) {
+                  timeData.time = startTime;
+              }
               // Print time only once, that is, for the first entry.
               if( printTimeFlg ){
                   dataFile << timeData.time << ",";
@@ -608,6 +615,9 @@ void printData(MetaModel& model,
 
               TLMTimeDataSignal& timeData = dataStorageSignal.at(interfaceProxy.GetID());
 
+              if(timeData.time < startTime) {
+                  timeData.time = startTime;
+              }
               // Print time only once, that is, for the first entry.
               if( printTimeFlg ){
                   dataFile << timeData.time << ",";
