@@ -97,13 +97,12 @@ namespace hopsan {
                 mpSystemParent->getParameterValue(parNames[i],parValue);
                 TLMErrorLog::Log("Registers parameter: "+h2s(parNames[i]));
                 mParIds.push_back(mpPlugin->RegisterTLMParameter(h2s(parNames[i]),h2s(parValue)));
-                TLMErrorLog::Log("Got parameter ID: "+h2s(mParIds[mParIds.size()-1]));
+                std::stringstream ss;
+                ss << "Hopsan got parameter ID: " << mParIds[mParIds.size()-1];
+                TLMErrorLog::Log(ss.str());
             }
-            return (mpPlugin != 0);
-        }
 
-        void initialize()
-        {
+            //Receive parameter values
             for(size_t i=0; i<mParIds.size(); ++i)
             {
                 std::string name, value;
@@ -112,10 +111,17 @@ namespace hopsan {
                 TLMErrorLog::Log(ss.str());
                 mpPlugin->GetParameterValue(mParIds[i], name, value);
                 std::stringstream ss2;
-                ss << "Got name \"" << name << "\" and value \"" << value << "\"";
+                ss2 << "Got name \"" << name << "\" and value \"" << value << "\"";
                 TLMErrorLog::Log(ss2.str());
                 mpSystemParent->setParameterValue(HString(name.c_str()),HString(value.c_str()));
             }
+
+            return (mpPlugin != 0);
+        }
+
+        void initialize()
+        {
+
         }
 
         void simulateOneTimestep() {}
