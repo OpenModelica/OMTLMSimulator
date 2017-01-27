@@ -149,6 +149,13 @@ void ManagerCommHandler::RunStartupProtocol() {
                 comp.SetReadyToSim();
                 numCheckModel++;
             }
+            else if(message->Header.MessageType == TLMMessageTypeConst::TLM_REG_PARAMETER) {
+                TLMErrorLog::Log(string("Component ") + comp.GetName() + " registers parameter");
+
+                Comm.AddActiveSocket(hdl);
+                ProcessRegParameterMessage(iSock, *message);
+                MessageQueue.PutWriteSlot(message);
+            }
             else {
                 TLMErrorLog::Log(string("Component ") + comp.GetName() + " registers interface");;
 
@@ -231,7 +238,7 @@ void ManagerCommHandler::ProcessRegInterfaceMessage(int compID, TLMMessage& mess
     if(mess.Header.MessageType != TLMMessageTypeConst::TLM_REG_INTERFACE) {
         //std::cerr << "wrong message is: " <<  mess.Header.MessageType << endl;
         //std::cerr << "wrong message is: " <<  int(mess.Header.MessageType) << endl;
-	TLMErrorLog::FatalError("Interface registration message expected");	
+       TLMErrorLog::FatalError("Interface registration message expected");
     }
 
     // First, find the interface in the meta model
@@ -331,6 +338,58 @@ void ManagerCommHandler::ProcessRegInterfaceMessage(int compID, TLMMessage& mess
     }
     else {
         TLMErrorLog::Warning("Wrong coomunication mode in ManagerCommHandler::ProcessRegInterfaceMessage(...)");
+        return;
+    }
+}
+
+void ManagerCommHandler::ProcessRegParameterMessage(int compID, TLMMessage &mess)
+{
+    if(mess.Header.MessageType != TLMMessageTypeConst::TLM_REG_PARAMETER) {
+        //std::cerr << "wrong message is: " <<  mess.Header.MessageType << endl;
+        //std::cerr << "wrong message is: " <<  int(mess.Header.MessageType) << endl;
+    TLMErrorLog::FatalError("Parameter registration message expected");
+    }
+
+    // First, find the interface in the meta model
+    string aNameAndValue ((const char*)(& mess.Data[0]), mess.Header.DataSize);
+
+    TLMErrorLog::Log("Manager received nameAndValue: "+aNameAndValue);
+
+    string aName, aValue;
+    bool readingName=true;
+    for(size_t i=0; i<aNameAndValue.size(); ++i) {
+        if(aNameAndValue[i] == ':' && readingName) {
+            readingName = false;
+        }
+       else if(readingName) {
+            aName += aNameAndValue[i];
+        }
+        else {
+            aValue += aNameAndValue[i];
+        }
+    }
+
+    TLMErrorLog::Log("Name = " + aName + ", Value = " + aValue);
+
+    int ParID = TheModel.GetTLMParameterID(compID, aName);
+
+    mess.Header.TLMParameterID = ParID;
+
+    mess.Header.SourceIsBigEndianSystem = TLMMessageHeader::IsBigEndianSystem;
+    mess.Header.DataSize = 0;
+
+    if(ParID < 0 && CommMode == InterfaceRequestMode) {
+        // interface not found, create it
+        //std::string type = "1D";                                //HARD-CODED /robbr
+        TheModel.RegisterTLMParameterProxy(compID, aName, aValue);
+        ParID = TheModel.GetTLMParameterID(compID, aName);
+    }
+
+    if(ParID < 0) {
+        // interface not found
+        TLMErrorLog::Warning(string("Parameter ") +
+                             TheModel.GetTLMParameterProxy(compID).GetName() + '.'
+                             + aName + " not defined in metamodel. Ignored.");
         return;
     }
 }

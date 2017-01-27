@@ -23,6 +23,7 @@ SRCCLT= PluginImplementer.cc \
 	TLMInterfaceSignalOutput.cc \
 	TLMInterface1D.cc \
 	TLMInterface3D.cc \
+	TLMParameter.cc \
 	TLMErrorLog.cc \
 	TLMPlugin.cc 
 

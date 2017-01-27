@@ -14,6 +14,7 @@
 #include "TLMInterface1D.h"
 #include "TLMInterface3D.h"
 #include "TLMPlugin.h"
+#include "TLMParameter.h"
 
 
 //! PluginImplemneter class implements the  TLMPlugin interface.
@@ -56,6 +57,9 @@ protected:
 
     //! Registered interfaces
     std::vector<TLMInterface*> Interfaces;
+
+    //! Registered parameters
+    std::vector<TLMParameter*> Parameters;
     
     //! The communication object
     TLMClientComm ClientComm;
@@ -67,7 +71,13 @@ protected:
     //!  and their index in the Interfaces vector
     std::map<int, int> MapID2Ind;
 
+    //! MapID2Ind provides a mapping between the ID of parameters
+    //!  and their index in the Parameters vector
+    std::map<int, int> MapID2Par;
+
     int GetInterfaceIndex(int ID) const { return MapID2Ind.find(ID)->second; }
+
+    int GetParameterIndex(int ID) const { return MapID2Par.find(ID)->second; }
 
     //! Init method. Should be called after the default constructor. It will
     //! initialize the object and connect to TLMManager. Will return true
@@ -85,6 +95,8 @@ protected:
     //! the interface is not connected in the MetaModel.
     int RegisteTLMInterface(std::string name, int dimensions=6 ,
                             std::string causality="Bidirectional", std::string domain="Mechanical");
+
+    int RegisterTLMParameter(std::string name, std::string defaultValue);
 
     //! ReceiveTimeData receives time-stamped data from coupled simulations
     //! if the specified interface needs more data for the given time..
@@ -162,6 +174,7 @@ protected:
     void GetTimeData1D(int interfaceID, double time, TLMTimeData1D& DataOut);
     void GetTimeData3D(int interfaceID, double time, TLMTimeData3D& DataOut);
 
+    void GetParameterValue(int parameterID, std::string &Name, std::string &Value);
  protected:
 
     //! StartTime - start time for the simulation

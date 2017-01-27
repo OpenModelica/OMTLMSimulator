@@ -190,6 +190,25 @@ int  PluginImplementer::RegisteTLMInterface(std::string name , int dimensions,
 }
 
 
+int PluginImplementer::RegisterTLMParameter(std::string name, std::string defaultValue)
+{
+    TLMParameter *par = new TLMParameter(ClientComm, name, defaultValue);
+
+    int id = par->GetParameterID();
+
+    TLMErrorLog::Log(string("Got parameter ID: ") + TLMErrorLog::ToStdStr(id));
+
+    // The index of the new interface:
+    int idx = Parameters.size();
+
+    Parameters.push_back(par);
+
+    MapID2Par[id] = idx;
+
+    return id;
+}
+
+
 // ReceiveTimeData receives time-stamped data from coupled simulations.
 // Since the order of messages can vary the specified interfaceID
 // is used only to detect the last message expected when the function
@@ -538,5 +557,14 @@ void PluginImplementer::GetTimeData3D(int interfaceID, double time, TLMTimeData3
 
   ifc->GetTimeData(DataOut);
 
+}
+
+void PluginImplementer::GetParameterValue(int parameterID, std::string &Name, std::string &Value) {
+  if(!ModelChecked) CheckModel();
+
+  int idx = GetParameterIndex(parameterID);
+  TLMParameter* pPar = Parameters[idx];
+  Name = pPar->GetName();
+  Value = pPar->GetValue();
 }
 
