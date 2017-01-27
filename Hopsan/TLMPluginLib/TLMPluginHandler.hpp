@@ -45,6 +45,8 @@ namespace hopsan {
 
         TLMPlugin *mpPlugin;
 
+        std::vector<int> mParIds;
+
     public:
         static Component *Creator()
         {
@@ -85,13 +87,36 @@ namespace hopsan {
                 TLMErrorLog::SetDebugOut(true);
             }
 
+            //Register parameters
+            mParIds.clear();
+            std::vector<HString> parNames;
+            mpSystemParent->getParameterNames(parNames);
+            for(size_t i=0; i<parNames.size(); ++i)
+            {
+                HString parValue;
+                mpSystemParent->getParameterValue(parNames[i],parValue);
+                TLMErrorLog::Log("Registers parameter: "+h2s(parNames[i]));
+                mParIds.push_back(mpPlugin->RegisterTLMParameter(h2s(parNames[i]),h2s(parValue)));
+                TLMErrorLog::Log("Got parameter ID: "+h2s(mParIds[mParIds.size()-1]));
+            }
             return (mpPlugin != 0);
         }
 
         void initialize()
         {
-         }
-
+            for(size_t i=0; i<mParIds.size(); ++i)
+            {
+                std::string name, value;
+                std::stringstream ss;
+                ss << "Requesting value for parameter " << mParIds[i];
+                TLMErrorLog::Log(ss.str());
+                mpPlugin->GetParameterValue(mParIds[i], name, value);
+                std::stringstream ss2;
+                ss << "Got name \"" << name << "\" and value \"" << value << "\"";
+                TLMErrorLog::Log(ss2.str());
+                mpSystemParent->setParameterValue(HString(name.c_str()),HString(value.c_str()));
+            }
+        }
 
         void simulateOneTimestep() {}
 
@@ -104,6 +129,11 @@ namespace hopsan {
         TLMPlugin *getPlugin()
         {
             return mpPlugin;
+        }
+
+        inline std::string h2s(HString text)
+        {
+            return std::string(text.c_str());
         }
     };
 }
