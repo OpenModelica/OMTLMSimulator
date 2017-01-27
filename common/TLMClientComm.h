@@ -70,6 +70,8 @@ class TLMClientComm {
     //! attached to the specified interface
     void UnpackRegInterfaceMessage(TLMMessage& mess, TLMConnectionParams& param);
 
+    void UnpackRegParameterMessage(TLMMessage &mess, std::string &Value);
+
     //! GetSocketHandle returns the SocketHandle obtained after a call to ConnectManager
     int GetSocketHandle() const { return SocketHandle; }
 };

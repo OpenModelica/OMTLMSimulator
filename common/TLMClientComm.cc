@@ -299,3 +299,29 @@ void TLMClientComm::UnpackRegInterfaceMessage(TLMMessage& mess, TLMConnectionPar
 
     memcpy(&param, & mess.Data[0], mess.Header.DataSize);
 }
+
+void TLMClientComm::UnpackRegParameterMessage(TLMMessage &mess, std::string &Value) {
+    TLMErrorLog::Log("Entering UnpackRegParameterMessage()");
+    if(mess.Header.DataSize == 0) return; // non connected interface
+    TLMErrorLog::Log("DataSize is ok!");
+    char ValueBuf[100];
+    if(mess.Header.DataSize != sizeof(ValueBuf)) {
+        TLMErrorLog::FatalError("Wrong size of message in parameter registration : DataSize "+
+            tlmMisc::Int2Str(mess.Header.DataSize)+
+            " sizeof(ValueBuf)="+
+            tlmMisc::Int2Str(sizeof(ValueBuf)));
+    }
+
+    // check if we have byte order missmatch in the message and perform
+    // swapping if necessary
+    bool switch_byte_order =
+        (TLMMessageHeader::IsBigEndianSystem != mess.Header.SourceIsBigEndianSystem);
+    if (switch_byte_order)
+        TLMCommUtil::ByteSwap(& mess.Data[0], sizeof(double),
+        mess.Header.DataSize/sizeof(double));
+
+    memcpy(&ValueBuf, & mess.Data[0], mess.Header.DataSize);
+    Value = std::string(ValueBuf);
+
+    TLMErrorLog::Log("Parameter received value: "+Value);
+}

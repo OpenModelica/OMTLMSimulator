@@ -30,7 +30,9 @@ TLMParameter::TLMParameter(TLMClientComm& theComm, std::string& aName, std::stri
     while(Message.Header.MessageType != TLMMessageTypeConst::TLM_REG_PARAMETER) {
         TLMCommUtil::ReceiveMessage(Message);
     }
-    ParameterID =  Message.Header.TLMInterfaceID;
+    ParameterID =  Message.Header.TLMParameterID;
+
+    Comm.UnpackRegParameterMessage(Message, Value);
 
     TLMErrorLog::Log(std::string("Parameter ") + GetName() + " got ID " + TLMErrorLog::ToStdStr(ParameterID));
 }

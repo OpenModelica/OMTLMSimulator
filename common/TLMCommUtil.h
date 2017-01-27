@@ -97,7 +97,7 @@ struct TLMMessage {
     int SocketHandle; 
 
     //! Message header
-    TLMMessageHeader Header;    
+    TLMMessageHeader Header;
 
     //! Data array (contents depends on the message type)
     std::vector<unsigned char> Data;
