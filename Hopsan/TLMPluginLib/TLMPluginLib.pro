@@ -8,7 +8,7 @@ TEMPLATE = lib
 TARGET = TLMPluginLib
 
 # Destination for the compiled dll. $${PWD}/ means the same directory as this .pro file, even if you use shadow build
-DESTDIR = $${PWD}/
+DESTDIR = $${PWD}/../../bin/Hopsan/TLMPluginLib
 
 #TLMPLugin include paths
 INCLUDEPATH += ../../common
@@ -57,7 +57,8 @@ SOURCES += \
     ../../common/TLMInterfaceSignalInput.cc \
     ../../common/TLMInterfaceSignalOutput.cc \
     ../../common/TLMInterface1D.cc \
-    ../../common/TLMInterface3D.cc
+    ../../common/TLMInterface3D.cc \
+    ../../common/TLMParameter.cc
 
 HEADERS += \
     TLMPluginInterfaceSignalInput.hpp \
@@ -85,3 +86,5 @@ DISTFILES += \
     TLMPluginInterfaceHydraulic1D.xml \
     TLMPluginInterfaceMechanical1D.xml \
     TLMPluginInterfaceRotational1D.xml
+
+
