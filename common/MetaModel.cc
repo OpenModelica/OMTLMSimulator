@@ -228,6 +228,17 @@ int MetaModel::RegisterTLMInterfaceProxy(const int ComponentID, string& Name, in
     return Interfaces.size()-1;	
 }
 
+int MetaModel::RegisterTLMParameterProxy(const int ComponentID, string& Name, string& DefaultValue) {
+    TLMParameterProxy* par = new TLMParameterProxy(ComponentID, Parameters.size(), Name, DefaultValue);
+
+    std::stringstream ss;
+    ss << "Registering parameter proxy. Id = " << Parameters.size() << ", Name = " << Name << ", DefaultValue = " << DefaultValue;
+    TLMErrorLog::Log(ss.str());
+
+    Parameters.insert(Parameters.end(), par);
+    return Parameters.size()-1;
+}
+
 
 // Find TLMInterface belonging to a given component (ID)
 // with a specified name and return its ID.
@@ -238,6 +249,17 @@ int MetaModel::GetTLMInterfaceID(const int ComponentID, string& Name) {
 	    && (ifc.GetName() == Name) ) {
 	    return i;
 	}
+    }
+    return -1;
+}
+
+int MetaModel::GetTLMParameterID(const int ComponentID, std::string &Name) {
+    for(int i = Parameters.size() - 1; i >= 0; i--) {
+        TLMParameterProxy& ifc =  GetTLMParameterProxy(i);
+        if( (ifc.GetComponentID() == ComponentID)
+                && (ifc.GetName() == Name) ) {
+            return i;
+        }
     }
     return -1;
 }
@@ -460,4 +482,12 @@ void TLMComponentProxy::StartComponent(SimulationParams& SimParams, double MaxSt
     else{
         TLMErrorLog::Log( "Start command \"none\" nothing started!" );
     }
+}
+
+TLMParameterProxy::TLMParameterProxy(int CompID, int ParID, std::string &aName, std::string &aDefaultValue) :
+    ParameterID(ParID),
+    ComponentID(CompID),
+    Name(aName),
+    Value(aDefaultValue)
+{
 }

@@ -69,6 +69,17 @@ void print_interface_information(MetaModel& theModel)
       }
     }
     interfacefile << "</Interfaces>\n";
+
+    interfacefile << "<Parameters>\n";
+    for(size_t idx=0; idx<theModel.GetParametersNum(); ++idx) {
+      TLMParameterProxy& parProx = theModel.GetTLMParameterProxy(idx);
+      TLMComponentProxy& comProx = theModel.GetTLMComponentProxy(parProx.GetComponentID());
+
+      interfacefile << "\t<Parameter model=\"" + comProx.GetName() +
+                       "\" Name=\"" + parProx.GetName() +
+                       "\" DefaultValue=\"" +parProx.GetValue() + "\"/>\n";
+    }
+    interfacefile << "</Parameters>\n";
     interfacefile.close();
   } else {
     std::cout << "Error opening interfaceData.xml file." << std::endl;

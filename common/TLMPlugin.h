@@ -70,6 +70,8 @@ class TLMPlugin {
     virtual int RegisteTLMInterface( std::string name, int dimensions=6,
                                      std::string causality="Bidirectional", std::string domain="Mechanical") = 0;
 
+    virtual int RegisterTLMParameter(std::string name, std::string defaultValue) = 0;
+
     //! Evaluate the reaction force from the TLM connection
     //! for a specified interface. This function might result in a request sent
     //! to the TLM manager.
@@ -124,6 +126,9 @@ class TLMPlugin {
                              double speed[],
                              double ang_speed[]) = 0;
 
+    virtual void GetParameterValue(int parameterID,
+                                   std::string &Name,
+                                   std::string &Value) = 0;
 
     //! Check if the object is initialized (Init was called).
     bool IsInitialized() const { return Initialized; }

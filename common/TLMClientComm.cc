@@ -269,6 +269,17 @@ void TLMClientComm::CreateInterfaceRegMessage(std::string& Name, int dimensions,
     memcpy(&mess.Data[0], specification.c_str(), specification.length());
 }
 
+void TLMClientComm::CreateParameterRegMessage(std::string &Name, std::string &Value, TLMMessage &mess)
+{
+    mess.Header.MessageType = TLMMessageTypeConst::TLM_REG_PARAMETER;
+
+    std::string nameAndValue = Name+":"+Value;
+    TLMErrorLog::Log("Client sends nameAndValue: "+nameAndValue);
+    mess.Header.DataSize = nameAndValue.length();
+    mess.Data.resize(nameAndValue.length());
+    memcpy(&mess.Data[0], nameAndValue.c_str(), nameAndValue.length());
+}
+
 void TLMClientComm::UnpackRegInterfaceMessage(TLMMessage& mess, TLMConnectionParams& param) {
     if(mess.Header.DataSize == 0) return; // non connected interface
     if(mess.Header.DataSize != sizeof(TLMConnectionParams)) {
