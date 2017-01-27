@@ -329,6 +329,9 @@ void ManagerCommHandler::ProcessRegInterfaceMessage(int compID, TLMMessage& mess
         TLMErrorLog::Log(string("Register TLM interface ") + 
                          TheModel.GetTLMComponentProxy(compID).GetName() + '.' + aName);
         
+        std::stringstream ss;
+        ss << "Assigning interface ID = " << IfcID;
+        TLMErrorLog::Log(ss.str());
         mess.Header.TLMInterfaceID = IfcID;
         
         TLMInterfaceProxy& ifc = TheModel.GetTLMInterfaceProxy(IfcID);
@@ -373,8 +376,6 @@ void ManagerCommHandler::ProcessRegParameterMessage(int compID, TLMMessage &mess
 
     int ParID = TheModel.GetTLMParameterID(compID, aName);
 
-    mess.Header.TLMParameterID = ParID;
-
     mess.Header.SourceIsBigEndianSystem = TLMMessageHeader::IsBigEndianSystem;
     mess.Header.DataSize = 0;
 
@@ -388,10 +389,22 @@ void ManagerCommHandler::ProcessRegParameterMessage(int compID, TLMMessage &mess
     if(ParID < 0) {
         // interface not found
         TLMErrorLog::Warning(string("Parameter ") +
-                             TheModel.GetTLMParameterProxy(compID).GetName() + '.'
+                             TheModel.GetTLMComponentProxy(compID).GetName() + '.'
                              + aName + " not defined in metamodel. Ignored.");
         return;
     }
+
+    std::stringstream ss;
+    ss << "Assigning parameter ID = " << ParID;
+    TLMErrorLog::Log(ss.str());
+
+    mess.Header.TLMParameterID = ParID;
+
+    char ValueBuf[100];
+    sprintf(ValueBuf, "%.99s", TheModel.GetTLMParameterProxy(ParID).GetValue().c_str());
+    mess.Header.DataSize = sizeof (ValueBuf);
+    mess.Data.resize(sizeof (TLMConnectionParams));
+    memcpy(& mess.Data[0], &ValueBuf, mess.Header.DataSize);
 }
 
 void ManagerCommHandler::SetupInterfaceConnectionMessage(int IfcID, std::string& aName, TLMMessage& mess)

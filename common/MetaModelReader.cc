@@ -87,6 +87,10 @@ void MetaModelReader::ReadComponents(xmlNode *node, bool skipInterfaces=false, s
             if(!skipInterfaces) {
               ReadTLMInterfaceNodes(curNode, compID);
             }
+
+            if(!skipInterfaces) {
+              ReadTLMParameters(curNode, compID);
+            }
         }
     }
 }
@@ -157,6 +161,27 @@ void MetaModelReader::ReadTLMInterfaceNodes(xmlNode* node, int ComponentID) {
             ReadPositionAndOrientation(curNode,
                                        ip.getTime0Data3D().Position,
                                        ip.getTime0Data3D().RotMatrix);
+        }
+    }
+}
+
+void MetaModelReader::ReadTLMParameters(xmlNode *node, int ComponentID)
+{
+    for(xmlNode* curNode = node->children; curNode; curNode = curNode->next) {
+        if(    (XML_ELEMENT_NODE == curNode->type)
+               && (strcmp("Parameter", (const char*)(curNode->name)) == 0)) {
+            // For every InterfacePoint element that we find read its name
+
+            xmlNode* curAttrVal = FindAttributeByName(curNode, "Name");
+            string Name((const char*)curAttrVal->content);
+
+            curAttrVal = FindAttributeByName(curNode, "Value");
+            string Value((const char*)curAttrVal->content);
+
+            std::stringstream ss;
+            ss << "Registering TLM parameter " << Name << " with value " << Value;
+            TLMErrorLog::Log(ss.str());
+            TheModel.RegisterTLMParameterProxy(ComponentID, Name, Value);
         }
     }
 }

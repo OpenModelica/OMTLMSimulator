@@ -8,6 +8,8 @@
 
 #include <cstdio>
 #include <string>
+#include <fstream>
+#include <iostream>
 
 #include "MetaModel.h"
 
@@ -32,6 +34,8 @@ class MetaModelReader {
     //! ReadTLMInterfaceNodes method reads in TLM interface definitions for a
     //! given SubModel XML node and its ID (ComponentID).
     void ReadTLMInterfaceNodes(xmlNode* node, int ComponentID);
+
+    void ReadTLMParameters(xmlNode* node, int ComponentID);
 
 
     //! ReadSimParams method reads in simulation parameters (Port, StartTime, StopTime)

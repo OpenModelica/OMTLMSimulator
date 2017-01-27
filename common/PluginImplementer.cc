@@ -6,6 +6,7 @@
 #include <cassert>
 #include <iostream>
 #include <csignal>
+#include <sstream>
 
 using std::string;
 using std::vector;
@@ -509,8 +510,9 @@ void PluginImplementer::GetTimeDataSignal(int interfaceID, double time, TLMTimeD
 
         ifc->GetTimeData(DataOut);
     }
-    else {          //Monitoring = receive ime data for output interface
+    else {          //Monitoring = receive time data for output interface
         TLMInterfaceOutput* ifc = dynamic_cast<TLMInterfaceOutput*>(Interfaces[idx]);
+
         assert(ifc -> GetInterfaceID() == interfaceID);
         // Check if the interface expects more data from the coupled simulation
         // Receive if necessary .Note that potentially more that one receive is possible
@@ -560,8 +562,6 @@ void PluginImplementer::GetTimeData3D(int interfaceID, double time, TLMTimeData3
 }
 
 void PluginImplementer::GetParameterValue(int parameterID, std::string &Name, std::string &Value) {
-  if(!ModelChecked) CheckModel();
-
   int idx = GetParameterIndex(parameterID);
   TLMParameter* pPar = Parameters[idx];
   Name = pPar->GetName();
