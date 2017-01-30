@@ -77,11 +77,8 @@ namespace hopsan {
 
         void simulateOneTimestep()
         {
-            TLMErrorLog::Log("SignalOutput: Taking step!");
             // Set motion in TLM interface
             mpPlugin->SetValueSignal(mInterfaceId,mTime,*mpP1_x);
-            TLMErrorLog::Log("SignalOutput: Took step!");
-
         }
 
 
