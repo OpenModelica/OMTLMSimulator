@@ -78,6 +78,7 @@ EXT_OBJS = PluginImplementer.o \
 	TLMInterfaceSignalOutput.o \
 	TLMInterface1D.o \
 	TLMInterface3D.o \
+	TLMParameter.o \
 	TLMErrorLog.o \
 	TLMPlugin.o \
 	coordTrans.o \

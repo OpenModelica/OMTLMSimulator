@@ -58,7 +58,8 @@ SOURCES += main.cpp \
     ../common/TLMInterface3D.cc \
     ../common/TLMInterfaceSignal.cc \
     ../common/TLMInterfaceSignalInput.cc \
-    ../common/TLMInterfaceSignalOutput.cc
+    ../common/TLMInterfaceSignalOutput.cc \
+    ../common/TLMParameter.cc
 
 HEADERS += \
     FMILibrary-2.0.1/install/include/JM/jm_portability.h \
