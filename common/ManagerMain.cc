@@ -43,6 +43,7 @@ void print_interface_information(MetaModel& theModel)
   std::ofstream interfacefile ("interfaceData.xml");
   if (interfacefile.is_open()) {
     interfacefile << "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n";
+    interfacefile << "<ModelData>\n";
     interfacefile << "<Interfaces>\n";
     if( theModel.GetInterfacesNum() > 0 ) {
       for(size_t idx=0 ; idx<theModel.GetInterfacesNum() ; idx++ ){
@@ -80,6 +81,7 @@ void print_interface_information(MetaModel& theModel)
                        "\" DefaultValue=\"" +parProx.GetValue() + "\"/>\n";
     }
     interfacefile << "</Parameters>\n";
+    interfacefile << "</ModelData>\n";
     interfacefile.close();
   } else {
     std::cout << "Error opening interfaceData.xml file." << std::endl;
