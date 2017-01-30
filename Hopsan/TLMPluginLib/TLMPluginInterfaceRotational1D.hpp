@@ -55,7 +55,6 @@ namespace hopsan {
 
         void initialize()
         {
-            TLMErrorLog::Log("Initializing!");
             // Get node data pointers from ports
             mpP1_x = getSafeNodeDataPtr(mpP1, NodeMechanicRotational::Angle);
             mpP1_v = getSafeNodeDataPtr(mpP1, NodeMechanicRotational::AngularVelocity);
@@ -82,20 +81,11 @@ namespace hopsan {
 
             // Register TLM Interface
             mInterfaceId = mpPlugin->RegisteTLMInterface(this->getName().c_str(),1,"Bidirectional","Rotational");
-            TLMErrorLog::Log("Finished initializing!");
         }
 
 
         void simulateOneTimestep()
         {
-            if(mInvert)
-            {
-                TLMErrorLog::Log("Mechanical1D: Taking inverted step!");
-            }
-            else
-            {
-                TLMErrorLog::Log("Mechanical1D: Taking step!");
-            }
             // Read input variables (position and speed only)
             double x,v,f;
 
@@ -122,8 +112,6 @@ namespace hopsan {
 
             // Set motion in TLM interface
             mpPlugin->SetMotion1D(mInterfaceId,mTime,x,v);
-
-            TLMErrorLog::Log("Mechanical1D: Took step!");
         }
     };
 }
