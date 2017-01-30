@@ -1152,6 +1152,51 @@ int main(int argc, char* argv[])
   // Check FMU kind (CS or ME)
   fmi2_fmu_kind_enu_t kind = fmi2_import_get_fmu_kind(fmu);
 
+  fmi2_import_variable_list_t *list = fmi2_import_get_variable_list(fmu,0);
+  size_t nVar = fmi2_import_get_variable_list_size(list);
+  for(size_t i=0; i<nVar; ++i) {
+      fmi2_import_variable_t* var = fmi2_import_get_variable(list,i);
+      if(fmi2_import_get_causality(var) == fmi2_causality_enu_parameter) {
+        std::string name = fmi2_import_get_variable_name(var);
+        std::string value;
+        if(fmi2_import_get_variable_base_type(var) == fmi2_base_type_real) {
+            double value_real;
+            fmi2_import_real_variable_t *var_real = fmi2_import_get_variable_as_real(var);
+            value_real = fmi2_import_get_real_variable_start(var_real);
+            std::stringstream ss;
+            ss << value_real;
+            value = ss.str();
+        }
+        else if(fmi2_import_get_variable_base_type(var) == fmi2_base_type_int) {
+            double value_int;
+            fmi2_import_integer_variable_t *var_int = fmi2_import_get_variable_as_integer(var);
+            value_int = fmi2_import_get_integer_variable_start(var_int);
+            std::stringstream ss;
+            ss << value_int;
+            value = ss.str();
+        }
+        else if(fmi2_import_get_variable_base_type(var) == fmi2_base_type_bool) {
+            int value_bool;
+            fmi2_import_bool_variable_t *var_bool = fmi2_import_get_variable_as_boolean(var);
+            value_bool = fmi2_import_get_boolean_variable_start(var_bool);
+            std::stringstream ss;
+            ss << value_bool;
+            value = ss.str();
+        }
+        else if(fmi2_import_get_variable_base_type(var) == fmi2_base_type_str) {
+            const char* value_str;
+            fmi2_import_string_variable_t *var_str = fmi2_import_get_variable_as_string(var);
+            value_str = fmi2_import_get_string_variable_start(var_str);
+            value = value_str;
+        }
+
+        int parId = plugin->RegisterTLMParameter(name,value);
+
+        plugin->GetParameterValue(parId, name, value);
+        TLMErrorLog::Log("Received value: "+value+" for parameter "+name);
+      }
+  }
+
   // Start simulation
   switch(kind) {
     case fmi2_fmu_kind_cs:
