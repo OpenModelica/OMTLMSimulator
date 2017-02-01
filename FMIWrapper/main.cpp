@@ -246,6 +246,8 @@ void fmiLogger(jm_callbacks* c, jm_string module, jm_log_level_enu_t log_level, 
 // Simulate function
 int simulate_fmi2_cs()
 {
+
+
   fmi2_status_t fmistatus;
   jm_status_enu_t jmstatus;
 
@@ -865,7 +867,7 @@ void readFmiConfigFile()
       }
       else if(word == "domain") {
           getline(ss, word, ',');
-          fmiConfig.domains[fmiConfig.domains.size()-1] = std::atoi(word.c_str());
+          fmiConfig.domains[fmiConfig.domains.size()-1] = word.c_str();
       }
       else if(word == "position" &&
               fmiConfig.dimensions[fmiConfig.dimensions.size()-1] == 6 &&
@@ -876,6 +878,9 @@ void readFmiConfigFile()
               fmiConfig.dimensions[fmiConfig.dimensions.size()-1] == 1 &&
               fmiConfig.causalities[fmiConfig.dimensions.size()-1] == "Bidirectional") {
         csvToIntArray(ss.str(),1,&(fmiConfig.position_vr.back()));
+        std::stringstream ss2;
+        ss2 << "position_vr = " << fmiConfig.position_vr.back();
+        TLMErrorLog::Log(ss2.str());
       }
       else if(word == "orientation") {
         csvToIntArray(ss.str(),9,&(fmiConfig.orientation_vr.back()));
@@ -889,6 +894,9 @@ void readFmiConfigFile()
               fmiConfig.dimensions[fmiConfig.dimensions.size()-1] == 1 &&
               fmiConfig.causalities[fmiConfig.dimensions.size()-1] == "Bidirectional") {
         csvToIntArray(ss.str(),1,&(fmiConfig.speed_vr.back()));
+        std::stringstream ss2;
+        ss2 << "speed_vr = " << fmiConfig.speed_vr.back();
+        TLMErrorLog::Log(ss2.str());
       }
       else if(word == "ang_speed") {
         csvToIntArray(ss.str(),3,&(fmiConfig.ang_speed_vr.back()));
@@ -897,6 +905,9 @@ void readFmiConfigFile()
               fmiConfig.dimensions[fmiConfig.dimensions.size()-1] == 6 &&
               fmiConfig.causalities[fmiConfig.dimensions.size()-1] == "Bidirectional") {
         csvToIntArray(ss.str(),6,&(fmiConfig.force_vr.back()));
+        std::stringstream ss2;
+        ss2 << "force_vr = " << fmiConfig.force_vr.back();
+        TLMErrorLog::Log(ss2.str());
       }
       else if(word == "force" &&
               fmiConfig.dimensions[fmiConfig.dimensions.size()-1] == 1 &&
