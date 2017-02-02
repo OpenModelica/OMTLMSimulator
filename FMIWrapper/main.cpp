@@ -9,6 +9,7 @@
 #include <unistd.h>
 #include <vector>
 #include <fstream>
+#include <map>
 
 #define Ith(v,i)    NV_Ith_S(v,i-1)       /* Ith numbers components 1..NEQ */
 #define IJth(A,i,j) DENSE_ELEM(A,i-1,j-1) /* IJth numbers rows,cols 1..NEQ */
@@ -88,6 +89,23 @@ static fmi2_import_t* fmu = 0;
 static fmiConfig_t fmiConfig = fmiConfig_t();
 static tlmConfig_t tlmConfig = tlmConfig_t();
 static simConfig_t simConfig = simConfig_t();
+
+static std::map<fmi2_value_reference_t,std::string> parameterMap;
+
+void setParameters()
+{
+    //Todo: Support other types than real
+    std::map<fmi2_value_reference_t, std::string >::iterator it;
+    for(it=parameterMap.begin(); it!=parameterMap.end(); ++it) {
+        fmi2_value_reference_t vr = it->first;
+        std::string value = it->second;
+        double value_real = atof(value.c_str());
+        std::stringstream ss;
+        ss << "Setting parameter: " << vr << " to " << value_real;
+        TLMErrorLog::Log(ss.str());
+        fmi2_import_set_real(fmu,&vr,1,&value_real);
+    }
+}
 
 //Read force from TLMPlugin and write it to FMU
 void forceFromTlmToFmu(double tcur)
@@ -283,6 +301,8 @@ int simulate_fmi2_cs()
   if (jmstatus == jm_status_error) {
     TLMErrorLog::FatalError("fmi2_import_instantiate failed");
   }
+
+  setParameters();
 
   fmistatus = fmi2_import_setup_experiment(fmu, fmi2_true,
                                            relativeTol, tlmConfig.tstart, StopTimeDefined, tlmConfig.tend);
@@ -1205,6 +1225,8 @@ int main(int argc, char* argv[])
 
         plugin->GetParameterValue(parId, name, value);
         TLMErrorLog::Log("Received value: "+value+" for parameter "+name);
+        fmi2_value_reference_t vr = fmi2_import_get_variable_vr(var);
+        parameterMap.insert(std::pair<fmi2_value_reference_t,std::string>(vr,value));
       }
   }
 
