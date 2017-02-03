@@ -76,6 +76,7 @@ struct simConfig_t {
 static const char* TEMP_DIR_NAME = "temp";
 static const char* TLM_CONFIG_FILE_NAME = "tlm.config";
 static const char* FMI_CONFIG_FILE_NAME = "fmi.config";
+static const char* LOG_FILE_NAME = "logdata.csv";
 
 static TLMPlugin* plugin;
 static size_t n_states = 0;
@@ -91,6 +92,56 @@ static tlmConfig_t tlmConfig = tlmConfig_t();
 static simConfig_t simConfig = simConfig_t();
 
 static std::map<fmi2_value_reference_t,std::string> parameterMap;
+
+static std::ofstream logStream;
+bool logStreamOpen = false;
+
+void logAllVariables(double time) {
+  if(!logStreamOpen) {
+    logStream.open(LOG_FILE_NAME);
+    if(logStream.is_open()) {
+      logStreamOpen = true;
+      logStream << "time,";
+      fmi2_import_variable_list_t *list = fmi2_import_get_variable_list(fmu,0);
+      size_t nVar = fmi2_import_get_variable_list_size(list);
+      for(size_t i=0; i<nVar; ++i) {
+        fmi2_import_variable_t* var = fmi2_import_get_variable(list,i);
+        std::string name = fmi2_import_get_variable_name(var);
+        logStream << name;
+        if(i != nVar-1) {
+          logStream << ",";
+        }
+        else {
+          logStream << "\n";
+        }
+      }
+    }
+  }
+  else {
+    if(logStream.is_open()) {
+      logStream << time << ",";
+      fmi2_import_variable_list_t *list = fmi2_import_get_variable_list(fmu,0);
+      size_t nVar = fmi2_import_get_variable_list_size(list);
+      for(size_t i=0; i<nVar; ++i) {
+        fmi2_import_variable_t* var = fmi2_import_get_variable(list,i);
+        //TODO: Also log non-real variables
+        if(fmi2_import_get_variable_base_type(var) == fmi2_base_type_real) {
+          double value;
+          fmi2_value_reference_t vr = fmi2_import_get_variable_vr(var);
+          fmi2_import_get_real(fmu,&vr,1,&value);
+          logStream << value;
+          if(i != nVar-1) {
+            logStream << ",";
+          }
+        }
+        if(i == nVar-1) {
+          logStream << "\n";
+        }
+      }
+    }
+  }
+}
+
 
 void setParameters()
 {
@@ -323,6 +374,8 @@ int simulate_fmi2_cs()
   tcur = tlmConfig.tstart;
 
   while (tcur < tlmConfig.tend) {
+    logAllVariables(tcur);
+
     fmi2_real_t hsub = tlmConfig.hmax/fmiConfig.nSubSteps;
     for(size_t i=0; i<fmiConfig.nSubSteps; ++i) {
       for(size_t j=0; j<fmiConfig.nInterfaces; ++j) {
@@ -690,6 +743,7 @@ int simulate_fmi2_me()
 
   double tc=tstart; //Cvode time
   while ((tcur < tend) && (!(eventInfo.terminateSimulation || terminateSimulation))) {
+    logAllVariables(tcur);
     size_t k;
     fmi2_real_t tlast;
     int zero_crossing_event = 0;
