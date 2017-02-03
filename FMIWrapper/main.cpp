@@ -610,6 +610,8 @@ int simulate_fmi2_me()
     TLMErrorLog::FatalError("fmi2_import_instantiate failed");
   }
 
+  setParameters();
+
   fmi2_import_set_debug_logging(fmu, fmi2_false, 0, 0);
   TLMErrorLog::Log("fmi2_import_set_debug_logging: " + string(fmi2_status_to_string(fmistatus)));
   fmi2_import_set_debug_logging(fmu, fmi2_true, 0, 0);
