@@ -133,6 +133,7 @@ public:
     //! in the model. It'll just mean that no information will be sent to/from it.
     void ProcessRegInterfaceMessage(int compID, TLMMessage& mess) ;
 
+    void ProcessRegParameterMessage(int compID, TLMMessage& mess);
 
     //! ReaderThreadRun processes incomming messages and creates
     //! messages to be sent.

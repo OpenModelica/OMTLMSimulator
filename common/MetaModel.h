@@ -13,10 +13,12 @@
 
 #include "TLMCommUtil.h"
 #include "TLMErrorLog.h"
+#include "TLMInterface.h"
 
 // Classes defined later in this file
 class TLMComponentProxy;
 class TLMInterfaceProxy;
+class TLMParameterProxy;
 class TLMConnection;
 class SimulationParams;
 
@@ -26,6 +28,9 @@ typedef std::vector<TLMComponentProxy*> ComponentsVector;
 
 //!  TLMInterfacesVector is an array of TLMInterfaceProxy as stored in MetaModel on the TLM manager
 typedef std::vector<TLMInterfaceProxy*> TLMInterfacesVector;
+
+//!  TLMParametersVector is an array of TLMParameterProxy as stored in MetaModel on the TLM manager
+typedef std::vector<TLMParameterProxy*> TLMParametersVector;
 
 //!  ConnectionsVector is an array of components as stored in MetaModel on the TLM manager
 typedef std::vector<TLMConnection*> ConnectionsVector;
@@ -42,12 +47,28 @@ public:
     //! aCompID - comonent ID of the owner
     //! IfcID - ID of this interface
     //! aName - name of this interface
-    TLMInterfaceProxy(int CompID, int IfcID, std::string& aName) ;
+    TLMInterfaceProxy(int CompID, int IfcID, std::string& aName, int aDimensions=6,
+                      std::string aCausality="Bidirectional", std::string aDomain="Mechanical") ;
 
     //! Get the name of this interface
     const std::string& GetName() const {
-        return Name;
-    };
+      return Name;
+    }
+
+    //! Get the dimensions of this interface
+    const int GetDimensions() const {
+      return Dimensions;
+    }
+
+    //! Get the causality of this interface
+    const std::string GetCausality() const {
+      return Causality;
+    }
+
+    //! Get the domain of this interface
+    const std::string GetDomain() const {
+      return Domain;
+    }
 
     //! Get ID of the interface
     int GetID() const {
@@ -78,17 +99,25 @@ public:
     //! simulating compontent.
     void SetConnected() {
         Connected = true;
-    };
+    }
 
     //! Read the Connected flag. Returns 'true' if the proxy is connected
     //! to a simulating component.
     bool GetConnected() const {
         return Connected;
-    };
+    }
+
+//    TLMTimeDataSignal& getTime0DataSignal(){
+//        return time0DataSignal;
+//    }
+
+//    TLMTimeData1D& getTime0Data1D(){
+//        return time0Data1D;
+//    }
 
     //! Access data for simulation start time.
-    TLMTimeData& getTime0Data(){
-        return time0Data;
+    TLMTimeData3D& getTime0Data3D(){
+        return time0Data3D;
     }
 
 private:
@@ -113,14 +142,70 @@ private:
     //! Name of the interface within the Component
     std::string Name;
 
+    //! Type of the interface
+    int Dimensions;
+
+    //! Causality of the interface
+    std::string Causality;
+
+    //! Physical domain of the interface
+    std::string Domain;
+
     //! Flag telling if the simulating component is connected to the proxy.
     bool Connected;
 
     //! Data at simulation start time.
     //! Used for data interface data request mode.
-    TLMTimeData time0Data;
+//    TLMTimeData3D time0DataSignal;
+//    TLMTimeData3D time0Data1D;
+    TLMTimeData3D time0Data3D;
 };
 
+
+
+class  TLMParameterProxy {
+
+public:
+
+    TLMParameterProxy(int CompID, int ParID, std::string& aName, std::string& aDefaultValue) ;
+
+    //! Get the name of this interface
+    const std::string& GetName() const {
+      return Name;
+    }
+
+    //! Get the dimensions of this interface
+    const std::string& GetValue() const {
+      return Value;
+    }
+
+    //! Get ID of the parameter
+    int GetID() const {
+        return ParameterID;
+    }
+
+    //! Get ID of the owner component
+    int GetComponentID() {
+        return ComponentID;
+    }
+
+    void SetValue(std::string& aValue) {
+        Value = aValue;
+    }
+
+private:
+    //! ID of this parameter
+    int ParameterID;
+
+    //! ID of the owner component
+    int ComponentID;
+
+    //! Name of the interface within the Component
+    std::string Name;
+
+    //! Value of the parameter
+    std::string Value;
+};
 
 
 //! Component proxy stores information related to a TLM client 
@@ -407,6 +492,9 @@ class MetaModel {
     //! Array of InterfaceProxies keeping tract of the TLMInterfaces in the model
     TLMInterfacesVector Interfaces;
 
+    //! Array of ParameterProxies keeping track of the TLMParameters in the model
+    TLMParametersVector Parameters;
+
     //! Array of TLMConnections. The essential part of meta-model.
     ConnectionsVector Connections;
 
@@ -443,6 +531,8 @@ public:
         return Interfaces.size();
     };
 
+    size_t GetParametersNum() const { return Parameters.size(); }
+
     //! Find a Component by its name and return the ID
     //! Return -1 if not component was found..
     int GetTLMComponentID(const std::string& Name);
@@ -452,16 +542,28 @@ public:
     int GetTLMInterfaceID(std::string& FullName) ;
 
     //! Add TLM interface proxy with a given name to the Model, return its ID.
-    int RegisterTLMInterfaceProxy(const int ComponentID, std::string& Name);
+    int RegisterTLMInterfaceProxy(const int ComponentID, std::string& Name, int Dimensions=6,
+                                  std::string Causality="Bidirectional", std::string Domain="Mechanical");
+
+    int RegisterTLMParameterProxy(const int ComponentID, std::string& Name, std::string& DefaultValue);
 
     //! Return the TLMInterfaceProxy associated with the given ID.
     TLMInterfaceProxy& GetTLMInterfaceProxy(const int ID) {
         return *(Interfaces[ID]);
     }
 
+    // Return the TLMParameterProxy associated with the given ID.
+    TLMParameterProxy& GetTLMParameterProxy(const int ID) {
+        return *(Parameters[ID]);
+    }
+
     //! Find TLMInterface belonging to a given component (ID)
     //! with a specified name and return its ID.
     int GetTLMInterfaceID(const int ComponentID, std::string& Name);
+
+    //! Find TLMParameter belonging to a given component (ID)
+    //! with a specified name and return its ID.
+    int GetTLMParameterID(const int ComponentID, std::string& Name);
 
     //! Add a TLMConnection to the model.
     //! Input:

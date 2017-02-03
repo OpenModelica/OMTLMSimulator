@@ -2,20 +2,31 @@
 <hopsancomponentlibrary name="TLMPluginLib" xmlversion="0.1" libversion="1">
     <lib debug_ext="_d">TLMPluginLib</lib>
     <source>TLMPluginLib.cc</source>
-    <source>c:/users/robbr48/Documents/Mercurial/TLMPlugin/common/PluginImplementer.cc</source>
-    <source>c:/users/robbr48/Documents/Mercurial/TLMPlugin/common/TLMClientComm.cc</source>
-    <source>c:/users/robbr48/Documents/Mercurial/TLMPlugin/common/TLMCommUtil.cc</source>
-    <source>c:/users/robbr48/Documents/Mercurial/TLMPlugin/common/TLMErrorLog.cc</source>
-    <source>c:/users/robbr48/Documents/Mercurial/TLMPlugin/common/TLMInterface.cc</source>
-    <source>c:/users/robbr48/Documents/Mercurial/TLMPlugin/common/TLMPlugin.cc</source>
-    <source>c:/users/robbr48/Documents/Mercurial/TLMPlugin/extralibs/misc/src/strConv.cc</source>
-    <source>c:/users/robbr48/Documents/Mercurial/TLMPlugin/extralibs/misc/src/coordTrans.cc</source>
-    <source>c:/users/robbr48/Documents/Mercurial/TLMPlugin/extralibs/misc/src/double3Vec.cc</source>
-    <source>c:/users/robbr48/Documents/Mercurial/TLMPlugin/extralibs/misc/src/double33Mat.cc</source>
-    <component>TLMPluginInterface.hpp</component>
-    <caf>TLMPluginInterface.xml</caf>
+    <source>../../common/PluginImplementer.cc</source>
+    <source>../../common/TLMClientComm.cc</source>
+    <source>../../common/TLMCommUtil.cc</source>
+    <source>../../common/TLMErrorLog.cc</source>
+    <source>../../common/TLMInterface.cc</source>
+    <source>../../common/TLMInterfaceSignalInput.cc</source>
+    <source>../../common/TLMInterfaceSignalOutput.cc</source>
+    <source>../../common/TLMInterfaceSignal.cc</source>
+    <source>../../common/TLMInterface1D.cc</source>
+    <source>../../common/TLMInterface3D.cc</source>
+    <source>../../common/TLMPlugin.cc</source>
+    <source>../../extralibs/misc/src/strConv.cc</source>
+    <source>../../extralibs/misc/src/coordTrans.cc</source>
+    <source>../../extralibs/misc/src/double3Vec.cc</source>
+    <source>../../extralibs/misc/src/double33Mat.cc</source>
+    <component>TLMPluginHandler.hpp</component>
+    <component>TLMPluginInterfaceSignalInput.hpp</component>
+    <component>TLMPluginInterfaceSignalOutput.hpp</component>
+    <component>TLMPluginInterface1D.hpp</component>
+    <caf>TLMPluginInterfaceSignalInput.xml</caf>
+    <caf>TLMPluginInterfaceSignalOutput.xml</caf>
+    <caf>TLMPluginInterface1D.xml</caf>
+    <caf>TLMPluginHandler.xml</caf>
     <buildflags>
-      <cflags>-Ic:/users/robbr48/Documents/Mercurial/TLMPlugin/common -Ic:/users/robbr48/Documents/Mercurial/TLMPlugin/extralibs/misc/include</cflags>
+      <cflags>-I../../common -I../../extralibs/misc/include</cflags>
       <lflags>-lws2_32</lflags>
     </buildflags>
 </hopsancomponentlibrary>

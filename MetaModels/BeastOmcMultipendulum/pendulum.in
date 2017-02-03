@@ -1,5 +1,5 @@
-# FORMAT-12.1
-# BEAST_VERSION: [12.1 - Nov 25 2015 08:13:10] Linked [Wed Nov 25 08:15:06 2015] in [/home/Beast/alex_devRep/src/Beast] Revision date=[Mon Nov 23 09:38:16 2015 +0100]  Tag=33811:265eabbd863a
+# FORMAT-13.0
+# BEAST_VERSION: [13.0 - Nov 23 2016 12:38:13] Linked [Wed Nov 23 14:55:48 2016] in [C:\home\ProductRepPC_13.0\src\Beauty13] 
 
 environment type=Environment
   def time=0 unit="s";
@@ -10,8 +10,9 @@ environment type=Environment
   def StartStateWhat=1;
   def WriteThisOften=10;
   def WriteTimeStep=0.01 unit="s";
-  def AnimFreq_WriteThisOften=0;
-  def AnimFreq_WriteTimeStep=1;
+  def SurfaceFreq_WriteThisOften=0;
+  def SurfaceFreq_WriteTimeStep=1;
+  def UserVariableMode=0;
   def ModelID="UnnamedModelID";
   def MaxTimeStep=5e-5 unit="s";
   def Solver="CVODE";
@@ -50,9 +51,31 @@ environment type=Environment
   def EHLInletShearHeatingFlg=0;
   implicit_coordinate_system type=ImplicitCoordSystem name=cG;
   implicit_coordinate_system type=ImplicitCoordSystem name=cB
-    def R_Func[cG][cG].DefinedFlg=0;
-    def phi_Func[cG].DefinedFlg=0;
     def phiSequence[cG]=1;
+    multi_term type=MultiTermTimeFunc3 name=R_Func functionTerms="" 
+      def isMultiTermDefined=0;
+    end multi_term; /* cB`R_Func:MultiTermTimeFunc3 */ 
+    multi_term type=MultiTermTimeFunc1 name=R_Func_1 functionTerms="" 
+      def isMultiTermDefined=0;
+    end multi_term; /* cB`R_Func_1:MultiTermTimeFunc1 */ 
+    multi_term type=MultiTermTimeFunc1 name=R_Func_2 functionTerms="" 
+      def isMultiTermDefined=0;
+    end multi_term; /* cB`R_Func_2:MultiTermTimeFunc1 */ 
+    multi_term type=MultiTermTimeFunc1 name=R_Func_3 functionTerms="" 
+      def isMultiTermDefined=0;
+    end multi_term; /* cB`R_Func_3:MultiTermTimeFunc1 */ 
+    multi_term type=MultiTermTimeFunc3 name=phi_Func functionTerms="" 
+      def isMultiTermDefined=0;
+    end multi_term; /* cB`phi_Func:MultiTermTimeFunc3 */ 
+    multi_term type=MultiTermTimeFunc1 name=phi_Func_1 functionTerms="" 
+      def isMultiTermDefined=0;
+    end multi_term; /* cB`phi_Func_1:MultiTermTimeFunc1 */ 
+    multi_term type=MultiTermTimeFunc1 name=phi_Func_2 functionTerms="" 
+      def isMultiTermDefined=0;
+    end multi_term; /* cB`phi_Func_2:MultiTermTimeFunc1 */ 
+    multi_term type=MultiTermTimeFunc1 name=phi_Func_3 functionTerms="" 
+      def isMultiTermDefined=0;
+    end multi_term; /* cB`phi_Func_3:MultiTermTimeFunc1 */ 
   end implicit_coordinate_system; /* cB:ImplicitCoordSystem */ 
   model type=SModel name=""
     def Description="";

@@ -27,7 +27,7 @@ BINDIR=$(UP)/../bin/$(ABI)
 
 
 BNAME=tlmmodelica.lib
-MISCHOME=misc
+MISCHOME=../extralibs/misc
 INCLUDES=  -I. \
 	-I../common \
 	-I$(MISCHOME)/include
@@ -45,10 +45,7 @@ CFLAGS=$(INCLUDES) -DWIN32
 %.obj: ../common/%.cc
 	$(CC) $(INCLUDES) -c $< -o $@ 
 
-%.obj: ../../../lib/misc/src/%.cc
-	$(CC) $(INCLUDES) -c $< -o $@ 
-
-%.obj: misc/src/%.cc
+%.obj: ../extralibs/misc/src/%.cc
 	$(CC) $(INCLUDES) -c $< -o $@ 
 
 OBJS=  tlmforce.o 
@@ -57,18 +54,15 @@ ABIOBJS=tlmforce.obj ../common/PluginImplementer.obj \
 	../common/TLMClientComm.obj \
 	../common/TLMCommUtil.obj \
 	../common/TLMInterface.obj \
+    ../common/TLMInterfaceSignal.obj \
+    ../common/TLMInterface1D.obj \
+    ../common/TLMInterface3D.obj \
 	../common/TLMErrorLog.obj \
-	../common/TLMPlugin.obj \
-	misc/src/lightmat.obj \
-	misc/src/ErrorLog.obj \
-	misc/src/tostr.obj \
-	misc/src/Bstring.obj \
-	misc/src/double33s.obj \
-	misc/src/dsyevc3.obj \
-	misc/src/dsyevq3.obj \
-	misc/src/dsyevv3.obj \
-	misc/src/dsytrd3.obj
-
+	../common/TLMPlugin.obj  \
+    ../extralibs/misc/src/coordTrans.obj \
+    ../extralibs/misc/src/double3Vec.obj \
+    ../extralibs/misc/src/double33Mat.obj \
+    ../extralibs/misc/src/strConv.obj
 
 default: dirs $(ABIOBJS)
 	lib /out:$(ABI)/$(BNAME) *.obj

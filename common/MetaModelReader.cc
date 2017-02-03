@@ -6,9 +6,11 @@
 
 #include "MetaModelReader.h"
 #include "TLMErrorLog.h"
+#include "TLMInterface.h"
 #include "double3Vec.h"
 #include "double33Mat.h"
 #include <string>
+#include <sstream>
 using std::string;
 using namespace tlmMisc;
 
@@ -17,7 +19,7 @@ using namespace tlmMisc;
 // Input: node - pointer to the "SubModels" element node 
 //   - parent to all the SubModels
 // Input/Output: TheModel - structure is updated in the model representation
-void MetaModelReader::ReadComponents(xmlNode *node, bool skipInterfaces=false) {
+void MetaModelReader::ReadComponents(xmlNode *node, bool skipInterfaces=false, std::string singleModel="") {
     for(xmlNode* curNode = node->children; curNode; curNode = curNode->next) {
         if(    (XML_ELEMENT_NODE == curNode->type)
                // A SubModel Node found, read parameters
@@ -25,6 +27,11 @@ void MetaModelReader::ReadComponents(xmlNode *node, bool skipInterfaces=false) {
 
             xmlNode* curAttrVal = FindAttributeByName(curNode, "Name");
             string Name((const char *)curAttrVal->content);
+
+            if(skipInterfaces && singleModel != "" && Name != singleModel) {
+                std::cout << "Skipping model " << Name << "\n";
+                continue; //Don't load other models than the single model
+            }
 
             TLMErrorLog::Log(string("Processing SubModel ") + Name);
 
@@ -80,6 +87,10 @@ void MetaModelReader::ReadComponents(xmlNode *node, bool skipInterfaces=false) {
             if(!skipInterfaces) {
               ReadTLMInterfaceNodes(curNode, compID);
             }
+
+            if(!skipInterfaces) {
+              ReadTLMParameters(curNode, compID);
+            }
         }
     }
 }
@@ -94,17 +105,83 @@ void MetaModelReader::ReadTLMInterfaceNodes(xmlNode* node, int ComponentID) {
             // For every InterfacePoint element that we find read its name
 
             xmlNode* curAttrVal = FindAttributeByName(curNode, "Name");
+            string Name((const char*)curAttrVal->content);
 
-            string name((const char*)curAttrVal->content);
+            int Dimensions = 6;
+            curAttrVal = FindAttributeByName(curNode, "Dimensions");
+            if(curAttrVal) {
+                Dimensions = atoi((const char*)curAttrVal->content);
+            }
 
-            TLMErrorLog::Log(string("Registering TLM interface ") + name);
-            int ipID = TheModel.RegisterTLMInterfaceProxy(ComponentID, name);
+            string Causality = "Bidirectional";
+            curAttrVal = FindAttributeByName(curNode, "Causality");
+            if(curAttrVal) {
+                Causality = (const char*)curAttrVal->content;
+                TLMErrorLog::Log("Reading causality: "+Causality);
+            }
+
+            string Domain="Mechanical";
+            curAttrVal = FindAttributeByName(curNode, "Domain");
+            if(curAttrVal) {
+                Domain = (const char*)curAttrVal->content;
+            }
+
+//            InterfaceType type=Type3D;                                     //Default is 3D
+//            if(name.size() > 1 &&                                 //Temporary hack: if name of interface ends
+//               name[name.size()-2] == '1' &&                      //with "1D" it is a 1D connection
+//               name[name.size()-1] == 'D') {
+//                type = Type1D;
+//            }
+//            else if(name.size() > 3 &&                            //Temporary hack: if name of interface ends
+//               name[name.size()-4] == '1' &&                      //with "1DIN" it is a signal input interface
+//               name[name.size()-3] == 'D' &&
+//               name[name.size()-2] == 'I' &&
+//                name[name.size()-1] == 'N') {
+//                type = TypeInput;
+//            }
+//            else if(name.size() > 4 &&                            //Temporary hack: if name of interface ends
+//               name[name.size()-5] == '1' &&                      //with "1DOUT" it is a signal output interface
+//               name[name.size()-4] == 'D' &&
+//               name[name.size()-3] == 'O' &&
+//               name[name.size()-2] == 'U' &&
+//               name[name.size()-1] == 'T') {
+//                type = TypeOutput;
+//            }
+//            if(curAttrVal) {                                      //Now check for XML attribute
+//              type = ((const char*)curAttrVal->content);
+//            }
+
+            std::stringstream ss;
+            ss << "Registering TLM interface " << Name << " with " << Dimensions << " dimensions.";
+            TLMErrorLog::Log(ss.str());
+            int ipID = TheModel.RegisterTLMInterfaceProxy(ComponentID, Name, Dimensions, Causality, Domain);
 
             // Get/Set position and orientation if available in XML file.
             TLMInterfaceProxy& ip = TheModel.GetTLMInterfaceProxy(ipID);
             ReadPositionAndOrientation(curNode,
-                                       ip.getTime0Data().Position,
-                                       ip.getTime0Data().RotMatrix);
+                                       ip.getTime0Data3D().Position,
+                                       ip.getTime0Data3D().RotMatrix);
+        }
+    }
+}
+
+void MetaModelReader::ReadTLMParameters(xmlNode *node, int ComponentID)
+{
+    for(xmlNode* curNode = node->children; curNode; curNode = curNode->next) {
+        if(    (XML_ELEMENT_NODE == curNode->type)
+               && (strcmp("Parameter", (const char*)(curNode->name)) == 0)) {
+            // For every InterfacePoint element that we find read its name
+
+            xmlNode* curAttrVal = FindAttributeByName(curNode, "Name");
+            string Name((const char*)curAttrVal->content);
+
+            curAttrVal = FindAttributeByName(curNode, "Value");
+            string Value((const char*)curAttrVal->content);
+
+            std::stringstream ss;
+            ss << "Registering TLM parameter " << Name << " with value " << Value;
+            TLMErrorLog::Log(ss.str());
+            TheModel.RegisterTLMParameterProxy(ComponentID, Name, Value);
         }
     }
 }
@@ -231,7 +308,7 @@ xmlNode* MetaModelReader::FindAttributeByName(xmlNode* node, const char* name, b
         }
     }
     if(required) {
-        TLMErrorLog::FatalError(string("Cannot find attribute ") +  name);
+        TLMErrorLog::Warning(string("Cannot find attribute ") +  name);
     }
     return NULL;
 }
@@ -318,7 +395,7 @@ void MetaModelReader::ReadTLMConnectionNode(xmlNode* node) {
 // ReadModel method processes input XML file and creates MetaModel definition.
 // Input: InputFile - input XML file name
 // Input/Output: TheModel - model structure to be build.
-void MetaModelReader::ReadModel(std::string &InputFile, bool InterfaceRequestMode) {
+void MetaModelReader::ReadModel(std::string &InputFile, bool InterfaceRequestMode, std::string singleModel) {
 
     xmlDoc* doc = xmlParseFile(InputFile.c_str()); // open XML & parse it
 
@@ -332,7 +409,7 @@ void MetaModelReader::ReadModel(std::string &InputFile, bool InterfaceRequestMod
 
     xmlNode *components = FindChildByName(model_element, "SubModels");  //Don't load interfaces in interface request mode
 
-    ReadComponents(components, InterfaceRequestMode);
+    ReadComponents(components, InterfaceRequestMode, singleModel);
 
     xmlNode *connections = FindChildByName(model_element, "Connections", false); // We allow models without connections for interface request mode.
 

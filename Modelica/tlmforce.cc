@@ -165,7 +165,7 @@ void set_tlm_motion(const char* markerID,   // The calling marker ID
         int interfaceID = MarkerIDmap[markerID];
 
         if( interfaceID >= 0 ){
-            Plugin->SetMotion(interfaceID,          // Send data to the Plugin
+            Plugin->SetMotion3D(interfaceID,          // Send data to the Plugin
                               time,
                               position,
                               orientation,
@@ -208,7 +208,7 @@ void calc_tlm_force(const char* markerID,   // The calling marker ID
 
     if( interfaceID >= 0 ){
         // Call the plugin to get reaction force
-        Plugin->GetForce(interfaceID,
+        Plugin->GetForce3D(interfaceID,
                          time,
                          position,
                          orientation,

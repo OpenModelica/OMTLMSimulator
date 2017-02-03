@@ -1,0 +1,12 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<hopsanobjectappearance version="0.3">
+    <modelobject sourcecode="TLMPluginInterfaceSignalOutput.hpp" typename="TLMPluginInterfaceSignalOutput" displayname="TLM Plugin Signal Output">
+        <icons>
+            <icon scale="1" path="TLMPluginInterfaceSignalOutput.svg" iconrotation="ON" type="user"/>
+        </icons>
+        <ports>
+            <port name="in" x="0.0" y="0.5" a="180"/>
+        </ports>
+        <animation/>
+    </modelobject>
+</hopsanobjectappearance>
