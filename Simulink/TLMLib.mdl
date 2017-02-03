@@ -1,53 +1,131 @@
 Library {
   Name			  "TLMLib"
-  Version		  6.5
-  MdlSubVersion		  0
+  Version		  8.8
   SavedCharacterEncoding  "windows-1252"
+  LogicAnalyzerGraphicalSettings ""
+  LogicAnalyzerPlugin	  "on"
+  LogicAnalyzerSignalOrdering ""
+  DiagnosticSuppressor	  "on"
+  SuppressorTable	  "22 serialization::archive 11 0 3 0 0 0 8 0"
   LibraryType		  "BlockLibrary"
-  SaveDefaultBlockParams  on
+  ScopeRefreshTime	  0.035000
+  OverrideScopeRefreshTime on
+  DisableAllScopes	  off
+  FPTRunName		  "Run 1"
+  MaxMDLFileLineLength	  120
+  LastSavedArchitecture	  "win64"
+  Object {
+    $PropName		    "BdWindowsInfo"
+    $ObjectID		    1
+    $ClassName		    "Simulink.BDWindowsInfo"
+    Object {
+      $PropName		      "WindowsInfo"
+      $ObjectID		      2
+      $ClassName	      "Simulink.WindowInfo"
+      IsActive		      [1]
+      Location		      [792.0, 52.0, 400.0, 527.0]
+      Object {
+	$PropName		"ModelBrowserInfo"
+	$ObjectID		3
+	$ClassName		"Simulink.ModelBrowserInfo"
+	Visible			[0]
+	DockPosition		"Left"
+	Width			[50]
+	Height			[50]
+	Filter			[9]
+      }
+      Object {
+	$PropName		"ExplorerBarInfo"
+	$ObjectID		4
+	$ClassName		"Simulink.ExplorerBarInfo"
+	Visible			[1]
+      }
+      Object {
+	$PropName		"EditorsInfo"
+	$ObjectID		5
+	$ClassName		"Simulink.EditorInfo"
+	IsActive		[1]
+	ViewObjType		"SimulinkTopLevel"
+	LoadSaveID		"0"
+	Extents			[350.0, 356.0]
+	ZoomFactor		[1.0]
+	Offset			[0.0, 0.0]
+      }
+      Object {
+	$PropName		"DockComponentsInfo"
+	$ObjectID		6
+	$ClassName		"Simulink.DockComponentInfo"
+	Type			"GLUE2:PropertyInspector"
+	ID			"Property Inspector"
+	Visible			[0]
+	CreateCallback		""
+	UserData		""
+	Floating		[0]
+	DockPosition		"Right"
+	Width			[640]
+	Height			[480]
+      }
+      WindowState	      "AAAA/wAAAAD9AAAAAgAAAAAAAAC9AAAB+PwCAAAAA/sAAAAWAEQAbwBjAGsAVwBpAGQAZwBlAHQAMwEAAAAxAAAB+AAAA"
+      "AAAAAAA+wAAABYARABvAGMAawBXAGkAZABnAGUAdAA0AAAAAAD/////AAAAAAAAAAD7AAAAUgBHAEwAVQBFADIAIAB0AHIAZQBlACAAYwBvAG0Ac"
+      "ABvAG4AZQBuAHQALwBHAEwAVQBFADIAIAB0AHIAZQBlACAAYwBvAG0AcABvAG4AZQBuAHQAAAAAAP////8AAABfAP///wAAAAEAAAAAAAAAAPwCA"
+      "AAAAfsAAABUAEcATABVAEUAMgA6AFAAcgBvAHAAZQByAHQAeQBJAG4AcwBwAGUAYwB0AG8AcgAvAFAAcgBvAHAAZQByAHQAeQAgAEkAbgBzAHAAZ"
+      "QBjAHQAbwByAAAAAAD/////AAAAJwD///8AAAGAAAABmgAAAAEAAAACAAAAAQAAAAL8AAAAAQAAAAIAAAAP/////wAAAAAA/////wAAAAAAAAAA/"
+      "////wEAAAAA/////wAAAAAAAAAA/////wAAAAAA/////wAAAAAAAAAA/////wAAAAAA/////wAAAAAAAAAA/////wAAAAAA/////wAAAAAAAAAA/"
+      "////wEAAAB5/////wAAAAAAAAAA/////wEAAADa/////wAAAAAAAAAA/////wAAAAAA/////wAAAAAAAAAA/////wAAAAAA/////wAAAAAAAAAA/"
+      "////wAAAAAA/////wAAAAAAAAAA/////wAAAAAA/////wAAAAAAAAAA/////wAAAAAA/////wAAAAAAAAAA/////wEAAAEo/////wAAAAAAAAAA/"
+      "////wAAAAAA/////wAAAAAAAAAA/////wAAAAAA/////wAAAAAAAAAA"
+    }
+  }
+  Created		  "Fri Oct 13 15:20:19 2006"
+  Creator		  "Administrator"
+  UpdateHistory		  "UpdateHistoryNever"
+  ModifiedByFormat	  "%<Auto>"
+  LastModifiedBy	  "robbr48"
+  ModifiedDateFormat	  "%<Auto>"
+  LastModifiedDate	  "Wed Nov 23 11:23:06 2016"
+  RTWModifiedTimeStamp	  401800983
+  ModelVersionFormat	  "1.%<AutoIncrement:39>"
+  ConfigurationManager	  "none"
   SampleTimeColors	  off
+  SampleTimeAnnotations	  off
   LibraryLinkDisplay	  "none"
   WideLines		  off
   ShowLineDimensions	  off
   ShowPortDataTypes	  off
+  ShowEditTimeErrors	  on
+  ShowEditTimeWarnings	  on
+  ShowEditTimeAdvisorChecks off
+  ShowPortUnits		  off
+  ShowDesignRanges	  off
   ShowLoopsOnError	  on
   IgnoreBidirectionalLines off
   ShowStorageClass	  off
   ShowTestPointIcons	  on
+  ShowSignalResolutionIcons on
   ShowViewerIcons	  on
   SortedOrder		  off
+  VariantCondition	  off
   ExecutionContextIcon	  off
   ShowLinearizationAnnotations on
-  ScopeRefreshTime	  0.035000
-  OverrideScopeRefreshTime on
-  DisableAllScopes	  off
+  ShowVisualizeInsertedRTB on
+  ShowMarkup		  on
   BlockNameDataTip	  off
   BlockParametersDataTip  off
   BlockDescriptionStringDataTip	off
   ToolBar		  on
   StatusBar		  on
   BrowserShowLibraryLinks off
+  FunctionConnectors	  off
   BrowserLookUnderMasks	  off
-  Created		  "Fri Oct 13 15:20:19 2006"
-  Creator		  "Administrator"
-  UpdateHistory		  "UpdateHistoryNever"
-  ModifiedByFormat	  "%<Auto>"
-  LastModifiedBy	  "alex"
-  ModifiedDateFormat	  "%<Auto>"
-  LastModifiedDate	  "Mon Dec 18 16:52:27 2006"
-  ModelVersionFormat	  "1.%<AutoIncrement:36>"
-  ConfigurationManager	  "None"
+  SimulationMode	  "normal"
+  PauseTimes		  "5"
+  NumberOfSteps		  1
+  SnapshotBufferSize	  10
+  SnapshotInterval	  10
+  NumberOfLastSnapshots	  0
   LinearizationMsg	  "none"
   Profile		  off
   ParamWorkspaceSource	  "MATLABWorkspace"
-  CovSaveName		  "covdata"
-  CovMetricSettings	  "dw"
-  CovNameIncrementing	  off
-  CovHtmlReporting	  on
-  covSaveCumulativeToWorkspaceVar on
-  CovSaveSingleToWorkspaceVar on
-  CovCumulativeReport	  off
-  CovReportOnPause	  on
   ExtModeBatchMode	  off
   ExtModeEnableFloating	  on
   ExtModeTrigType	  "manual"
@@ -69,11 +147,671 @@ Library {
   ExtModeSkipDownloadWhenConnect off
   ExtModeLogAll		  on
   ExtModeAutoUpdateStatusClock off
-  ProdHWDeviceType	  "32-bit Generic"
   ShowModelReferenceBlockVersion off
   ShowModelReferenceBlockIO off
+  Array {
+    Type		    "Handle"
+    Dimension		    1
+    Simulink.ConfigSet {
+      $ObjectID		      7
+      Version		      "1.16.5"
+      DisabledProps	      []
+      Description	      ""
+      Array {
+	Type			"Handle"
+	Dimension		9
+	Simulink.SolverCC {
+	  $ObjectID		  8
+	  Version		  "1.16.5"
+	  DisabledProps		  []
+	  Description		  ""
+	  StartTime		  "0.0"
+	  StopTime		  "10.0"
+	  AbsTol		  "auto"
+	  FixedStep		  "auto"
+	  InitialStep		  "auto"
+	  MaxNumMinSteps	  "-1"
+	  MaxOrder		  5
+	  ZcThreshold		  "auto"
+	  ConsecutiveZCsStepRelTol "10*128*eps"
+	  MaxConsecutiveZCs	  "1000"
+	  ExtrapolationOrder	  4
+	  NumberNewtonIterations  1
+	  MaxStep		  "auto"
+	  MinStep		  "auto"
+	  MaxConsecutiveMinStep	  "1"
+	  RelTol		  "1e-3"
+	  EnableMultiTasking	  off
+	  EnableConcurrentExecution off
+	  ConcurrentTasks	  off
+	  Solver		  "VariableStepAuto"
+	  SolverName		  "VariableStepAuto"
+	  SolverJacobianMethodControl "auto"
+	  ShapePreserveControl	  "DisableAll"
+	  ZeroCrossControl	  "UseLocalSettings"
+	  ZeroCrossAlgorithm	  "Nonadaptive"
+	  AlgebraicLoopSolver	  "TrustRegion"
+	  SolverInfoToggleStatus  off
+	  IsAutoAppliedInSIP	  off
+	  SolverResetMethod	  "Fast"
+	  PositivePriorityOrder	  off
+	  AutoInsertRateTranBlk	  off
+	  SampleTimeConstraint	  "Unconstrained"
+	  InsertRTBMode		  "Whenever possible"
+	  SampleTimeProperty	  []
+	}
+	Simulink.DataIOCC {
+	  $ObjectID		  9
+	  Version		  "1.16.5"
+	  DisabledProps		  []
+	  Description		  ""
+	  Decimation		  "1"
+	  ExternalInput		  "[t, u]"
+	  FinalStateName	  "xFinal"
+	  InitialState		  "xInitial"
+	  LimitDataPoints	  off
+	  MaxDataPoints		  "1000"
+	  LoadExternalInput	  off
+	  LoadInitialState	  off
+	  SaveFinalState	  off
+	  SaveCompleteFinalSimState off
+	  SaveFormat		  "Array"
+	  SignalLoggingSaveFormat "ModelDataLogs"
+	  SaveOutput		  on
+	  SaveState		  off
+	  SignalLogging		  on
+	  DSMLogging		  on
+	  InspectSignalLogs	  off
+	  VisualizeSimOutput	  on
+	  StreamToWorkspace	  off
+	  StreamVariableName	  "streamout"
+	  SaveTime		  on
+	  ReturnWorkspaceOutputs  off
+	  StateSaveName		  "xout"
+	  TimeSaveName		  "tout"
+	  OutputSaveName	  "yout"
+	  SignalLoggingName	  "logsout"
+	  DSMLoggingName	  "dsmout"
+	  OutputOption		  "RefineOutputTimes"
+	  OutputTimes		  "[]"
+	  ReturnWorkspaceOutputsName "out"
+	  Refine		  "1"
+	  LoggingToFile		  off
+	  LoggingFileName	  "out.mat"
+	  LoggingIntervals	  "[-inf, inf]"
+	}
+	Simulink.OptimizationCC {
+	  $ObjectID		  10
+	  Version		  "1.16.5"
+	  Array {
+	    Type		    "Cell"
+	    Dimension		    8
+	    Cell		    "BooleansAsBitfields"
+	    Cell		    "PassReuseOutputArgsAs"
+	    Cell		    "PassReuseOutputArgsThreshold"
+	    Cell		    "ZeroExternalMemoryAtStartup"
+	    Cell		    "ZeroInternalMemoryAtStartup"
+	    Cell		    "OptimizeModelRefInitCode"
+	    Cell		    "NoFixptDivByZeroProtection"
+	    Cell		    "UseSpecifiedMinMax"
+	    PropName		    "DisabledProps"
+	  }
+	  Description		  ""
+	  BlockReduction	  off
+	  BooleanDataType	  off
+	  ConditionallyExecuteInputs on
+	  DefaultParameterBehavior "Tunable"
+	  UseDivisionForNetSlopeComputation "off"
+	  UseFloatMulNetSlope	  off
+	  DefaultUnderspecifiedDataType	"double"
+	  UseSpecifiedMinMax	  off
+	  InlineInvariantSignals  off
+	  OptimizeBlockIOStorage  on
+	  BufferReuse		  on
+	  EnhancedBackFolding	  off
+	  CachingGlobalReferences off
+	  GlobalBufferReuse	  on
+	  StrengthReduction	  off
+	  AdvancedOptControl	  ""
+	  ExpressionFolding	  on
+	  BooleansAsBitfields	  off
+	  BitfieldContainerType	  "uint_T"
+	  EnableMemcpy		  on
+	  MemcpyThreshold	  64
+	  PassReuseOutputArgsAs	  "Structure reference"
+	  PassReuseOutputArgsThreshold 12
+	  ExpressionDepthLimit	  128
+	  LocalBlockOutputs	  on
+	  RollThreshold		  5
+	  StateBitsets		  off
+	  DataBitsets		  off
+	  ActiveStateOutputEnumStorageType "Native Integer"
+	  ZeroExternalMemoryAtStartup on
+	  ZeroInternalMemoryAtStartup on
+	  InitFltsAndDblsToZero	  off
+	  NoFixptDivByZeroProtection off
+	  EfficientFloat2IntCast  off
+	  EfficientMapNaN2IntZero on
+	  LifeSpan		  "auto"
+	  MaxStackSize		  "Inherit from target"
+	  BufferReusableBoundary  on
+	  SimCompilerOptimization "off"
+	  AccelVerboseBuild	  off
+	}
+	Simulink.DebuggingCC {
+	  $ObjectID		  11
+	  Version		  "1.16.5"
+	  Array {
+	    Type		    "Cell"
+	    Dimension		    1
+	    Cell		    "UseOnlyExistingSharedCode"
+	    PropName		    "DisabledProps"
+	  }
+	  Description		  ""
+	  RTPrefix		  "error"
+	  ConsistencyChecking	  "none"
+	  ArrayBoundsChecking	  "none"
+	  SignalInfNanChecking	  "none"
+	  SignalRangeChecking	  "none"
+	  ReadBeforeWriteMsg	  "UseLocalSettings"
+	  WriteAfterWriteMsg	  "UseLocalSettings"
+	  WriteAfterReadMsg	  "UseLocalSettings"
+	  AlgebraicLoopMsg	  "warning"
+	  ArtificialAlgebraicLoopMsg "warning"
+	  SaveWithDisabledLinksMsg "warning"
+	  SaveWithParameterizedLinksMsg	"none"
+	  CheckSSInitialOutputMsg on
+	  UnderspecifiedInitializationDetection	"Classic"
+	  MergeDetectMultiDrivingBlocksExec "none"
+	  CheckExecutionContextPreStartOutputMsg off
+	  CheckExecutionContextRuntimeOutputMsg	off
+	  SignalResolutionControl "TryResolveAllWithWarning"
+	  BlockPriorityViolationMsg "warning"
+	  MinStepSizeMsg	  "warning"
+	  TimeAdjustmentMsg	  "none"
+	  MaxConsecutiveZCsMsg	  "error"
+	  MaskedZcDiagnostic	  "warning"
+	  IgnoredZcDiagnostic	  "warning"
+	  SolverPrmCheckMsg	  "none"
+	  InheritedTsInSrcMsg	  "warning"
+	  MultiTaskDSMMsg	  "error"
+	  MultiTaskCondExecSysMsg "error"
+	  MultiTaskRateTransMsg	  "error"
+	  SingleTaskRateTransMsg  "none"
+	  TasksWithSamePriorityMsg "warning"
+	  SigSpecEnsureSampleTimeMsg "warning"
+	  CheckMatrixSingularityMsg "none"
+	  IntegerOverflowMsg	  "warning"
+	  Int32ToFloatConvMsg	  "warning"
+	  ParameterDowncastMsg	  "error"
+	  ParameterOverflowMsg	  "error"
+	  ParameterUnderflowMsg	  "none"
+	  ParameterPrecisionLossMsg "warning"
+	  ParameterTunabilityLossMsg "warning"
+	  FixptConstUnderflowMsg  "none"
+	  FixptConstOverflowMsg	  "none"
+	  FixptConstPrecisionLossMsg "none"
+	  UnderSpecifiedDataTypeMsg "none"
+	  UnnecessaryDatatypeConvMsg "none"
+	  VectorMatrixConversionMsg "none"
+	  InvalidFcnCallConnMsg	  "error"
+	  FcnCallInpInsideContextMsg "error"
+	  SignalLabelMismatchMsg  "none"
+	  UnconnectedInputMsg	  "warning"
+	  UnconnectedOutputMsg	  "warning"
+	  UnconnectedLineMsg	  "warning"
+	  UseOnlyExistingSharedCode "error"
+	  SFcnCompatibilityMsg	  "none"
+	  FrameProcessingCompatibilityMsg "error"
+	  UniqueDataStoreMsg	  "none"
+	  BusObjectLabelMismatch  "warning"
+	  RootOutportRequireBusObject "warning"
+	  AssertControl		  "UseLocalSettings"
+	  AllowSymbolicDim	  on
+	  RowMajorDimensionSupport off
+	  ModelReferenceIOMsg	  "none"
+	  ModelReferenceMultiInstanceNormalModeStructChecksumCheck "error"
+	  ModelReferenceVersionMismatchMessage "none"
+	  ModelReferenceIOMismatchMessage "none"
+	  UnknownTsInhSupMsg	  "warning"
+	  ModelReferenceDataLoggingMessage "warning"
+	  ModelReferenceSymbolNameMessage "warning"
+	  ModelReferenceExtraNoncontSigs "error"
+	  StateNameClashWarn	  "none"
+	  SimStateInterfaceChecksumMismatchMsg "warning"
+	  SimStateOlderReleaseMsg "error"
+	  InitInArrayFormatMsg	  "warning"
+	  StrictBusMsg		  "Warning"
+	  BusNameAdapt		  "WarnAndRepair"
+	  NonBusSignalsTreatedAsBus "none"
+	  SymbolicDimMinMaxWarning "warning"
+	  LossOfSymbolicDimsSimulationWarning "warning"
+	  LossOfSymbolicDimsCodeGenerationWarning "error"
+	  BlockIODiagnostic	  "none"
+	  SFUnusedDataAndEventsDiag "warning"
+	  SFUnexpectedBacktrackingDiag "error"
+	  SFInvalidInputDataAccessInChartInitDiag "warning"
+	  SFNoUnconditionalDefaultTransitionDiag "error"
+	  SFTransitionOutsideNaturalParentDiag "warning"
+	  SFUnreachableExecutionPathDiag "warning"
+	  SFUndirectedBroadcastEventsDiag "warning"
+	  SFTransitionActionBeforeConditionDiag	"warning"
+	  SFOutputUsedAsStateInMooreChartDiag "error"
+	  SFTemporalDelaySmallerThanSampleTimeDiag "warning"
+	  SFSelfTransitionDiag	  "warning"
+	  SFExecutionAtInitializationDiag "warning"
+	  SFMachineParentedDataDiag "warning"
+	  IntegerSaturationMsg	  "warning"
+	  AllowedUnitSystems	  "all"
+	  UnitsInconsistencyMsg	  "warning"
+	  AllowAutomaticUnitConversions	on
+	}
+	Simulink.HardwareCC {
+	  $ObjectID		  12
+	  Version		  "1.16.5"
+	  DisabledProps		  []
+	  Description		  ""
+	  ProdBitPerChar	  8
+	  ProdBitPerShort	  16
+	  ProdBitPerInt		  32
+	  ProdBitPerLong	  32
+	  ProdBitPerLongLong	  64
+	  ProdBitPerFloat	  32
+	  ProdBitPerDouble	  64
+	  ProdBitPerPointer	  32
+	  ProdBitPerSizeT	  32
+	  ProdBitPerPtrDiffT	  32
+	  ProdLargestAtomicInteger "Char"
+	  ProdLargestAtomicFloat  "None"
+	  ProdIntDivRoundTo	  "Undefined"
+	  ProdEndianess		  "Unspecified"
+	  ProdWordSize		  32
+	  ProdShiftRightIntArith  on
+	  ProdLongLongMode	  off
+	  ProdHWDeviceType	  "32-bit Generic"
+	  TargetBitPerChar	  8
+	  TargetBitPerShort	  16
+	  TargetBitPerInt	  32
+	  TargetBitPerLong	  32
+	  TargetBitPerLongLong	  64
+	  TargetBitPerFloat	  32
+	  TargetBitPerDouble	  64
+	  TargetBitPerPointer	  32
+	  TargetBitPerSizeT	  32
+	  TargetBitPerPtrDiffT	  32
+	  TargetLargestAtomicInteger "Char"
+	  TargetLargestAtomicFloat "None"
+	  TargetShiftRightIntArith on
+	  TargetLongLongMode	  off
+	  TargetIntDivRoundTo	  "Undefined"
+	  TargetEndianess	  "Unspecified"
+	  TargetWordSize	  32
+	  TargetPreprocMaxBitsSint 32
+	  TargetPreprocMaxBitsUint 32
+	  TargetHWDeviceType	  "Specified"
+	  TargetUnknown		  on
+	  ProdEqTarget		  on
+	  UseEmbeddedCoderFeatures on
+	  UseSimulinkCoderFeatures on
+	}
+	Simulink.ModelReferenceCC {
+	  $ObjectID		  13
+	  Version		  "1.16.5"
+	  DisabledProps		  []
+	  Description		  ""
+	  UpdateModelReferenceTargets "IfOutOfDateOrStructuralChange"
+	  EnableRefExpFcnMdlSchedulingChecks on
+	  CheckModelReferenceTargetMessage "error"
+	  EnableParallelModelReferenceBuilds off
+	  ParallelModelReferenceErrorOnInvalidPool on
+	  ParallelModelReferenceMATLABWorkerInit "None"
+	  ModelReferenceNumInstancesAllowed "Multi"
+	  PropagateVarSize	  "Infer from blocks in model"
+	  ModelDependencies	  ""
+	  ModelReferencePassRootInputsByReference on
+	  ModelReferenceMinAlgLoopOccurrences off
+	  PropagateSignalLabelsOutOfModel off
+	  SupportModelReferenceSimTargetCustomCode off
+	}
+	Simulink.SFSimCC {
+	  $ObjectID		  14
+	  Version		  "1.16.5"
+	  DisabledProps		  []
+	  Description		  ""
+	  SimCustomSourceCode	  ""
+	  SimCustomHeaderCode	  ""
+	  SimCustomInitializer	  ""
+	  SimCustomTerminator	  ""
+	  SimReservedNameArray	  []
+	  SimUserSources	  ""
+	  SimUserIncludeDirs	  ""
+	  SimUserLibraries	  ""
+	  SimUserDefines	  ""
+	  SimCustomCompilerFlags  ""
+	  SimCustomLinkerFlags	  ""
+	  SFSimEcho		  on
+	  SimCtrlC		  on
+	  SimIntegrity		  on
+	  SimUseLocalCustomCode	  off
+	  SimParseCustomCode	  on
+	  SimBuildMode		  "sf_incremental_build"
+	  SimGenImportedTypeDefs  off
+	  ModelFunctionsGlobalVisibility "on"
+	  CompileTimeRecursionLimit 50
+	  EnableRuntimeRecursion  on
+	}
+	Simulink.RTWCC {
+	  $BackupClass		  "Simulink.RTWCC"
+	  $ObjectID		  15
+	  Version		  "1.16.5"
+	  Array {
+	    Type		    "Cell"
+	    Dimension		    13
+	    Cell		    "IncludeHyperlinkInReport"
+	    Cell		    "GenerateTraceInfo"
+	    Cell		    "GenerateTraceReport"
+	    Cell		    "GenerateTraceReportSl"
+	    Cell		    "GenerateTraceReportSf"
+	    Cell		    "GenerateTraceReportEml"
+	    Cell		    "PortableWordSizes"
+	    Cell		    "GenerateWebview"
+	    Cell		    "GenerateCodeMetricsReport"
+	    Cell		    "GenerateCodeReplacementReport"
+	    Cell		    "GenerateMissedCodeReplacementReport"
+	    Cell		    "GenerateErtSFunction"
+	    Cell		    "CreateSILPILBlock"
+	    PropName		    "DisabledProps"
+	  }
+	  SystemTargetFile	  "grt.tlc"
+	  HardwareBoard		  "None"
+	  TLCOptions		  ""
+	  GenCodeOnly		  off
+	  MakeCommand		  "make_rtw"
+	  GenerateMakefile	  on
+	  PackageGeneratedCodeAndArtifacts off
+	  PackageName		  ""
+	  TemplateMakefile	  "grt_default_tmf"
+	  PostCodeGenCommand	  ""
+	  Description		  ""
+	  GenerateReport	  off
+	  SaveLog		  off
+	  RTWVerbose		  on
+	  RetainRTWFile		  off
+	  RTWBuildHooks		  []
+	  ProfileTLC		  off
+	  TLCDebug		  off
+	  TLCCoverage		  off
+	  TLCAssert		  off
+	  RTWUseLocalCustomCode	  off
+	  RTWUseSimCustomCode	  off
+	  CustomSourceCode	  ""
+	  CustomHeaderCode	  ""
+	  CustomInclude		  ""
+	  CustomSource		  ""
+	  CustomLibrary		  ""
+	  CustomDefine		  ""
+	  CustomLAPACKCallback	  ""
+	  CustomInitializer	  ""
+	  CustomTerminator	  ""
+	  Toolchain		  "Automatically locate an installed toolchain"
+	  BuildConfiguration	  "Faster Builds"
+	  CustomToolchainOptions  []
+	  IncludeHyperlinkInReport off
+	  LaunchReport		  off
+	  PortableWordSizes	  off
+	  CreateSILPILBlock	  "None"
+	  CodeExecutionProfiling  off
+	  CodeExecutionProfileVariable "executionProfile"
+	  CodeProfilingSaveOptions "SummaryOnly"
+	  CodeProfilingInstrumentation off
+	  SILDebugging		  off
+	  TargetLang		  "C"
+	  IncludeBusHierarchyInRTWFileBlockHierarchyMap	off
+	  GenerateTraceInfo	  off
+	  GenerateTraceReport	  off
+	  GenerateTraceReportSl	  off
+	  GenerateTraceReportSf	  off
+	  GenerateTraceReportEml  off
+	  GenerateWebview	  off
+	  GenerateCodeMetricsReport off
+	  GenerateCodeReplacementReport	off
+	  GenerateMissedCodeReplacementReport off
+	  RTWCompilerOptimization "off"
+	  ObjectivePriorities	  []
+	  RTWCustomCompilerOptimizations ""
+	  CheckMdlBeforeBuild	  "Off"
+	  SharedConstantsCachingThreshold 1024
+	  Array {
+	    Type		    "Handle"
+	    Dimension		    2
+	    Simulink.CodeAppCC {
+	      $ObjectID		      16
+	      Version		      "1.16.5"
+	      Array {
+		Type			"Cell"
+		Dimension		25
+		Cell			"IgnoreCustomStorageClasses"
+		Cell			"IgnoreTestpoints"
+		Cell			"InsertBlockDesc"
+		Cell			"InsertPolySpaceComments"
+		Cell			"SFDataObjDesc"
+		Cell			"MATLABFcnDesc"
+		Cell			"SimulinkDataObjDesc"
+		Cell			"DefineNamingRule"
+		Cell			"SignalNamingRule"
+		Cell			"ParamNamingRule"
+		Cell			"InternalIdentifier"
+		Cell			"InlinedPrmAccess"
+		Cell			"CustomSymbolStr"
+		Cell			"CustomSymbolStrGlobalVar"
+		Cell			"CustomSymbolStrType"
+		Cell			"CustomSymbolStrField"
+		Cell			"CustomSymbolStrFcn"
+		Cell			"CustomSymbolStrModelFcn"
+		Cell			"CustomSymbolStrFcnArg"
+		Cell			"CustomSymbolStrBlkIO"
+		Cell			"CustomSymbolStrTmpVar"
+		Cell			"CustomSymbolStrMacro"
+		Cell			"CustomSymbolStrUtil"
+		Cell			"CustomUserTokenString"
+		Cell			"ReqsInCode"
+		PropName		"DisabledProps"
+	      }
+	      Description	      ""
+	      Comment		      ""
+	      ForceParamTrailComments off
+	      GenerateComments	      on
+	      CommentStyle	      "Auto"
+	      IgnoreCustomStorageClasses on
+	      IgnoreTestpoints	      off
+	      IncHierarchyInIds	      off
+	      MaxIdLength	      31
+	      PreserveName	      off
+	      PreserveNameWithParent  off
+	      ShowEliminatedStatement off
+	      OperatorAnnotations     off
+	      IncAutoGenComments      off
+	      SimulinkDataObjDesc     off
+	      SFDataObjDesc	      off
+	      MATLABFcnDesc	      off
+	      IncDataTypeInIds	      off
+	      MangleLength	      1
+	      CustomSymbolStrGlobalVar "$R$N$M"
+	      CustomSymbolStrType     "$N$R$M_T"
+	      CustomSymbolStrField    "$N$M"
+	      CustomSymbolStrFcn      "$R$N$M$F"
+	      CustomSymbolStrModelFcn "$R$N"
+	      CustomSymbolStrFcnArg   "rt$I$N$M"
+	      CustomSymbolStrBlkIO    "rtb_$N$M"
+	      CustomSymbolStrTmpVar   "$N$M"
+	      CustomSymbolStrMacro    "$R$N$M"
+	      CustomSymbolStrUtil     "$N$C"
+	      CustomUserTokenString   ""
+	      CustomCommentsFcn	      ""
+	      DefineNamingRule	      "None"
+	      DefineNamingFcn	      ""
+	      ParamNamingRule	      "None"
+	      ParamNamingFcn	      ""
+	      SignalNamingRule	      "None"
+	      SignalNamingFcn	      ""
+	      InsertBlockDesc	      off
+	      InsertPolySpaceComments off
+	      SimulinkBlockComments   on
+	      MATLABSourceComments    off
+	      EnableCustomComments    off
+	      InternalIdentifierFile  ""
+	      InternalIdentifier      "Shortened"
+	      InlinedPrmAccess	      "Literals"
+	      ReqsInCode	      off
+	      UseSimReservedNames     off
+	      ReservedNameArray	      []
+	    }
+	    Simulink.GRTTargetCC {
+	      $BackupClass	      "Simulink.TargetCC"
+	      $ObjectID		      17
+	      Version		      "1.16.5"
+	      Array {
+		Type			"Cell"
+		Dimension		15
+		Cell			"IncludeMdlTerminateFcn"
+		Cell			"SuppressErrorStatus"
+		Cell			"ERTCustomFileBanners"
+		Cell			"GenerateSampleERTMain"
+		Cell			"ExistingSharedCode"
+		Cell			"GenerateTestInterfaces"
+		Cell			"ModelStepFunctionPrototypeControlCompliant"
+		Cell			"GenerateAllocFcn"
+		Cell			"PurelyIntegerCode"
+		Cell			"SupportComplex"
+		Cell			"SupportAbsoluteTime"
+		Cell			"SupportContinuousTime"
+		Cell			"SupportNonInlinedSFcns"
+		Cell			"RemoveDisableFunc"
+		Cell			"RemoveResetFunc"
+		PropName		"DisabledProps"
+	      }
+	      Description	      ""
+	      TargetFcnLib	      "ansi_tfl_table_tmw.mat"
+	      TargetLibSuffix	      ""
+	      TargetPreCompLibLocation ""
+	      GenFloatMathFcnCalls    "NOT IN USE"
+	      TargetLangStandard      "C99 (ISO)"
+	      CodeReplacementLibrary  "None"
+	      UtilityFuncGeneration   "Auto"
+	      ERTMultiwordTypeDef     "System defined"
+	      ERTMultiwordLength      256
+	      MultiwordLength	      2048
+	      GenerateFullHeader      on
+	      InferredTypesCompatibility off
+	      ExistingSharedCode      ""
+	      GenerateSampleERTMain   off
+	      GenerateTestInterfaces  off
+	      ModelReferenceCompliant on
+	      ParMdlRefBuildCompliant on
+	      CompOptLevelCompliant   on
+	      ConcurrentExecutionCompliant on
+	      IncludeMdlTerminateFcn  on
+	      GeneratePreprocessorConditionals "Use local settings"
+	      CombineOutputUpdateFcns on
+	      CombineSignalStateStructs	off
+	      SuppressErrorStatus     off
+	      ERTFirstTimeCompliant   off
+	      IncludeFileDelimiter    "Auto"
+	      ERTCustomFileBanners    off
+	      SupportAbsoluteTime     on
+	      LogVarNameModifier      "rt_"
+	      MatFileLogging	      on
+	      MultiInstanceERTCode    off
+	      CodeInterfacePackaging  "Nonreusable function"
+	      SupportNonFinite	      on
+	      SupportComplex	      on
+	      PurelyIntegerCode	      off
+	      SupportContinuousTime   on
+	      SupportNonInlinedSFcns  on
+	      RemoveDisableFunc	      off
+	      RemoveResetFunc	      off
+	      SupportVariableSizeSignals off
+	      ParenthesesLevel	      "Nominal"
+	      CastingMode	      "Nominal"
+	      MATLABClassNameForMDSCustomization "Simulink.SoftwareTarget.GRTCustomization"
+	      ModelStepFunctionPrototypeControlCompliant off
+	      CPPClassGenCompliant    on
+	      AutosarCompliant	      off
+	      MDXCompliant	      off
+	      GRTInterface	      off
+	      GenerateAllocFcn	      off
+	      UseToolchainInfoCompliant	on
+	      GenerateSharedConstants on
+	      CoderGroups	      []
+	      UseMalloc		      off
+	      ExtMode		      off
+	      ExtModeStaticAlloc      off
+	      ExtModeTesting	      off
+	      ExtModeStaticAllocSize  1000000
+	      ExtModeTransport	      0
+	      ExtModeMexFile	      "ext_comm"
+	      ExtModeMexArgs	      ""
+	      ExtModeIntrfLevel	      "Level1"
+	      RTWCAPISignals	      off
+	      RTWCAPIParams	      off
+	      RTWCAPIStates	      off
+	      RTWCAPIRootIO	      off
+	      GenerateASAP2	      off
+	      MultiInstanceErrorCode  "Error"
+	    }
+	    PropName		    "Components"
+	  }
+	}
+	SlCovCC.ConfigComp {
+	  $ObjectID		  18
+	  Version		  "1.16.5"
+	  DisabledProps		  []
+	  Description		  "Simulink Coverage Configuration Component"
+	  Name			  "Simulink Coverage"
+	  CovEnable		  off
+	  CovScope		  "EntireSystem"
+	  CovIncludeTopModel	  on
+	  RecordCoverage	  off
+	  CovPath		  "/"
+	  CovSaveName		  "covdata"
+	  CovCompData		  ""
+	  CovMetricSettings	  "dw"
+	  CovFilter		  ""
+	  CovHTMLOptions	  ""
+	  CovNameIncrementing	  off
+	  CovHtmlReporting	  on
+	  CovForceBlockReductionOff on
+	  CovEnableCumulative	  on
+	  CovSaveCumulativeToWorkspaceVar on
+	  CovSaveSingleToWorkspaceVar on
+	  CovCumulativeVarName	  "covCumulativeData"
+	  CovCumulativeReport	  off
+	  CovSaveOutputData	  on
+	  CovOutputDir		  "slcov_output/$ModelName$"
+	  CovDataFileName	  "$ModelName$_cvdata"
+	  CovShowResultsExplorer  on
+	  CovReportOnPause	  on
+	  CovModelRefEnable	  "off"
+	  CovModelRefExcluded	  ""
+	  CovExternalEMLEnable	  off
+	  CovSFcnEnable		  on
+	  CovBoundaryAbsTol	  1e-05
+	  CovBoundaryRelTol	  0.01
+	  CovUseTimeInterval	  off
+	  CovStartTime		  0
+	  CovStopTime		  0
+	}
+	PropName		"Components"
+      }
+      Name		      "Configuration"
+      ExtraOptions	      ""
+      CurrentDlgPage	      "Solver"
+      ConfigPrmDlgPosition     [ 340, 280, 1260, 920 ] 
+    }
+    PropName		    "ConfigurationSets"
+  }
+  ExplicitPartitioning	  off
   BlockDefaults {
-    Orientation		    "right"
     ForegroundColor	    "black"
     BackgroundColor	    "white"
     DropShadow		    off
@@ -83,25 +821,47 @@ Library {
     FontWeight		    "normal"
     FontAngle		    "normal"
     ShowName		    on
+    BlockRotation	    0
+    BlockMirror		    off
+  }
+  AnnotationDefaults {
+    HorizontalAlignment	    "center"
+    VerticalAlignment	    "middle"
+    ForegroundColor	    "black"
+    BackgroundColor	    "white"
+    DropShadow		    off
+    FontName		    "Arial"
+    FontSize		    10
+    FontWeight		    "normal"
+    FontAngle		    "normal"
+    UseDisplayTextAsClickCallback off
+  }
+  LineDefaults {
+    FontName		    "Arial"
+    FontSize		    9
+    FontWeight		    "normal"
+    FontAngle		    "normal"
+  }
+  MaskDefaults {
+    SelfModifiable	    "off"
+    IconFrame		    "on"
+    IconOpaque		    "opaque"
+    RunInitForIconRedraw    "off"
+    IconRotate		    "none"
+    PortRotate		    "default"
+    IconUnits		    "autoscale"
+  }
+  MaskParameterDefaults {
+    Evaluate		    "on"
+    Tunable		    "on"
+    NeverSave		    "off"
+    Internal		    "off"
+    ReadOnly		    "off"
+    Enabled		    "on"
+    Visible		    "on"
+    ToolTip		    "on"
   }
   BlockParameterDefaults {
-    Block {
-      BlockType		      Actuator
-      SubClassName	      "unknown"
-      PortType		      "blob"
-    }
-    Block {
-      BlockType		      Constant
-      Value		      "1"
-      VectorParams1D	      on
-      SamplingMode	      "Sample based"
-      OutDataTypeMode	      "Inherit from 'Constant value'"
-      OutDataType	      "sfix(16)"
-      ConRadixGroup	      "Use specified scaling"
-      OutScaling	      "2^0"
-      SampleTime	      "inf"
-      FramePeriod	      "inf"
-    }
     Block {
       BlockType		      Demux
       Outputs		      "4"
@@ -109,39 +869,22 @@ Library {
       BusSelectionMode	      off
     }
     Block {
-      BlockType		      Gain
-      Gain		      "1"
-      Multiplication	      "Element-wise(K.*u)"
-      ParameterDataTypeMode   "Same as input"
-      ParameterDataType	      "sfix(16)"
-      ParameterScalingMode    "Best Precision: Matrix-wise"
-      ParameterScaling	      "2^0"
-      OutDataTypeMode	      "Same as input"
-      OutDataType	      "sfix(16)"
-      OutScaling	      "2^0"
-      LockScale		      off
-      RndMeth		      "Floor"
-      SaturateOnIntegerOverflow	on
-      SampleTime	      "-1"
-    }
-    Block {
-      BlockType		      Ground
-    }
-    Block {
       BlockType		      Inport
       Port		      "1"
-      UseBusObject	      off
-      BusObject		      "BusObject"
+      OutputFunctionCall      off
+      OutMin		      "[]"
+      OutMax		      "[]"
+      OutDataTypeStr	      "Inherit: auto"
+      LockScale		      off
       BusOutputAsStruct	      off
+      Unit		      "inherit"
       PortDimensions	      "-1"
+      VarSizeSig	      "Inherit"
       SampleTime	      "-1"
-      DataType		      "auto"
-      OutDataType	      "sfix(16)"
-      OutScaling	      "2^0"
       SignalType	      "auto"
       SamplingMode	      "auto"
       LatchByDelayingOutsideSignal off
-      LatchByCopyingInsideSignal off
+      LatchInputForFeedbackSignals off
       Interpolate	      on
     }
     Block {
@@ -155,46 +898,45 @@ Library {
     Block {
       BlockType		      Outport
       Port		      "1"
-      UseBusObject	      off
-      BusObject		      "BusObject"
+      OutMin		      "[]"
+      OutMax		      "[]"
+      OutDataTypeStr	      "Inherit: auto"
+      LockScale		      off
       BusOutputAsStruct	      off
+      Unit		      "inherit"
       PortDimensions	      "-1"
+      VarSizeSig	      "Inherit"
       SampleTime	      "-1"
-      DataType		      "auto"
-      OutDataType	      "sfix(16)"
-      OutScaling	      "2^0"
       SignalType	      "auto"
       SamplingMode	      "auto"
+      EnsureOutportIsVirtual  off
+      SourceOfInitialOutputValue "Dialog"
       OutputWhenDisabled      "held"
       InitialOutput	      "[]"
-    }
-    Block {
-      BlockType		      PMComponent
-      SubClassName	      "unknown"
     }
     Block {
       BlockType		      PMIOPort
     }
     Block {
-      BlockType		      Sensor
-      SubClassName	      "unknown"
-      PortType		      "blob"
-    }
-    Block {
-      BlockType		      "S-Function"
+      BlockType		      S-Function
       FunctionName	      "system"
       SFunctionModules	      "''"
       PortCounts	      "[]"
     }
     Block {
       BlockType		      SubSystem
-      ShowPortLabels	      on
+      ShowPortLabels	      "FromPortIcon"
       Permissions	      "ReadWrite"
       PermitHierarchicalResolution "All"
       TreatAsAtomicUnit	      off
+      MinAlgLoopOccurrences   off
+      PropExecContextOutsideSubsystem off
       SystemSampleTime	      "-1"
+      RTWSystemCode	      "Auto"
       RTWFcnNameOpts	      "Auto"
       RTWFileNameOpts	      "Auto"
+      FunctionInterfaceSpec   "void_void"
+      FunctionWithSeparateData off
       RTWMemSecFuncInitTerm   "Inherit from model"
       RTWMemSecFuncExecute    "Inherit from model"
       RTWMemSecDataConstants  "Inherit from model"
@@ -202,32 +944,24 @@ Library {
       RTWMemSecDataParameters "Inherit from model"
       SimViewingDevice	      off
       DataTypeOverride	      "UseLocalSettings"
+      DataTypeOverrideAppliesTo	"AllNumericTypes"
       MinMaxOverflowLogging   "UseLocalSettings"
+      Opaque		      off
+      MaskHideContents	      off
+      SFBlockType	      "NONE"
+      GeneratePreprocessorConditionals off
+      PropagateVariantConditions off
+      TreatAsGroupedWhenPropagatingVariantConditions on
+      ContentPreviewEnabled   off
+      IsWebBlock	      off
     }
     Block {
       BlockType		      Terminator
     }
   }
-  AnnotationDefaults {
-    HorizontalAlignment	    "center"
-    VerticalAlignment	    "middle"
-    ForegroundColor	    "black"
-    BackgroundColor	    "white"
-    DropShadow		    off
-    FontName		    "Arial"
-    FontSize		    10
-    FontWeight		    "normal"
-    FontAngle		    "normal"
-  }
-  LineDefaults {
-    FontName		    "Arial"
-    FontSize		    9
-    FontWeight		    "normal"
-    FontAngle		    "normal"
-  }
   System {
     Name		    "TLMLib"
-    Location		    [822, 97, 1166, 440]
+    Location		    [792, 52, 1192, 579]
     Open		    on
     ModelBrowserVisibility  off
     ModelBrowserWidth	    200
@@ -241,18 +975,19 @@ Library {
     ShowPageBoundaries	    off
     ZoomFactor		    "100"
     ReportName		    "simulink-default.rpt"
+    SIDHighWatermark	    "33"
     Block {
       BlockType		      SubSystem
       Name		      "TLMDriver"
+      SID		      "1"
       Ports		      [0, 0, 0, 0, 0, 1, 1]
       Position		      [205, 19, 300, 91]
-      MinAlgLoopOccurrences   off
-      RTWSystemCode	      "Auto"
-      FunctionWithSeparateData off
-      MaskHideContents	      off
+      ZOrder		      -1
+      RequestExecContextInheritance off
+      Variant		      off
       System {
 	Name			"TLMDriver"
-	Location		[87, 311, 1450, 821]
+	Location		[57, 199, 1476, 893]
 	Open			off
 	ModelBrowserVisibility	off
 	ModelBrowserWidth	200
@@ -268,9 +1003,10 @@ Library {
 	Block {
 	  BlockType		  Reference
 	  Name			  "Angular Velocity"
+	  SID			  "2"
 	  Ports			  [0, 1, 0, 0, 0, 1]
 	  Position		  [480, 370, 520, 410]
-	  DialogController	  "MECH.DynMechDlgSource"
+	  ZOrder		  -1
 	  SourceBlock		  "mblibv1/Sensors & \nActuators/Body Sensor"
 	  SourceType		  "msb"
 	  ShowPortLabels	  on
@@ -311,9 +1047,10 @@ Library {
 	Block {
 	  BlockType		  Reference
 	  Name			  "Body Actuator"
+	  SID			  "3"
 	  Ports			  [1, 0, 0, 0, 0, 0, 1]
 	  Position		  [1060, 240, 1100, 280]
-	  DialogController	  "MECH.DynMechDlgSource"
+	  ZOrder		  -2
 	  SourceBlock		  "mblibv1/Sensors & \nActuators/Body Actuator"
 	  SourceType		  "msb"
 	  ShowPortLabels	  on
@@ -348,12 +1085,12 @@ Library {
 	Block {
 	  BlockType		  Reference
 	  Name			  "Mechanical\nBranching\nBar"
+	  SID			  "4"
 	  Ports			  [0, 0, 0, 0, 0, 1, 4]
 	  Position		  [260, 209, 275, 306]
+	  ZOrder		  -3
 	  BackgroundColor	  "black"
-	  DialogController	  "MECH.DynMechDlgSource"
-	  SourceBlock		  "mblibv1/Utilities/Mechanical\nBranching\nBa"
-"r"
+	  SourceBlock		  "mblibv1/Utilities/Mechanical\nBranching\nBar"
 	  SourceType		  "msb"
 	  PhysicalDomain	  "mechanical"
 	  SubClassName		  "Unknown"
@@ -368,8 +1105,10 @@ Library {
 	Block {
 	  BlockType		  Mux
 	  Name			  "Mux"
+	  SID			  "5"
 	  Ports			  [2, 1]
 	  Position		  [945, 219, 955, 301]
+	  ZOrder		  -4
 	  ShowName		  off
 	  Inputs		  "[3 3]"
 	  DisplayOption		  "bar"
@@ -377,9 +1116,10 @@ Library {
 	Block {
 	  BlockType		  Reference
 	  Name			  "Position"
+	  SID			  "6"
 	  Ports			  [0, 1, 0, 0, 0, 1]
 	  Position		  [475, 110, 515, 150]
-	  DialogController	  "MECH.DynMechDlgSource"
+	  ZOrder		  -5
 	  SourceBlock		  "mblibv1/Sensors & \nActuators/Body Sensor"
 	  SourceType		  "msb"
 	  ShowPortLabels	  on
@@ -420,17 +1160,20 @@ Library {
 	Block {
 	  BlockType		  Reference
 	  Name			  "TLMForce"
+	  SID			  "7"
 	  Ports			  [4, 4]
 	  Position		  [745, 203, 805, 312]
+	  ZOrder		  -6
 	  SourceBlock		  "TLMLib/TLMForce"
 	  SourceType		  "TLMForceInterface"
 	}
 	Block {
 	  BlockType		  Reference
 	  Name			  "Translation"
+	  SID			  "8"
 	  Ports			  [0, 1, 0, 0, 0, 1]
 	  Position		  [475, 190, 515, 230]
-	  DialogController	  "MECH.DynMechDlgSource"
+	  ZOrder		  -7
 	  SourceBlock		  "mblibv1/Sensors & \nActuators/Body Sensor"
 	  SourceType		  "msb"
 	  ShowPortLabels	  on
@@ -471,9 +1214,10 @@ Library {
 	Block {
 	  BlockType		  Reference
 	  Name			  "Velocity"
+	  SID			  "9"
 	  Ports			  [0, 1, 0, 0, 0, 1]
 	  Position		  [475, 280, 515, 320]
-	  DialogController	  "MECH.DynMechDlgSource"
+	  ZOrder		  -8
 	  SourceBlock		  "mblibv1/Sensors & \nActuators/Body Sensor"
 	  SourceType		  "msb"
 	  ShowPortLabels	  on
@@ -514,26 +1258,32 @@ Library {
 	Block {
 	  BlockType		  PMIOPort
 	  Name			  "CS in"
+	  SID			  "10"
 	  Tag			  "PMCPort"
 	  Position		  [125, 241, 155, 259]
+	  ZOrder		  -9
 	  Port			  "1"
 	  Side			  "Left"
 	}
 	Block {
 	  BlockType		  PMIOPort
 	  Name			  "Force out"
+	  SID			  "11"
 	  Tag			  "PMCPort"
 	  Position		  [1205, 336, 1235, 354]
+	  ZOrder		  -10
 	  Port			  "2"
 	  Side			  "Right"
 	}
 	Line {
+	  ZOrder		  1
 	  SrcBlock		  "Mux"
 	  SrcPort		  1
 	  DstBlock		  "Body Actuator"
 	  DstPort		  1
 	}
 	Line {
+	  ZOrder		  2
 	  SrcBlock		  "TLMForce"
 	  SrcPort		  1
 	  Points		  [95, 0; 0, 60]
@@ -541,6 +1291,7 @@ Library {
 	  DstPort		  2
 	}
 	Line {
+	  ZOrder		  3
 	  SrcBlock		  "TLMForce"
 	  SrcPort		  2
 	  Points		  [70, 0; 0, -5]
@@ -548,6 +1299,7 @@ Library {
 	  DstPort		  1
 	}
 	Line {
+	  ZOrder		  4
 	  SrcBlock		  "Angular Velocity"
 	  SrcPort		  1
 	  Points		  [145, 0; 0, -95]
@@ -555,6 +1307,7 @@ Library {
 	  DstPort		  4
 	}
 	Line {
+	  ZOrder		  5
 	  SrcBlock		  "Velocity"
 	  SrcPort		  1
 	  Points		  [105, 0; 0, -30]
@@ -562,6 +1315,7 @@ Library {
 	  DstPort		  3
 	}
 	Line {
+	  ZOrder		  6
 	  SrcBlock		  "Translation"
 	  SrcPort		  1
 	  Points		  [105, 0; 0, 35]
@@ -569,6 +1323,7 @@ Library {
 	  DstPort		  2
 	}
 	Line {
+	  ZOrder		  7
 	  SrcBlock		  "Position"
 	  SrcPort		  1
 	  Points		  [155, 0; 0, 90]
@@ -577,6 +1332,7 @@ Library {
 	}
 	Line {
 	  LineType		  "Connection"
+	  ZOrder		  8
 	  SrcBlock		  "Mechanical\nBranching\nBar"
 	  SrcPort		  RConn3
 	  Points		  [130, 0; 0, 30]
@@ -585,6 +1341,7 @@ Library {
 	}
 	Line {
 	  LineType		  "Connection"
+	  ZOrder		  9
 	  SrcBlock		  "Mechanical\nBranching\nBar"
 	  SrcPort		  RConn2
 	  Points		  [130, 0; 0, -35]
@@ -593,6 +1350,7 @@ Library {
 	}
 	Line {
 	  LineType		  "Connection"
+	  ZOrder		  10
 	  SrcBlock		  "Body Actuator"
 	  SrcPort		  RConn1
 	  Points		  [110, 0; 0, -25; 60, 0; 0, 110]
@@ -601,6 +1359,7 @@ Library {
 	}
 	Line {
 	  LineType		  "Connection"
+	  ZOrder		  11
 	  SrcBlock		  "CS in"
 	  SrcPort		  RConn1
 	  Points		  [40, 0; 0, 10]
@@ -609,6 +1368,7 @@ Library {
 	}
 	Line {
 	  LineType		  "Connection"
+	  ZOrder		  12
 	  SrcBlock		  "Mechanical\nBranching\nBar"
 	  SrcPort		  RConn4
 	  Points		  [85, 0; 0, 95]
@@ -617,6 +1377,7 @@ Library {
 	}
 	Line {
 	  LineType		  "Connection"
+	  ZOrder		  13
 	  SrcBlock		  "Mechanical\nBranching\nBar"
 	  SrcPort		  RConn1
 	  Points		  [85, 0; 0, -90]
@@ -626,43 +1387,63 @@ Library {
       }
     }
     Block {
-      BlockType		      "S-Function"
+      BlockType		      S-Function
       Name		      "TLMForce"
+      SID		      "12"
       Ports		      [4, 4]
       Position		      [35, 24, 110, 131]
+      ZOrder		      -2
       FunctionName	      "tlmforce"
-      MaskType		      "TLMForceInterface"
-      MaskDescription	      "The TLM force interface enables Simulink to par"
-"ticipate in TLM Co-Simulations.\nThe interface consists of communication port"
-" and a cartesian coordiante system."
-      MaskHelp		      "The input are:<br>\nR = Three dimensional posit"
-"ion vector, describing the interface location relative the inertial system.<b"
-"r>\nA = Orientation matrix 3x3 describing the interface orientation relative "
-"the inertial system.<br>\nvR = Three dimensional velocity vector. <br>\nOmega"
-" = Three dimensional vector describing the rotational velocity.<br>\n<br>\nTh"
-"e outputs are:<br>\nF = Reaction force in the interface.<br>\nM = Reaction mo"
-"ment in the interface.<br>\n"
-      MaskDisplay	      "port_label('input',1,'R');\nport_label('input',"
-"2,'A');\nport_label('output',3,'R');\nport_label('output',4,'A');\ncolor('red"
-"'); \nport_label('input',3,'vR');\nport_label('input',4,'Omega');\nport_label"
-"('output',1,'F');\nport_label('output',2,'M');\n"
-      MaskIconFrame	      on
-      MaskIconOpaque	      on
-      MaskIconRotate	      "none"
-      MaskIconUnits	      "autoscale"
+      SFunctionDeploymentMode off
+      EnableBusSupport	      off
+      SFcnIsStateOwnerBlock   off
+      Object {
+	$PropName		"MaskObject"
+	$ObjectID		19
+	$ClassName		"Simulink.Mask"
+	Type			"TLMForceInterface"
+	Description		"The TLM force interface enables Simulink to participate in TLM Co-Simulations.\nThe interface consists "
+	"of communication port and a cartesian coordiante system."
+	Help			"The input are:<br>\nR = Three dimensional position vector, describing the interface location relative the ine"
+	"rtial system.<br>\nA = Orientation matrix 3x3 describing the interface orientation relative the inertial system.<br>\n"
+	"vR = Three dimensional velocity vector. <br>\nOmega = Three dimensional vector describing the rotational velocity.<br"
+	">\n<br>\nThe outputs are:<br>\nF = Reaction force in the interface.<br>\nM = Reaction moment in the interface.<br>\n"
+	Display			"port_label('input',1,'R');\nport_label('input',2,'A');\nport_label('output',3,'R');\nport_label('output',4"
+	",'A');\ncolor('red'); \nport_label('input',3,'vR');\nport_label('input',4,'Omega');\nport_label('output',1,'F');\npor"
+	"t_label('output',2,'M');\n"
+      }
+    }
+    Block {
+      BlockType		      S-Function
+      Name		      "TLMInput"
+      SID		      "32"
+      Ports		      [2, 2]
+      Position		      [45, 182, 105, 213]
+      ZOrder		      1
+      FunctionName	      "tlmsignal"
+      SFunctionDeploymentMode off
+      EnableBusSupport	      off
+      SFcnIsStateOwnerBlock   off
+      Object {
+	$PropName		"MaskObject"
+	$ObjectID		20
+	$ClassName		"Simulink.Mask"
+	Display			"port_label('input',1,'u1');\nport_label('input',2,'u2');\ncolor('red'); \nport_label('output',1,'y1');\npo"
+	"rt_label('output',2,'y2');\n"
+      }
     }
     Block {
       BlockType		      SubSystem
       Name		      "TLMInterface"
+      SID		      "13"
       Ports		      [0, 0, 0, 0, 0, 1]
       Position		      [205, 119, 305, 161]
-      MinAlgLoopOccurrences   off
-      RTWSystemCode	      "Auto"
-      FunctionWithSeparateData off
-      MaskHideContents	      off
+      ZOrder		      -3
+      RequestExecContextInheritance off
+      Variant		      off
       System {
 	Name			"TLMInterface"
-	Location		[80, 537, 1451, 1047]
+	Location		[50, 425, 1477, 1119]
 	Open			off
 	ModelBrowserVisibility	off
 	ModelBrowserWidth	200
@@ -678,9 +1459,10 @@ Library {
 	Block {
 	  BlockType		  Reference
 	  Name			  "Angular Velocity"
+	  SID			  "14"
 	  Ports			  [0, 1, 0, 0, 0, 1]
 	  Position		  [480, 370, 520, 410]
-	  DialogController	  "MECH.DynMechDlgSource"
+	  ZOrder		  -1
 	  SourceBlock		  "mblibv1/Sensors & \nActuators/Body Sensor"
 	  SourceType		  "msb"
 	  ShowPortLabels	  on
@@ -728,12 +1510,12 @@ Library {
 	Block {
 	  BlockType		  Reference
 	  Name			  "Mechanical\nBranching\nBar"
+	  SID			  "15"
 	  Ports			  [0, 0, 0, 0, 0, 1, 5]
 	  Position		  [260, 211, 275, 309]
+	  ZOrder		  -2
 	  BackgroundColor	  "black"
-	  DialogController	  "MECH.DynMechDlgSource"
-	  SourceBlock		  "mblibv1/Utilities/Mechanical\nBranching\nBa"
-"r"
+	  SourceBlock		  "mblibv1/Utilities/Mechanical\nBranching\nBar"
 	  SourceType		  "msb"
 	  PhysicalDomain	  "mechanical"
 	  SubClassName		  "Unknown"
@@ -748,15 +1530,16 @@ Library {
 	Block {
 	  BlockType		  Mux
 	  Name			  "Mux"
+	  SID			  "16"
 	  Ports			  [2, 1]
 	  Position		  [945, 219, 955, 301]
+	  ZOrder		  -3
 	  ShowName		  off
 	  Inputs		  "[3 3]"
 	  DisplayOption		  "bar"
 	  Port {
 	    PortNumber		    1
 	    Name		    "moment/force"
-	    PropagatedSignals	    "TLM moment out, TLM force out"
 	    RTWStorageClass	    "Auto"
 	    DataLoggingNameMode	    "SignalName"
 	  }
@@ -764,9 +1547,10 @@ Library {
 	Block {
 	  BlockType		  Reference
 	  Name			  "Position"
+	  SID			  "17"
 	  Ports			  [0, 1, 0, 0, 0, 1]
 	  Position		  [475, 110, 515, 150]
-	  DialogController	  "MECH.DynMechDlgSource"
+	  ZOrder		  -4
 	  SourceBlock		  "mblibv1/Sensors & \nActuators/Body Sensor"
 	  SourceType		  "msb"
 	  ShowPortLabels	  on
@@ -814,9 +1598,10 @@ Library {
 	Block {
 	  BlockType		  Reference
 	  Name			  "Reaction\nforce/moment"
+	  SID			  "18"
 	  Ports			  [1, 0, 0, 0, 0, 0, 1]
 	  Position		  [1060, 240, 1100, 280]
-	  DialogController	  "MECH.DynMechDlgSource"
+	  ZOrder		  -5
 	  SourceBlock		  "mblibv1/Sensors & \nActuators/Body Actuator"
 	  SourceType		  "msb"
 	  ShowPortLabels	  on
@@ -851,8 +1636,10 @@ Library {
 	Block {
 	  BlockType		  Reference
 	  Name			  "TLMForce"
+	  SID			  "19"
 	  Ports			  [4, 4]
 	  Position		  [745, 203, 805, 312]
+	  ZOrder		  -6
 	  SourceBlock		  "TLMLib/TLMForce"
 	  SourceType		  "TLMForceInterface"
 	  Port {
@@ -873,9 +1660,10 @@ Library {
 	Block {
 	  BlockType		  Reference
 	  Name			  "Translation"
+	  SID			  "20"
 	  Ports			  [0, 1, 0, 0, 0, 1]
 	  Position		  [475, 190, 515, 230]
-	  DialogController	  "MECH.DynMechDlgSource"
+	  ZOrder		  -7
 	  SourceBlock		  "mblibv1/Sensors & \nActuators/Body Sensor"
 	  SourceType		  "msb"
 	  ShowPortLabels	  on
@@ -923,9 +1711,10 @@ Library {
 	Block {
 	  BlockType		  Reference
 	  Name			  "Velocity"
+	  SID			  "21"
 	  Ports			  [0, 1, 0, 0, 0, 1]
 	  Position		  [475, 280, 515, 320]
-	  DialogController	  "MECH.DynMechDlgSource"
+	  ZOrder		  -8
 	  SourceBlock		  "mblibv1/Sensors & \nActuators/Body Sensor"
 	  SourceType		  "msb"
 	  ShowPortLabels	  on
@@ -973,14 +1762,16 @@ Library {
 	Block {
 	  BlockType		  PMIOPort
 	  Name			  "CS in"
+	  SID			  "22"
 	  Tag			  "PMCPort"
 	  Position		  [45, 241, 75, 259]
+	  ZOrder		  -9
 	  Port			  "1"
 	  Side			  "Left"
 	}
 	Line {
 	  LineType		  "Connection"
-	  Labels		  [3, 0]
+	  ZOrder		  1
 	  SrcBlock		  "Reaction\nforce/moment"
 	  SrcPort		  RConn1
 	  Points		  [65, 0; 0, 200; -850, 0; 0, -160]
@@ -989,6 +1780,7 @@ Library {
 	}
 	Line {
 	  Name			  "moment/force"
+	  ZOrder		  2
 	  Labels		  [0, 0]
 	  SrcBlock		  "Mux"
 	  SrcPort		  1
@@ -997,6 +1789,7 @@ Library {
 	}
 	Line {
 	  Name			  "TLM force out"
+	  ZOrder		  3
 	  Labels		  [0, 0]
 	  SrcBlock		  "TLMForce"
 	  SrcPort		  1
@@ -1006,6 +1799,7 @@ Library {
 	}
 	Line {
 	  Name			  "TLM moment out"
+	  ZOrder		  4
 	  Labels		  [0, 0]
 	  SrcBlock		  "TLMForce"
 	  SrcPort		  2
@@ -1015,6 +1809,7 @@ Library {
 	}
 	Line {
 	  Name			  "Ang Velocity in"
+	  ZOrder		  5
 	  Labels		  [0, 0]
 	  SrcBlock		  "Angular Velocity"
 	  SrcPort		  1
@@ -1024,6 +1819,7 @@ Library {
 	}
 	Line {
 	  Name			  "Velocity in"
+	  ZOrder		  6
 	  Labels		  [0, 0]
 	  SrcBlock		  "Velocity"
 	  SrcPort		  1
@@ -1033,6 +1829,7 @@ Library {
 	}
 	Line {
 	  Name			  "Orientation in"
+	  ZOrder		  7
 	  Labels		  [0, 0]
 	  SrcBlock		  "Translation"
 	  SrcPort		  1
@@ -1042,6 +1839,7 @@ Library {
 	}
 	Line {
 	  Name			  "Position in"
+	  ZOrder		  8
 	  Labels		  [0, 0]
 	  SrcBlock		  "Position"
 	  SrcPort		  1
@@ -1051,6 +1849,7 @@ Library {
 	}
 	Line {
 	  LineType		  "Connection"
+	  ZOrder		  9
 	  SrcBlock		  "Mechanical\nBranching\nBar"
 	  SrcPort		  RConn3
 	  Points		  [130, 0; 0, 40]
@@ -1059,6 +1858,7 @@ Library {
 	}
 	Line {
 	  LineType		  "Connection"
+	  ZOrder		  10
 	  SrcBlock		  "Mechanical\nBranching\nBar"
 	  SrcPort		  RConn2
 	  Points		  [130, 0; 0, -30]
@@ -1067,6 +1867,7 @@ Library {
 	}
 	Line {
 	  LineType		  "Connection"
+	  ZOrder		  11
 	  SrcBlock		  "CS in"
 	  SrcPort		  RConn1
 	  Points		  [120, 0; 0, 10]
@@ -1075,6 +1876,7 @@ Library {
 	}
 	Line {
 	  LineType		  "Connection"
+	  ZOrder		  12
 	  SrcBlock		  "Mechanical\nBranching\nBar"
 	  SrcPort		  RConn4
 	  Points		  [85, 0; 0, 110]
@@ -1083,6 +1885,7 @@ Library {
 	}
 	Line {
 	  LineType		  "Connection"
+	  ZOrder		  13
 	  SrcBlock		  "Mechanical\nBranching\nBar"
 	  SrcPort		  RConn1
 	  Points		  [85, 0; 0, -90]
@@ -1094,21 +1897,22 @@ Library {
     Block {
       BlockType		      SubSystem
       Name		      "Transformations etc."
+      SID		      "23"
       Ports		      []
-      Position		      [110, 194, 209, 245]
+      Position		      [190, 224, 289, 275]
+      ZOrder		      -4
       BackgroundColor	      "[0.700000, 0.700000, 0.700000]"
-      MinAlgLoopOccurrences   off
-      RTWSystemCode	      "Auto"
-      FunctionWithSeparateData off
-      MaskHideContents	      off
-      MaskDisplay	      "disp('TOOLS')\n"
-      MaskIconFrame	      on
-      MaskIconOpaque	      on
-      MaskIconRotate	      "none"
-      MaskIconUnits	      "autoscale"
+      RequestExecContextInheritance off
+      Variant		      off
+      Object {
+	$PropName		"MaskObject"
+	$ObjectID		21
+	$ClassName		"Simulink.Mask"
+	Display			"disp('TOOLS')\n"
+      }
       System {
 	Name			"Transformations etc."
-	Location		[559, 399, 911, 803]
+	Location		[529, 287, 937, 875]
 	Open			off
 	ModelBrowserVisibility	off
 	ModelBrowserWidth	200
@@ -1124,23 +1928,19 @@ Library {
 	Block {
 	  BlockType		  SubSystem
 	  Name			  "A2Phi"
+	  SID			  "24"
 	  Ports			  [1, 1]
 	  Position		  [35, 17, 105, 63]
-	  MinAlgLoopOccurrences	  off
-	  RTWSystemCode		  "Auto"
-	  FunctionWithSeparateData off
-	  MaskHideContents	  off
-	  MaskType		  "Stateflow"
-	  MaskDescription	  "Embedded MATLAB block"
-	  MaskDisplay		  "disp('A2Phi321');"
-	  MaskSelfModifiable	  on
-	  MaskIconFrame		  on
-	  MaskIconOpaque	  off
-	  MaskIconRotate	  "none"
-	  MaskIconUnits		  "autoscale"
+	  ZOrder		  -1
+	  ErrorFcn		  "Stateflow.Translate.translate"
+	  PermitHierarchicalResolution "ExplicitOnly"
+	  TreatAsAtomicUnit	  on
+	  RequestExecContextInheritance	off
+	  SFBlockType		  "MATLAB Function"
+	  Variant		  off
 	  System {
 	    Name		    "A2Phi"
-	    Location		    [257, 457, 812, 717]
+	    Location		    [227, 345, 838, 789]
 	    Open		    off
 	    ModelBrowserVisibility  off
 	    ModelBrowserWidth	    200
@@ -1153,27 +1953,37 @@ Library {
 	    TiledPageScale	    1
 	    ShowPageBoundaries	    off
 	    ZoomFactor		    "100"
+	    SIDHighWatermark	    "8"
 	    Block {
 	      BlockType		      Inport
 	      Name		      "u"
+	      SID		      "24::1"
 	      Position		      [20, 101, 40, 119]
+	      ZOrder		      -1
 	      IconDisplay	      "Port number"
 	    }
 	    Block {
 	      BlockType		      Demux
 	      Name		      " Demux "
+	      SID		      "24::7"
 	      Ports		      [1, 1]
-	      Position		      [270, 160, 320, 200]
+	      Position		      [270, 230, 320, 270]
+	      ZOrder		      2
 	      Outputs		      "1"
 	    }
 	    Block {
-	      BlockType		      "S-Function"
+	      BlockType		      S-Function
 	      Name		      " SFunction "
+	      SID		      "24::6"
 	      Tag		      "Stateflow S-Function TLMLib 2"
 	      Ports		      [1, 2]
 	      Position		      [180, 100, 230, 160]
+	      ZOrder		      1
 	      FunctionName	      "sf_sfun"
 	      PortCounts	      "[1 2]"
+	      SFunctionDeploymentMode off
+	      EnableBusSupport	      off
+	      SFcnIsStateOwnerBlock   off
 	      Port {
 		PortNumber		2
 		Name			"y"
@@ -1184,17 +1994,28 @@ Library {
 	    Block {
 	      BlockType		      Terminator
 	      Name		      " Terminator "
-	      Position		      [460, 171, 480, 189]
+	      SID		      "24::8"
+	      Position		      [460, 241, 480, 259]
+	      ZOrder		      3
 	    }
 	    Block {
 	      BlockType		      Outport
 	      Name		      "y"
+	      SID		      "24::5"
 	      Position		      [460, 101, 480, 119]
+	      ZOrder		      -5
 	      IconDisplay	      "Port number"
-	      BusOutputAsStruct	      off
+	    }
+	    Line {
+	      ZOrder		      5
+	      SrcBlock		      "u"
+	      SrcPort		      1
+	      DstBlock		      " SFunction "
+	      DstPort		      1
 	    }
 	    Line {
 	      Name		      "y"
+	      ZOrder		      6
 	      Labels		      [0, 0]
 	      SrcBlock		      " SFunction "
 	      SrcPort		      2
@@ -1202,21 +2023,16 @@ Library {
 	      DstPort		      1
 	    }
 	    Line {
-	      SrcBlock		      "u"
-	      SrcPort		      1
-	      DstBlock		      " SFunction "
-	      DstPort		      1
-	    }
-	    Line {
+	      ZOrder		      7
 	      SrcBlock		      " Demux "
 	      SrcPort		      1
 	      DstBlock		      " Terminator "
 	      DstPort		      1
 	    }
 	    Line {
+	      ZOrder		      8
 	      SrcBlock		      " SFunction "
 	      SrcPort		      1
-	      Points		      [0, 65]
 	      DstBlock		      " Demux "
 	      DstPort		      1
 	    }
@@ -1225,23 +2041,19 @@ Library {
 	Block {
 	  BlockType		  SubSystem
 	  Name			  "AToEuler"
+	  SID			  "25"
 	  Ports			  [1, 1]
 	  Position		  [135, 97, 205, 143]
-	  MinAlgLoopOccurrences	  off
-	  RTWSystemCode		  "Auto"
-	  FunctionWithSeparateData off
-	  MaskHideContents	  off
-	  MaskType		  "Stateflow"
-	  MaskDescription	  "Embedded MATLAB block"
-	  MaskDisplay		  "disp('A2E');"
-	  MaskSelfModifiable	  on
-	  MaskIconFrame		  on
-	  MaskIconOpaque	  off
-	  MaskIconRotate	  "none"
-	  MaskIconUnits		  "autoscale"
+	  ZOrder		  -2
+	  ErrorFcn		  "Stateflow.Translate.translate"
+	  PermitHierarchicalResolution "ExplicitOnly"
+	  TreatAsAtomicUnit	  on
+	  RequestExecContextInheritance	off
+	  SFBlockType		  "MATLAB Function"
+	  Variant		  off
 	  System {
 	    Name		    "AToEuler"
-	    Location		    [257, 457, 812, 717]
+	    Location		    [227, 345, 838, 789]
 	    Open		    off
 	    ModelBrowserVisibility  off
 	    ModelBrowserWidth	    200
@@ -1254,27 +2066,37 @@ Library {
 	    TiledPageScale	    1
 	    ShowPageBoundaries	    off
 	    ZoomFactor		    "100"
+	    SIDHighWatermark	    "8"
 	    Block {
 	      BlockType		      Inport
 	      Name		      "u"
+	      SID		      "25::1"
 	      Position		      [20, 101, 40, 119]
+	      ZOrder		      -1
 	      IconDisplay	      "Port number"
 	    }
 	    Block {
 	      BlockType		      Demux
 	      Name		      " Demux "
+	      SID		      "25::7"
 	      Ports		      [1, 1]
-	      Position		      [270, 160, 320, 200]
+	      Position		      [270, 230, 320, 270]
+	      ZOrder		      2
 	      Outputs		      "1"
 	    }
 	    Block {
-	      BlockType		      "S-Function"
+	      BlockType		      S-Function
 	      Name		      " SFunction "
+	      SID		      "25::6"
 	      Tag		      "Stateflow S-Function TLMLib 5"
 	      Ports		      [1, 2]
 	      Position		      [180, 100, 230, 160]
+	      ZOrder		      1
 	      FunctionName	      "sf_sfun"
 	      PortCounts	      "[1 2]"
+	      SFunctionDeploymentMode off
+	      EnableBusSupport	      off
+	      SFcnIsStateOwnerBlock   off
 	      Port {
 		PortNumber		2
 		Name			"y"
@@ -1285,29 +2107,20 @@ Library {
 	    Block {
 	      BlockType		      Terminator
 	      Name		      " Terminator "
-	      Position		      [460, 171, 480, 189]
+	      SID		      "25::8"
+	      Position		      [460, 241, 480, 259]
+	      ZOrder		      3
 	    }
 	    Block {
 	      BlockType		      Outport
 	      Name		      "y"
+	      SID		      "25::5"
 	      Position		      [460, 101, 480, 119]
+	      ZOrder		      -5
 	      IconDisplay	      "Port number"
-	      BusOutputAsStruct	      off
 	    }
 	    Line {
-	      SrcBlock		      " SFunction "
-	      SrcPort		      1
-	      Points		      [0, 65]
-	      DstBlock		      " Demux "
-	      DstPort		      1
-	    }
-	    Line {
-	      SrcBlock		      " Demux "
-	      SrcPort		      1
-	      DstBlock		      " Terminator "
-	      DstPort		      1
-	    }
-	    Line {
+	      ZOrder		      5
 	      SrcBlock		      "u"
 	      SrcPort		      1
 	      DstBlock		      " SFunction "
@@ -1315,10 +2128,25 @@ Library {
 	    }
 	    Line {
 	      Name		      "y"
+	      ZOrder		      6
 	      Labels		      [0, 0]
 	      SrcBlock		      " SFunction "
 	      SrcPort		      2
 	      DstBlock		      "y"
+	      DstPort		      1
+	    }
+	    Line {
+	      ZOrder		      7
+	      SrcBlock		      " Demux "
+	      SrcPort		      1
+	      DstBlock		      " Terminator "
+	      DstPort		      1
+	    }
+	    Line {
+	      ZOrder		      8
+	      SrcBlock		      " SFunction "
+	      SrcPort		      1
+	      DstBlock		      " Demux "
 	      DstPort		      1
 	    }
 	  }
@@ -1326,23 +2154,19 @@ Library {
 	Block {
 	  BlockType		  SubSystem
 	  Name			  "EulerToPhi"
+	  SID			  "26"
 	  Ports			  [1, 1]
 	  Position		  [35, 167, 105, 213]
-	  MinAlgLoopOccurrences	  off
-	  RTWSystemCode		  "Auto"
-	  FunctionWithSeparateData off
-	  MaskHideContents	  off
-	  MaskType		  "Stateflow"
-	  MaskDescription	  "Embedded MATLAB block"
-	  MaskDisplay		  "disp('E2Phi');"
-	  MaskSelfModifiable	  on
-	  MaskIconFrame		  on
-	  MaskIconOpaque	  off
-	  MaskIconRotate	  "none"
-	  MaskIconUnits		  "autoscale"
+	  ZOrder		  -3
+	  ErrorFcn		  "Stateflow.Translate.translate"
+	  PermitHierarchicalResolution "ExplicitOnly"
+	  TreatAsAtomicUnit	  on
+	  RequestExecContextInheritance	off
+	  SFBlockType		  "MATLAB Function"
+	  Variant		  off
 	  System {
 	    Name		    "EulerToPhi"
-	    Location		    [257, 457, 812, 717]
+	    Location		    [227, 345, 838, 789]
 	    Open		    off
 	    ModelBrowserVisibility  off
 	    ModelBrowserWidth	    200
@@ -1355,27 +2179,37 @@ Library {
 	    TiledPageScale	    1
 	    ShowPageBoundaries	    off
 	    ZoomFactor		    "100"
+	    SIDHighWatermark	    "8"
 	    Block {
 	      BlockType		      Inport
 	      Name		      "u"
+	      SID		      "26::1"
 	      Position		      [20, 101, 40, 119]
+	      ZOrder		      -1
 	      IconDisplay	      "Port number"
 	    }
 	    Block {
 	      BlockType		      Demux
 	      Name		      " Demux "
+	      SID		      "26::7"
 	      Ports		      [1, 1]
-	      Position		      [270, 160, 320, 200]
+	      Position		      [270, 230, 320, 270]
+	      ZOrder		      2
 	      Outputs		      "1"
 	    }
 	    Block {
-	      BlockType		      "S-Function"
+	      BlockType		      S-Function
 	      Name		      " SFunction "
+	      SID		      "26::6"
 	      Tag		      "Stateflow S-Function TLMLib 6"
 	      Ports		      [1, 2]
 	      Position		      [180, 100, 230, 160]
+	      ZOrder		      1
 	      FunctionName	      "sf_sfun"
 	      PortCounts	      "[1 2]"
+	      SFunctionDeploymentMode off
+	      EnableBusSupport	      off
+	      SFcnIsStateOwnerBlock   off
 	      Port {
 		PortNumber		2
 		Name			"y"
@@ -1386,29 +2220,20 @@ Library {
 	    Block {
 	      BlockType		      Terminator
 	      Name		      " Terminator "
-	      Position		      [460, 171, 480, 189]
+	      SID		      "26::8"
+	      Position		      [460, 241, 480, 259]
+	      ZOrder		      3
 	    }
 	    Block {
 	      BlockType		      Outport
 	      Name		      "y"
+	      SID		      "26::5"
 	      Position		      [460, 101, 480, 119]
+	      ZOrder		      -5
 	      IconDisplay	      "Port number"
-	      BusOutputAsStruct	      off
 	    }
 	    Line {
-	      SrcBlock		      " SFunction "
-	      SrcPort		      1
-	      Points		      [0, 65]
-	      DstBlock		      " Demux "
-	      DstPort		      1
-	    }
-	    Line {
-	      SrcBlock		      " Demux "
-	      SrcPort		      1
-	      DstBlock		      " Terminator "
-	      DstPort		      1
-	    }
-	    Line {
+	      ZOrder		      5
 	      SrcBlock		      "u"
 	      SrcPort		      1
 	      DstBlock		      " SFunction "
@@ -1416,10 +2241,25 @@ Library {
 	    }
 	    Line {
 	      Name		      "y"
+	      ZOrder		      6
 	      Labels		      [0, 0]
 	      SrcBlock		      " SFunction "
 	      SrcPort		      2
 	      DstBlock		      "y"
+	      DstPort		      1
+	    }
+	    Line {
+	      ZOrder		      7
+	      SrcBlock		      " Demux "
+	      SrcPort		      1
+	      DstBlock		      " Terminator "
+	      DstPort		      1
+	    }
+	    Line {
+	      ZOrder		      8
+	      SrcBlock		      " SFunction "
+	      SrcPort		      1
+	      DstBlock		      " Demux "
 	      DstPort		      1
 	    }
 	  }
@@ -1427,24 +2267,20 @@ Library {
 	Block {
 	  BlockType		  SubSystem
 	  Name			  "Matrix Multiplication"
+	  SID			  "27"
 	  Ports			  [2, 1]
 	  Position		  [160, 254, 305, 321]
-	  Orientation		  "left"
-	  MinAlgLoopOccurrences	  off
-	  RTWSystemCode		  "Auto"
-	  FunctionWithSeparateData off
-	  MaskHideContents	  off
-	  MaskType		  "Stateflow"
-	  MaskDescription	  "Embedded MATLAB block"
-	  MaskDisplay		  "disp('MatMult');"
-	  MaskSelfModifiable	  on
-	  MaskIconFrame		  on
-	  MaskIconOpaque	  off
-	  MaskIconRotate	  "none"
-	  MaskIconUnits		  "autoscale"
+	  ZOrder		  -4
+	  BlockMirror		  on
+	  ErrorFcn		  "Stateflow.Translate.translate"
+	  PermitHierarchicalResolution "ExplicitOnly"
+	  TreatAsAtomicUnit	  on
+	  RequestExecContextInheritance	off
+	  SFBlockType		  "MATLAB Function"
+	  Variant		  off
 	  System {
 	    Name		    "Matrix Multiplication"
-	    Location		    [257, 457, 812, 717]
+	    Location		    [227, 345, 838, 789]
 	    Open		    off
 	    ModelBrowserVisibility  off
 	    ModelBrowserWidth	    200
@@ -1457,34 +2293,46 @@ Library {
 	    TiledPageScale	    1
 	    ShowPageBoundaries	    off
 	    ZoomFactor		    "100"
+	    SIDHighWatermark	    "9"
 	    Block {
 	      BlockType		      Inport
 	      Name		      "c1Ac2_v"
+	      SID		      "27::1"
 	      Position		      [20, 101, 40, 119]
+	      ZOrder		      -1
 	      IconDisplay	      "Port number"
 	    }
 	    Block {
 	      BlockType		      Inport
 	      Name		      "c2Ac3_v"
+	      SID		      "27::2"
 	      Position		      [20, 136, 40, 154]
+	      ZOrder		      -2
 	      Port		      "2"
 	      IconDisplay	      "Port number"
 	    }
 	    Block {
 	      BlockType		      Demux
 	      Name		      " Demux "
+	      SID		      "27::8"
 	      Ports		      [1, 1]
-	      Position		      [270, 160, 320, 200]
+	      Position		      [270, 230, 320, 270]
+	      ZOrder		      2
 	      Outputs		      "1"
 	    }
 	    Block {
-	      BlockType		      "S-Function"
+	      BlockType		      S-Function
 	      Name		      " SFunction "
+	      SID		      "27::7"
 	      Tag		      "Stateflow S-Function TLMLib 7"
 	      Ports		      [2, 2]
 	      Position		      [180, 100, 230, 160]
+	      ZOrder		      1
 	      FunctionName	      "sf_sfun"
 	      PortCounts	      "[2 2]"
+	      SFunctionDeploymentMode off
+	      EnableBusSupport	      off
+	      SFcnIsStateOwnerBlock   off
 	      Port {
 		PortNumber		2
 		Name			"c1Ac3_v"
@@ -1495,36 +2343,36 @@ Library {
 	    Block {
 	      BlockType		      Terminator
 	      Name		      " Terminator "
-	      Position		      [460, 171, 480, 189]
+	      SID		      "27::9"
+	      Position		      [460, 241, 480, 259]
+	      ZOrder		      3
 	    }
 	    Block {
 	      BlockType		      Outport
 	      Name		      "c1Ac3_v"
+	      SID		      "27::6"
 	      Position		      [460, 101, 480, 119]
+	      ZOrder		      -6
 	      IconDisplay	      "Port number"
-	      BusOutputAsStruct	      off
 	    }
 	    Line {
-	      SrcBlock		      " SFunction "
-	      SrcPort		      1
-	      Points		      [0, 65]
-	      DstBlock		      " Demux "
-	      DstPort		      1
-	    }
-	    Line {
-	      SrcBlock		      " Demux "
-	      SrcPort		      1
-	      DstBlock		      " Terminator "
-	      DstPort		      1
-	    }
-	    Line {
+	      ZOrder		      6
 	      SrcBlock		      "c1Ac2_v"
 	      SrcPort		      1
+	      Points		      [120, 0]
 	      DstBlock		      " SFunction "
 	      DstPort		      1
 	    }
 	    Line {
+	      ZOrder		      7
+	      SrcBlock		      "c2Ac3_v"
+	      SrcPort		      1
+	      DstBlock		      " SFunction "
+	      DstPort		      2
+	    }
+	    Line {
 	      Name		      "c1Ac3_v"
+	      ZOrder		      8
 	      Labels		      [0, 0]
 	      SrcBlock		      " SFunction "
 	      SrcPort		      2
@@ -1532,34 +2380,38 @@ Library {
 	      DstPort		      1
 	    }
 	    Line {
-	      SrcBlock		      "c2Ac3_v"
+	      ZOrder		      9
+	      SrcBlock		      " Demux "
 	      SrcPort		      1
-	      DstBlock		      " SFunction "
-	      DstPort		      2
+	      DstBlock		      " Terminator "
+	      DstPort		      1
+	    }
+	    Line {
+	      ZOrder		      10
+	      SrcBlock		      " SFunction "
+	      SrcPort		      1
+	      DstBlock		      " Demux "
+	      DstPort		      1
 	    }
 	  }
 	}
 	Block {
 	  BlockType		  SubSystem
 	  Name			  "Matrix Transpose"
+	  SID			  "28"
 	  Ports			  [1, 1]
 	  Position		  [30, 262, 130, 318]
-	  Orientation		  "left"
-	  MinAlgLoopOccurrences	  off
-	  RTWSystemCode		  "Auto"
-	  FunctionWithSeparateData off
-	  MaskHideContents	  off
-	  MaskType		  "Stateflow"
-	  MaskDescription	  "Embedded MATLAB block"
-	  MaskDisplay		  "disp('T');"
-	  MaskSelfModifiable	  on
-	  MaskIconFrame		  on
-	  MaskIconOpaque	  off
-	  MaskIconRotate	  "none"
-	  MaskIconUnits		  "autoscale"
+	  ZOrder		  -5
+	  BlockMirror		  on
+	  ErrorFcn		  "Stateflow.Translate.translate"
+	  PermitHierarchicalResolution "ExplicitOnly"
+	  TreatAsAtomicUnit	  on
+	  RequestExecContextInheritance	off
+	  SFBlockType		  "MATLAB Function"
+	  Variant		  off
 	  System {
 	    Name		    "Matrix Transpose"
-	    Location		    [257, 457, 812, 717]
+	    Location		    [227, 345, 838, 789]
 	    Open		    off
 	    ModelBrowserVisibility  off
 	    ModelBrowserWidth	    200
@@ -1572,27 +2424,37 @@ Library {
 	    TiledPageScale	    1
 	    ShowPageBoundaries	    off
 	    ZoomFactor		    "100"
+	    SIDHighWatermark	    "8"
 	    Block {
 	      BlockType		      Inport
 	      Name		      "c1Ac2_v"
+	      SID		      "28::1"
 	      Position		      [20, 101, 40, 119]
+	      ZOrder		      -1
 	      IconDisplay	      "Port number"
 	    }
 	    Block {
 	      BlockType		      Demux
 	      Name		      " Demux "
+	      SID		      "28::7"
 	      Ports		      [1, 1]
-	      Position		      [270, 160, 320, 200]
+	      Position		      [270, 230, 320, 270]
+	      ZOrder		      2
 	      Outputs		      "1"
 	    }
 	    Block {
-	      BlockType		      "S-Function"
+	      BlockType		      S-Function
 	      Name		      " SFunction "
+	      SID		      "28::6"
 	      Tag		      "Stateflow S-Function TLMLib 8"
 	      Ports		      [1, 2]
 	      Position		      [180, 100, 230, 160]
+	      ZOrder		      1
 	      FunctionName	      "sf_sfun"
 	      PortCounts	      "[1 2]"
+	      SFunctionDeploymentMode off
+	      EnableBusSupport	      off
+	      SFcnIsStateOwnerBlock   off
 	      Port {
 		PortNumber		2
 		Name			"c2Ac1_v"
@@ -1603,17 +2465,28 @@ Library {
 	    Block {
 	      BlockType		      Terminator
 	      Name		      " Terminator "
-	      Position		      [460, 171, 480, 189]
+	      SID		      "28::8"
+	      Position		      [460, 241, 480, 259]
+	      ZOrder		      3
 	    }
 	    Block {
 	      BlockType		      Outport
 	      Name		      "c2Ac1_v"
+	      SID		      "28::5"
 	      Position		      [460, 101, 480, 119]
+	      ZOrder		      -5
 	      IconDisplay	      "Port number"
-	      BusOutputAsStruct	      off
+	    }
+	    Line {
+	      ZOrder		      5
+	      SrcBlock		      "c1Ac2_v"
+	      SrcPort		      1
+	      DstBlock		      " SFunction "
+	      DstPort		      1
 	    }
 	    Line {
 	      Name		      "c2Ac1_v"
+	      ZOrder		      6
 	      Labels		      [0, 0]
 	      SrcBlock		      " SFunction "
 	      SrcPort		      2
@@ -1621,21 +2494,16 @@ Library {
 	      DstPort		      1
 	    }
 	    Line {
-	      SrcBlock		      "c1Ac2_v"
-	      SrcPort		      1
-	      DstBlock		      " SFunction "
-	      DstPort		      1
-	    }
-	    Line {
+	      ZOrder		      7
 	      SrcBlock		      " Demux "
 	      SrcPort		      1
 	      DstBlock		      " Terminator "
 	      DstPort		      1
 	    }
 	    Line {
+	      ZOrder		      8
 	      SrcBlock		      " SFunction "
 	      SrcPort		      1
-	      Points		      [0, 65]
 	      DstBlock		      " Demux "
 	      DstPort		      1
 	    }
@@ -1644,23 +2512,19 @@ Library {
 	Block {
 	  BlockType		  SubSystem
 	  Name			  "Phi2Euler"
+	  SID			  "29"
 	  Ports			  [1, 1]
 	  Position		  [35, 97, 105, 143]
-	  MinAlgLoopOccurrences	  off
-	  RTWSystemCode		  "Auto"
-	  FunctionWithSeparateData off
-	  MaskHideContents	  off
-	  MaskType		  "Stateflow"
-	  MaskDescription	  "Embedded MATLAB block"
-	  MaskDisplay		  "disp('Phi2E');"
-	  MaskSelfModifiable	  on
-	  MaskIconFrame		  on
-	  MaskIconOpaque	  off
-	  MaskIconRotate	  "none"
-	  MaskIconUnits		  "autoscale"
+	  ZOrder		  -6
+	  ErrorFcn		  "Stateflow.Translate.translate"
+	  PermitHierarchicalResolution "ExplicitOnly"
+	  TreatAsAtomicUnit	  on
+	  RequestExecContextInheritance	off
+	  SFBlockType		  "MATLAB Function"
+	  Variant		  off
 	  System {
 	    Name		    "Phi2Euler"
-	    Location		    [257, 457, 812, 717]
+	    Location		    [227, 345, 838, 789]
 	    Open		    off
 	    ModelBrowserVisibility  off
 	    ModelBrowserWidth	    200
@@ -1673,27 +2537,37 @@ Library {
 	    TiledPageScale	    1
 	    ShowPageBoundaries	    off
 	    ZoomFactor		    "100"
+	    SIDHighWatermark	    "8"
 	    Block {
 	      BlockType		      Inport
 	      Name		      "u"
+	      SID		      "29::1"
 	      Position		      [20, 101, 40, 119]
+	      ZOrder		      -1
 	      IconDisplay	      "Port number"
 	    }
 	    Block {
 	      BlockType		      Demux
 	      Name		      " Demux "
+	      SID		      "29::7"
 	      Ports		      [1, 1]
-	      Position		      [270, 160, 320, 200]
+	      Position		      [270, 230, 320, 270]
+	      ZOrder		      2
 	      Outputs		      "1"
 	    }
 	    Block {
-	      BlockType		      "S-Function"
+	      BlockType		      S-Function
 	      Name		      " SFunction "
+	      SID		      "29::6"
 	      Tag		      "Stateflow S-Function TLMLib 4"
 	      Ports		      [1, 2]
 	      Position		      [180, 100, 230, 160]
+	      ZOrder		      1
 	      FunctionName	      "sf_sfun"
 	      PortCounts	      "[1 2]"
+	      SFunctionDeploymentMode off
+	      EnableBusSupport	      off
+	      SFcnIsStateOwnerBlock   off
 	      Port {
 		PortNumber		2
 		Name			"y"
@@ -1704,29 +2578,20 @@ Library {
 	    Block {
 	      BlockType		      Terminator
 	      Name		      " Terminator "
-	      Position		      [460, 171, 480, 189]
+	      SID		      "29::8"
+	      Position		      [460, 241, 480, 259]
+	      ZOrder		      3
 	    }
 	    Block {
 	      BlockType		      Outport
 	      Name		      "y"
+	      SID		      "29::5"
 	      Position		      [460, 101, 480, 119]
+	      ZOrder		      -5
 	      IconDisplay	      "Port number"
-	      BusOutputAsStruct	      off
 	    }
 	    Line {
-	      SrcBlock		      " SFunction "
-	      SrcPort		      1
-	      Points		      [0, 65]
-	      DstBlock		      " Demux "
-	      DstPort		      1
-	    }
-	    Line {
-	      SrcBlock		      " Demux "
-	      SrcPort		      1
-	      DstBlock		      " Terminator "
-	      DstPort		      1
-	    }
-	    Line {
+	      ZOrder		      5
 	      SrcBlock		      "u"
 	      SrcPort		      1
 	      DstBlock		      " SFunction "
@@ -1734,10 +2599,25 @@ Library {
 	    }
 	    Line {
 	      Name		      "y"
+	      ZOrder		      6
 	      Labels		      [0, 0]
 	      SrcBlock		      " SFunction "
 	      SrcPort		      2
 	      DstBlock		      "y"
+	      DstPort		      1
+	    }
+	    Line {
+	      ZOrder		      7
+	      SrcBlock		      " Demux "
+	      SrcPort		      1
+	      DstBlock		      " Terminator "
+	      DstPort		      1
+	    }
+	    Line {
+	      ZOrder		      8
+	      SrcBlock		      " SFunction "
+	      SrcPort		      1
+	      DstBlock		      " Demux "
 	      DstPort		      1
 	    }
 	  }
@@ -1745,23 +2625,19 @@ Library {
 	Block {
 	  BlockType		  SubSystem
 	  Name			  "PhiToA"
+	  SID			  "30"
 	  Ports			  [1, 1]
 	  Position		  [135, 17, 205, 63]
-	  MinAlgLoopOccurrences	  off
-	  RTWSystemCode		  "Auto"
-	  FunctionWithSeparateData off
-	  MaskHideContents	  off
-	  MaskType		  "Stateflow"
-	  MaskDescription	  "Embedded MATLAB block"
-	  MaskDisplay		  "disp('A321');"
-	  MaskSelfModifiable	  on
-	  MaskIconFrame		  on
-	  MaskIconOpaque	  off
-	  MaskIconRotate	  "none"
-	  MaskIconUnits		  "autoscale"
+	  ZOrder		  -7
+	  ErrorFcn		  "Stateflow.Translate.translate"
+	  PermitHierarchicalResolution "ExplicitOnly"
+	  TreatAsAtomicUnit	  on
+	  RequestExecContextInheritance	off
+	  SFBlockType		  "MATLAB Function"
+	  Variant		  off
 	  System {
 	    Name		    "PhiToA"
-	    Location		    [257, 457, 812, 717]
+	    Location		    [227, 345, 838, 789]
 	    Open		    off
 	    ModelBrowserVisibility  off
 	    ModelBrowserWidth	    200
@@ -1774,27 +2650,37 @@ Library {
 	    TiledPageScale	    1
 	    ShowPageBoundaries	    off
 	    ZoomFactor		    "100"
+	    SIDHighWatermark	    "8"
 	    Block {
 	      BlockType		      Inport
 	      Name		      "u"
+	      SID		      "30::1"
 	      Position		      [20, 101, 40, 119]
+	      ZOrder		      -1
 	      IconDisplay	      "Port number"
 	    }
 	    Block {
 	      BlockType		      Demux
 	      Name		      " Demux "
+	      SID		      "30::7"
 	      Ports		      [1, 1]
-	      Position		      [270, 160, 320, 200]
+	      Position		      [270, 230, 320, 270]
+	      ZOrder		      2
 	      Outputs		      "1"
 	    }
 	    Block {
-	      BlockType		      "S-Function"
+	      BlockType		      S-Function
 	      Name		      " SFunction "
+	      SID		      "30::6"
 	      Tag		      "Stateflow S-Function TLMLib 9"
 	      Ports		      [1, 2]
 	      Position		      [180, 100, 230, 160]
+	      ZOrder		      1
 	      FunctionName	      "sf_sfun"
 	      PortCounts	      "[1 2]"
+	      SFunctionDeploymentMode off
+	      EnableBusSupport	      off
+	      SFcnIsStateOwnerBlock   off
 	      Port {
 		PortNumber		2
 		Name			"y"
@@ -1805,29 +2691,20 @@ Library {
 	    Block {
 	      BlockType		      Terminator
 	      Name		      " Terminator "
-	      Position		      [460, 171, 480, 189]
+	      SID		      "30::8"
+	      Position		      [460, 241, 480, 259]
+	      ZOrder		      3
 	    }
 	    Block {
 	      BlockType		      Outport
 	      Name		      "y"
+	      SID		      "30::5"
 	      Position		      [460, 101, 480, 119]
+	      ZOrder		      -5
 	      IconDisplay	      "Port number"
-	      BusOutputAsStruct	      off
 	    }
 	    Line {
-	      SrcBlock		      " SFunction "
-	      SrcPort		      1
-	      Points		      [0, 65]
-	      DstBlock		      " Demux "
-	      DstPort		      1
-	    }
-	    Line {
-	      SrcBlock		      " Demux "
-	      SrcPort		      1
-	      DstBlock		      " Terminator "
-	      DstPort		      1
-	    }
-	    Line {
+	      ZOrder		      5
 	      SrcBlock		      "u"
 	      SrcPort		      1
 	      DstBlock		      " SFunction "
@@ -1835,1095 +2712,1005 @@ Library {
 	    }
 	    Line {
 	      Name		      "y"
+	      ZOrder		      6
 	      Labels		      [0, 0]
 	      SrcBlock		      " SFunction "
 	      SrcPort		      2
 	      DstBlock		      "y"
 	      DstPort		      1
 	    }
+	    Line {
+	      ZOrder		      7
+	      SrcBlock		      " Demux "
+	      SrcPort		      1
+	      DstBlock		      " Terminator "
+	      DstPort		      1
+	    }
+	    Line {
+	      ZOrder		      8
+	      SrcBlock		      " SFunction "
+	      SrcPort		      1
+	      DstBlock		      " Demux "
+	      DstPort		      1
+	    }
 	  }
 	}
       }
     }
-    Annotation {
-      Position		      [104, 198]
-      UseDisplayTextAsClickCallback off
-    }
   }
 }
-
-# Finite State Machines
+#Finite State Machines
 #
-#    Stateflow Version 6.5 (R2006b) dated Aug  8 2006, 21:28:24
+#   Stateflow 80000010
 #
 #
-
 Stateflow {
-
-	machine {
-		id                   		1
-		name                 		"TLMLib"
-		created              		"05-Dec-2006 08:03:19"
-		isLibrary            		1
-		firstTarget          		52
-		sfVersion            		65014000
-	}
-
-	chart {
-		id                                        		2
-		name                                      		"Transformations etc./A2Phi"
-		windowPosition                            		[450.75 128.25 200.25 189.75]
-		viewLimits                                		[0 156.75 0 153.75]
-		screen                                    		[1 1 1600 1200 1.25]
-		treeNode                                  		[0 3 0 0]
-		firstTransition                           		5
-		firstJunction                             		4
-		viewObj                                   		2
-		machine                                   		1
-		toolbarMode                               		LIBRARY_TOOLBAR
-		subviewS {
-		}
-		decomposition                             		CLUSTER_CHART
-		type                                      		EML_CHART
-		firstData                                 		6
-		chartFileNumber                           		2
-		disableImplicitCasting                    		1
-		eml {
-			name       		"A2Phi321"
-		}
-	}
-
-	state {
-		id                           		3
-		labelString                  		"eML_blk_kernel()"
-		position                     		[18 64.5 118 66]
-		fontSize                     		12
-		chart                        		2
-		treeNode                     		[2 0 0 0]
-		superState                   		SUBCHART
-		subviewer                    		2
-		type                         		FUNC_STATE
-		decomposition                		CLUSTER_STATE
-		eml {
-			isEML                    		1
-			script                   		"function y = A2Phi321(u)\n"
-						"% This block supports an embeddable subset of the MATLAB la"
-						"nguage.\n"
-						"% See the help menu for details. \n"
-						"\n"
-						"a11 = u(1);\n"
-						"a12 = u(2);\n"
-						"a13 = u(3);\n"
-						"a23 = u(6);\n"
-						"a33 = u(9);\n"
-						"\n"
-						"phi2 = -asin(a13);\n"
-						"cosphi2 = cos(phi2);\n"
-						"\n"
-						"phi1 = atan2(a23/cosphi2, a33/cosphi2);\n"
-						"phi3 = atan2(a12/cosphi2, a11/cosphi2);\n"
-						"    \n"
-						"y = [phi1 phi2 phi3];"
-			editorLayout             		"100 M4x1[320 518 943 564]"
-			treatIntsAsFixpt         		0
-		}
-	}
-
-	junction {
-		id         		4
-		position   		[23.5747 49.5747 7]
-		chart      		2
-		linkNode   		[2 0 0]
-		subviewer  		2
-		type       		CONNECTIVE_JUNCTION
-	}
-
-	transition {
-		id             		5
-		labelString    		"{eML_blk_kernel();}"
-		labelPosition  		[32.125 19.875 102.544 14.964]
-		fontSize       		12
-		src {
-			intersection		[0 0 1 0 23.5747 14.625 0 0]
-		}
-		dst {
-			id          		4
-			intersection		[7 0 -1 -1 23.5747 42.5747 0 0]
-		}
-		midPoint       		[23.5747 24.9468]
-		chart          		2
-		linkNode       		[2 0 0]
-		dataLimits     		[23.575 23.575 14.625 34.575]
-		subviewer      		2
-		drawStyle      		SMART
-		executionOrder 		1
-	}
-
-	data {
-		id                            		6
-		name                          		"u"
-		linkNode                      		[2 0 7]
-		scope                         		INPUT_DATA
-		machine                       		1
-		props {
-			array {
-				size      		"-1"
-			}
-			type {
-				method    		SF_INHERITED_TYPE
-			}
-			complexity  		SF_COMPLEX_INHERITED
-		}
-		dataType                      		"inherited"
-		fixptType {
-			slope   		1
-			baseType		SF_INT16_TYPE
-		}
-		complexity                    		SF_COMPLEX_INHERITED
-	}
-
-	data {
-		id                            		7
-		name                          		"y"
-		linkNode                      		[2 6 0]
-		scope                         		OUTPUT_DATA
-		machine                       		1
-		props {
-			array {
-				size      		"-1"
-			}
-			type {
-				method    		SF_INHERITED_TYPE
-			}
-			complexity  		SF_COMPLEX_INHERITED
-		}
-		dataType                      		"inherited"
-		fixptType {
-			slope   		1
-			baseType		SF_INT16_TYPE
-		}
-		complexity                    		SF_COMPLEX_INHERITED
-	}
-
-	instance {
-		id     		8
-		name   		"Transformations etc./A2Phi"
-		machine		1
-		chart  		2
-	}
-
-	chart {
-		id                                        		9
-		name                                      		"Transformations etc./Phi2Euler"
-		windowPosition                            		[435.75 143.25 200.25 189.75]
-		viewLimits                                		[0 156.75 0 153.75]
-		screen                                    		[1 1 1600 1200 1.25]
-		treeNode                                  		[0 10 0 0]
-		firstTransition                           		12
-		firstJunction                             		11
-		viewObj                                   		9
-		machine                                   		1
-		toolbarMode                               		LIBRARY_TOOLBAR
-		subviewS {
-		}
-		decomposition                             		CLUSTER_CHART
-		type                                      		EML_CHART
-		firstData                                 		13
-		chartFileNumber                           		4
-		disableImplicitCasting                    		1
-		eml {
-			name       		"Phi2E"
-		}
-	}
-
-	state {
-		id                           		10
-		labelString                  		"eML_blk_kernel()"
-		position                     		[18 64.5 118 66]
-		fontSize                     		12
-		chart                        		9
-		treeNode                     		[9 0 0 0]
-		superState                   		SUBCHART
-		subviewer                    		9
-		type                         		FUNC_STATE
-		decomposition                		CLUSTER_STATE
-		eml {
-			isEML                    		1
-			script                   		"function y = Phi2E(u)\n"
-						"% This block supports an embeddable subset of the MATLAB la"
-						"nguage.\n"
-						"% See the help menu for details. \n"
-						"c1 = cos(u(1)/2.0);\n"
-						"s1 = sin(u(1)/2.0);\n"
-						"c2 = cos(u(2)/2.0);\n"
-						"s2 = sin(u(2)/2.0);\n"
-						"c3 = cos(u(3)/2.0);\n"
-						"s3 = sin(u(3)/2.0);\n"
-						"    \n"
-						"q1 =  s1*c2*c3 - c1*s2*s3 ;\n"
-						"q2 =  c1*s2*c3 + s1*c2*s3 ;\n"
-						"q3 = -s1*s2*c3 + c1*c2*s3 ;\n"
-						"q4 =  c1*c2*c3 + s1*s2*s3 ;\n"
-						"\n"
-						"y = [q1 q2 q3 q4];"
-			editorLayout             		"100 M4x1[367 687 943 564]"
-			treatIntsAsFixpt         		0
-		}
-	}
-
-	junction {
-		id         		11
-		position   		[23.5747 49.5747 7]
-		chart      		9
-		linkNode   		[9 0 0]
-		subviewer  		9
-		type       		CONNECTIVE_JUNCTION
-	}
-
-	transition {
-		id             		12
-		labelString    		"{eML_blk_kernel();}"
-		labelPosition  		[32.125 19.875 102.544 14.964]
-		fontSize       		12
-		src {
-			intersection		[0 0 1 0 23.5747 14.625 0 0]
-		}
-		dst {
-			id          		11
-			intersection		[7 0 -1 -1 23.5747 42.5747 0 0]
-		}
-		midPoint       		[23.5747 24.9468]
-		chart          		9
-		linkNode       		[9 0 0]
-		dataLimits     		[23.575 23.575 14.625 34.575]
-		subviewer      		9
-		drawStyle      		SMART
-		executionOrder 		1
-	}
-
-	data {
-		id                            		13
-		name                          		"u"
-		linkNode                      		[9 0 14]
-		scope                         		INPUT_DATA
-		machine                       		1
-		props {
-			array {
-				size      		"-1"
-			}
-			type {
-				method    		SF_INHERITED_TYPE
-			}
-			complexity  		SF_COMPLEX_INHERITED
-		}
-		dataType                      		"inherited"
-		fixptType {
-			slope   		1
-			baseType		SF_INT16_TYPE
-		}
-		complexity                    		SF_COMPLEX_INHERITED
-	}
-
-	data {
-		id                            		14
-		name                          		"y"
-		linkNode                      		[9 13 0]
-		scope                         		OUTPUT_DATA
-		machine                       		1
-		props {
-			array {
-				size      		"-1"
-			}
-			type {
-				method    		SF_INHERITED_TYPE
-			}
-			complexity  		SF_COMPLEX_INHERITED
-		}
-		dataType                      		"inherited"
-		fixptType {
-			slope   		1
-			baseType		SF_INT16_TYPE
-		}
-		complexity                    		SF_COMPLEX_INHERITED
-	}
-
-	instance {
-		id     		15
-		name   		"Transformations etc./Phi2Euler"
-		machine		1
-		chart  		9
-	}
-
-	chart {
-		id                                        		16
-		name                                      		"Transformations etc./AToEuler"
-		windowPosition                            		[450.75 128.25 200.25 189.75]
-		viewLimits                                		[0 156.75 0 153.75]
-		screen                                    		[1 1 1600 1200 1.25]
-		treeNode                                  		[0 17 0 0]
-		firstTransition                           		19
-		firstJunction                             		18
-		viewObj                                   		16
-		machine                                   		1
-		toolbarMode                               		LIBRARY_TOOLBAR
-		subviewS {
-		}
-		decomposition                             		CLUSTER_CHART
-		type                                      		EML_CHART
-		firstData                                 		20
-		chartFileNumber                           		5
-		disableImplicitCasting                    		1
-		eml {
-			name       		"A2E"
-		}
-	}
-
-	state {
-		id                           		17
-		labelString                  		"eML_blk_kernel()"
-		position                     		[18 64.5 118 66]
-		fontSize                     		12
-		chart                        		16
-		treeNode                     		[16 0 0 0]
-		superState                   		SUBCHART
-		subviewer                    		16
-		type                         		FUNC_STATE
-		decomposition                		CLUSTER_STATE
-		eml {
-			isEML                    		1
-			script                   		"function y = A2E(u)\n"
-						"% This block supports an embeddable subset of the MATLAB la"
-						"nguage.\n"
-						"% See the help menu for details. \n"
-						"\n"
-						"a11 = u(0);\n"
-						"a12 = u(1);\n"
-						"a13 = u(2);\n"
-						"a21 = u(3);\n"
-						"a22 = u(4);\n"
-						"a23 = u(5);\n"
-						"a31 = u(6);\n"
-						"a32 = u(7);\n"
-						"a33 = u(8);\n"
-						"\n"
-						"q1 = 0.5*sqrt(Max(0.0,1+a11-a22-a33));\n"
-						"q2 = 0.5*sqrt(Max(0.0,1-a11+a22-a33));\n"
-						"q3 = 0.5*sqrt(Max(0.0,1-a11-a22+a33));\n"
-						"q4 = 0.5*sqrt(Max(0.0,1+a11+a22+a33));\n"
-						"    \n"
-						"if (q1>=q2 && q1>=q3 && q1>=q4) \n"
-						"\tif (a12+a21<0) q2 = -q2; end;\n"
-						"\tif (a13+a31<0) q3 = -q3; end;\n"
-						"\tif (a23-a32<0) q4 = -q4; end;\n"
-						"elseif (q2>=q1 && q2>=q3 && q2>=q4) \n"
-						"\tif (a12+a21<0) q1 = -q1; end;\n"
-						"\tif (a23+a32<0) q3 = -q3; end;\n"
-						"\tif (a31-a13<0) q4 = -q4; end;\n"
-						"elseif (q3>=q1 && q3>=q2 && q3>=q4) \n"
-						"\tif (a13+a31<0) q1 = -q1; end;\n"
-						"\tif (a23+a32<0) q2 = -q2; end;\n"
-						"\tif (a12-a21<0) q4 = -q4; end;\n"
-						"else \n"
-						"\tif (a23-a32<0) q1 = -q1; end;\n"
-						"\tif (a31-a13<0) q2 = -q2; end;\n"
-						"\tif (a12-a21<0) q3 = -q3; end;\n"
-						"end;\n"
-						"\n"
-						"% We choose the solution such that \n"
-						"% q1 is always positive\n"
-						"if (q1 < 0) \n"
-						"\tq1 = -q1;\n"
-						"\tq2 = -q2;\n"
-						"\tq3 = -q3;\n"
-						"\tq4 = -q4;\n"
-						"end;    \n"
-						"\n"
-						"\n"
-						"y = [q1 q2 q3 q4];"
-			editorLayout             		"100 M4x1[346 456 943 564]"
-			treatIntsAsFixpt         		0
-		}
-	}
-
-	junction {
-		id         		18
-		position   		[23.5747 49.5747 7]
-		chart      		16
-		linkNode   		[16 0 0]
-		subviewer  		16
-		type       		CONNECTIVE_JUNCTION
-	}
-
-	transition {
-		id             		19
-		labelString    		"{eML_blk_kernel();}"
-		labelPosition  		[32.125 19.875 102.544 14.964]
-		fontSize       		12
-		src {
-			intersection		[0 0 1 0 23.5747 14.625 0 0]
-		}
-		dst {
-			id          		18
-			intersection		[7 0 -1 -1 23.5747 42.5747 0 0]
-		}
-		midPoint       		[23.5747 24.9468]
-		chart          		16
-		linkNode       		[16 0 0]
-		dataLimits     		[23.575 23.575 14.625 34.575]
-		subviewer      		16
-		drawStyle      		SMART
-		executionOrder 		1
-	}
-
-	data {
-		id                            		20
-		name                          		"u"
-		linkNode                      		[16 0 21]
-		scope                         		INPUT_DATA
-		machine                       		1
-		props {
-			array {
-				size      		"-1"
-			}
-			type {
-				method    		SF_INHERITED_TYPE
-			}
-			complexity  		SF_COMPLEX_INHERITED
-		}
-		dataType                      		"inherited"
-		fixptType {
-			slope   		1
-			baseType		SF_INT16_TYPE
-		}
-		complexity                    		SF_COMPLEX_INHERITED
-	}
-
-	data {
-		id                            		21
-		name                          		"y"
-		linkNode                      		[16 20 0]
-		scope                         		OUTPUT_DATA
-		machine                       		1
-		props {
-			array {
-				size      		"-1"
-			}
-			type {
-				method    		SF_INHERITED_TYPE
-			}
-			complexity  		SF_COMPLEX_INHERITED
-		}
-		dataType                      		"inherited"
-		fixptType {
-			slope   		1
-			baseType		SF_INT16_TYPE
-		}
-		complexity                    		SF_COMPLEX_INHERITED
-	}
-
-	instance {
-		id     		22
-		name   		"Transformations etc./AToEuler"
-		machine		1
-		chart  		16
-	}
-
-	chart {
-		id                                        		23
-		name                                      		"Transformations etc./EulerToPhi"
-		windowPosition                            		[465.75 113.25 200.25 189.75]
-		viewLimits                                		[0 156.75 0 153.75]
-		screen                                    		[1 1 1600 1200 1.25]
-		treeNode                                  		[0 24 0 0]
-		firstTransition                           		26
-		firstJunction                             		25
-		viewObj                                   		23
-		machine                                   		1
-		toolbarMode                               		LIBRARY_TOOLBAR
-		subviewS {
-		}
-		decomposition                             		CLUSTER_CHART
-		type                                      		EML_CHART
-		firstData                                 		27
-		chartFileNumber                           		6
-		disableImplicitCasting                    		1
-		eml {
-			name       		"E2Phi"
-		}
-	}
-
-	state {
-		id                           		24
-		labelString                  		"eML_blk_kernel()"
-		position                     		[18 64.5 118 66]
-		fontSize                     		12
-		chart                        		23
-		treeNode                     		[23 0 0 0]
-		superState                   		SUBCHART
-		subviewer                    		23
-		type                         		FUNC_STATE
-		decomposition                		CLUSTER_STATE
-		eml {
-			isEML                    		1
-			script                   		"function y = E2Phi(u)\n"
-						"% This block supports an embeddable subset of the MATLAB la"
-						"nguage.\n"
-						"% See the help menu for details. \n"
-						"\n"
-						"a11 = u(0)*u(0) - u(1)*u(1) - u(2)*u(2) + u(3)*u(3) ;\n"
-						"a12 = 2.0*(u(0)*u(1) + u(2)*u(3)) ;\n"
-						"a13 = 2.0*(u(0)*u(2) - u(1)*u(3)) ;\n"
-						"a23 = 2.0*(u(1)*u(2) + u(0)*u(3)) ;\n"
-						"a33 = u(2)*u(2) - u(0)*u(0) - u(1)*u(1) + u(3)*u(3) ;\n"
-						"\n"
-						"a13 = max(a13, -1);\n"
-						"a13 = min(a13, 1);\n"
-						"phi2 = -asin(a13); % Safe\n"
-						"\n"
-						"tmp = cos(phi2) ;\n"
-						"cosphi2 = tmp+Sign(tmp)*1.0e-50 ;\n"
-						"  \n"
-						"% This implementation limits ph1 and phi3 to +/-pi\n"
-						"% so we use it.\n"
-						"phi1 = atan2(a23/cosphi2, a33/cosphi2);\n"
-						"phi3 = atan2(a12/cosphi2, a11/cosphi2);\n"
-						"    \n"
-						"\n"
-						"y = [phi1 phi2 phi3];"
-			editorLayout             		"100 M4x1[346 456 943 564]"
-			treatIntsAsFixpt         		0
-		}
-	}
-
-	junction {
-		id         		25
-		position   		[23.5747 49.5747 7]
-		chart      		23
-		linkNode   		[23 0 0]
-		subviewer  		23
-		type       		CONNECTIVE_JUNCTION
-	}
-
-	transition {
-		id             		26
-		labelString    		"{eML_blk_kernel();}"
-		labelPosition  		[32.125 19.875 102.544 14.964]
-		fontSize       		12
-		src {
-			intersection		[0 0 1 0 23.5747 14.625 0 0]
-		}
-		dst {
-			id          		25
-			intersection		[7 0 -1 -1 23.5747 42.5747 0 0]
-		}
-		midPoint       		[23.5747 24.9468]
-		chart          		23
-		linkNode       		[23 0 0]
-		dataLimits     		[23.575 23.575 14.625 34.575]
-		subviewer      		23
-		drawStyle      		SMART
-		executionOrder 		1
-	}
-
-	data {
-		id                            		27
-		name                          		"u"
-		linkNode                      		[23 0 28]
-		scope                         		INPUT_DATA
-		machine                       		1
-		props {
-			array {
-				size      		"-1"
-			}
-			type {
-				method    		SF_INHERITED_TYPE
-			}
-			complexity  		SF_COMPLEX_INHERITED
-		}
-		dataType                      		"inherited"
-		fixptType {
-			slope   		1
-			baseType		SF_INT16_TYPE
-		}
-		complexity                    		SF_COMPLEX_INHERITED
-	}
-
-	data {
-		id                            		28
-		name                          		"y"
-		linkNode                      		[23 27 0]
-		scope                         		OUTPUT_DATA
-		machine                       		1
-		props {
-			array {
-				size      		"-1"
-			}
-			type {
-				method    		SF_INHERITED_TYPE
-			}
-			complexity  		SF_COMPLEX_INHERITED
-		}
-		dataType                      		"inherited"
-		fixptType {
-			slope   		1
-			baseType		SF_INT16_TYPE
-		}
-		complexity                    		SF_COMPLEX_INHERITED
-	}
-
-	instance {
-		id     		29
-		name   		"Transformations etc./EulerToPhi"
-		machine		1
-		chart  		23
-	}
-
-	chart {
-		id                                        		30
-		name                                      		"Transformations etc./Matrix Multiplication"
-		windowPosition                            		[435.75 143.25 200.25 189.75]
-		viewLimits                                		[0 156.75 0 153.75]
-		screen                                    		[1 1 1600 1200 1.25]
-		treeNode                                  		[0 31 0 0]
-		firstTransition                           		33
-		firstJunction                             		32
-		viewObj                                   		30
-		machine                                   		1
-		subviewS {
-		}
-		decomposition                             		CLUSTER_CHART
-		type                                      		EML_CHART
-		firstData                                 		34
-		chartFileNumber                           		7
-		disableImplicitCasting                    		1
-		eml {
-			name       		"MatMult"
-		}
-	}
-
-	state {
-		id                           		31
-		labelString                  		"eML_blk_kernel()"
-		position                     		[18 64.5 118 66]
-		fontSize                     		12
-		chart                        		30
-		treeNode                     		[30 0 0 0]
-		superState                   		SUBCHART
-		subviewer                    		30
-		type                         		FUNC_STATE
-		decomposition                		CLUSTER_STATE
-		eml {
-			isEML                    		1
-			script                   		"function c1Ac3_v = MatMult(c1Ac2_v, c2Ac3_v)\n"
-						"% This block supports an embeddable subset of the MATLAB la"
-						"nguage.\n"
-						"% See the help menu for details. \n"
-						"\n"
-						"% Vector to matrix\n"
-						"c1Ac2=zeros(3,3);\n"
-						"c1Ac2(:)=c1Ac2_v;\n"
-						"c1Ac2=c1Ac2';\n"
-						"\n"
-						"% Vector to matrix\n"
-						"c2Ac3=zeros(3,3);\n"
-						"c2Ac3(:)=c2Ac3_v;\n"
-						"c2Ac3=c2Ac3';\n"
-						"\n"
-						"% Calc resulting matrix \n"
-						"c1Ac3=c1Ac2*c2Ac3;\n"
-						"c1Ac3=c1Ac3';\n"
-						"\n"
-						"% Return as vector\n"
-						"c1Ac3_v = c1Ac3(:);"
-			editorLayout             		"100 M4x1[285 285 900 750]"
-			treatIntsAsFixpt         		0
-		}
-	}
-
-	junction {
-		id         		32
-		position   		[23.5747 49.5747 7]
-		chart      		30
-		linkNode   		[30 0 0]
-		subviewer  		30
-		type       		CONNECTIVE_JUNCTION
-	}
-
-	transition {
-		id             		33
-		labelString    		"{eML_blk_kernel();}"
-		labelPosition  		[32.125 19.875 102.544 14.964]
-		fontSize       		12
-		src {
-			intersection		[0 0 1 0 23.5747 14.625 0 0]
-		}
-		dst {
-			id          		32
-			intersection		[7 0 -1 -1 23.5747 42.5747 0 0]
-		}
-		midPoint       		[23.5747 24.9468]
-		chart          		30
-		linkNode       		[30 0 0]
-		dataLimits     		[23.575 23.575 14.625 34.575]
-		subviewer      		30
-		drawStyle      		SMART
-		executionOrder 		1
-	}
-
-	data {
-		id                            		34
-		name                          		"c1Ac2_v"
-		linkNode                      		[30 0 35]
-		scope                         		INPUT_DATA
-		machine                       		1
-		props {
-			array {
-				size      		"-1"
-			}
-			type {
-				method    		SF_INHERITED_TYPE
-			}
-			complexity  		SF_COMPLEX_INHERITED
-		}
-		dataType                      		"inherited"
-		fixptType {
-			slope   		1
-			baseType		SF_INT16_TYPE
-		}
-		complexity                    		SF_COMPLEX_INHERITED
-	}
-
-	data {
-		id                            		35
-		name                          		"c1Ac3_v"
-		linkNode                      		[30 34 36]
-		scope                         		OUTPUT_DATA
-		machine                       		1
-		props {
-			array {
-				size      		"-1"
-			}
-			type {
-				method    		SF_INHERITED_TYPE
-			}
-			complexity  		SF_COMPLEX_INHERITED
-		}
-		dataType                      		"inherited"
-		fixptType {
-			slope   		1
-			baseType		SF_INT16_TYPE
-		}
-		complexity                    		SF_COMPLEX_INHERITED
-	}
-
-	data {
-		id                            		36
-		name                          		"c2Ac3_v"
-		linkNode                      		[30 35 0]
-		scope                         		INPUT_DATA
-		machine                       		1
-		props {
-			array {
-				size      		"-1"
-			}
-			type {
-				method    		SF_INHERITED_TYPE
-				primitive 		SF_DOUBLE_TYPE
-				isSigned  		1
-				wordLength		"16"
-			}
-			complexity  		SF_COMPLEX_INHERITED
-			frame       		SF_FRAME_INHERITED
-		}
-		dataType                      		"inherited"
-		complexity                    		SF_COMPLEX_INHERITED
-	}
-
-	instance {
-		id     		37
-		name   		"Transformations etc./Matrix Multiplication"
-		machine		1
-		chart  		30
-	}
-
-	chart {
-		id                                        		38
-		name                                      		"Transformations etc./Matrix Transpose"
-		windowPosition                            		[480.75 98.25 200.25 189.75]
-		viewLimits                                		[0 156.75 0 153.75]
-		screen                                    		[1 1 1600 1200 1.25]
-		treeNode                                  		[0 39 0 0]
-		firstTransition                           		41
-		firstJunction                             		40
-		viewObj                                   		38
-		machine                                   		1
-		subviewS {
-		}
-		decomposition                             		CLUSTER_CHART
-		type                                      		EML_CHART
-		firstData                                 		42
-		chartFileNumber                           		8
-		disableImplicitCasting                    		1
-		eml {
-			name       		"T"
-		}
-	}
-
-	state {
-		id                           		39
-		labelString                  		"eML_blk_kernel()"
-		position                     		[18 64.5 118 66]
-		fontSize                     		12
-		chart                        		38
-		treeNode                     		[38 0 0 0]
-		superState                   		SUBCHART
-		subviewer                    		38
-		type                         		FUNC_STATE
-		decomposition                		CLUSTER_STATE
-		eml {
-			isEML                    		1
-			script                   		"function c2Ac1_v = T(c1Ac2_v)\n"
-						"% This block supports an embeddable subset of the MATLAB la"
-						"nguage.\n"
-						"% See the help menu for details. \n"
-						"\n"
-						"% Vector to matrix\n"
-						"c1Ac2=zeros(3,3);\n"
-						"c1Ac2(:)=c1Ac2_v;\n"
-						"\n"
-						"%Transpose\n"
-						"c2Ac1=c1Ac2';\n"
-						"\n"
-						"% Return as vector\n"
-						"c2Ac1_v = c2Ac1(:);"
-			editorLayout             		"100 M4x1[627 565 900 750]"
-			treatIntsAsFixpt         		0
-		}
-	}
-
-	junction {
-		id         		40
-		position   		[23.5747 49.5747 7]
-		chart      		38
-		linkNode   		[38 0 0]
-		subviewer  		38
-		type       		CONNECTIVE_JUNCTION
-	}
-
-	transition {
-		id             		41
-		labelString    		"{eML_blk_kernel();}"
-		labelPosition  		[32.125 19.875 102.544 14.964]
-		fontSize       		12
-		src {
-			intersection		[0 0 1 0 23.5747 14.625 0 0]
-		}
-		dst {
-			id          		40
-			intersection		[7 0 -1 -1 23.5747 42.5747 0 0]
-		}
-		midPoint       		[23.5747 24.9468]
-		chart          		38
-		linkNode       		[38 0 0]
-		dataLimits     		[23.575 23.575 14.625 34.575]
-		subviewer      		38
-		drawStyle      		SMART
-		executionOrder 		1
-	}
-
-	data {
-		id                            		42
-		name                          		"c1Ac2_v"
-		linkNode                      		[38 0 43]
-		scope                         		INPUT_DATA
-		machine                       		1
-		props {
-			array {
-				size      		"-1"
-			}
-			type {
-				method    		SF_INHERITED_TYPE
-			}
-			complexity  		SF_COMPLEX_INHERITED
-		}
-		dataType                      		"inherited"
-		fixptType {
-			slope   		1
-			baseType		SF_INT16_TYPE
-		}
-		complexity                    		SF_COMPLEX_INHERITED
-	}
-
-	data {
-		id                            		43
-		name                          		"c2Ac1_v"
-		linkNode                      		[38 42 0]
-		scope                         		OUTPUT_DATA
-		machine                       		1
-		props {
-			array {
-				size      		"-1"
-			}
-			type {
-				method    		SF_INHERITED_TYPE
-			}
-			complexity  		SF_COMPLEX_INHERITED
-		}
-		dataType                      		"inherited"
-		fixptType {
-			slope   		1
-			baseType		SF_INT16_TYPE
-		}
-		complexity                    		SF_COMPLEX_INHERITED
-	}
-
-	instance {
-		id     		44
-		name   		"Transformations etc./Matrix Transpose"
-		machine		1
-		chart  		38
-	}
-
-	chart {
-		id                                        		45
-		name                                      		"Transformations etc./PhiToA"
-		windowPosition                            		[480.75 98.25 200.25 189.75]
-		viewLimits                                		[0 156.75 0 153.75]
-		screen                                    		[1 1 1600 1200 1.25]
-		treeNode                                  		[0 46 0 0]
-		firstTransition                           		48
-		firstJunction                             		47
-		viewObj                                   		45
-		machine                                   		1
-		subviewS {
-		}
-		decomposition                             		CLUSTER_CHART
-		type                                      		EML_CHART
-		firstData                                 		49
-		chartFileNumber                           		9
-		disableImplicitCasting                    		1
-		eml {
-			name       		"A321"
-		}
-	}
-
-	state {
-		id                           		46
-		labelString                  		"eML_blk_kernel()"
-		position                     		[18 64.5 118 66]
-		fontSize                     		12
-		chart                        		45
-		treeNode                     		[45 0 0 0]
-		superState                   		SUBCHART
-		subviewer                    		45
-		type                         		FUNC_STATE
-		decomposition                		CLUSTER_STATE
-		eml {
-			isEML                    		1
-			script                   		"function y = A321(u)\n"
-						"% This block supports an embeddable subset of the MATLAB la"
-						"nguage.\n"
-						"% See the help menu for details. \n"
-						"\n"
-						"y = [cos(u(2))*cos(u(3)) cos(u(2))*sin(u(3)) -sin(u(2)) -co"
-						"s(u(1))*sin(u(3))+sin(u(1))*sin(u(2))*cos(u(3)) cos(u(1))*c"
-						"os(u(3))+sin(u(1))*sin(u(2))*sin(u(3)) sin(u(1))*cos(u(2)) "
-						"sin(u(1))*sin(u(3))+cos(u(1))*sin(u(2))*cos(u(3)) -sin(u(1)"
-						")*cos(u(3))+cos(u(1))*sin(u(2))*sin(u(3)) cos(u(1))*cos(u(2"
-						"))];"
-			editorLayout             		"100 M4x1[488 607 829 559]"
-			treatIntsAsFixpt         		0
-		}
-	}
-
-	junction {
-		id         		47
-		position   		[23.5747 49.5747 7]
-		chart      		45
-		linkNode   		[45 0 0]
-		subviewer  		45
-		type       		CONNECTIVE_JUNCTION
-	}
-
-	transition {
-		id             		48
-		labelString    		"{eML_blk_kernel();}"
-		labelPosition  		[32.125 19.875 102.544 14.964]
-		fontSize       		12
-		src {
-			intersection		[0 0 1 0 23.5747 14.625 0 0]
-		}
-		dst {
-			id          		47
-			intersection		[7 0 -1 -1 23.5747 42.5747 0 0]
-		}
-		midPoint       		[23.5747 24.9468]
-		chart          		45
-		linkNode       		[45 0 0]
-		dataLimits     		[23.575 23.575 14.625 34.575]
-		subviewer      		45
-		drawStyle      		SMART
-		executionOrder 		1
-	}
-
-	data {
-		id                            		49
-		name                          		"u"
-		linkNode                      		[45 0 50]
-		scope                         		INPUT_DATA
-		machine                       		1
-		props {
-			array {
-				size      		"-1"
-			}
-			type {
-				method    		SF_INHERITED_TYPE
-			}
-			complexity  		SF_COMPLEX_INHERITED
-		}
-		dataType                      		"inherited"
-		fixptType {
-			slope   		1
-			baseType		SF_INT16_TYPE
-		}
-		complexity                    		SF_COMPLEX_INHERITED
-	}
-
-	data {
-		id                            		50
-		name                          		"y"
-		linkNode                      		[45 49 0]
-		scope                         		OUTPUT_DATA
-		machine                       		1
-		props {
-			array {
-				size      		"-1"
-			}
-			type {
-				method    		SF_INHERITED_TYPE
-			}
-			complexity  		SF_COMPLEX_INHERITED
-		}
-		dataType                      		"inherited"
-		fixptType {
-			slope   		1
-			baseType		SF_INT16_TYPE
-		}
-		complexity                    		SF_COMPLEX_INHERITED
-	}
-
-	instance {
-		id     		51
-		name   		"Transformations etc./PhiToA"
-		machine		1
-		chart  		45
-	}
-
-	target {
-		id                        		52
-		name                      		"sfun"
-		description               		"Default Simulink S-Function Target."
-		machine                   		1
-		linkNode                  		[1 0 0]
-	}
+  machine {
+    id			    1
+    name		    "TLMLib"
+    created		    "05-Dec-2006 08:03:19"
+    isLibrary		    1
+    sfVersion		    80000010
+    firstTarget		    52
+  }
+  chart {
+    id			    2
+    machine		    1
+    name		    "Transformations etc./A2Phi"
+    windowPosition	    [601 681 213 385]
+    viewLimits		    [0 156.75 0 153.75]
+    screen		    [1 1 1600 1200 1.25]
+    treeNode		    [0 3 0 0]
+    viewObj		    2
+    toolbarMode		    LIBRARY_TOOLBAR
+    ssIdHighWaterMark	    6
+    decomposition	    CLUSTER_CHART
+    type		    EML_CHART
+    chartFileNumber	    2
+    disableImplicitCasting  1
+    eml {
+      name		      "A2Phi321"
+    }
+    supportVariableSizing   0
+    firstData		    4
+    firstTransition	    7
+    firstJunction	    6
+  }
+  state {
+    id			    3
+    labelString		    "eML_blk_kernel()"
+    position		    [18 64.5 118 66]
+    fontSize		    12
+    chart		    2
+    treeNode		    [2 0 0 0]
+    superState		    SUBCHART
+    subviewer		    2
+    ssIdNumber		    1
+    type		    FUNC_STATE
+    decomposition	    CLUSTER_STATE
+    eml {
+      isEML		      1
+      script		      "function y = A2Phi321(u)\n% This block supports an embeddable subset of the MATLAB language.\n% S"
+      "ee the help menu for details. \n\na11 = u(1);\na12 = u(2);\na13 = u(3);\na23 = u(6);\na33 = u(9);\n\nphi2 = -asi"
+      "n(a13);\ncosphi2 = cos(phi2);\n\nphi1 = atan2(a23/cosphi2, a33/cosphi2);\nphi3 = atan2(a12/cosphi2, a11/cosphi2)"
+      ";\n    \ny = [phi1 phi2 phi3];"
+      editorLayout	      "100 M4x1[320 518 943 564]"
+      fimathString	      "fimath(...\n'RoundMode', 'floor',...\n'OverflowMode', 'wrap',...\n'ProductMode', 'KeepLSB', "
+      "'ProductWordLength', 32,...\n'SumMode', 'KeepLSB', 'SumWordLength', 32,...\n'CastBeforeSum', true)"
+      fimathForFiConstructors FimathMatlabFactoryDefault
+      emlDefaultFimath	      FimathUserSpecified
+    }
+  }
+  data {
+    id			    4
+    ssIdNumber		    4
+    name		    "u"
+    scope		    INPUT_DATA
+    machine		    1
+    props {
+      array {
+	size			"-1"
+      }
+      type {
+	method			SF_INHERITED_TYPE
+	primitive		SF_DOUBLE_TYPE
+      }
+      complexity	      SF_COMPLEX_INHERITED
+      unit {
+	name			"inherit"
+      }
+    }
+    dataType		    "Inherit: Same as Simulink"
+    linkNode		    [2 0 5]
+  }
+  data {
+    id			    5
+    ssIdNumber		    5
+    name		    "y"
+    scope		    OUTPUT_DATA
+    machine		    1
+    props {
+      array {
+	size			"-1"
+      }
+      type {
+	method			SF_INHERITED_TYPE
+	primitive		SF_DOUBLE_TYPE
+      }
+      complexity	      SF_COMPLEX_INHERITED
+      frame		      SF_FRAME_NO
+      unit {
+	name			"inherit"
+      }
+    }
+    dataType		    "Inherit: Same as Simulink"
+    linkNode		    [2 4 0]
+  }
+  junction {
+    id			    6
+    position		    [23.5747 49.5747 7]
+    chart		    2
+    subviewer		    2
+    ssIdNumber		    3
+    type		    CONNECTIVE_JUNCTION
+    linkNode		    [2 0 0]
+  }
+  transition {
+    id			    7
+    labelString		    "{eML_blk_kernel();}"
+    labelPosition	    [32.125 19.875 102.544 14.964]
+    fontSize		    12
+    src {
+      intersection	      [0 0 1 0 23.5747 14.625 0 0]
+    }
+    dst {
+      id		      6
+      intersection	      [1 0 -1 0 23.5747 42.5747 0 0]
+    }
+    midPoint		    [23.5747 24.9468]
+    chart		    2
+    dataLimits		    [23.575 23.575 14.625 34.575]
+    subviewer		    2
+    drawStyle		    SMART
+    slide {
+      sticky		      BOTH_STICK
+    }
+    executionOrder	    1
+    ssIdNumber		    2
+    linkNode		    [2 0 0]
+  }
+  instance {
+    id			    8
+    machine		    1
+    name		    "Transformations etc./A2Phi"
+    chart		    2
+  }
+  chart {
+    id			    9
+    machine		    1
+    name		    "Transformations etc./Phi2Euler"
+    windowPosition	    [581 661 213 385]
+    viewLimits		    [0 156.75 0 153.75]
+    screen		    [1 1 1600 1200 1.25]
+    treeNode		    [0 10 0 0]
+    viewObj		    9
+    toolbarMode		    LIBRARY_TOOLBAR
+    ssIdHighWaterMark	    6
+    decomposition	    CLUSTER_CHART
+    type		    EML_CHART
+    chartFileNumber	    4
+    disableImplicitCasting  1
+    eml {
+      name		      "Phi2E"
+    }
+    supportVariableSizing   0
+    firstData		    11
+    firstTransition	    14
+    firstJunction	    13
+  }
+  state {
+    id			    10
+    labelString		    "eML_blk_kernel()"
+    position		    [18 64.5 118 66]
+    fontSize		    12
+    chart		    9
+    treeNode		    [9 0 0 0]
+    superState		    SUBCHART
+    subviewer		    9
+    ssIdNumber		    1
+    type		    FUNC_STATE
+    decomposition	    CLUSTER_STATE
+    eml {
+      isEML		      1
+      script		      "function y = Phi2E(u)\n% This block supports an embeddable subset of the MATLAB language.\n% See "
+      "the help menu for details. \nc1 = cos(u(1)/2.0);\ns1 = sin(u(1)/2.0);\nc2 = cos(u(2)/2.0);\ns2 = sin(u(2)/2.0);\n"
+      "c3 = cos(u(3)/2.0);\ns3 = sin(u(3)/2.0);\n    \nq1 =  s1*c2*c3 - c1*s2*s3 ;\nq2 =  c1*s2*c3 + s1*c2*s3 ;\nq3 = -"
+      "s1*s2*c3 + c1*c2*s3 ;\nq4 =  c1*c2*c3 + s1*s2*s3 ;\n\ny = [q1 q2 q3 q4];"
+      editorLayout	      "100 M4x1[367 687 943 564]"
+      fimathString	      "fimath(...\n'RoundMode', 'floor',...\n'OverflowMode', 'wrap',...\n'ProductMode', 'KeepLSB', "
+      "'ProductWordLength', 32,...\n'SumMode', 'KeepLSB', 'SumWordLength', 32,...\n'CastBeforeSum', true)"
+      fimathForFiConstructors FimathMatlabFactoryDefault
+      emlDefaultFimath	      FimathUserSpecified
+    }
+  }
+  data {
+    id			    11
+    ssIdNumber		    4
+    name		    "u"
+    scope		    INPUT_DATA
+    machine		    1
+    props {
+      array {
+	size			"-1"
+      }
+      type {
+	method			SF_INHERITED_TYPE
+	primitive		SF_DOUBLE_TYPE
+      }
+      complexity	      SF_COMPLEX_INHERITED
+      unit {
+	name			"inherit"
+      }
+    }
+    dataType		    "Inherit: Same as Simulink"
+    linkNode		    [9 0 12]
+  }
+  data {
+    id			    12
+    ssIdNumber		    5
+    name		    "y"
+    scope		    OUTPUT_DATA
+    machine		    1
+    props {
+      array {
+	size			"-1"
+      }
+      type {
+	method			SF_INHERITED_TYPE
+	primitive		SF_DOUBLE_TYPE
+      }
+      complexity	      SF_COMPLEX_INHERITED
+      frame		      SF_FRAME_NO
+      unit {
+	name			"inherit"
+      }
+    }
+    dataType		    "Inherit: Same as Simulink"
+    linkNode		    [9 11 0]
+  }
+  junction {
+    id			    13
+    position		    [23.5747 49.5747 7]
+    chart		    9
+    subviewer		    9
+    ssIdNumber		    3
+    type		    CONNECTIVE_JUNCTION
+    linkNode		    [9 0 0]
+  }
+  transition {
+    id			    14
+    labelString		    "{eML_blk_kernel();}"
+    labelPosition	    [32.125 19.875 102.544 14.964]
+    fontSize		    12
+    src {
+      intersection	      [0 0 1 0 23.5747 14.625 0 0]
+    }
+    dst {
+      id		      13
+      intersection	      [1 0 -1 0 23.5747 42.5747 0 0]
+    }
+    midPoint		    [23.5747 24.9468]
+    chart		    9
+    dataLimits		    [23.575 23.575 14.625 34.575]
+    subviewer		    9
+    drawStyle		    SMART
+    slide {
+      sticky		      BOTH_STICK
+    }
+    executionOrder	    1
+    ssIdNumber		    2
+    linkNode		    [9 0 0]
+  }
+  instance {
+    id			    15
+    machine		    1
+    name		    "Transformations etc./Phi2Euler"
+    chart		    9
+  }
+  chart {
+    id			    16
+    machine		    1
+    name		    "Transformations etc./AToEuler"
+    windowPosition	    [601 681 213 385]
+    viewLimits		    [0 156.75 0 153.75]
+    screen		    [1 1 1600 1200 1.25]
+    treeNode		    [0 17 0 0]
+    viewObj		    16
+    toolbarMode		    LIBRARY_TOOLBAR
+    ssIdHighWaterMark	    6
+    decomposition	    CLUSTER_CHART
+    type		    EML_CHART
+    chartFileNumber	    5
+    disableImplicitCasting  1
+    eml {
+      name		      "A2E"
+    }
+    supportVariableSizing   0
+    firstData		    18
+    firstTransition	    21
+    firstJunction	    20
+  }
+  state {
+    id			    17
+    labelString		    "eML_blk_kernel()"
+    position		    [18 64.5 118 66]
+    fontSize		    12
+    chart		    16
+    treeNode		    [16 0 0 0]
+    superState		    SUBCHART
+    subviewer		    16
+    ssIdNumber		    1
+    type		    FUNC_STATE
+    decomposition	    CLUSTER_STATE
+    eml {
+      isEML		      1
+      script		      "function y = A2E(u)\n% This block supports an embeddable subset of the MATLAB language.\n% See th"
+      "e help menu for details. \n\na11 = u(0);\na12 = u(1);\na13 = u(2);\na21 = u(3);\na22 = u(4);\na23 = u(5);\na31 ="
+      " u(6);\na32 = u(7);\na33 = u(8);\n\nq1 = 0.5*sqrt(Max(0.0,1+a11-a22-a33));\nq2 = 0.5*sqrt(Max(0.0,1-a11+a22-a33)"
+      ");\nq3 = 0.5*sqrt(Max(0.0,1-a11-a22+a33));\nq4 = 0.5*sqrt(Max(0.0,1+a11+a22+a33));\n    \nif (q1>=q2 && q1>=q3 &"
+      "& q1>=q4) \n	if (a12+a21<0) q2 = -q2; end;\n	if (a13+a31<0) q3 = -q3; end;\n	if (a23-a32<0) q4 = -q4; end;\nelse"
+      "if (q2>=q1 && q2>=q3 && q2>=q4) \n	if (a12+a21<0) q1 = -q1; end;\n	if (a23+a32<0) q3 = -q3; end;\n	if (a31-a13<0"
+      ") q4 = -q4; end;\nelseif (q3>=q1 && q3>=q2 && q3>=q4) \n	if (a13+a31<0) q1 = -q1; end;\n	if (a23+a32<0) q2 = -q2"
+      "; end;\n	if (a12-a21<0) q4 = -q4; end;\nelse \n	if (a23-a32<0) q1 = -q1; end;\n	if (a31-a13<0) q2 = -q2; end;\n	"
+      "if (a12-a21<0) q3 = -q3; end;\nend;\n\n% We choose the solution such that \n% q1 is always positive\nif (q1 < 0)"
+      " \n	q1 = -q1;\n	q2 = -q2;\n	q3 = -q3;\n	q4 = -q4;\nend;    \n\n\ny = [q1 q2 q3 q4];"
+      editorLayout	      "100 M4x1[346 456 943 564]"
+      fimathString	      "fimath(...\n'RoundMode', 'floor',...\n'OverflowMode', 'wrap',...\n'ProductMode', 'KeepLSB', "
+      "'ProductWordLength', 32,...\n'SumMode', 'KeepLSB', 'SumWordLength', 32,...\n'CastBeforeSum', true)"
+      fimathForFiConstructors FimathMatlabFactoryDefault
+      emlDefaultFimath	      FimathUserSpecified
+    }
+  }
+  data {
+    id			    18
+    ssIdNumber		    4
+    name		    "u"
+    scope		    INPUT_DATA
+    machine		    1
+    props {
+      array {
+	size			"-1"
+      }
+      type {
+	method			SF_INHERITED_TYPE
+	primitive		SF_DOUBLE_TYPE
+      }
+      complexity	      SF_COMPLEX_INHERITED
+      unit {
+	name			"inherit"
+      }
+    }
+    dataType		    "Inherit: Same as Simulink"
+    linkNode		    [16 0 19]
+  }
+  data {
+    id			    19
+    ssIdNumber		    5
+    name		    "y"
+    scope		    OUTPUT_DATA
+    machine		    1
+    props {
+      array {
+	size			"-1"
+      }
+      type {
+	method			SF_INHERITED_TYPE
+	primitive		SF_DOUBLE_TYPE
+      }
+      complexity	      SF_COMPLEX_INHERITED
+      frame		      SF_FRAME_NO
+      unit {
+	name			"inherit"
+      }
+    }
+    dataType		    "Inherit: Same as Simulink"
+    linkNode		    [16 18 0]
+  }
+  junction {
+    id			    20
+    position		    [23.5747 49.5747 7]
+    chart		    16
+    subviewer		    16
+    ssIdNumber		    3
+    type		    CONNECTIVE_JUNCTION
+    linkNode		    [16 0 0]
+  }
+  transition {
+    id			    21
+    labelString		    "{eML_blk_kernel();}"
+    labelPosition	    [32.125 19.875 102.544 14.964]
+    fontSize		    12
+    src {
+      intersection	      [0 0 1 0 23.5747 14.625 0 0]
+    }
+    dst {
+      id		      20
+      intersection	      [1 0 -1 0 23.5747 42.5747 0 0]
+    }
+    midPoint		    [23.5747 24.9468]
+    chart		    16
+    dataLimits		    [23.575 23.575 14.625 34.575]
+    subviewer		    16
+    drawStyle		    SMART
+    slide {
+      sticky		      BOTH_STICK
+    }
+    executionOrder	    1
+    ssIdNumber		    2
+    linkNode		    [16 0 0]
+  }
+  instance {
+    id			    22
+    machine		    1
+    name		    "Transformations etc./AToEuler"
+    chart		    16
+  }
+  chart {
+    id			    23
+    machine		    1
+    name		    "Transformations etc./EulerToPhi"
+    windowPosition	    [621 701 213 385]
+    viewLimits		    [0 156.75 0 153.75]
+    screen		    [1 1 1600 1200 1.25]
+    treeNode		    [0 24 0 0]
+    viewObj		    23
+    toolbarMode		    LIBRARY_TOOLBAR
+    ssIdHighWaterMark	    6
+    decomposition	    CLUSTER_CHART
+    type		    EML_CHART
+    chartFileNumber	    6
+    disableImplicitCasting  1
+    eml {
+      name		      "E2Phi"
+    }
+    supportVariableSizing   0
+    firstData		    25
+    firstTransition	    28
+    firstJunction	    27
+  }
+  state {
+    id			    24
+    labelString		    "eML_blk_kernel()"
+    position		    [18 64.5 118 66]
+    fontSize		    12
+    chart		    23
+    treeNode		    [23 0 0 0]
+    superState		    SUBCHART
+    subviewer		    23
+    ssIdNumber		    1
+    type		    FUNC_STATE
+    decomposition	    CLUSTER_STATE
+    eml {
+      isEML		      1
+      script		      "function y = E2Phi(u)\n% This block supports an embeddable subset of the MATLAB language.\n% See "
+      "the help menu for details. \n\na11 = u(0)*u(0) - u(1)*u(1) - u(2)*u(2) + u(3)*u(3) ;\na12 = 2.0*(u(0)*u(1) + u(2"
+      ")*u(3)) ;\na13 = 2.0*(u(0)*u(2) - u(1)*u(3)) ;\na23 = 2.0*(u(1)*u(2) + u(0)*u(3)) ;\na33 = u(2)*u(2) - u(0)*u(0)"
+      " - u(1)*u(1) + u(3)*u(3) ;\n\na13 = max(a13, -1);\na13 = min(a13, 1);\nphi2 = -asin(a13); % Safe\n\ntmp = cos(ph"
+      "i2) ;\ncosphi2 = tmp+Sign(tmp)*1.0e-50 ;\n  \n% This implementation limits ph1 and phi3 to +/-pi\n% so we use it"
+      ".\nphi1 = atan2(a23/cosphi2, a33/cosphi2);\nphi3 = atan2(a12/cosphi2, a11/cosphi2);\n    \n\ny = [phi1 phi2 phi3"
+      "];"
+      editorLayout	      "100 M4x1[346 456 943 564]"
+      fimathString	      "fimath(...\n'RoundMode', 'floor',...\n'OverflowMode', 'wrap',...\n'ProductMode', 'KeepLSB', "
+      "'ProductWordLength', 32,...\n'SumMode', 'KeepLSB', 'SumWordLength', 32,...\n'CastBeforeSum', true)"
+      fimathForFiConstructors FimathMatlabFactoryDefault
+      emlDefaultFimath	      FimathUserSpecified
+    }
+  }
+  data {
+    id			    25
+    ssIdNumber		    4
+    name		    "u"
+    scope		    INPUT_DATA
+    machine		    1
+    props {
+      array {
+	size			"-1"
+      }
+      type {
+	method			SF_INHERITED_TYPE
+	primitive		SF_DOUBLE_TYPE
+      }
+      complexity	      SF_COMPLEX_INHERITED
+      unit {
+	name			"inherit"
+      }
+    }
+    dataType		    "Inherit: Same as Simulink"
+    linkNode		    [23 0 26]
+  }
+  data {
+    id			    26
+    ssIdNumber		    5
+    name		    "y"
+    scope		    OUTPUT_DATA
+    machine		    1
+    props {
+      array {
+	size			"-1"
+      }
+      type {
+	method			SF_INHERITED_TYPE
+	primitive		SF_DOUBLE_TYPE
+      }
+      complexity	      SF_COMPLEX_INHERITED
+      frame		      SF_FRAME_NO
+      unit {
+	name			"inherit"
+      }
+    }
+    dataType		    "Inherit: Same as Simulink"
+    linkNode		    [23 25 0]
+  }
+  junction {
+    id			    27
+    position		    [23.5747 49.5747 7]
+    chart		    23
+    subviewer		    23
+    ssIdNumber		    3
+    type		    CONNECTIVE_JUNCTION
+    linkNode		    [23 0 0]
+  }
+  transition {
+    id			    28
+    labelString		    "{eML_blk_kernel();}"
+    labelPosition	    [32.125 19.875 102.544 14.964]
+    fontSize		    12
+    src {
+      intersection	      [0 0 1 0 23.5747 14.625 0 0]
+    }
+    dst {
+      id		      27
+      intersection	      [1 0 -1 0 23.5747 42.5747 0 0]
+    }
+    midPoint		    [23.5747 24.9468]
+    chart		    23
+    dataLimits		    [23.575 23.575 14.625 34.575]
+    subviewer		    23
+    drawStyle		    SMART
+    slide {
+      sticky		      BOTH_STICK
+    }
+    executionOrder	    1
+    ssIdNumber		    2
+    linkNode		    [23 0 0]
+  }
+  instance {
+    id			    29
+    machine		    1
+    name		    "Transformations etc./EulerToPhi"
+    chart		    23
+  }
+  chart {
+    id			    30
+    machine		    1
+    name		    "Transformations etc./Matrix Multiplication"
+    windowPosition	    [581 661 213 385]
+    viewLimits		    [0 156.75 0 153.75]
+    screen		    [1 1 1600 1200 1.25]
+    treeNode		    [0 31 0 0]
+    viewObj		    30
+    ssIdHighWaterMark	    7
+    decomposition	    CLUSTER_CHART
+    type		    EML_CHART
+    chartFileNumber	    7
+    disableImplicitCasting  1
+    eml {
+      name		      "MatMult"
+    }
+    supportVariableSizing   0
+    firstData		    32
+    firstTransition	    36
+    firstJunction	    35
+  }
+  state {
+    id			    31
+    labelString		    "eML_blk_kernel()"
+    position		    [18 64.5 118 66]
+    fontSize		    12
+    chart		    30
+    treeNode		    [30 0 0 0]
+    superState		    SUBCHART
+    subviewer		    30
+    ssIdNumber		    1
+    type		    FUNC_STATE
+    decomposition	    CLUSTER_STATE
+    eml {
+      isEML		      1
+      script		      "function c1Ac3_v = MatMult(c1Ac2_v, c2Ac3_v)\n% This block supports an embeddable subset of the M"
+      "ATLAB language.\n% See the help menu for details. \n\n% Vector to matrix\nc1Ac2=zeros(3,3);\nc1Ac2(:)=c1Ac2_v;\n"
+      "c1Ac2=c1Ac2';\n\n% Vector to matrix\nc2Ac3=zeros(3,3);\nc2Ac3(:)=c2Ac3_v;\nc2Ac3=c2Ac3';\n\n% Calc resulting mat"
+      "rix \nc1Ac3=c1Ac2*c2Ac3;\nc1Ac3=c1Ac3';\n\n% Return as vector\nc1Ac3_v = c1Ac3(:);"
+      editorLayout	      "100 M4x1[285 285 900 750]"
+      fimathString	      "fimath(...\n'RoundMode', 'floor',...\n'OverflowMode', 'wrap',...\n'ProductMode', 'KeepLSB', "
+      "'ProductWordLength', 32,...\n'SumMode', 'KeepLSB', 'SumWordLength', 32,...\n'CastBeforeSum', true)"
+      fimathForFiConstructors FimathMatlabFactoryDefault
+      emlDefaultFimath	      FimathUserSpecified
+    }
+  }
+  data {
+    id			    32
+    ssIdNumber		    4
+    name		    "c1Ac2_v"
+    scope		    INPUT_DATA
+    machine		    1
+    props {
+      array {
+	size			"-1"
+      }
+      type {
+	method			SF_INHERITED_TYPE
+	primitive		SF_DOUBLE_TYPE
+      }
+      complexity	      SF_COMPLEX_INHERITED
+      unit {
+	name			"inherit"
+      }
+    }
+    dataType		    "Inherit: Same as Simulink"
+    linkNode		    [30 0 33]
+  }
+  data {
+    id			    33
+    ssIdNumber		    5
+    name		    "c1Ac3_v"
+    scope		    OUTPUT_DATA
+    machine		    1
+    props {
+      array {
+	size			"-1"
+      }
+      type {
+	method			SF_INHERITED_TYPE
+	primitive		SF_DOUBLE_TYPE
+      }
+      complexity	      SF_COMPLEX_INHERITED
+      frame		      SF_FRAME_NO
+      unit {
+	name			"inherit"
+      }
+    }
+    dataType		    "Inherit: Same as Simulink"
+    linkNode		    [30 32 34]
+  }
+  data {
+    id			    34
+    ssIdNumber		    6
+    name		    "c2Ac3_v"
+    scope		    INPUT_DATA
+    machine		    1
+    props {
+      array {
+	size			"-1"
+      }
+      type {
+	method			SF_INHERITED_TYPE
+	primitive		SF_DOUBLE_TYPE
+	isSigned		1
+	wordLength		"16"
+      }
+      complexity	      SF_COMPLEX_INHERITED
+      frame		      SF_FRAME_INHERITED
+      unit {
+	name			"inherit"
+      }
+    }
+    dataType		    "Inherit: Same as Simulink"
+    linkNode		    [30 33 0]
+  }
+  junction {
+    id			    35
+    position		    [23.5747 49.5747 7]
+    chart		    30
+    subviewer		    30
+    ssIdNumber		    3
+    type		    CONNECTIVE_JUNCTION
+    linkNode		    [30 0 0]
+  }
+  transition {
+    id			    36
+    labelString		    "{eML_blk_kernel();}"
+    labelPosition	    [32.125 19.875 102.544 14.964]
+    fontSize		    12
+    src {
+      intersection	      [0 0 1 0 23.5747 14.625 0 0]
+    }
+    dst {
+      id		      35
+      intersection	      [1 0 -1 0 23.5747 42.5747 0 0]
+    }
+    midPoint		    [23.5747 24.9468]
+    chart		    30
+    dataLimits		    [23.575 23.575 14.625 34.575]
+    subviewer		    30
+    drawStyle		    SMART
+    slide {
+      sticky		      BOTH_STICK
+    }
+    executionOrder	    1
+    ssIdNumber		    2
+    linkNode		    [30 0 0]
+  }
+  instance {
+    id			    37
+    machine		    1
+    name		    "Transformations etc./Matrix Multiplication"
+    chart		    30
+  }
+  chart {
+    id			    38
+    machine		    1
+    name		    "Transformations etc./Matrix Transpose"
+    windowPosition	    [641 721 213 385]
+    viewLimits		    [0 156.75 0 153.75]
+    screen		    [1 1 1600 1200 1.25]
+    treeNode		    [0 39 0 0]
+    viewObj		    38
+    ssIdHighWaterMark	    6
+    decomposition	    CLUSTER_CHART
+    type		    EML_CHART
+    chartFileNumber	    8
+    disableImplicitCasting  1
+    eml {
+      name		      "T"
+    }
+    supportVariableSizing   0
+    firstData		    40
+    firstTransition	    43
+    firstJunction	    42
+  }
+  state {
+    id			    39
+    labelString		    "eML_blk_kernel()"
+    position		    [18 64.5 118 66]
+    fontSize		    12
+    chart		    38
+    treeNode		    [38 0 0 0]
+    superState		    SUBCHART
+    subviewer		    38
+    ssIdNumber		    1
+    type		    FUNC_STATE
+    decomposition	    CLUSTER_STATE
+    eml {
+      isEML		      1
+      script		      "function c2Ac1_v = T(c1Ac2_v)\n% This block supports an embeddable subset of the MATLAB language."
+      "\n% See the help menu for details. \n\n% Vector to matrix\nc1Ac2=zeros(3,3);\nc1Ac2(:)=c1Ac2_v;\n\n%Transpose\nc"
+      "2Ac1=c1Ac2';\n\n% Return as vector\nc2Ac1_v = c2Ac1(:);"
+      editorLayout	      "100 M4x1[627 565 900 750]"
+      fimathString	      "fimath(...\n'RoundMode', 'floor',...\n'OverflowMode', 'wrap',...\n'ProductMode', 'KeepLSB', "
+      "'ProductWordLength', 32,...\n'SumMode', 'KeepLSB', 'SumWordLength', 32,...\n'CastBeforeSum', true)"
+      fimathForFiConstructors FimathMatlabFactoryDefault
+      emlDefaultFimath	      FimathUserSpecified
+    }
+  }
+  data {
+    id			    40
+    ssIdNumber		    4
+    name		    "c1Ac2_v"
+    scope		    INPUT_DATA
+    machine		    1
+    props {
+      array {
+	size			"-1"
+      }
+      type {
+	method			SF_INHERITED_TYPE
+	primitive		SF_DOUBLE_TYPE
+      }
+      complexity	      SF_COMPLEX_INHERITED
+      unit {
+	name			"inherit"
+      }
+    }
+    dataType		    "Inherit: Same as Simulink"
+    linkNode		    [38 0 41]
+  }
+  data {
+    id			    41
+    ssIdNumber		    5
+    name		    "c2Ac1_v"
+    scope		    OUTPUT_DATA
+    machine		    1
+    props {
+      array {
+	size			"-1"
+      }
+      type {
+	method			SF_INHERITED_TYPE
+	primitive		SF_DOUBLE_TYPE
+      }
+      complexity	      SF_COMPLEX_INHERITED
+      frame		      SF_FRAME_NO
+      unit {
+	name			"inherit"
+      }
+    }
+    dataType		    "Inherit: Same as Simulink"
+    linkNode		    [38 40 0]
+  }
+  junction {
+    id			    42
+    position		    [23.5747 49.5747 7]
+    chart		    38
+    subviewer		    38
+    ssIdNumber		    3
+    type		    CONNECTIVE_JUNCTION
+    linkNode		    [38 0 0]
+  }
+  transition {
+    id			    43
+    labelString		    "{eML_blk_kernel();}"
+    labelPosition	    [32.125 19.875 102.544 14.964]
+    fontSize		    12
+    src {
+      intersection	      [0 0 1 0 23.5747 14.625 0 0]
+    }
+    dst {
+      id		      42
+      intersection	      [1 0 -1 0 23.5747 42.5747 0 0]
+    }
+    midPoint		    [23.5747 24.9468]
+    chart		    38
+    dataLimits		    [23.575 23.575 14.625 34.575]
+    subviewer		    38
+    drawStyle		    SMART
+    slide {
+      sticky		      BOTH_STICK
+    }
+    executionOrder	    1
+    ssIdNumber		    2
+    linkNode		    [38 0 0]
+  }
+  instance {
+    id			    44
+    machine		    1
+    name		    "Transformations etc./Matrix Transpose"
+    chart		    38
+  }
+  chart {
+    id			    45
+    machine		    1
+    name		    "Transformations etc./PhiToA"
+    windowPosition	    [641 721 213 385]
+    viewLimits		    [0 156.75 0 153.75]
+    screen		    [1 1 1600 1200 1.25]
+    treeNode		    [0 46 0 0]
+    viewObj		    45
+    ssIdHighWaterMark	    6
+    decomposition	    CLUSTER_CHART
+    type		    EML_CHART
+    chartFileNumber	    9
+    disableImplicitCasting  1
+    eml {
+      name		      "A321"
+    }
+    supportVariableSizing   0
+    firstData		    47
+    firstTransition	    50
+    firstJunction	    49
+  }
+  state {
+    id			    46
+    labelString		    "eML_blk_kernel()"
+    position		    [18 64.5 118 66]
+    fontSize		    12
+    chart		    45
+    treeNode		    [45 0 0 0]
+    superState		    SUBCHART
+    subviewer		    45
+    ssIdNumber		    1
+    type		    FUNC_STATE
+    decomposition	    CLUSTER_STATE
+    eml {
+      isEML		      1
+      script		      "function y = A321(u)\n% This block supports an embeddable subset of the MATLAB language.\n% See t"
+      "he help menu for details. \n\ny = [cos(u(2))*cos(u(3)) cos(u(2))*sin(u(3)) -sin(u(2)) -cos(u(1))*sin(u(3))+sin(u"
+      "(1))*sin(u(2))*cos(u(3)) cos(u(1))*cos(u(3))+sin(u(1))*sin(u(2))*sin(u(3)) sin(u(1))*cos(u(2)) sin(u(1))*sin(u(3"
+      "))+cos(u(1))*sin(u(2))*cos(u(3)) -sin(u(1))*cos(u(3))+cos(u(1))*sin(u(2))*sin(u(3)) cos(u(1))*cos(u(2))];"
+      editorLayout	      "100 M4x1[488 607 829 559]"
+      fimathString	      "fimath(...\n'RoundMode', 'floor',...\n'OverflowMode', 'wrap',...\n'ProductMode', 'KeepLSB', "
+      "'ProductWordLength', 32,...\n'SumMode', 'KeepLSB', 'SumWordLength', 32,...\n'CastBeforeSum', true)"
+      fimathForFiConstructors FimathMatlabFactoryDefault
+      emlDefaultFimath	      FimathUserSpecified
+    }
+  }
+  data {
+    id			    47
+    ssIdNumber		    4
+    name		    "u"
+    scope		    INPUT_DATA
+    machine		    1
+    props {
+      array {
+	size			"-1"
+      }
+      type {
+	method			SF_INHERITED_TYPE
+	primitive		SF_DOUBLE_TYPE
+      }
+      complexity	      SF_COMPLEX_INHERITED
+      unit {
+	name			"inherit"
+      }
+    }
+    dataType		    "Inherit: Same as Simulink"
+    linkNode		    [45 0 48]
+  }
+  data {
+    id			    48
+    ssIdNumber		    5
+    name		    "y"
+    scope		    OUTPUT_DATA
+    machine		    1
+    props {
+      array {
+	size			"-1"
+      }
+      type {
+	method			SF_INHERITED_TYPE
+	primitive		SF_DOUBLE_TYPE
+      }
+      complexity	      SF_COMPLEX_INHERITED
+      frame		      SF_FRAME_NO
+      unit {
+	name			"inherit"
+      }
+    }
+    dataType		    "Inherit: Same as Simulink"
+    linkNode		    [45 47 0]
+  }
+  junction {
+    id			    49
+    position		    [23.5747 49.5747 7]
+    chart		    45
+    subviewer		    45
+    ssIdNumber		    3
+    type		    CONNECTIVE_JUNCTION
+    linkNode		    [45 0 0]
+  }
+  transition {
+    id			    50
+    labelString		    "{eML_blk_kernel();}"
+    labelPosition	    [32.125 19.875 102.544 14.964]
+    fontSize		    12
+    src {
+      intersection	      [0 0 1 0 23.5747 14.625 0 0]
+    }
+    dst {
+      id		      49
+      intersection	      [1 0 -1 0 23.5747 42.5747 0 0]
+    }
+    midPoint		    [23.5747 24.9468]
+    chart		    45
+    dataLimits		    [23.575 23.575 14.625 34.575]
+    subviewer		    45
+    drawStyle		    SMART
+    slide {
+      sticky		      BOTH_STICK
+    }
+    executionOrder	    1
+    ssIdNumber		    2
+    linkNode		    [45 0 0]
+  }
+  instance {
+    id			    51
+    machine		    1
+    name		    "Transformations etc./PhiToA"
+    chart		    45
+  }
+  target {
+    id			    52
+    machine		    1
+    name		    "sfun"
+    linkNode		    [1 0 0]
+  }
 }

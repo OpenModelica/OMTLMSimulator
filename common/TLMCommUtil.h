@@ -48,6 +48,8 @@ struct TLMMessageTypeConst {
     static const char TLM_CHECK_MODEL = 8;
     //! Error detected, abort simulation
     static const char TLM_ABORT = 16;
+    //! Parameter registration message
+    static const char TLM_REG_PARAMETER = 32;
 };
 
 //! Message header used in all the messages sent between
@@ -83,7 +85,10 @@ struct TLMMessageHeader {
     int  DataSize;
 
     //! Source interface ID (not used for registration messages)
-    int  TLMInterfaceID;                  
+    int  TLMInterfaceID;
+
+    //! Source parameter ID (not used for registration messages)
+    int TLMParameterID;
 };
 
 //! TLMMessage structure is used to encapsulate all the TLM messages
@@ -92,7 +97,7 @@ struct TLMMessage {
     int SocketHandle; 
 
     //! Message header
-    TLMMessageHeader Header;    
+    TLMMessageHeader Header;
 
     //! Data array (contents depends on the message type)
     std::vector<unsigned char> Data;

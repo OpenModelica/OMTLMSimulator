@@ -12,7 +12,7 @@ set Mofile=%6.mo
 
 rem *********************SET PATHS****************************************************
 rem set path to Dymola installation folder
-set DymolaPath=c:\Program Files (x86)\Dymola 7.1
+set DymolaPath=C:\Program Files (x86)\Dymola 2016 FD01
 
 rem *********************SETUP SIMULATION*********************************************
 rem use dir /x to study these weird MS-DOS paths 
@@ -44,7 +44,10 @@ echo %4 >> %TLMCONFIGFILE%
 set MOSFILE=%1.mos
 for /F %%I in ("%6") do set MODELNAME=%%~nI 
 for /F %%I in ("%Mofile%") do set MODELNAME_WITH_MO=%%I 
-%TLMPluginPath%\bin\AdvancedCalc.exe (%3-%2)/%4
+echo APA
+echo %TLMPluginPath%\AdvancedCalc.exe (%3-%2)/%4
+echo KANIN
+%TLMPluginPath%\AdvancedCalc.exe (%3-%2)/%4
 rem resulting in "result.bat" that contains "set res=xxx"
 call result.bat
 set INTERVALS=%res%

@@ -21,24 +21,28 @@ include $(MAKEFILEHEADHOME)/Makefile.head
 #CC=mycl cl -DWIN32 -D_WIN32 -DXMSTATIC -DYY_NEVER_INTERACTIVE  /EHsc
 #cc=mycl cl -DWIN32 -D_WIN32 -DXMSTATIC -DYY_NEVER_INTERACTIVE  /EHsc
 
-CC += -pipe -fno-keep-inline-dllexport -O2 -frtti -Wall -Wextra -fexceptions -mthreads -DUNICODE
-cc += -pipe -fno-keep-inline-dllexport -O2 -frtti -Wall -Wextra -fexceptions -mthreads -DUNICODE
+CC += -pipe -O2 -frtti -Wall -Wextra -fexceptions -DUNICODE
+cc += -pipe -O2 -frtti -Wall -Wextra -fexceptions -DUNICODE
 
 BNAME=FMIWrapper$(FEXT)
 MISCHOME=../extralibs/misc
 
 INCLUDES=  -I. \
-	-I"..\FMIWrapper" \
-    -I"..\FMIWrapper\FMILibrary-2.0.1\install\include" \
-    -I"..\common" -I"..\extralibs\misc\include" \
+	-I"../FMIWrapper" \
+    -I"../FMIWrapper/FMILibrary-2.0.1/install/include" \
+    -I"../common" -I"../extralibs/misc/include" \
     -I"cvode-2.9.0/include" \
     -I"ida-2.9.0/include"
     
+ifeq ($(OS),Windows_NT)
+	LIBS = 	-lws2_32 \
+	        -LFMILibrary-2.0.1/install/lib \
+  	      -llibfmilib_shared 
+else
+	LIBS = 	-LFMILibrary-2.0.1/install/lib \
+  	      -lfmilib_shared 
+endif
 
-LIBS = 	-lws2_32 \
-        -LFMILibrary-2.0.1/install/lib \
-        -llibfmilib_shared 
-    
 $(ABI)/%.o: %.cpp
 	$(CC) $(INCLUDES) -c $< -o $@
 
@@ -69,25 +73,31 @@ EXT_OBJS = PluginImplementer.o \
 	TLMClientComm.o \
 	TLMCommUtil.o \
 	TLMInterface.o \
+	TLMInterfaceSignal.o \
+	TLMInterfaceSignalInput.o \
+	TLMInterfaceSignalOutput.o \
+	TLMInterface1D.o \
+	TLMInterface3D.o \
+	TLMParameter.o \
 	TLMErrorLog.o \
 	TLMPlugin.o \
 	coordTrans.o \
 	double3Vec.o \
 	double33Mat.o \
 	strConv.o \
-    nvector_serial.o \
-    sundials_math.o \
-    sundials_nvector.o \
-    sundials_direct.o \
-    sundials_dense.o \
-    cvode.o \
-    cvode_dense.o \
-    cvode_direct.o \
-    cvode_io.o \
-    ida.o \
-    ida_dense.o \
-    ida_direct.o \
-    ida_io.o
+	nvector_serial.o \
+	sundials_math.o \
+	sundials_nvector.o \
+	sundials_direct.o \
+	sundials_dense.o \
+	cvode.o \
+	cvode_dense.o \
+	cvode_direct.o \
+	cvode_io.o \
+	ida.o \
+	ida_dense.o \
+	ida_direct.o \
+	ida_io.o
    
 
 ABIOBJS=$(OBJS:%.o= $(ABI)/%.o) $(EXT_OBJS:%.o= $(ABI)/%.o)

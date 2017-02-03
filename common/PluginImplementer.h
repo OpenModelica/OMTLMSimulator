@@ -9,7 +9,12 @@
 #include <map>
 #include "TLMClientComm.h"
 #include "TLMInterface.h"
+#include "TLMInterfaceSignalInput.h"
+#include "TLMInterfaceSignalOutput.h"
+#include "TLMInterface1D.h"
+#include "TLMInterface3D.h"
 #include "TLMPlugin.h"
+#include "TLMParameter.h"
 
 
 //! PluginImplemneter class implements the  TLMPlugin interface.
@@ -52,6 +57,9 @@ protected:
 
     //! Registered interfaces
     std::vector<TLMInterface*> Interfaces;
+
+    //! Registered parameters
+    std::vector<TLMParameter*> Parameters;
     
     //! The communication object
     TLMClientComm ClientComm;
@@ -63,7 +71,13 @@ protected:
     //!  and their index in the Interfaces vector
     std::map<int, int> MapID2Ind;
 
+    //! MapID2Ind provides a mapping between the ID of parameters
+    //!  and their index in the Parameters vector
+    std::map<int, int> MapID2Par;
+
     int GetInterfaceIndex(int ID) const { return MapID2Ind.find(ID)->second; }
+
+    int GetParameterIndex(int ID) const { return MapID2Par.find(ID)->second; }
 
     //! Init method. Should be called after the default constructor. It will
     //! initialize the object and connect to TLMManager. Will return true
@@ -79,7 +93,10 @@ protected:
     //! Register TLM interface sends a registration request to TLMManager
     //! and returns the ID for the interface. '-1' is returned if
     //! the interface is not connected in the MetaModel.
-    int RegisteTLMInterface( std::string name);
+    int RegisteTLMInterface(std::string name, int dimensions=6 ,
+                            std::string causality="Bidirectional", std::string domain="Mechanical");
+
+    int RegisterTLMParameter(std::string name, std::string defaultValue);
 
     //! ReceiveTimeData receives time-stamped data from coupled simulations
     //! if the specified interface needs more data for the given time..
@@ -106,36 +123,58 @@ protected:
     //!    \param force - returns 6 doubles giving force & torque at the interface.
     //!  \note Global coordinate system common for the whole meta model is assumed
     //!   for all vectors.
-    void GetForce(int interfaceID,
-		  double time,
-		  double position[],
-		  double orientation[],
-		  double speed[],
-		  double ang_speed[],
-		  double* force) ;
+    void GetValueSignal(int interfaceID,
+                        double time,
+                        double *value);
+    void GetForce1D(int interfaceID,
+                    double time,
+                    double position,
+                    double speed,
+                    double *force);
+    void GetForce1D(int interfaceID,
+                    double time,
+                    double speed,
+                    double* force);
+    void GetForce3D(int interfaceID,
+                    double time,
+                    double position[],
+                    double orientation[],
+                    double speed[],
+                    double ang_speed[],
+                    double* force);
 
     //! Set the motion of a TLM interface after a successful integration step.
     //! The information is eventually sent to the TLM manager and forwarded
     //! to the coupled simulation.
     //! Input:
     //!  See comments to GetForce method
-    void SetMotion(int forceID,
-		   double time,
-		   double position[],
-		   double orientation[],
-		   double speed[],
-		   double ang_speed[]);
+    void SetValueSignal(int valueID,
+                        double time,
+                        double value);
+    void SetMotion1D(int forceID,
+                     double time,
+                     double position,
+                     double speed);
+    void SetMotion3D(int forceID,
+                     double time,
+                     double position[],
+                     double orientation[],
+                     double speed[],
+                     double ang_speed[]);
 
     //! GetConnectionParams returnes the ConnectionParams for
     //! the specified interface ID. Interface must be registered
     //! first.
-    virtual void GetConnectionParams(int interfaceID, TLMConnectionParams& ParamsOut);
+    void GetConnectionParams(int interfaceID, TLMConnectionParams& ParamsOut);
 
     //! GetTimeData returnes the necessary time stamped information needed
     //! for the calculation of the reaction force at a given time.
     //! The function might result in a request sent to TLM manager.
-    virtual void GetTimeData(int interfaceID, double time, TLMTimeData& DataOut);
+    virtual void GetTimeDataSignal(int interfaceID, double time, TLMTimeDataSignal& DataOut, bool monitoring=false);
+    void GetTimeData1D(int interfaceID, double time, TLMTimeData1D& DataOut);
+    void GetTimeData3D(int interfaceID, double time, TLMTimeData3D& DataOut);
 
+    void GetParameterValue(int parameterID, std::string &Name, std::string &Value);
  protected:
 
     //! StartTime - start time for the simulation
