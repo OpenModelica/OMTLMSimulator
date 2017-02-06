@@ -38,6 +38,7 @@ install:
 	cp TLMPluginLib/TLMPluginInterfaceSignalOutput.xml $(LIBDIR)
 
 	cp StartTLMHopsan.bat $(BINDIR)
+	cp StartTLMHopsan $(BINDIR)
     
 clean:
 	rm -rf $(INSTDIR)
