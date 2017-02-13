@@ -1,5 +1,5 @@
 #include "tlmforce.h"
-#include "TLMPlugin.h"
+#include "Plugin/TLMPlugin.h"
 #include <string>
 #include <strstream>
 #include <fstream>
