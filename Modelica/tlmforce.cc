@@ -1,6 +1,6 @@
 #include "tlmforce.h"
-#include "TLMPlugin.h"
-#include "TLMErrorLog.h"
+#include "Plugin/TLMPlugin.h"
+#include "Logging/TLMErrorLog.h"
 #include <string>
 #include <fstream>
 #include <iostream>
