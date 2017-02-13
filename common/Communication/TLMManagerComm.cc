@@ -31,8 +31,7 @@ using std::string;
 
 // CreateServerSocket create a server TCP/IP socket
 // and start listening. Returns the socket ID.
-int TLMManagerComm::CreateServerSocket()
-{
+int TLMManagerComm::CreateServerSocket() {
     assert(ContactSocket == -1);
 
     struct sockaddr_in sa;  // My socket addr.
@@ -185,8 +184,7 @@ void TLMManagerComm::DropActiveSocket(int socket) {
 }
 
 // Close all active sockets
-void TLMManagerComm::CloseAll()
-{
+void TLMManagerComm::CloseAll() {
     std::vector<int>::iterator activeSockIter;
     for(activeSockIter = ActiveSockets.begin(); activeSockIter != ActiveSockets.end(); activeSockIter++) {
         BCloseSocket(*activeSockIter);

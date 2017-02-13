@@ -20,8 +20,7 @@ TLMParameter::TLMParameter(TLMClientComm& theComm, std::string& aName, std::stri
     Name(aName),
     Value(aDefaultValue),
     ParameterID(-1),
-    Comm(theComm)
-{ // TLMParameter constructor
+    Comm(theComm) {
     Comm.CreateParameterRegMessage(aName, aDefaultValue, Message);
     Message.SocketHandle = Comm.GetSocketHandle();
 

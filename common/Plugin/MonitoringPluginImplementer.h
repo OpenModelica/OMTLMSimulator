@@ -12,8 +12,7 @@
 //! MonitoringPluginImplementer class implements the TLMPlugin interface for
 //! communication monitoring.
 //! Inherits PluginImplementer and re-implements ReceiveTimeData(...).
-class MonitoringPluginImplementer : public PluginImplementer
-{
+class MonitoringPluginImplementer : public PluginImplementer {
 public:
     //! Contruction and Initialization
     MonitoringPluginImplementer();

@@ -127,8 +127,7 @@ std::string  TLMErrorLog::ToStdStr(double val) {
     return std::string(buf);
 }
 
-std::string  TLMErrorLog::TimeStr()
-{
+std::string  TLMErrorLog::TimeStr() {
     if(LogTimeOn) {
         time_t rawtime;
         struct tm * timeinfo;

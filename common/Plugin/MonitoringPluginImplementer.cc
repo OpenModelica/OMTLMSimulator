@@ -4,9 +4,7 @@
 #include <string>
 using namespace std;
 
-MonitoringPluginImplementer::MonitoringPluginImplementer()
-{
-}
+MonitoringPluginImplementer::MonitoringPluginImplementer() {}
 
 //! CreateInstance static "factory" method returns
 //! a pointer to the object implementing the interface.

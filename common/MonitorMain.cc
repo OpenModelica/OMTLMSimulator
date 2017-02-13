@@ -48,8 +48,7 @@ struct Color {
     }
 };
 
-TLMPlugin* InitializeTLMConnection(MetaModel& model, std::string& serverName)
-{
+TLMPlugin* InitializeTLMConnection(MetaModel& model, std::string& serverName) {
     TLMPlugin* TLMlink = MonitoringPluginImplementer::CreateInstance();
 
     TLMErrorLog::Log("Trying to register TLM monitor on host " + serverName);
@@ -153,8 +152,7 @@ void MonitorTimeStep(TLMPlugin* TLMlink,
     }
 }
 
-void WriteVisualXMLFile(MetaModel& model, std::string &baseFileName, std::string &path)
-{
+void WriteVisualXMLFile(MetaModel& model, std::string &baseFileName, std::string &path) {
     // Get data from TLM-Manager here!
     bool canWriteVisualXMLFile = false;
     int nTLMComponents = model.GetComponentsNum();
@@ -408,8 +406,7 @@ void WriteVisualXMLFile(MetaModel& model, std::string &baseFileName, std::string
     }
 }
 
-void PrintHeader(MetaModel& model, std::ofstream& dataFile)
-{
+void PrintHeader(MetaModel& model, std::ofstream& dataFile) {
     // Get data from TLM-Manager here!
     int nTLMInterfaces = model.GetInterfacesNum();
 
@@ -484,8 +481,7 @@ void PrintData(MetaModel& model,
                std::ofstream& dataFile,
                std::map<int, TLMTimeDataSignal> &dataStorageSignal,
                std::map<int, TLMTimeData1D>& dataStorage1D,
-               std::map<int, TLMTimeData3D> &dataStorage3D)
-{
+               std::map<int, TLMTimeData3D> &dataStorage3D) {
     double startTime = model.GetSimParams().GetStartTime();
 
     // Get data from TLM-Manager here!
@@ -636,8 +632,7 @@ void PrintData(MetaModel& model,
     dataFile << std::endl;
 }
 
-void PrintRunStatus(MetaModel& model, std::ofstream& runFile, tTM_Info& tInfo, double SimTime)
-{
+void PrintRunStatus(MetaModel& model, std::ofstream& runFile, tTM_Info& tInfo, double SimTime)  {
     double startTime = model.GetSimParams().GetStartTime();
     double endTime = model.GetSimParams().GetEndTime();
     double timeStep = model.GetSimParams().GetWriteTimeStep();

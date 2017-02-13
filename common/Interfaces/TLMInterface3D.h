@@ -17,8 +17,7 @@ class TLMTimeData3D;
 //!
 //! TLMInterface1D provides the client side functionality for a single TLM interface of three dimensions
 //!
-class TLMInterface3D : public TLMInterface
-{
+class TLMInterface3D : public TLMInterface {
 public:
     TLMInterface3D(TLMClientComm& theComm, std::string& aName, double StartTime, std::string Domain="Mechanical");
 

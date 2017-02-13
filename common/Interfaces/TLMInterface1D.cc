@@ -23,8 +23,7 @@ TLMInterface1D::~TLMInterface1D() {
 }
 
 
-void TLMInterface1D::UnpackTimeData(TLMMessage &mess)
-{
+void TLMInterface1D::UnpackTimeData(TLMMessage &mess) {
     Comm.UnpackTimeDataMessage1D(mess, TimeData);
 
     NextRecvTime =  TimeData.back().time + Params.Delay;

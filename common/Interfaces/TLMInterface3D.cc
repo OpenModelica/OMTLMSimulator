@@ -12,10 +12,7 @@ static const double TLM_DAMP_DELAY = 1.5;
 using namespace tlmMisc;
 
 TLMInterface3D::TLMInterface3D(TLMClientComm &theComm, std::string &aName, double StartTime, std::string Domain)
-    : TLMInterface(theComm, aName, StartTime, 6, "Bidirectional", Domain)
-{
-
-}
+    : TLMInterface(theComm, aName, StartTime, 6, "Bidirectional", Domain) {}
 
 TLMInterface3D::~TLMInterface3D() {
     if(DataToSend.size() != 0) {
@@ -28,8 +25,7 @@ TLMInterface3D::~TLMInterface3D() {
 }
 
 
-void TLMInterface3D::UnpackTimeData(TLMMessage &mess)
-{
+void TLMInterface3D::UnpackTimeData(TLMMessage &mess) {
     TLMErrorLog::Log(std::string("Interface ") + GetName());
     Comm.UnpackTimeDataMessage3D(mess, TimeData);
 
@@ -252,9 +248,7 @@ void TLMInterface3D::SetTimeData(double time,
 }
 
 
-void TLMInterface3D::TransformTimeDataToCG(std::vector<TLMTimeData3D>& timeData, TLMConnectionParams& params)
-{
-
+void TLMInterface3D::TransformTimeDataToCG(std::vector<TLMTimeData3D>& timeData, TLMConnectionParams& params) {
     std::vector<TLMTimeData3D>::iterator iter;
     for(iter=timeData.begin(); iter!=timeData.end(); iter++) {
         TLMTimeData3D& data = *iter;

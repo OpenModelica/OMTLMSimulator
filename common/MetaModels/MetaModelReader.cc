@@ -165,8 +165,7 @@ void MetaModelReader::ReadTLMInterfaceNodes(xmlNode* node, int ComponentID) {
     }
 }
 
-void MetaModelReader::ReadTLMParameters(xmlNode *node, int ComponentID)
-{
+void MetaModelReader::ReadTLMParameters(xmlNode *node, int ComponentID) {
     for(xmlNode* curNode = node->children; curNode; curNode = curNode->next) {
         if(   (XML_ELEMENT_NODE == curNode->type)
                && (strcmp("Parameter", (const char*)(curNode->name)) == 0)) {
@@ -225,8 +224,7 @@ void MetaModelReader::ReadVectorAttribute(xmlNode* node, const char *attribute, 
 
 // ReadVectorAttribute method reads a nodes 3D vector attribute if applicable.
 // For instance, reads a position vector "x,y,z", that is, Position="0.0,1.0,-0.3"
-void MetaModelReader::ReadPositionAndOrientation(xmlNode* node, double R[3], double A[9])
-{
+void MetaModelReader::ReadPositionAndOrientation(xmlNode* node, double R[3], double A[9]) {
     double phi[3] = {0.0, 0.0, 0.0};
 
     ReadVectorAttribute(node, "Position", R);

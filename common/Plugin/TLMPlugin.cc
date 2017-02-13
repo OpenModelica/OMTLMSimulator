@@ -3,8 +3,7 @@
 
 
 // V = M * V
-void TransformMV(double A[9], double V[3])
-{
+void TransformMV(double A[9], double V[3]) {
     double XX = A[0]*V[0];
     XX += A[1]*V[1];
     XX += A[2]*V[2];
@@ -22,9 +21,9 @@ void TransformMV(double A[9], double V[3])
     V[2] = ZZ;
 }	
 
+
 // V = V * M
-void TransformVM(double V[3], double A[9])
-{
+void TransformVM(double V[3], double A[9]) {
     double XX = V[0]*A[0];
     XX += V[1]*A[3];
     XX += V[2]*A[6];
@@ -77,8 +76,7 @@ void  TLMPlugin::GetForce3D(double position[],
 
 void TLMPlugin::GetValueSignal(TLMTimeDataSignal &Data,
                                TLMConnectionParams &Params,
-                               double *value)
-{
+                               double *value) {
     if(Data.time == TIME_WITHOUT_DATA) {
         (*value) = 0.0;
     }
@@ -88,11 +86,11 @@ void TLMPlugin::GetValueSignal(TLMTimeDataSignal &Data,
     }
 }
 
+
 void TLMPlugin::GetForce1D(double speed,
                            TLMTimeData1D &Data,
                            TLMConnectionParams &Params,
-                           double *force)
-{
+                           double *force) {
 
     if(Data.time == TIME_WITHOUT_DATA) {
         (*force) = 0.0;

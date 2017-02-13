@@ -187,8 +187,7 @@ public:
 };
 
 //! Lock the mutex.
-inline void SimpleLock::lock()
-{
+inline void SimpleLock::lock() {
 #ifndef SKIP_PTHREADS
     DBG_VALIDATE(pthread_mutex_lock(&the_lock));
 #endif
@@ -199,8 +198,7 @@ inline void SimpleLock::lock()
 }
 
 //! Unlock the mutex.
-inline void SimpleLock::unlock()
-{
+inline void SimpleLock::unlock() {
 #ifdef DEBUG_TQ_VER_FLG
     assert(pthread_equal(ownerThreadID,pthread_self()));
     ownerThreadID = 777;
@@ -211,8 +209,7 @@ inline void SimpleLock::unlock()
 }
 
 // Wait on the condition using the specified mutex.
-inline void SimpleCond::wait(SimpleLock& lock)
-{
+inline void SimpleCond::wait(SimpleLock& lock) {
 #ifdef DEBUG_TQ_VER_FLG
     pthread_t savedID = lock.ownerThreadID;
     lock.ownerThreadID = 777;
