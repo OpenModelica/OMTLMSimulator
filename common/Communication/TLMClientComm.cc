@@ -265,7 +265,7 @@ void TLMClientComm::CreateInterfaceRegMessage(std::string& Name, int dimensions,
 std::string specification = Name;
 TLMErrorLog::Log("Client sends nameAndType: "+specification);
 #else
-    std:.string specification = Name;
+    std::string specification = Name;
     TLMErrorLog::Log("Client sends name: "+specification);
 #endif
 
