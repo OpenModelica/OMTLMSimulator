@@ -20,7 +20,7 @@
 //! PluginImplemneter class implements the  TLMPlugin interface.
 class PluginImplementer: public TLMPlugin {
 
- public:
+public:
     //! Constructor
     PluginImplementer();
 
@@ -33,7 +33,7 @@ class PluginImplementer: public TLMPlugin {
 protected:
 
     //! SetDebugOut function enables/disables debug information
-    //! output from TLM plugin. 
+    //! output from TLM plugin.
     //! Input: if Enable is true - output is on, othewise - off.
     virtual void SetDebugOut(bool Enable) { TLMErrorLog::SetDebugOut( Enable); }
 
@@ -110,7 +110,7 @@ protected:
     virtual void ReceiveTimeData(TLMInterface* reqIfc, double time);
 
     //! Evaluate the reaction force from the TLM connection
-    //! for a specified interface. Might need to receive messages from the 
+    //! for a specified interface. Might need to receive messages from the
     //! TLM manager with TimeData.
     //! Input:
     //!  \param interfaceID - ID of an interface registered with RegisteTLMInterface
@@ -175,7 +175,7 @@ protected:
     void GetTimeData3D(int interfaceID, double time, TLMTimeData3D& DataOut);
 
     void GetParameterValue(int parameterID, std::string &Name, std::string &Value);
- protected:
+protected:
 
     //! StartTime - start time for the simulation
     double StartTime;

@@ -31,9 +31,9 @@ int main(int argn, char* argv[]) {
     char* Model;
 
     if(argn != 8) {
-	cout << "TLM test application. Usage: " << endl
-	     << "tlmtest  <k1> <k2> <Model> <FromTime> <ToTime> <Step> <Server:port>" << endl;
-	exit(1);
+        cout << "TLM test application. Usage: " << endl
+             << "tlmtest  <k1> <k2> <Model> <FromTime> <ToTime> <Step> <Server:port>" << endl;
+        exit(1);
     };
     // Coefficients used in the ODE
     const double k1 = atof(argv[1]);
@@ -49,16 +49,16 @@ int main(int argn, char* argv[]) {
     TlmForce->SetDebugOut(true);
 
     if(!TlmForce->Init(Model, Time, TimeEnd, MaxStep, ServerName)) {
-	cerr << "Failed to init TLM plugin" << endl;
-	exit(1);
+        cerr << "Failed to init TLM plugin" << endl;
+        exit(1);
     };
 
     // This is the only TLM interface of this model: px
     int forceID = TlmForce->RegisteTLMInterface("px");
 
     if(forceID < 0) {
-	cerr << "Failed to register TLM interface" << endl;
-	exit(1);
+        cerr << "Failed to register TLM interface" << endl;
+        exit(1);
     }
 
     // Initialize the random number generator
@@ -82,43 +82,43 @@ int main(int argn, char* argv[]) {
     // do simulation
     while(Time < TimeEnd) {
 
-	// Current position needed to request info from TLM interface
-	position[0] = x;
-	speed[0] = v;
+        // Current position needed to request info from TLM interface
+        position[0] = x;
+        speed[0] = v;
 
-	// Time step is random between 0.5 MaxStep and MaxStep
-	dt = (MaxStep + rand() * MaxStep / RAND_MAX) / 2;
+        // Time step is random between 0.5 MaxStep and MaxStep
+        dt = (MaxStep + rand() * MaxStep / RAND_MAX) / 2;
 
-	// Get force & moment from TLM connection
-	TlmForce->GetForce3D(forceID, Time+dt,  position, orientation, speed, ang_speed, force);
+        // Get force & moment from TLM connection
+        TlmForce->GetForce3D(forceID, Time+dt,  position, orientation, speed, ang_speed, force);
 
-	cout<< "Mdl: " << Model << " t=" << Time+dt << " got f= " << force[0] << "; v= " << v << endl;
+        cout<< "Mdl: " << Model << " t=" << Time+dt << " got f= " << force[0] << "; v= " << v << endl;
 
-	// Calculate derivatives according to the implicit Euler method
-	double v_next = (v + dt * (-k1* x + k2 * sin(Time+dt) + force[0])) / (1 + k1 * dt * dt);
-	double x_next = x + v_next * dt;
+        // Calculate derivatives according to the implicit Euler method
+        double v_next = (v + dt * (-k1* x + k2 * sin(Time+dt) + force[0])) / (1 + k1 * dt * dt);
+        double x_next = x + v_next * dt;
 
-	x = x_next;
-	v = v_next;
+        x = x_next;
+        v = v_next;
 
-	// Preparing to send to TLM
-	position[0] = x;
-	speed[0] = v;
-	
-	// Pass info to the tlm
-	TlmForce->SetMotion3D(forceID, Time + dt, position, orientation, speed, ang_speed);
+        // Preparing to send to TLM
+        position[0] = x;
+        speed[0] = v;
 
-	cout<< "Model " << Model << " time: " << Time << "; x = " << x << "; v = " << v << endl;
+        // Pass info to the tlm
+        TlmForce->SetMotion3D(forceID, Time + dt, position, orientation, speed, ang_speed);
 
-	outstr << Time << ' ' << x << ' ' << v << ' ' << force[0] << endl;
-	
-	// do the time step
-	Time += dt;	
+        cout<< "Model " << Model << " time: " << Time << "; x = " << x << "; v = " << v << endl;
+
+        outstr << Time << ' ' << x << ' ' << v << ' ' << force[0] << endl;
+
+        // do the time step
+        Time += dt;
     }
 
     delete TlmForce;
 
-    cerr << "Simulation done for model " << Model << endl;    
+    cerr << "Simulation done for model " << Model << endl;
 
     return 0;
 }

@@ -91,7 +91,7 @@ void ManagerCommHandler::RunStartupProtocol() {
     int acceptSocket = Comm.CreateServerSocket();
     
     // Update the meta-model with the selected server port.
-    TheModel.GetSimParams().SetPort(Comm.GetServerPort());    
+    TheModel.GetSimParams().SetPort(Comm.GetServerPort());
     
     // Start the external components forming "coupled simulation"
     TheModel.StartComponents();
@@ -111,10 +111,10 @@ void ManagerCommHandler::RunStartupProtocol() {
         TM_Stop(&tInfo);
         if( tInfo.total.tv_sec > TheModel.GetSimParams().GetTimeout() ){
             Comm.CloseAll();
-            TLMErrorLog::FatalError("Timeout - failed to start all components, give up! (" 
-                                    + TLMErrorLog::ToStdStr(tInfo.total.tv_sec) 
-                                    + " > " + TLMErrorLog::ToStdStr(TheModel.GetSimParams().GetTimeout()) 
-                                    + ")" );            
+            TLMErrorLog::FatalError("Timeout - failed to start all components, give up! ("
+                                    + TLMErrorLog::ToStdStr(tInfo.total.tv_sec)
+                                    + " > " + TLMErrorLog::ToStdStr(TheModel.GetSimParams().GetTimeout())
+                                    + ")" );
             break;
         }
         // Restart is needed for correct time accumulation.
@@ -205,7 +205,7 @@ void ManagerCommHandler::RunStartupProtocol() {
 void ManagerCommHandler::ProcessRegComponentMessage( TLMMessage& mess) {
 
     if(mess.Header.MessageType !=  TLMMessageTypeConst::TLM_REG_COMPONENT) {
-	TLMErrorLog::FatalError("Component registration message expected");
+        TLMErrorLog::FatalError("Component registration message expected");
     }
 
     string aName ((const char*)(& mess.Data[0]), mess.Header.DataSize);
@@ -213,7 +213,7 @@ void ManagerCommHandler::ProcessRegComponentMessage( TLMMessage& mess) {
     int CompID = TheModel.GetTLMComponentID(aName);
 
     if( CompID < 0 || CompID >= TheModel.GetComponentsNum() ){
-	TLMErrorLog::FatalError("Component registration for " + aName + " failed!");
+        TLMErrorLog::FatalError("Component registration for " + aName + " failed!");
         return;
     }
 
@@ -226,7 +226,7 @@ void ManagerCommHandler::ProcessRegComponentMessage( TLMMessage& mess) {
     mess.Header.TLMInterfaceID = CompID;
     
     TLMErrorLog::Log(string("Component ") + aName + " is connected");
-	
+
 }
 
 // ProcessRegInterfaceMessage processes a TLMInterface registration message from a client.
@@ -238,7 +238,7 @@ void ManagerCommHandler::ProcessRegInterfaceMessage(int compID, TLMMessage& mess
     if(mess.Header.MessageType != TLMMessageTypeConst::TLM_REG_INTERFACE) {
         //std::cerr << "wrong message is: " <<  mess.Header.MessageType << endl;
         //std::cerr << "wrong message is: " <<  int(mess.Header.MessageType) << endl;
-       TLMErrorLog::FatalError("Interface registration message expected");
+        TLMErrorLog::FatalError("Interface registration message expected");
     }
 
     // First, find the interface in the meta model
@@ -298,7 +298,7 @@ void ManagerCommHandler::ProcessRegInterfaceMessage(int compID, TLMMessage& mess
         domain = "Mechanical";
     }
 
-    int IfcID = TheModel.GetTLMInterfaceID(compID, aName);    
+    int IfcID = TheModel.GetTLMInterfaceID(compID, aName);
 
     mess.Header.TLMInterfaceID = IfcID;
 
@@ -310,12 +310,12 @@ void ManagerCommHandler::ProcessRegInterfaceMessage(int compID, TLMMessage& mess
         //std::string type = "1D";                                //HARD-CODED /robbr
         TheModel.RegisterTLMInterfaceProxy(compID, aName, dimensions,
                                            causality, domain);
-        IfcID = TheModel.GetTLMInterfaceID(compID, aName);        
+        IfcID = TheModel.GetTLMInterfaceID(compID, aName);
     }
 
     if(IfcID < 0) {
         // interface not found
-        TLMErrorLog::Warning(string("Interface ") + 
+        TLMErrorLog::Warning(string("Interface ") +
                              TheModel.GetTLMComponentProxy(compID).GetName() + '.'
                              + aName + " not defined in metamodel. Ignored.");
         return;
@@ -326,7 +326,7 @@ void ManagerCommHandler::ProcessRegInterfaceMessage(int compID, TLMMessage& mess
     }
     else if( CommMode == InterfaceRequestMode ){
         
-        TLMErrorLog::Log(string("Register TLM interface ") + 
+        TLMErrorLog::Log(string("Register TLM interface ") +
                          TheModel.GetTLMComponentProxy(compID).GetName() + '.' + aName);
         
         std::stringstream ss;
@@ -350,7 +350,7 @@ void ManagerCommHandler::ProcessRegParameterMessage(int compID, TLMMessage &mess
     if(mess.Header.MessageType != TLMMessageTypeConst::TLM_REG_PARAMETER) {
         //std::cerr << "wrong message is: " <<  mess.Header.MessageType << endl;
         //std::cerr << "wrong message is: " <<  int(mess.Header.MessageType) << endl;
-    TLMErrorLog::FatalError("Parameter registration message expected");
+        TLMErrorLog::FatalError("Parameter registration message expected");
     }
 
     // First, find the interface in the meta model
@@ -364,7 +364,7 @@ void ManagerCommHandler::ProcessRegParameterMessage(int compID, TLMMessage &mess
         if(aNameAndValue[i] == ':' && readingName) {
             readingName = false;
         }
-       else if(readingName) {
+        else if(readingName) {
             aName += aNameAndValue[i];
         }
         else {
@@ -417,7 +417,7 @@ void ManagerCommHandler::SetupInterfaceConnectionMessage(int IfcID, std::string&
 
     int connID = ifc.GetConnectionID();
     if(connID < 0){
-	// interface is not connected in the meta-model
+        // interface is not connected in the meta-model
         mess.Header.TLMInterfaceID = -1;
         return;
     }
@@ -435,24 +435,24 @@ void ManagerCommHandler::SetupInterfaceConnectionMessage(int IfcID, std::string&
 
     // Send initial interface position
     //if(ifc.GetDimensions() == 9) {
-        TLMTimeData3D& td = ifc.getTime0Data3D();
-        for(int i=0 ; i<3 ; i++ ) param.Nom_cI_R_cX_cX[i] = td.Position[i];
-        for(int i=0 ; i<9 ; i++ ) param.Nom_cI_A_cX[i] = td.RotMatrix[i];
+    TLMTimeData3D& td = ifc.getTime0Data3D();
+    for(int i=0 ; i<3 ; i++ ) param.Nom_cI_R_cX_cX[i] = td.Position[i];
+    for(int i=0 ; i<9 ; i++ ) param.Nom_cI_A_cX[i] = td.RotMatrix[i];
     //}
-//    else if(ifc.GetDimensions() == 3 && ifc.GetCausality() == "Bidirectional") {
-//        TLMTimeData1D& td = ifc.getTime0Data1D();
-//        param.Nom_cI_R_cX_cX[0] = 0;        param.Nom_cI_R_cX_cX[1] = 0;    param.Nom_cI_R_cX_cX[2] = 0;
-//        param.Nom_cI_A_cX[0] = td.Position; param.Nom_cI_A_cX[1] = 0;       param.Nom_cI_A_cX[2] = 0;
-//        param.Nom_cI_A_cX[3] = 0;           param.Nom_cI_A_cX[4] = 1;       param.Nom_cI_A_cX[5] = 0;
-//        param.Nom_cI_A_cX[6] = 0;           param.Nom_cI_A_cX[7] = 0;       param.Nom_cI_A_cX[8] = 1;
-//    }
-//    else {
-//        TLMTimeData1D& td = ifc.getTime0DataSignal();
-//        param.Nom_cI_R_cX_cX[0] = 0;    param.Nom_cI_R_cX_cX[1] = 0;    param.Nom_cI_R_cX_cX[2] = 0;
-//        param.Nom_cI_A_cX[0] = 1;       param.Nom_cI_A_cX[1] = 0;       param.Nom_cI_A_cX[2] = 0;
-//        param.Nom_cI_A_cX[3] = 0;       param.Nom_cI_A_cX[4] = 1;       param.Nom_cI_A_cX[5] = 0;
-//        param.Nom_cI_A_cX[6] = 0;       param.Nom_cI_A_cX[7] = 0;       param.Nom_cI_A_cX[8] = 1;
-//    }
+    //    else if(ifc.GetDimensions() == 3 && ifc.GetCausality() == "Bidirectional") {
+    //        TLMTimeData1D& td = ifc.getTime0Data1D();
+    //        param.Nom_cI_R_cX_cX[0] = 0;        param.Nom_cI_R_cX_cX[1] = 0;    param.Nom_cI_R_cX_cX[2] = 0;
+    //        param.Nom_cI_A_cX[0] = td.Position; param.Nom_cI_A_cX[1] = 0;       param.Nom_cI_A_cX[2] = 0;
+    //        param.Nom_cI_A_cX[3] = 0;           param.Nom_cI_A_cX[4] = 1;       param.Nom_cI_A_cX[5] = 0;
+    //        param.Nom_cI_A_cX[6] = 0;           param.Nom_cI_A_cX[7] = 0;       param.Nom_cI_A_cX[8] = 1;
+    //    }
+    //    else {
+    //        TLMTimeData1D& td = ifc.getTime0DataSignal();
+    //        param.Nom_cI_R_cX_cX[0] = 0;    param.Nom_cI_R_cX_cX[1] = 0;    param.Nom_cI_R_cX_cX[2] = 0;
+    //        param.Nom_cI_A_cX[0] = 1;       param.Nom_cI_A_cX[1] = 0;       param.Nom_cI_A_cX[2] = 0;
+    //        param.Nom_cI_A_cX[3] = 0;       param.Nom_cI_A_cX[4] = 1;       param.Nom_cI_A_cX[5] = 0;
+    //        param.Nom_cI_A_cX[6] = 0;       param.Nom_cI_A_cX[7] = 0;       param.Nom_cI_A_cX[8] = 1;
+    //    }
 
     mess.Header.DataSize = sizeof (TLMConnectionParams);
 
@@ -464,7 +464,7 @@ void ManagerCommHandler::SetupInterfaceConnectionMessage(int IfcID, std::string&
 
 void ManagerCommHandler::SetupInterfaceRequestMessage(TLMMessage& mess)
 {
-        
+
     TLMConnectionParams param;
     param.Delay = 0.1;
     param.mode = 1;
@@ -615,9 +615,9 @@ void ManagerCommHandler::UnpackAndStoreTimeData(TLMMessage& message)
         // check if we have byte order missmatch in the message and perform
         // swapping if necessary
         bool switch_byte_order =
-        (TLMMessageHeader::IsBigEndianSystem != message.Header.SourceIsBigEndianSystem);
+                (TLMMessageHeader::IsBigEndianSystem != message.Header.SourceIsBigEndianSystem);
         if (switch_byte_order)
-        TLMCommUtil::ByteSwap(Next, sizeof(double),  message.Header.DataSize/sizeof(double));
+            TLMCommUtil::ByteSwap(Next, sizeof(double),  message.Header.DataSize/sizeof(double));
 
         // forward the time data
         TLMTimeData3D& data = ip.getTime0Data3D();
@@ -632,9 +632,9 @@ void ManagerCommHandler::UnpackAndStoreTimeData(TLMMessage& message)
         // check if we have byte order missmatch in the message and perform
         // swapping if necessary
         bool switch_byte_order =
-        (TLMMessageHeader::IsBigEndianSystem != message.Header.SourceIsBigEndianSystem);
+                (TLMMessageHeader::IsBigEndianSystem != message.Header.SourceIsBigEndianSystem);
         if (switch_byte_order)
-        TLMCommUtil::ByteSwap(Next, sizeof(double),  message.Header.DataSize/sizeof(double));
+            TLMCommUtil::ByteSwap(Next, sizeof(double),  message.Header.DataSize/sizeof(double));
 
         // forward the time data
         TLMTimeData3D& data = ip.getTime0Data3D();
@@ -657,9 +657,9 @@ void ManagerCommHandler::UnpackAndStoreTimeData(TLMMessage& message)
         // check if we have byte order missmatch in the message and perform
         // swapping if necessary
         bool switch_byte_order =
-        (TLMMessageHeader::IsBigEndianSystem != message.Header.SourceIsBigEndianSystem);
+                (TLMMessageHeader::IsBigEndianSystem != message.Header.SourceIsBigEndianSystem);
         if (switch_byte_order)
-        TLMCommUtil::ByteSwap(Next, sizeof(double),  message.Header.DataSize/sizeof(double));
+            TLMCommUtil::ByteSwap(Next, sizeof(double),  message.Header.DataSize/sizeof(double));
 
         // forward the time data
         TLMTimeData3D& data = ip.getTime0Data3D();
@@ -700,7 +700,7 @@ int ManagerCommHandler::ProcessInterfaceMonitoringMessage(TLMMessage& message)
         }
     }
 
-    TLMErrorLog::Log( "Request for monitoring " + aName ); 
+    TLMErrorLog::Log( "Request for monitoring " + aName );
 
     // Here the full name, i.e., component.interface, is requered
     int IfcID = TheModel.GetTLMInterfaceID(aName);
@@ -710,7 +710,7 @@ int ManagerCommHandler::ProcessInterfaceMonitoringMessage(TLMMessage& message)
     message.Header.DataSize = 0;
     
     if( IfcID < 0 ){
-        TLMErrorLog::Warning( "In monitoring, interface " + aName + " is not connected." ); 
+        TLMErrorLog::Warning( "In monitoring, interface " + aName + " is not connected." );
         return -1;
     }
     
@@ -727,7 +727,7 @@ int ManagerCommHandler::ProcessInterfaceMonitoringMessage(TLMMessage& message)
 
 
     string::size_type DotPos = aName.find('.');  // Component name is the part before '.'
-    string IfcName = aName.substr(DotPos+1);    
+    string IfcName = aName.substr(DotPos+1);
     
     SetupInterfaceConnectionMessage(IfcID, IfcName, message);
 
@@ -750,11 +750,11 @@ void ManagerCommHandler::ForwardToMonitor(TLMMessage& message){
         // Forward to all connected monitoring ports
         multimap<int,int>::iterator pos;
         for( pos = monitorInterfaceMap.lower_bound(TLMInterfaceID) ;
-             pos != monitorInterfaceMap.upper_bound(TLMInterfaceID) ; 
+             pos != monitorInterfaceMap.upper_bound(TLMInterfaceID) ;
              pos++ ){
             
-            TLMErrorLog::Log( "Forwarding to monitor, interface " + TLMErrorLog::ToStdStr(TLMInterfaceID) 
-                              + " on socket " + TLMErrorLog::ToStdStr(pos->second) ); 
+            TLMErrorLog::Log( "Forwarding to monitor, interface " + TLMErrorLog::ToStdStr(TLMInterfaceID)
+                              + " on socket " + TLMErrorLog::ToStdStr(pos->second) );
             
             int hdl = pos->second;
             
@@ -765,7 +765,7 @@ void ManagerCommHandler::ForwardToMonitor(TLMMessage& message){
             newMessage->Header.TLMInterfaceID = TLMInterfaceID;
 
             newMessage->Header.DataSize = message.Header.DataSize;
-            newMessage->Data.resize(newMessage->Header.DataSize);	    
+            newMessage->Data.resize(newMessage->Header.DataSize);
             
             memcpy(&newMessage->Data[0], &message.Data[0], newMessage->Header.DataSize);
 
@@ -831,16 +831,16 @@ void ManagerCommHandler::MonitorThreadRun()
             hdl = monComm.AcceptComponentConnections();
             if( hdl < 0 ){
                 TLMErrorLog::FatalError("Failed to accept socket.");
-                abort();        
+                abort();
             }
             monComm.AddActiveSocket(hdl);
             MonitorConnected = true;
-            socks.push_back(hdl);            
+            socks.push_back(hdl);
         }
         else {
             for( std::vector<int>::iterator it=socks.begin() ; it != socks.end() ; it++ ){
                 if(monComm.HasData(*it)) {
-                    TLMErrorLog::Log("Accepted data on monitoring connection" );                    
+                    TLMErrorLog::Log("Accepted data on monitoring connection" );
 
                     hdl = *it;
                     break;
@@ -863,7 +863,7 @@ void ManagerCommHandler::MonitorThreadRun()
             }
             
             if(message->Header.MessageType ==  TLMMessageTypeConst::TLM_CHECK_MODEL) {
-                TLMErrorLog::Warning("Received unexpected check-model on monitoring interface, try to answer..."); 
+                TLMErrorLog::Warning("Received unexpected check-model on monitoring interface, try to answer...");
 
                 message->Header.TLMInterfaceID = 1;
                 message->Header.DataSize = 0;
@@ -873,7 +873,7 @@ void ManagerCommHandler::MonitorThreadRun()
             else {
                 int IfcID = ProcessInterfaceMonitoringMessage(*message);
                 MessageQueue.PutWriteSlot(message);
-		
+
                 if( IfcID >= 0 ){
 
                     TLMErrorLog::Log("Register monitor handle for interface " + tlmMisc::ToStr(IfcID));

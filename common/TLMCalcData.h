@@ -17,16 +17,16 @@
 class TLMConnectionParams {
 public:
     //! Constructor initialized everything to 0.0.
-    TLMConnectionParams() : 
-        Delay(0.0), 
-        Zf(0.0), 
-        Zfr(0.0), 
-        alpha(0.0), 
+    TLMConnectionParams() :
+        Delay(0.0),
+        Zf(0.0),
+        Zfr(0.0),
+        alpha(0.0),
         //Position,
         //RotMatrix,
         //Nom_cI_R_cX_cX,
         //Nom_cI_A_cX,
-        mode(0.0) 
+        mode(0.0)
     {
         for(int i=0 ; i<3 ; i++){
             cX_R_cG_cG[i] = 0.0;
@@ -40,12 +40,12 @@ public:
     }
 
     //! time delay in the line
-    double Delay; 
+    double Delay;
     //! impedance
-    double Zf;   
+    double Zf;
     //! impedance for rotation
-    double Zfr;   
-    //! damping 
+    double Zfr;
+    //! damping
     double alpha;
 
     //! Position cX_R_cG_cG of the component in the common coordinate system (typically global) cG.
@@ -56,7 +56,7 @@ public:
     //! cX_R_cG_cG - cX position relative cG, expressed in cG.
     double cX_R_cG_cG[3];
 
-    //! Rotation matrix cX_A_cG stored row-wise. 
+    //! Rotation matrix cX_A_cG stored row-wise.
     //! Notation is:
     //! cX - Xmodel inertial coordinate system
     //! A  - Cartesian orientation matrix (x,y,z)
@@ -80,7 +80,7 @@ public:
     //! cI_A_cX - cI orientation relative cX.
     double Nom_cI_A_cX[9];
 
-    //! Connection mode, currently: 
+    //! Connection mode, currently:
     //! 0.0 = Real simulation
     //! 1.0 = Interface data request
     double mode;

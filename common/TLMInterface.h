@@ -21,7 +21,7 @@
 //!
 class TLMInterface {
 
- public:
+public:
 
     //! TLMInterface constructor. Sends a registration message to the TLM manager
     //! and prepares the object for simulation.
@@ -59,18 +59,18 @@ class TLMInterface {
     //! Get parameters for the TLM connection attached to the interface
     const TLMConnectionParams& GetConnParams() const { return Params; }
 
- protected:
+protected:
 
     //! Linear interpolation (can be used for linear extrapolation as well)
     //! returns f(time) = ((time - t[0]) * f[1] - (time - t[1]) * f[0]) /( t[1] - t[0])
     inline static double linear_interpolate(double time,
-                        double t0, double t1,
-                        double f0, double f1){
-    return ((time - t0) * f1 - (time - t1) * f0) / ( t1 - t0);
+                                            double t0, double t1,
+                                            double f0, double f1){
+        return ((time - t0) * f1 - (time - t1) * f0) / ( t1 - t0);
     }
 
 
-        //! Hermite cubic interpolation. For the given 4 data points t[i], f[i] and time,
+    //! Hermite cubic interpolation. For the given 4 data points t[i], f[i] and time,
     //! such that t[0]<t[1]<time<t[2]<t[3], returns f(time). .
     static double InterpolateHermite(double time, double t[4], double f[4]);
 

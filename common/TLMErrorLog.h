@@ -41,7 +41,7 @@ public:
     static bool LogEnabled() { return LoggingOn; }
 
     //! SetDebugOut function enables/disables debug information
-    //! output from TLM plugin. 
+    //! output from TLM plugin.
     //! Input: if Enable is true - output is on, othewise - off.
     static void SetDebugOut(bool Enable);
 
@@ -62,7 +62,7 @@ public:
     //! Otherwise abort()/exit() is called on fatal error.
     static void SetErrorException( bool Enable ) { ExceptionOn = Enable; }
 
-    //! Returns the state of the error exception mode. 
+    //! Returns the state of the error exception mode.
     static bool ExceptionEnabled(){ return ExceptionOn; }
 
     //! Return current time as string.
@@ -72,7 +72,7 @@ private:
     //! LoggingOn flags tells if logging is enabled.
     static bool LoggingOn;
 
-    //! Warning messages on if enabled. 
+    //! Warning messages on if enabled.
     static bool WarningOn;
 
     //! Exception mode on in enabled.

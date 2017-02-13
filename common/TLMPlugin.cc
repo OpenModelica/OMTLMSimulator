@@ -8,7 +8,7 @@ void TransformMV( double A[9], double V[3] )
     double XX = A[0]*V[0];
     XX += A[1]*V[1];
     XX += A[2]*V[2];
-		       
+
     double YY = A[3]*V[0];
     YY += A[4]*V[1];
     YY += A[5]*V[2];
@@ -46,12 +46,12 @@ void TransformVM(double V[3], double A[9])
 // The static GetForce function is a pure function that uses
 // parameters as defined for the GetForce above 
 void  TLMPlugin::GetForce3D(double position[],
-                          double orientation[],
-                          double speed[],
-                          double ang_speed[],
-                          TLMTimeData3D& Data,
-                          TLMConnectionParams& Params,
-                          double* force) {
+                            double orientation[],
+                            double speed[],
+                            double ang_speed[],
+                            TLMTimeData3D& Data,
+                            TLMConnectionParams& Params,
+                            double* force) {
 
     if(Data.time == TIME_WITHOUT_DATA) {
         for(int i = 0; i < 6; i++) {
@@ -80,7 +80,7 @@ void TLMPlugin::GetValueSignal(TLMTimeDataSignal &Data,
                                double *value)
 {
     if(Data.time == TIME_WITHOUT_DATA) {
-      (*value) = 0.0;
+        (*value) = 0.0;
     }
     else {
         //No physical connection, so just return the value
@@ -94,14 +94,14 @@ void TLMPlugin::GetForce1D(double speed,
                            double *force)
 {
 
-  if(Data.time == TIME_WITHOUT_DATA) {
-    (*force) = 0.0;
-  }
-  else {
-    double f = Data.GenForce;
+    if(Data.time == TIME_WITHOUT_DATA) {
+        (*force) = 0.0;
+    }
+    else {
+        double f = Data.GenForce;
 
-    // The reaction force is (ReceivedWave - Impedance * Velocity)
-    (*force) = f -  Params.Zf * speed;
-  }
+        // The reaction force is (ReceivedWave - Impedance * Velocity)
+        (*force) = f -  Params.Zf * speed;
+    }
 }
 

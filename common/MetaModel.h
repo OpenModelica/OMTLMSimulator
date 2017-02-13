@@ -52,22 +52,22 @@ public:
 
     //! Get the name of this interface
     const std::string& GetName() const {
-      return Name;
+        return Name;
     }
 
     //! Get the dimensions of this interface
     const int GetDimensions() const {
-      return Dimensions;
+        return Dimensions;
     }
 
     //! Get the causality of this interface
     const std::string GetCausality() const {
-      return Causality;
+        return Causality;
     }
 
     //! Get the domain of this interface
     const std::string GetDomain() const {
-      return Domain;
+        return Domain;
     }
 
     //! Get ID of the interface
@@ -107,13 +107,13 @@ public:
         return Connected;
     }
 
-//    TLMTimeDataSignal& getTime0DataSignal(){
-//        return time0DataSignal;
-//    }
+    //    TLMTimeDataSignal& getTime0DataSignal(){
+    //        return time0DataSignal;
+    //    }
 
-//    TLMTimeData1D& getTime0Data1D(){
-//        return time0Data1D;
-//    }
+    //    TLMTimeData1D& getTime0Data1D(){
+    //        return time0Data1D;
+    //    }
 
     //! Access data for simulation start time.
     TLMTimeData3D& getTime0Data3D(){
@@ -156,8 +156,8 @@ private:
 
     //! Data at simulation start time.
     //! Used for data interface data request mode.
-//    TLMTimeData3D time0DataSignal;
-//    TLMTimeData3D time0Data1D;
+    //    TLMTimeData3D time0DataSignal;
+    //    TLMTimeData3D time0Data1D;
     TLMTimeData3D time0Data3D;
 };
 
@@ -171,12 +171,12 @@ public:
 
     //! Get the name of this interface
     const std::string& GetName() const {
-      return Name;
+        return Name;
     }
 
     //! Get the dimensions of this interface
     const std::string& GetValue() const {
-      return Value;
+        return Value;
     }
 
     //! Get ID of the parameter
@@ -253,12 +253,12 @@ public:
                       const std::string& aStartCommand,
                       const std::string& aModelName,
                       bool aSolverMode,
-		      const std::string& aGeometryFile):
+                      const std::string& aGeometryFile):
         Name(aName),
         StartCommand(aStartCommand),
         ModelName(aModelName),
         SolverMode(aSolverMode),
-	GeometryFile(aGeometryFile),
+        GeometryFile(aGeometryFile),
         SocketHandle(-1),
         ReadyToSim(false)
       //cX_R_cG_cG,
@@ -320,7 +320,7 @@ public:
     }
 
     std::string& GetGeometryFile() {
-      return GeometryFile;
+        return GeometryFile;
     }
 
     //! Set position and orientation of the component inertial system relative the
@@ -514,7 +514,7 @@ public:
                                   const std::string& StartCommand,
                                   const std::string& ModelName,
                                   int SolverMode,
-				  const std::string& GeometryFile);
+                                  const std::string& GeometryFile);
 
     //! Return ComponentProxy for the specified ID.
     TLMComponentProxy& GetTLMComponentProxy(const int ID) {

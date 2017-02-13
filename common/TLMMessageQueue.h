@@ -15,7 +15,7 @@
 //! Class TLMMessageQueue is a thread-safe message queue as needed
 //! by the ManagerCommHandler class.
 class TLMMessageQueue {
-   
+
     //! The buffers to be sent.
     SimpleLock SendBufLock;
     std::queue<TLMMessage*> SendBuffers;
@@ -24,7 +24,7 @@ class TLMMessageQueue {
     //! Storage is messaged by this class.
     SimpleLock FreeBufLock;
     std::stack<TLMMessage*> FreeBuffers;
-     
+
     //! Nothing to be send. Wait on this.
     SimpleCond SenderWait;
 
@@ -32,7 +32,7 @@ class TLMMessageQueue {
     //! no more messages are expected in PutWriteSlot
     bool Terminated;
 
- public:
+public:
 
     //! Constructor
     TLMMessageQueue()

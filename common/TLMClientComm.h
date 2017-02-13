@@ -22,7 +22,7 @@ class TLMClientComm {
 
     int SocketHandle;
     
- public:
+public:
 
     //! Constructor
     TLMClientComm();
@@ -30,7 +30,7 @@ class TLMClientComm {
     //! Destructor, closes socket.
     ~TLMClientComm();
 
-    //! Fill in TLMMessage with the information from TLMTimeData vector 
+    //! Fill in TLMMessage with the information from TLMTimeData vector
     //! coming to given InterfaceID. This function is called by TLMPlugin
     //!  when constructing messages with time-stamped data.
     static void PackTimeDataMessageSignal(int InterfaceID,

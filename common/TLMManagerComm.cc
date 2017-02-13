@@ -43,7 +43,7 @@ int TLMManagerComm::CreateServerSocket()
     struct hostent *hp;
 
 #ifdef WIN32
-    WSADATA ws; 
+    WSADATA ws;
     int d;
     d=WSAStartup(0x0101,&ws);
     assert(d==0);
@@ -81,17 +81,17 @@ int TLMManagerComm::CreateServerSocket()
 
     int theSckt;
 
-    if ((theSckt = 
-#ifdef WIN32
-        socket(AF_INET, SOCK_STREAM,IPPROTO_TCP)
-#else
-        socket(AF_INET, SOCK_STREAM,0)
+    if ((theSckt =
+     #ifdef WIN32
+         socket(AF_INET, SOCK_STREAM,IPPROTO_TCP)
+     #else
+         socket(AF_INET, SOCK_STREAM,0)
 
-#endif
-        ) < 0 ) {
-            TLMErrorLog::FatalError("Create server socket - failed to get a socket handle") ;
+     #endif
+         ) < 0 ) {
+        TLMErrorLog::FatalError("Create server socket - failed to get a socket handle") ;
 
-            return -1;
+        return -1;
     }
 
     int bindCount = 0;
@@ -110,7 +110,7 @@ int TLMManagerComm::CreateServerSocket()
     }
 
     if(listen(theSckt, NumClients) != 0) {
-	BCloseSocket(theSckt);
+        BCloseSocket(theSckt);
         TLMErrorLog::FatalError("Crate server socket - failed in listen on the server socket.") ;
     };
 
@@ -189,7 +189,7 @@ void TLMManagerComm::CloseAll()
 {
     std::vector<int>::iterator activeSockIter;
     for( activeSockIter = ActiveSockets.begin() ; activeSockIter != ActiveSockets.end() ; activeSockIter++ ){
-        BCloseSocket(*activeSockIter);        
+        BCloseSocket(*activeSockIter);
     }
     BCloseSocket(ContactSocket);
 }

@@ -28,15 +28,15 @@ char tmpbuf[128];
 //#ifndef _MSC_VER
 #ifndef WIN32
 void _strtime( char* timestring ){
-	
-	time_t rawtime;
-        struct tm * timeinfo;
 
-       time ( &rawtime );
-       timeinfo = localtime ( &rawtime );
-       strcpy( tmpbuf,asctime (timeinfo) );
-	
-	}
+    time_t rawtime;
+    struct tm * timeinfo;
+
+    time ( &rawtime );
+    timeinfo = localtime ( &rawtime );
+    strcpy( tmpbuf,asctime (timeinfo) );
+
+}
 #endif
 
 
@@ -106,7 +106,7 @@ void  TLMErrorLog::Warning(const std::string& mess) {
 // Log function logs a message to log file
 void  TLMErrorLog::Log(const std::string& mess) {
 
-    if(!LoggingOn ) return; 
+    if(!LoggingOn ) return;
     Open();
     *outStream << TimeStr() << " Log: " << mess << std::endl;
     if( NormalErrorLogOn) {

@@ -33,8 +33,8 @@ void TLMCommUtil::SendMessage( TLMMessage& mess){
 
     if (doDetailedLogging) {
         TLMErrorLog::Log("SendMessage: wants to send "+
-            tlmMisc::Int2Str(sizeof(TLMMessageHeader))+"+"+
-            tlmMisc::Int2Str(DataSize)+ " bytes ");
+                         tlmMisc::Int2Str(sizeof(TLMMessageHeader))+"+"+
+                         tlmMisc::Int2Str(DataSize)+ " bytes ");
     }
 
     if(TLMMessageHeader::IsBigEndianSystem != mess.Header.SourceIsBigEndianSystem) {
@@ -105,9 +105,9 @@ bool TLMCommUtil::ReceiveMessage( TLMMessage& mess){
         // this should never happen, but it does...
         TLMErrorLog::Warning("Could not receive the header, will try again");
         bcount += recv(mess.SocketHandle,
-            (char*)(&mess.Header) + bcount, 
-            sizeof(TLMMessageHeader) - bcount,  
-            MSG_WAITALL);
+                       (char*)(&mess.Header) + bcount,
+                       sizeof(TLMMessageHeader) - bcount,
+                       MSG_WAITALL);
         if(bcount == 0) return false; // seems like on windows this may indicate "socket closed"
     }
     if(bcount == -1) {
@@ -156,9 +156,9 @@ bool TLMCommUtil::ReceiveMessage( TLMMessage& mess){
             // this should never happen, but it does...
             TLMErrorLog::Warning("Could not receive the TLM data, will try again");
             bcount += recv(mess.SocketHandle,
-                (char*)&(mess.Data[0]) + bcount, 
-                mess.Header.DataSize - bcount,  
-                MSG_WAITALL);	    
+                           (char*)&(mess.Data[0]) + bcount,
+                    mess.Header.DataSize - bcount,
+                    MSG_WAITALL);
         }
         if(bcount == -1) {
 

@@ -56,14 +56,14 @@ struct TLMMessageTypeConst {
 //! TLM clients & TLM manager.
 struct TLMMessageHeader {
 
-    //! The length of the signature string. 
+    //! The length of the signature string.
     static const int TLM_SIGNATURE_LENGTH =  8;
 
     //! The signature that comes in the beginning of every message
     static const char TLMSignature[TLM_SIGNATURE_LENGTH+1];
 
-    //! This constant tells if the host system is using BigEndian 
-    //!  conversion for data storage 
+    //! This constant tells if the host system is using BigEndian
+    //!  conversion for data storage
     static const char IsBigEndianSystem;
 
     //! Constructor
@@ -76,10 +76,10 @@ struct TLMMessageHeader {
     char Signature[TLM_SIGNATURE_LENGTH];
 
     //! Message king (see TLMMessageTypeConst above)
-    char MessageType;                     
+    char MessageType;
 
     //! The bit conversion used on originator system
-    char SourceIsBigEndianSystem;         
+    char SourceIsBigEndianSystem;
 
     //! Size of Data in bytes
     int  DataSize;
@@ -94,7 +94,7 @@ struct TLMMessageHeader {
 //! TLMMessage structure is used to encapsulate all the TLM messages
 struct TLMMessage {
     //! source/destination socket
-    int SocketHandle; 
+    int SocketHandle;
 
     //! Message header
     TLMMessageHeader Header;
@@ -115,21 +115,21 @@ struct TLMMessage {
 //! on client and server
 class TLMCommUtil {
 
- public:
+public:
 
     //! Empty contructor.
     TLMCommUtil(){}
 
 
-    //! The IsBigEndian() function detects if the current hardware 
+    //! The IsBigEndian() function detects if the current hardware
     //! uses Large or Small endian conversion
 
     static bool IsBigEndian()	{
-	short word = 0x4321;
-	if((*(char *)& word) != 0x21 )
-	    return true;
-	else 
-	    return false;
+        short word = 0x4321;
+        if((*(char *)& word) != 0x21 )
+            return true;
+        else
+            return false;
     }
 
     //! The ByteSwap function swaps byte order of any atomic type
@@ -137,7 +137,7 @@ class TLMCommUtil {
     //! endian systems.
     //! \param Buff - memory buffer to be processed
     //! \param  type_size - number of bytes in the data type (2,4,8)
-    //! \param  items - number of data items to be proccessed 
+    //! \param  items - number of data items to be proccessed
     inline static void ByteSwap(void * Buff, size_t type_size, size_t items = 1);
 
     //! Send the TLMMessage pointed by mess via socket with handle SocketHandle
@@ -145,7 +145,7 @@ class TLMCommUtil {
 
     //! Basic receive of a TLMMessage. Insures correct signature and
     //! fixes byte order for the message header if necessary.
-    //! Note that the actual message data is not processed, just received, 
+    //! Note that the actual message data is not processed, just received,
     //! Returns 'true' on success, 'false' if socket is closed, aborts on error.
     static bool ReceiveMessage( TLMMessage& mess);
 
@@ -155,13 +155,13 @@ inline void TLMCommUtil::ByteSwap(void * Buff, size_t type_size, size_t items){
     register unsigned char * b = (unsigned char *)Buff;
     register size_t items_cnt = items;
     while(items_cnt-- > 0) {
-	register size_t i = 0; // was int, warning removed.
-	register size_t j = type_size-1;
-	while (i<j)   {
-	    std::swap(b[i], b[j]);
-	    i++, j--;
-	}
-	b += type_size;
+        register size_t i = 0; // was int, warning removed.
+        register size_t j = type_size-1;
+        while (i<j)   {
+            std::swap(b[i], b[j]);
+            i++, j--;
+        }
+        b += type_size;
     }
 }
 #endif

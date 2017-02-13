@@ -128,7 +128,7 @@ void TLMInterface3D::GetTimeData(TLMTimeData3D& Instance, std::deque<TLMTimeData
         {
             // linear interpolation
             InterpolateLinear(Instance,
-                               Data[CurrentIntervalIndex], Data[CurrentIntervalIndex+1],OnlyForce);
+                              Data[CurrentIntervalIndex], Data[CurrentIntervalIndex+1],OnlyForce);
         }
     }
     else {
@@ -159,19 +159,19 @@ void TLMInterface3D::GetTimeData(TLMTimeData3D& Instance, std::deque<TLMTimeData
 
 
 void TLMInterface3D::GetForce( double time,
-                             double position[],
-                             double orientation[],
-                             double speed[],
-                             double ang_speed[],
-                             double* force) {
+                               double position[],
+                               double orientation[],
+                               double speed[],
+                               double ang_speed[],
+                               double* force) {
     TLMTimeData3D request;
     request.time = time - Params.Delay;
     GetTimeData(request);
 
     TLMPlugin::GetForce3D(position, orientation,
-                        speed, ang_speed,
-                        request, Params,
-                        force);
+                          speed, ang_speed,
+                          request, Params,
+                          force);
 
 
 }
@@ -180,10 +180,10 @@ void TLMInterface3D::GetForce( double time,
 
 // Set motion data and communicate if necessary.
 void TLMInterface3D::SetTimeData(double time,
-                               double position[],
-                               double orientation[],
-                               double speed[],
-                               double ang_speed[]) {
+                                 double position[],
+                                 double orientation[],
+                                 double speed[],
+                                 double ang_speed[]) {
     // put the variables into TLMTimeData structure and the end of  DataToSend vector
     int lastInd = DataToSend.size();
     DataToSend.resize( lastInd + 1);
@@ -214,9 +214,9 @@ void TLMInterface3D::SetTimeData(double time,
     }
 
     TLMPlugin::GetForce3D(position, orientation,
-                        speed, ang_speed,
-                        request, Params,
-                        item.GenForce);
+                          speed, ang_speed,
+                          request, Params,
+                          item.GenForce);
 
     // The wave to send is: (- Force + Impedance * Velocity)
     for(int i = 0; i < 3; i++) {

@@ -41,27 +41,27 @@ class SimpleLock {
 public:
 
     //! Constructor. Initializes the mutex
-    SimpleLock() 
+    SimpleLock()
 #ifdef DEBUG_TQ_VER_FLG
         :ownerThreadID(777)
-#endif
+    #endif
 
-        {
+    {
 #ifndef SKIP_PTHREADS
-            DBG_VALIDATE(pthread_mutex_init(&the_lock, NULL));
+        DBG_VALIDATE(pthread_mutex_init(&the_lock, NULL));
 #endif
-        };
+    };
 
     //! Unlock and destroy.
-    ~SimpleLock() 
-        {
+    ~SimpleLock()
+    {
 #ifdef DEBUG_TQ_VER_FLG
-            assert(ownerThreadID == 777);
+        assert(ownerThreadID == 777);
 #endif
 #ifndef SKIP_PTHREADS
-            DBG_VALIDATE(pthread_mutex_destroy (&the_lock));
+        DBG_VALIDATE(pthread_mutex_destroy (&the_lock));
 #endif
-        };
+    };
 
     //! Lock the mutex.
     inline void lock();
@@ -80,39 +80,39 @@ class SimpleCond {
 public:
 
     //! Constructor. Initializes the mutex.
-    SimpleCond() 
-        {
+    SimpleCond()
+    {
 #ifndef SKIP_PTHREADS
-            DBG_VALIDATE(pthread_cond_init(&the_cond, NULL));
+        DBG_VALIDATE(pthread_cond_init(&the_cond, NULL));
 #endif
-        };
+    };
 
     //! Unlock and destroy.
-    ~SimpleCond() 
-        {
+    ~SimpleCond()
+    {
 #ifndef SKIP_PTHREADS
-            DBG_VALIDATE(pthread_cond_destroy (&the_cond));
+        DBG_VALIDATE(pthread_cond_destroy (&the_cond));
 #endif
-        };
+    };
 
     //! Wait on the condition using the specified mutex.
     inline void wait(SimpleLock& lock);
 
     //! Signal on the condition.
     void signal()
-       {
+    {
 #ifndef SKIP_PTHREADS
-            DBG_VALIDATE(pthread_cond_signal(&the_cond));
+        DBG_VALIDATE(pthread_cond_signal(&the_cond));
 #endif
-        }
+    }
 
     //! Broadcast on the condition.
     void broadcast()
-        {
+    {
 #ifndef SKIP_PTHREADS
-            DBG_VALIDATE(pthread_cond_broadcast(&the_cond));
+        DBG_VALIDATE(pthread_cond_broadcast(&the_cond));
 #endif
-        }
+    }
 };
 
 
@@ -126,15 +126,15 @@ public:
 
     //! Constructor. Locks the mutex.
     AutoLock(SimpleLock& a_lock):the_lock(a_lock)
-        {
-            the_lock.lock();
-        };
+    {
+        the_lock.lock();
+    };
 
-     //! Destructor. Unlocks the mutex
-    ~AutoLock() 
-        {
-            the_lock.unlock();
-        };
+    //! Destructor. Unlocks the mutex
+    ~AutoLock()
+    {
+        the_lock.unlock();
+    };
 private:
     // Should never be used
     AutoLock& operator=(AutoLock& a_in) ;
@@ -149,38 +149,38 @@ class ThreadLocal {
     void * data;
 #endif
 
- public:
+public:
     
     //! Allocate a slot for thread specific data.
     ThreadLocal() {
 #ifndef SKIP_PTHREADS
-	DBG_VALIDATE(pthread_key_create(& keyID, NULL));
+        DBG_VALIDATE(pthread_key_create(& keyID, NULL));
 #else
-	data = NULL;
+        data = NULL;
 #endif
     }
 
     //! Release the slot.
     ~ThreadLocal() {
 #ifndef SKIP_PTHREADS
-	DBG_VALIDATE(pthread_key_delete(keyID));
+        DBG_VALIDATE(pthread_key_delete(keyID));
 #endif
     }
-  
+
     //! Get the thread specific pointer.
-    void * get_thread_specific() { 
+    void * get_thread_specific() {
 #ifndef SKIP_PTHREADS
-	return pthread_getspecific(keyID); 
+        return pthread_getspecific(keyID);
 #else
-	return data;
+        return data;
 #endif
     }
 
     void set_thread_specific(const void * value) {
 #ifndef SKIP_PTHREADS
-	pthread_setspecific(keyID, value);
+        pthread_setspecific(keyID, value);
 #else
-	data = (void*)value;
+        data = (void*)value;
 #endif
     }
     
@@ -197,7 +197,7 @@ inline void SimpleLock::lock()
     ownerThreadID = pthread_self();
 #endif
 }
-    
+
 //! Unlock the mutex.
 inline void SimpleLock::unlock()
 {
