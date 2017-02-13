@@ -1,7 +1,7 @@
 //
-// File: ManagerMain.cc
+// File: MonitorManagerMain.cc
 // 
-// TLM manager main program file.
+// TLM monitor main program file.
 #include <iostream>
 #include <fstream>
 #include <string>

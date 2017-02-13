@@ -47,7 +47,7 @@ SRCSRVLIB= ManagerCommHandler.cc \
 SRCMONITOR= $(SRCCLT) \
 	MetaModels/MetaModel.cc \
 	MetaModelReader.cc \
-	MonitorManagerMain.cc
+	MonitorMain.cc
 
 CP=cp
 
