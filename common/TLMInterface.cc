@@ -55,16 +55,8 @@ TLMInterface::TLMInterface(TLMClientComm& theComm, std::string& aName, double St
     NextRecvTime = StartTime + Params.Delay;
 }
 
+
 TLMInterface::~TLMInterface() { }
-
-
-
-
-
-
-
-
-
 
 
 // Hermite cubic interpolation. For the given 4 data points t[i], f[i] and time,

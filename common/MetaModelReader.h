@@ -82,7 +82,7 @@ class MetaModelReader {
     //! result of the method.
     void ReadTLMConnectionNode(xmlNode* node);
 
- public:
+public:
 
     //! Constructor
     MetaModelReader(MetaModel& model) : TheModel(model) {};

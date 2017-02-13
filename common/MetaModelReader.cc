@@ -48,16 +48,16 @@ void MetaModelReader::ReadComponents(xmlNode *node, bool skipInterfaces=false, s
             curAttrVal = FindAttributeByName(curNode, "ExactStep", false);
             bool SolverMode = false;
             if (curAttrVal != NULL) {
-              SolverMode = (curAttrVal->content[0] == '1');
-              if(!SolverMode && (curAttrVal->content[0] == '1')) {
-                TLMErrorLog::FatalError("Unexpected value of ExactStep attribute. Must be 0 or 1.");
-              }
+                SolverMode = (curAttrVal->content[0] == '1');
+                if(!SolverMode && (curAttrVal->content[0] == '1')) {
+                    TLMErrorLog::FatalError("Unexpected value of ExactStep attribute. Must be 0 or 1.");
+                }
             }
 
             curAttrVal = FindAttributeByName(curNode, "GeometryFile", false);
             string GeometryFile = "";
             if (curAttrVal != NULL) {
-              GeometryFile = (const char*)curAttrVal->content;
+                GeometryFile = (const char*)curAttrVal->content;
             }
 
             // Now we're registering a proxy for the new component
@@ -67,7 +67,7 @@ void MetaModelReader::ReadComponents(xmlNode *node, bool skipInterfaces=false, s
                                                        StartCommand,
                                                        ModelFile,
                                                        SolverMode,
-						       GeometryFile);
+                                                       GeometryFile);
 
             TLMComponentProxy& cp = TheModel.GetTLMComponentProxy(compID);
 
@@ -85,11 +85,11 @@ void MetaModelReader::ReadComponents(xmlNode *node, bool skipInterfaces=false, s
 
             // Read the interface definitions (should be in the children nodes)
             if(!skipInterfaces) {
-              ReadTLMInterfaceNodes(curNode, compID);
+                ReadTLMInterfaceNodes(curNode, compID);
             }
 
             if(!skipInterfaces) {
-              ReadTLMParameters(curNode, compID);
+                ReadTLMParameters(curNode, compID);
             }
         }
     }
@@ -126,30 +126,30 @@ void MetaModelReader::ReadTLMInterfaceNodes(xmlNode* node, int ComponentID) {
                 Domain = (const char*)curAttrVal->content;
             }
 
-//            InterfaceType type=Type3D;                                     //Default is 3D
-//            if(name.size() > 1 &&                                 //Temporary hack: if name of interface ends
-//               name[name.size()-2] == '1' &&                      //with "1D" it is a 1D connection
-//               name[name.size()-1] == 'D') {
-//                type = Type1D;
-//            }
-//            else if(name.size() > 3 &&                            //Temporary hack: if name of interface ends
-//               name[name.size()-4] == '1' &&                      //with "1DIN" it is a signal input interface
-//               name[name.size()-3] == 'D' &&
-//               name[name.size()-2] == 'I' &&
-//                name[name.size()-1] == 'N') {
-//                type = TypeInput;
-//            }
-//            else if(name.size() > 4 &&                            //Temporary hack: if name of interface ends
-//               name[name.size()-5] == '1' &&                      //with "1DOUT" it is a signal output interface
-//               name[name.size()-4] == 'D' &&
-//               name[name.size()-3] == 'O' &&
-//               name[name.size()-2] == 'U' &&
-//               name[name.size()-1] == 'T') {
-//                type = TypeOutput;
-//            }
-//            if(curAttrVal) {                                      //Now check for XML attribute
-//              type = ((const char*)curAttrVal->content);
-//            }
+            //            InterfaceType type=Type3D;                                     //Default is 3D
+            //            if(name.size() > 1 &&                                 //Temporary hack: if name of interface ends
+            //               name[name.size()-2] == '1' &&                      //with "1D" it is a 1D connection
+            //               name[name.size()-1] == 'D') {
+            //                type = Type1D;
+            //            }
+            //            else if(name.size() > 3 &&                            //Temporary hack: if name of interface ends
+            //               name[name.size()-4] == '1' &&                      //with "1DIN" it is a signal input interface
+            //               name[name.size()-3] == 'D' &&
+            //               name[name.size()-2] == 'I' &&
+            //                name[name.size()-1] == 'N') {
+            //                type = TypeInput;
+            //            }
+            //            else if(name.size() > 4 &&                            //Temporary hack: if name of interface ends
+            //               name[name.size()-5] == '1' &&                      //with "1DOUT" it is a signal output interface
+            //               name[name.size()-4] == 'D' &&
+            //               name[name.size()-3] == 'O' &&
+            //               name[name.size()-2] == 'U' &&
+            //               name[name.size()-1] == 'T') {
+            //                type = TypeOutput;
+            //            }
+            //            if(curAttrVal) {                                      //Now check for XML attribute
+            //              type = ((const char*)curAttrVal->content);
+            //            }
 
             std::stringstream ss;
             ss << "Registering TLM interface " << Name << " with " << Dimensions << " dimensions.";
@@ -415,7 +415,7 @@ void MetaModelReader::ReadModel(std::string &InputFile, bool InterfaceRequestMod
 
     //Don't load connections if interface request mode
     if(!InterfaceRequestMode) {
-       ReadTLMConnectionNode(connections);
+        ReadTLMConnectionNode(connections);
     }
 
     xmlNode *sim_params = FindChildByName(model_element, "SimulationParams");

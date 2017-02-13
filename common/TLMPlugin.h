@@ -27,18 +27,18 @@
 class TLMPlugin {
 
 
- public: 
+public:
 
-    //! CreateInstance static "factory" method returns 
+    //! CreateInstance static "factory" method returns
     //! a pointer to the object implementing the interface.
     //! See PluginImplementer.cc for definition.
     static TLMPlugin* CreateInstance();
     
-    //! Destructor. Close TCP/IP connection and release memory. 
+    //! Destructor. Close TCP/IP connection and release memory.
     virtual ~TLMPlugin() {};
 
     //! SetDebugOut function enables/disables debug information
-    //! output from TLM plugin. 
+    //! output from TLM plugin.
     //! Input: if Enable is true - output is on, othewise - off.
     virtual void SetDebugOut(bool Enable) = 0;
 
@@ -53,15 +53,15 @@ class TLMPlugin {
     //! only once.
     //! \param model name of the component
     //! \param timeStart start time for the simulation
-    //! \param timeEnd end time for the simulation 
+    //! \param timeEnd end time for the simulation
     //! \param maxStep maximum step of the solver
     //! \param serverName IP address and port of the computer running TLM manager
     //!        separated by colon (e.g., 198.111.123.2:1111)
     virtual bool Init( std::string model,
-	       double timeStart,
-	       double timeEnd,
-	       double maxStep,
-	       std::string serverName) = 0;
+                       double timeStart,
+                       double timeEnd,
+                       double maxStep,
+                       std::string serverName) = 0;
 
     //! Register TLM interface sends a registration request to TLMManager
     //! and returns the ID for the interface. '-1' is returned if
@@ -137,12 +137,12 @@ class TLMPlugin {
     //!
     //! The following functions are to be used by distributed
     //! applications where TLMPlugin is constructed on one
-    //! host (Master) and the force calculations are performed 
-    //! on another host. 
+    //! host (Master) and the force calculations are performed
+    //! on another host.
     //! In such a setup the GetConnectionParams & GetTimeData
     //! should be called on the Master host and TLMConnectionParams
     //! together with  TLMTimeData should be send out to
-    //! other hosts. The static GetForce function defined in TLMCalcData 
+    //! other hosts. The static GetForce function defined in TLMCalcData
     //! class should be used to calculate the resulting force.
     
     //! GetConnectionParams returnes the ConnectionParams for
@@ -164,28 +164,28 @@ class TLMPlugin {
                                TLMConnectionParams& Params,
                                double *value);
     static void GetForce1D(double speed,
-                         TLMTimeData1D& Data,
-                         TLMConnectionParams& Params,
-                         double* force);
+                           TLMTimeData1D& Data,
+                           TLMConnectionParams& Params,
+                           double* force);
     static void GetForce3D(double position[],
-			 double orientation[],
-			 double speed[],
-			 double ang_speed[],
-			 TLMTimeData3D& Data,
-			 TLMConnectionParams& Params,
-			 double* force);    
+                           double orientation[],
+                           double speed[],
+                           double ang_speed[],
+                           TLMTimeData3D& Data,
+                           TLMConnectionParams& Params,
+                           double* force);
 
 
     //! TIME_WITHOUT_DATA is a large negative constant used to
     //! indicate lack of data during simulation startup.
     static const int TIME_WITHOUT_DATA = -111111;
 
- protected:
+protected:
 
     //! Set the initialized flag
     void SetInitialized(bool on = true) { Initialized = on; }
 
- private:
+private:
 
     //! Initialized flag tells if the init method was called
     bool Initialized;

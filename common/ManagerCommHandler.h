@@ -29,7 +29,7 @@
 class ManagerCommHandler {
 private:
     //! send message queue
-    TLMMessageQueue MessageQueue; 
+    TLMMessageQueue MessageQueue;
 
     //! Communication object
     TLMManagerComm Comm;
@@ -40,17 +40,17 @@ private:
     bool MonitorConnected;
 
 public:
-    //! The communication protocol modes, i.e., real co-simulation or interface information request. 
+    //! The communication protocol modes, i.e., real co-simulation or interface information request.
     enum CommunicationMode { CoSimulationMode, InterfaceRequestMode };
 
 private:
-    //! The mode of communication either real co-simulation or interface information request. 
+    //! The mode of communication either real co-simulation or interface information request.
     CommunicationMode CommMode;
 
     //! The multimap to store monitoring interface sockets.
     std::multimap<int,int> monitorInterfaceMap;
 
-    //! The multimap mutex for synchronisation of "monitorInterfaceMap" access 
+    //! The multimap mutex for synchronisation of "monitorInterfaceMap" access
     SimpleLock monitorMapLock;
 
 public:
@@ -68,12 +68,12 @@ private:
     SimpleLock exceptionLock;
 
 public:
-    //! Constructor. 
+    //! Constructor.
     ManagerCommHandler(MetaModel& Model):
         MessageQueue(),
         Comm(Model.GetComponentsNum(), Model.GetSimParams().GetPort()),
         TheModel(Model),
-	MonitorConnected(false),
+        MonitorConnected(false),
         CommMode(CoSimulationMode),
         monitorInterfaceMap(),
         monitorMapLock(),
@@ -90,18 +90,18 @@ public:
 
     //! Forward start to the particular object
     static void* thread_ReaderThreadRun(void * arg) {
-	ManagerCommHandler* con = (ManagerCommHandler*)arg;
+        ManagerCommHandler* con = (ManagerCommHandler*)arg;
 
-	if (con->TheModel.GetSimParams().GetMonitorPort() > 0) {
-	    while (!con->MonitorConnected) {
+        if (con->TheModel.GetSimParams().GetMonitorPort() > 0) {
+            while (!con->MonitorConnected) {
 #ifndef _MSC_VER
-		usleep(10000); // micro seconds
+                usleep(10000); // micro seconds
 #else
-		Sleep(10); // milli seconds
+                Sleep(10); // milli seconds
 #endif
-		TLMErrorLog::Log("Waiting for monitor to connect");
-	    }
-	}
+                TLMErrorLog::Log("Waiting for monitor to connect");
+            }
+        }
 
         try {
             con->ReaderThreadRun();
@@ -146,11 +146,11 @@ public:
         if (con->TheModel.GetSimParams().GetMonitorPort() > 0) {
             while (!con->MonitorConnected) {
 #ifndef _MSC_VER
-        	usleep(10000); // micro seconds
+                usleep(10000); // micro seconds
 #else
-        	Sleep(10); // milli seconds
+                Sleep(10); // milli seconds
 #endif
-        	TLMErrorLog::Log("Waiting for monitor to connect");
+                TLMErrorLog::Log("Waiting for monitor to connect");
             }
         }
 
@@ -201,20 +201,20 @@ public:
     bool GotException(std::string &msg);
 
 private:
-    //! Setup interface connection message. 
+    //! Setup interface connection message.
     //! Used in ProcessRegInterfaceMessage(...).
     void SetupInterfaceConnectionMessage(int IfcID, std::string& aName, TLMMessage& mess);
 
-    //! Setup interface connection message for data request mode. 
+    //! Setup interface connection message for data request mode.
     //! Used in ProcessRegInterfaceMessage(...).
     void SetupInterfaceRequestMessage(TLMMessage& mess);
 
-    //! Extracts the time data from message and stores it in the 
+    //! Extracts the time data from message and stores it in the
     //! corresponding meta-model interface proxy.
     void UnpackAndStoreTimeData(TLMMessage& mess);
 
-    //! Process interface monitoring requests. 
-    //! Each TLM interface might be monitored by one or several 
+    //! Process interface monitoring requests.
+    //! Each TLM interface might be monitored by one or several
     //! external processes.
     int ProcessInterfaceMonitoringMessage(TLMMessage& message);
 

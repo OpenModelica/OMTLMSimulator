@@ -34,20 +34,20 @@ class TLMManagerComm {
     //! port used for CreateServerSocket
     unsigned short ServerPort;
     
-    //! Number of clients processed 
+    //! Number of clients processed
     const int NumClients;
 
- public:
+public:
 
     //! Constructor for the specified number of components.
     //! Listen on the specified port.
     TLMManagerComm(int numClients, unsigned short portNr)
-	: ContactSocket(-1),
-	  ClientSockets(),
-	  ActiveSockets(),
-	  StartupMode(true),
-	  ServerPort (portNr),
-	  NumClients(numClients)
+        : ContactSocket(-1),
+          ClientSockets(),
+          ActiveSockets(),
+          StartupMode(true),
+          ServerPort (portNr),
+          NumClients(numClients)
     {
         FD_ZERO(& CurFDSet);
     };
@@ -65,7 +65,7 @@ class TLMManagerComm {
     //! Clear the active sockets set. Note that HasData function still
     //! checks the results of the last select.
     void ClearActiveSockets( ) {
-	ActiveSockets.resize(0);
+        ActiveSockets.resize(0);
     }
 
     //! Add a socket handle to the active sockets set
@@ -88,7 +88,7 @@ class TLMManagerComm {
     void CloseAll();
 
     //! Return the actual server port.
-    //! This port might be different from the server 
+    //! This port might be different from the server
     //! port specified in the constructor.
     unsigned short GetServerPort()const { return ServerPort; }
 

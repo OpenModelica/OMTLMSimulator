@@ -140,8 +140,8 @@ void TLMInterface1D::GetForce(double time,
 
 // Set motion data and communicate if necessary.
 void TLMInterface1D::SetTimeData(double time,
-                               double position,
-                               double speed) {
+                                 double position,
+                                 double speed) {
     // put the variables into TLMTimeData structure and the end of  DataToSend vector
     int lastInd = DataToSend.size();
     DataToSend.resize( lastInd + 1);
