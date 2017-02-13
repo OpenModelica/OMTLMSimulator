@@ -146,7 +146,7 @@ bool PluginImplementer::Init(std::string model,
 // the interface is not connected in the MetaModel.
 int  PluginImplementer::RegisteTLMInterface(std::string name , int dimensions,
                                             std::string causality, std::string domain) {
-    TLMErrorLog::Log(string("Register Interface (kanin) ") + name);
+    TLMErrorLog::Log(string("Register Interface ") + name);
 
     TLMInterface *ifc;
     if(dimensions==6) {

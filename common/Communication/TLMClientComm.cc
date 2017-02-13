@@ -182,8 +182,6 @@ int TLMClientComm::ConnectManager(string& callname, int portnr) {
     }
     localIP = inet_ntoa (*(struct in_addr *)*hp->h_addr_list);
 
-    TLMErrorLog::Log(string("Result of inet_ntoa:") + localIP);
-
     //    sa.sin_addr =*((struct in_addr *)(hp->h_addr));
     //     if(0 == strcmp(callname.c_str(), "localhost")) {
     sa.sin_addr.s_addr = inet_addr(localIP);
