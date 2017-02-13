@@ -8,7 +8,7 @@
 #ifndef TLMPlugin_h_
 #define TLMPlugin_h_
 
-#include "TLMCalcData.h"
+#include "Communication/TLMCalcData.h"
 #include "Interfaces/TLMInterface.h"
 
 #include <string>
