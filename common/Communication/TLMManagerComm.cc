@@ -4,7 +4,7 @@
 * Implementation of classes used for communication with client apps by TLMManager
 */
 #include "Communication/TLMManagerComm.h"
-#include "TLMErrorLog.h"
+#include "Logging/TLMErrorLog.h"
 #include <cassert>
 #include <cstring>
 #include <vector>

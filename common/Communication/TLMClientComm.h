@@ -13,7 +13,7 @@
 #include <string>
 #include <cstdlib>
 #include "Communication/TLMCommUtil.h"
-#include "TLMErrorLog.h"
+#include "Logging/TLMErrorLog.h"
 #include "common.h"
 
 //! Class TLMClientCommUtil contains utility functions used by

@@ -1,5 +1,5 @@
 #include "Plugin/TLMPlugin.h"
-#include "TLMErrorLog.h"
+#include "Logging/TLMErrorLog.h"
 
 
 // V = M * V

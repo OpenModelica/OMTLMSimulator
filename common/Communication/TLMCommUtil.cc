@@ -1,5 +1,5 @@
 #include "Communication/TLMCommUtil.h"
-#include "TLMErrorLog.h"
+#include "Logging/TLMErrorLog.h"
 #include "strConv.h"
 
 #include <string>

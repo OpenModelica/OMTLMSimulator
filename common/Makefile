@@ -24,7 +24,7 @@ SRCCLT= Plugin/PluginImplementer.cc \
 	Interfaces/TLMInterface1D.cc \
 	Interfaces/TLMInterface3D.cc \
 	Parameters/TLMParameter.cc \
-	TLMErrorLog.cc \
+	Logging/TLMErrorLog.cc \
 	Plugin/TLMPlugin.cc 
 
 
@@ -35,14 +35,14 @@ SRCMGR= ManagerCommHandler.cc \
 	Communication/TLMCommUtil.cc \
 	Communication/TLMManagerComm.cc \
 	Communication/TLMMessageQueue.cc \
-	TLMErrorLog.cc
+	Logging/TLMErrorLog.cc
 
 SRCSRVLIB= ManagerCommHandler.cc \
 	MetaModels/MetaModel.cc \
 	Communication/TLMCommUtil.cc \
 	Communication/TLMManagerComm.cc \
 	Communication/TLMMessageQueue.cc \
-	TLMErrorLog.cc
+	Logging/TLMErrorLog.cc
 
 SRCMONITOR= $(SRCCLT) \
 	MetaModels/MetaModel.cc \
@@ -153,6 +153,7 @@ $(ABI):
 	mkdir -p $@/Plugin
 	mkdir -p $@/Communication
 	mkdir -p $@/Parameters
+	mkdir -p $@/Logging
 depend: 
 	@echo > $(ABI)/makedepend.tail
 	makedepend -Y -p"\$$(ABI)/" -f $(ABI)/makedepend.tail \
