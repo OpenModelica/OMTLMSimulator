@@ -41,14 +41,14 @@ $(ABI)/%.o: $(MISCHOME)/src/%.cc
 
 OBJS=   
 
-EXT_OBJS = PluginImplementer.o \
-	TLMClientComm.o \
-	TLMCommUtil.o \
-	TLMInterface.o \
-    TLMInterface1D.o \
-    TLMInterface3D.o \
-	TLMErrorLog.o \
-	TLMPlugin.o \
+EXT_OBJS = Plugin/PluginImplementer.o \
+	Communication/TLMClientComm.o \
+	Communication/TLMCommUtil.o \
+	Interfaces/TLMInterface.o \
+	Interfaces/TLMInterface1D.o \
+	Interfaces/TLMInterface3D.o \
+	Logging/TLMErrorLog.o \
+	Plugin/TLMPlugin.o \
 	coordTrans.o \
 	double3Vec.o \
 	double33Mat.o \
@@ -69,8 +69,11 @@ install: default
 .PHONY: dirs clean
 
 dirs:
-	-if [ ! -d $(ABI) ] ; then \
-	mkdir $(ABI) ; fi ;
+	mkdir -p $(ABI)
+	mkdir -p $(ABI)/Plugin
+	mkdir -p $(ABI)/Communication
+	mkdir -p $(ABI)/Interfaces
+	mkdir -p $(ABI)/Logging
 	-if [ ! -d $(INSTDIR) ] ; then \
 	mkdir -p $(INSTDIR) ; fi ;
 
