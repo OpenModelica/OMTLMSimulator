@@ -3,8 +3,8 @@
 * 
 * Implementation for the methods defined in TLMClientComm.h
 */
-#include "TLMCommUtil.h"
-#include "TLMClientComm.h"
+#include "Communication/TLMCommUtil.h"
+#include "Communication/TLMClientComm.h"
 #include "TLMErrorLog.h"
 #include "Interfaces/TLMInterface.h"
 #include "strConv.h"

@@ -13,10 +13,10 @@ endif
 include $(MAKEFILEHEADHOME)/Makefile.head
 MISCHOME = ../extralibs/misc
 
-SRCCLT= PluginImplementer.cc \
-	MonitoringPluginImplementer.cc \
-	TLMClientComm.cc \
-	TLMCommUtil.cc \
+SRCCLT= Plugin/PluginImplementer.cc \
+	Plugin/MonitoringPluginImplementer.cc \
+	Communication/TLMClientComm.cc \
+	Communication/TLMCommUtil.cc \
 	Interfaces/TLMInterface.cc \
 	Interfaces/TLMInterfaceSignal.cc \
 	Interfaces/TLMInterfaceSignalInput.cc \
@@ -25,23 +25,23 @@ SRCCLT= PluginImplementer.cc \
 	Interfaces/TLMInterface3D.cc \
 	TLMParameter.cc \
 	TLMErrorLog.cc \
-	TLMPlugin.cc 
+	Plugin/TLMPlugin.cc 
 
 
 SRCMGR= ManagerCommHandler.cc \
 	ManagerMain.cc	\
 	MetaModels/MetaModel.cc \
 	MetaModels/MetaModelReader.cc \
-	TLMCommUtil.cc \
-	TLMManagerComm.cc \
-	TLMMessageQueue.cc \
+	Communication/TLMCommUtil.cc \
+	Communication/TLMManagerComm.cc \
+	Communication/TLMMessageQueue.cc \
 	TLMErrorLog.cc
 
 SRCSRVLIB= ManagerCommHandler.cc \
 	MetaModels/MetaModel.cc \
-	TLMCommUtil.cc \
-	TLMManagerComm.cc \
-	TLMMessageQueue.cc \
+	Communication/TLMCommUtil.cc \
+	Communication/TLMManagerComm.cc \
+	Communication/TLMMessageQueue.cc \
 	TLMErrorLog.cc
 
 SRCMONITOR= $(SRCCLT) \
@@ -150,6 +150,8 @@ $(ABI):
 	mkdir -p $@
 	mkdir -p $@/Interfaces
 	mkdir -p $@/MetaModels
+	mkdir -p $@/Plugin
+	mkdir -p $@/Communication
 depend: 
 	@echo > $(ABI)/makedepend.tail
 	makedepend -Y -p"\$$(ABI)/" -f $(ABI)/makedepend.tail \

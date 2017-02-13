@@ -5,8 +5,8 @@
  */
 
 #include "Interfaces/TLMInterface.h"
-#include "TLMCommUtil.h"
-#include "TLMPlugin.h"
+#include "Communication/TLMCommUtil.h"
+#include "Plugin/TLMPlugin.h"
 #include <deque>
 #include <string>
 #include "double33Mat.h"

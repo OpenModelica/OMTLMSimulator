@@ -6,7 +6,7 @@
 #ifndef MONITORINGPLUGINIMPLEMENTER_H
 #define MONITORINGPLUGINIMPLEMENTER_H
 
-#include "PluginImplementer.h"
+#include "Plugin/PluginImplementer.h"
 
 
 //! MonitoringPluginImplementer class implements the TLMPlugin interface for

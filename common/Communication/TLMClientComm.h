@@ -12,7 +12,7 @@
 #include <deque>
 #include <string>
 #include <cstdlib>
-#include "TLMCommUtil.h"
+#include "Communication/TLMCommUtil.h"
 #include "TLMErrorLog.h"
 #include "common.h"
 
