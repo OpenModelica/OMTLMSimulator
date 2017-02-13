@@ -9,7 +9,7 @@
 #define TLMPlugin_h_
 
 #include "TLMCalcData.h"
-#include "TLMInterface.h"
+#include "Interfaces/TLMInterface.h"
 
 #include <string>
 

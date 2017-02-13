@@ -10,7 +10,7 @@
 #ifndef TLMINTERFACESIGNALOUTPUT_H
 #define TLMINTERFACESIGNALOUTPUT_H
 
-#include "TLMInterfaceSignal.h"
+#include "Interfaces/TLMInterfaceSignal.h"
 
 //!
 //! TLMInterfaceSignal provides the client side functionality for a single output interface

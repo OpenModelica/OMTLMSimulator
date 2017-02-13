@@ -4,7 +4,7 @@
  * Provides implementation for the TLMInterface class methods
  */
 
-#include "TLMInterface.h"
+#include "Interfaces/TLMInterface.h"
 #include "TLMCommUtil.h"
 #include "TLMPlugin.h"
 #include <deque>

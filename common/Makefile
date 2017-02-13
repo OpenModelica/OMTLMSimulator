@@ -17,12 +17,12 @@ SRCCLT= PluginImplementer.cc \
 	MonitoringPluginImplementer.cc \
 	TLMClientComm.cc \
 	TLMCommUtil.cc \
-	TLMInterface.cc \
-	TLMInterfaceSignal.cc \
-	TLMInterfaceSignalInput.cc \
-	TLMInterfaceSignalOutput.cc \
-	TLMInterface1D.cc \
-	TLMInterface3D.cc \
+	Interfaces/TLMInterface.cc \
+	Interfaces/TLMInterfaceSignal.cc \
+	Interfaces/TLMInterfaceSignalInput.cc \
+	Interfaces/TLMInterfaceSignalOutput.cc \
+	Interfaces/TLMInterface1D.cc \
+	Interfaces/TLMInterface3D.cc \
 	TLMParameter.cc \
 	TLMErrorLog.cc \
 	TLMPlugin.cc 
@@ -148,6 +148,7 @@ $(ABI)/makedepend.tail: $(ABI)
 	touch $@
 $(ABI):
 	mkdir -p $@
+	mkdir -p $@/Interfaces
 depend: 
 	@echo > $(ABI)/makedepend.tail
 	makedepend -Y -p"\$$(ABI)/" -f $(ABI)/makedepend.tail \

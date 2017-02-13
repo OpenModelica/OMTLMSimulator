@@ -6,7 +6,7 @@
 
 #include "MetaModelReader.h"
 #include "TLMErrorLog.h"
-#include "TLMInterface.h"
+#include "Interfaces/TLMInterface.h"
 #include "double3Vec.h"
 #include "double33Mat.h"
 #include <string>

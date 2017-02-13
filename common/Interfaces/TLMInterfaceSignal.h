@@ -10,7 +10,7 @@
 #ifndef TLMINTERFACESIGNAL_H
 #define TLMINTERFACESIGNAL_H
 
-#include "TLMInterface.h"
+#include "Interfaces/TLMInterface.h"
 
 //!
 //! TLMInterfaceSignal provides the base class for client side functionality for a single signal interface

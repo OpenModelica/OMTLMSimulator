@@ -6,7 +6,7 @@
 #include "TLMCommUtil.h"
 #include "TLMClientComm.h"
 #include "TLMErrorLog.h"
-#include "TLMInterface.h"
+#include "Interfaces/TLMInterface.h"
 #include "strConv.h"
 #include <vector>
 #include <deque>
