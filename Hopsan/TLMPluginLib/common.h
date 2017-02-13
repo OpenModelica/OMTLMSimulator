@@ -1,11 +1,11 @@
-#ifndef COMMON_H
-#define COMMON_H
+#ifndef HOPSANCOMMON_H
+#define HOPSANCOMMON_H
 
-#include "TLMErrorLog.h"
-#include "TLMPlugin.h"
+#include <sstream>
+#include "Logging/TLMErrorLog.h"
 
-static const char* TLM_CONFIG_FILE_NAME = "tlm.config";
-static const char* TLM_DEBUG_FILE_NAME = "tlmmodelica.log";
+#define TLM_CONFIG_FILE_NAME "tlm.config"
+#define TLM_DEBUG_FILE_NAME "TLMHopsan.log"
 
 // TLM config data
 struct tlmConfig_t {
@@ -16,7 +16,7 @@ struct tlmConfig_t {
     double hmax;
 };
 
-tlmConfig_t readTlmConfigFile(std::string path)
+inline tlmConfig_t readTlmConfigFile(std::string path)
 {
     tlmConfig_t tlmConfig;
     std::ifstream tlmConfigFile(path.c_str());
@@ -29,7 +29,7 @@ tlmConfig_t readTlmConfigFile(std::string path)
 
     if(!tlmConfigFile.good()) {
       TLMErrorLog::FatalError("Error reading TLM configuration data from tlm.config");
-      exit(1);
+      //exit(1);
     }
 
     //Print results to log file
@@ -50,4 +50,4 @@ tlmConfig_t readTlmConfigFile(std::string path)
 }
 
 
-#endif // COMMON_H
+#endif // HOPSANCOMMON_H
