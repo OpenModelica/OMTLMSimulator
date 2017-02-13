@@ -1,3 +1,12 @@
+//!
+//! \file TLMInterface3D.h
+//!
+//! Provides a definition for the TLMInterface3D class
+//!
+//!
+//! \author   Robert Braun
+//!
+
 #ifndef TLMINTERFACE3D_H
 #define TLMINTERFACE3D_H
 
@@ -5,6 +14,9 @@
 
 class TLMTimeData3D;
 
+//!
+//! TLMInterface1D provides the client side functionality for a single TLM interface of three dimensions
+//!
 class TLMInterface3D : public TLMInterface
 {
 public:

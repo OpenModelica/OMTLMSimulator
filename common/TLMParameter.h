@@ -4,7 +4,7 @@
 //! Provides a definition for the TLMParameter class
 //!
 //!
-//! \author   Iakov Nakhimovski
+//! \author Robert Braun
 //!
 
 #ifndef TLMPARAMETER_H
@@ -20,7 +20,8 @@
 
 
 //!
-//! TLMParameter provides the client side functionality for a single TLM parameter
+//! TLMParameter provides the client side functionality for a single sub-model parameter
+//! (not to be confused with TLM connection parameters)
 //!
 class TLMParameter {
 
@@ -30,12 +31,13 @@ class TLMParameter {
     //! and prepares the object for simulation.
     TLMParameter(TLMClientComm& theComm, std::string& aName, std::string& aDefaultValue);
 
-    //! Get name of the interface
+    //! Get name of the parameter
     const std::string& GetName() const { return Name; }
 
-    //! Get interface ID of this interface
+    //! Get parameter ID of this parameter
     int GetParameterID() const { return  ParameterID; }
 
+    //! Get the current value of this parameter
     std::string GetValue() const { return Value; }
 
  protected:
@@ -45,6 +47,7 @@ class TLMParameter {
     //! TLM ID of this interface as received from the TLM manager
     int ParameterID;
 
+    //! Value of this parameter
     std::string Value;
 
     //! The communication object of the client
