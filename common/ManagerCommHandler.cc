@@ -571,7 +571,7 @@ void ManagerCommHandler::MarshalMessage(TLMMessage& message) {
     if(message.Header.MessageType !=   TLMMessageTypeConst::TLM_TIME_DATA) {
         TLMErrorLog::Log("Interface ID: "+TLMErrorLog::ToStdStr(message.Header.TLMInterfaceID));
         TLMErrorLog::FatalError("Unexpected message received " + tlmMisc::ToStr(message.Header.MessageType));
-    };
+    }
 
     // forward the time data
     TLMInterfaceProxy& src = TheModel.GetTLMInterfaceProxy(message.Header.TLMInterfaceID);
@@ -604,7 +604,7 @@ void ManagerCommHandler::UnpackAndStoreTimeData(TLMMessage& message)
         ss << "Message type = " << int(message.Header.MessageType);
         TLMErrorLog::Log(ss.str());
         TLMErrorLog::FatalError("Unexpected message received in ManagerCommHandler::UnpackAndStoreTimeData(...)");
-    };
+    }
 
     TLMInterfaceProxy& ip = TheModel.GetTLMInterfaceProxy(message.Header.TLMInterfaceID);
 
@@ -745,7 +745,7 @@ void ManagerCommHandler::ForwardToMonitor(TLMMessage& message){
         
         if(message.Header.MessageType != TLMMessageTypeConst::TLM_TIME_DATA) {
             TLMErrorLog::FatalError("Unexpected message received in forward to monitor");
-        };
+        }
 
         // Forward to all connected monitoring ports
         multimap<int,int>::iterator pos;

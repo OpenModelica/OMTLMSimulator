@@ -85,7 +85,7 @@ class MetaModelReader {
 public:
 
     //! Constructor
-    MetaModelReader(MetaModel& model) : TheModel(model) {};
+    MetaModelReader(MetaModel& model) : TheModel(model) {}
 
 
     //! ReadModel method processes input XML file and creates MetaModel definition.

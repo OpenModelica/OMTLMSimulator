@@ -73,7 +73,7 @@ public:
     //! Get ID of the interface
     int GetID() const {
         return InterfaceID;
-    };
+    }
 
     //! Get ID of the owner component
     int GetComponentID() {
@@ -84,13 +84,13 @@ public:
     //! Returns '-1' if it is not connected
     int GetLinkedID() const {
         return LinkedID;
-    };
+    }
 
     //! Get the ID of Connection object attached to this interface.
     //! Returns '-1' if no connection is attached.
     int GetConnectionID() const {
         return ConnectionID;
-    };
+    }
 
     //! Set the connection object attached to this interface.
     void SetConnection( TLMConnection& conn);
@@ -125,7 +125,7 @@ private:
     //! Set the interface connected to this one with TLMConnection
     void SetLinkedID( int ID) {
         LinkedID = ID;
-    };
+    }
 
     //! ID of this interface
     int InterfaceID;
@@ -360,7 +360,7 @@ public:
         ToID(ID2),
         Param(param)
     {
-    };
+    }
     
     //! Get ID of this connection object
     int GetID() const { return ID; }
@@ -410,7 +410,7 @@ public:
     //! Constructor
     SimulationParams() {
         Set(0, 0.0, 0.0);
-    };
+    }
 
     //! Set method assign the attributes of the object
     void Set(int aPort, double StartTime, double StopTime, int aTimeout = 600, int aMonitorPort = -1 ) {
@@ -420,7 +420,7 @@ public:
         WriteTimeStep = (TimeEnd-TimeStart)/1000.0;
         Timeout = aTimeout;
         MonitorPort = aMonitorPort;
-    };
+    }
 
     //! Get the port number
     int GetPort() const {
@@ -452,7 +452,7 @@ public:
         char Buf[50];
         sprintf(Buf, "%g", TimeStart);
         return std::string(Buf);
-    };
+    }
 
     //! Get simulation end time
     double GetEndTime() const {
@@ -464,7 +464,7 @@ public:
         char Buf[50];
         sprintf(Buf, "%g", TimeEnd);
         return std::string(Buf);
-    };
+    }
 
     //! Get server name & port number in the form \<server>:\<port>
     std::string GetServerName() const;
@@ -519,17 +519,17 @@ public:
     //! Return ComponentProxy for the specified ID.
     TLMComponentProxy& GetTLMComponentProxy(const int ID) {
         return *(Components[ID]);
-    };
+    }
 
     //! Return the number of registered components.
     int GetComponentsNum( ) const  {
         return static_cast<int>(Components.size());
-    };
+    }
 
     //! Return the number of registered components.
     size_t GetInterfacesNum( ) const  {
         return Interfaces.size();
-    };
+    }
 
     size_t GetParametersNum() const { return Parameters.size(); }
 
@@ -574,7 +574,7 @@ public:
     //! Get the TLMConnection associated with the ID.
     TLMConnection& GetTLMConnection(int ConnID) {
         return *(Connections[ConnID]);
-    };
+    }
 
     //! Start component executables
     void StartComponents();

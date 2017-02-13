@@ -34,7 +34,7 @@ int main(int argn, char* argv[]) {
         cout << "TLM test application. Usage: " << endl
              << "tlmtest  <k1> <k2> <Model> <FromTime> <ToTime> <Step> <Server:port>" << endl;
         exit(1);
-    };
+    }
     // Coefficients used in the ODE
     const double k1 = atof(argv[1]);
     const double k2 = atof(argv[2]);
@@ -51,7 +51,7 @@ int main(int argn, char* argv[]) {
     if(!TlmForce->Init(Model, Time, TimeEnd, MaxStep, ServerName)) {
         cerr << "Failed to init TLM plugin" << endl;
         exit(1);
-    };
+    }
 
     // This is the only TLM interface of this model: px
     int forceID = TlmForce->RegisteTLMInterface("px");

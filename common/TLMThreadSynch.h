@@ -50,7 +50,7 @@ public:
 #ifndef SKIP_PTHREADS
         DBG_VALIDATE(pthread_mutex_init(&the_lock, NULL));
 #endif
-    };
+    }
 
     //! Unlock and destroy.
     ~SimpleLock()
@@ -61,7 +61,7 @@ public:
 #ifndef SKIP_PTHREADS
         DBG_VALIDATE(pthread_mutex_destroy (&the_lock));
 #endif
-    };
+    }
 
     //! Lock the mutex.
     inline void lock();
@@ -85,7 +85,7 @@ public:
 #ifndef SKIP_PTHREADS
         DBG_VALIDATE(pthread_cond_init(&the_cond, NULL));
 #endif
-    };
+    }
 
     //! Unlock and destroy.
     ~SimpleCond()
@@ -93,7 +93,7 @@ public:
 #ifndef SKIP_PTHREADS
         DBG_VALIDATE(pthread_cond_destroy (&the_cond));
 #endif
-    };
+    }
 
     //! Wait on the condition using the specified mutex.
     inline void wait(SimpleLock& lock);
@@ -128,13 +128,13 @@ public:
     AutoLock(SimpleLock& a_lock):the_lock(a_lock)
     {
         the_lock.lock();
-    };
+    }
 
     //! Destructor. Unlocks the mutex
     ~AutoLock()
     {
         the_lock.unlock();
-    };
+    }
 private:
     // Should never be used
     AutoLock& operator=(AutoLock& a_in) ;

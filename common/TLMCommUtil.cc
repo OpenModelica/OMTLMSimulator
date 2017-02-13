@@ -54,7 +54,7 @@ void TLMCommUtil::SendMessage( TLMMessage& mess){
         // try to resend
         TLMErrorLog::Warning("Failed to send message header, will try to continue anyway");
         sendBytes = send(mess.SocketHandle, (const char*)&(mess.Header) , sizeof(TLMMessageHeader), MSG_MORE);
-    };
+    }
 
 #ifdef  WIN32
     int errcode = WSAGetLastError();

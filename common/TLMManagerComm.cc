@@ -112,7 +112,7 @@ int TLMManagerComm::CreateServerSocket()
     if(listen(theSckt, NumClients) != 0) {
         BCloseSocket(theSckt);
         TLMErrorLog::FatalError("Crate server socket - failed in listen on the server socket.") ;
-    };
+    }
 
     ContactSocket = theSckt;
 
