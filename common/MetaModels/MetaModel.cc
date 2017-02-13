@@ -5,7 +5,7 @@
  */
 #include <string>
 #include <sstream>
-#include "MetaModel.h"
+#include "MetaModels/MetaModel.h"
 #include "TLMCommUtil.h"
 //#include "portability.h"
 #include <cstdlib>

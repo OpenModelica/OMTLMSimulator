@@ -4,7 +4,7 @@
  * Defines the MetaModelReader class methods
  */
 
-#include "MetaModelReader.h"
+#include "MetaModels/MetaModelReader.h"
 #include "TLMErrorLog.h"
 #include "Interfaces/TLMInterface.h"
 #include "double3Vec.h"

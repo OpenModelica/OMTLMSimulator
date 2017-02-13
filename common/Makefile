@@ -30,22 +30,22 @@ SRCCLT= PluginImplementer.cc \
 
 SRCMGR= ManagerCommHandler.cc \
 	ManagerMain.cc	\
-	MetaModel.cc \
-	MetaModelReader.cc \
+	MetaModels/MetaModel.cc \
+	MetaModels/MetaModelReader.cc \
 	TLMCommUtil.cc \
 	TLMManagerComm.cc \
 	TLMMessageQueue.cc \
 	TLMErrorLog.cc
 
 SRCSRVLIB= ManagerCommHandler.cc \
-	MetaModel.cc \
+	MetaModels/MetaModel.cc \
 	TLMCommUtil.cc \
 	TLMManagerComm.cc \
 	TLMMessageQueue.cc \
 	TLMErrorLog.cc
 
 SRCMONITOR= $(SRCCLT) \
-	MetaModel.cc \
+	MetaModels/MetaModel.cc \
 	MetaModelReader.cc \
 	MonitorManagerMain.cc
 
@@ -149,6 +149,7 @@ $(ABI)/makedepend.tail: $(ABI)
 $(ABI):
 	mkdir -p $@
 	mkdir -p $@/Interfaces
+	mkdir -p $@/MetaModels
 depend: 
 	@echo > $(ABI)/makedepend.tail
 	makedepend -Y -p"\$$(ABI)/" -f $(ABI)/makedepend.tail \
