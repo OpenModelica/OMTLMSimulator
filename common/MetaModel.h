@@ -13,7 +13,7 @@
 
 #include "TLMCommUtil.h"
 #include "TLMErrorLog.h"
-#include "TLMInterface.h"
+#include "Interfaces/TLMInterface.h"
 
 // Classes defined later in this file
 class TLMComponentProxy;

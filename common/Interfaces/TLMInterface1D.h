@@ -10,7 +10,7 @@
 #ifndef TLMINTERFACE1D_H
 #define TLMINTERFACE1D_H
 
-#include "TLMInterface.h"
+#include "Interfaces/TLMInterface.h"
 
 class TLMTimeData1D;
 

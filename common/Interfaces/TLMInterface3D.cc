@@ -1,4 +1,4 @@
-#include "TLMInterface3D.h"
+#include "Interfaces/TLMInterface3D.h"
 #include "TLMCommUtil.h"
 #include "TLMPlugin.h"
 #include <deque>
