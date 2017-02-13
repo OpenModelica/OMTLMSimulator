@@ -282,10 +282,9 @@ void ManagerCommHandler::ProcessRegInterfaceMessage(int compID, TLMMessage& mess
             aName += aSpecification[i];
         }
     }
-    TLMErrorLog::Log("dimStr = "+dimStr);
+
     int dimensions;
     if(dimStr == "3D") {        //Backwards compatibility
-        TLMErrorLog::Log("Setting dimensions to 6");
         dimensions = 6;
     }
     else {
@@ -340,7 +339,7 @@ void ManagerCommHandler::ProcessRegInterfaceMessage(int compID, TLMMessage& mess
         SetupInterfaceRequestMessage(mess);
     }
     else {
-        TLMErrorLog::Warning("Wrong coomunication mode in ManagerCommHandler::ProcessRegInterfaceMessage(...)");
+        TLMErrorLog::Warning("Wrong communication mode in ManagerCommHandler::ProcessRegInterfaceMessage(...)");
         return;
     }
 }
@@ -371,8 +370,6 @@ void ManagerCommHandler::ProcessRegParameterMessage(int compID, TLMMessage &mess
             aValue += aNameAndValue[i];
         }
     }
-
-    TLMErrorLog::Log("Name = " + aName + ", Value = " + aValue);
 
     int ParID = TheModel.GetTLMParameterID(compID, aName);
 
