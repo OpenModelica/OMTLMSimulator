@@ -11,7 +11,7 @@
 #include <fstream>
 #include <iostream>
 
-#include "MetaModel.h"
+#include "MetaModels/MetaModel.h"
 
 #include <libxml/parser.h>
 #include <libxml/tree.h>
