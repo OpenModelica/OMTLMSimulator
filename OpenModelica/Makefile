@@ -56,17 +56,17 @@ $(ABI)/%.o: $(MISCHOME)/src/%.cc
 OBJS=  tlmforce.o 
 
 EXT_OBJS = PluginImplementer.o \
-	TLMClientComm.o \
-	TLMCommUtil.o \
-	TLMInterface.o \
-	TLMInterfaceSignal.o \
-	TLMInterfaceSignalInput.o \
-	TLMInterfaceSignalOutput.o \
-	TLMInterface1D.o \
-	TLMInterface3D.o \
-	TLMParameter.o \
-	TLMErrorLog.o \
-	TLMPlugin.o \
+	Communication/TLMClientComm.o \
+	Communication/TLMCommUtil.o \
+	Interfaces/TLMInterface.o \
+	Interfaces/TLMInterfaceSignal.o \
+	Interfaces/TLMInterfaceSignalInput.o \
+	Interfaces/TLMInterfaceSignalOutput.o \
+	Interfaces/TLMInterface1D.o \
+	Interfaces/TLMInterface3D.o \
+	Parameters/TLMParameter.o \
+	Logging/TLMErrorLog.o \
+	Plugin/TLMPlugin.o \
 	coordTrans.o \
 	double3Vec.o \
 	double33Mat.o \
@@ -89,6 +89,11 @@ install: default
 
 dirs:
 	-mkdir -p $(ABI)
+	-mkdir -p $(ABI)/Plugin
+	-mkdir -p $(ABI)/Parameters
+	-mkdir -p $(ABI)/Communication
+	-mkdir -p $(ABI)/Interfaces
+	-mkdir -p $(ABI)/Logging
 	-mkdir -p $(INSTDIR)
 	-mkdir -p $(RESOURCESDIR)/Include
 	-mkdir -p $(RESOURCESDIR)/Library
