@@ -23,7 +23,7 @@ SRCCLT= Plugin/PluginImplementer.cc \
 	Interfaces/TLMInterfaceSignalOutput.cc \
 	Interfaces/TLMInterface1D.cc \
 	Interfaces/TLMInterface3D.cc \
-	TLMParameter.cc \
+	Parameters/TLMParameter.cc \
 	TLMErrorLog.cc \
 	Plugin/TLMPlugin.cc 
 
@@ -152,6 +152,7 @@ $(ABI):
 	mkdir -p $@/MetaModels
 	mkdir -p $@/Plugin
 	mkdir -p $@/Communication
+	mkdir -p $@/Parameters
 depend: 
 	@echo > $(ABI)/makedepend.tail
 	makedepend -Y -p"\$$(ABI)/" -f $(ABI)/makedepend.tail \

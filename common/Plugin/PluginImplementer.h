@@ -14,7 +14,7 @@
 #include "Interfaces/TLMInterface1D.h"
 #include "Interfaces/TLMInterface3D.h"
 #include "Plugin/TLMPlugin.h"
-#include "TLMParameter.h"
+#include "Parameters/TLMParameter.h"
 
 
 //! PluginImplemneter class implements the  TLMPlugin interface.
