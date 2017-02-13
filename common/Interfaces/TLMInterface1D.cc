@@ -167,7 +167,6 @@ void TLMInterface1D::SetTimeData(double time,
     }
 
     // The wave to send is: (- Force + Impedance * Velocity)
-    double oldForce = item.GenForce;
     if(Domain=="Hydraulic") {
         item.GenForce   = item.GenForce   +  Params.Zf * speed;
     }

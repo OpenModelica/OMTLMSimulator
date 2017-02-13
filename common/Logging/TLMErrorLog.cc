@@ -28,7 +28,7 @@ char tmpbuf[128];
 //#ifndef _MSC_VER
 #ifndef WIN32
 void _strtime(char* timestring) {
-
+    (void)timestring;
     time_t rawtime;
     struct tm * timeinfo;
 
