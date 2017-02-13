@@ -15,8 +15,7 @@
 //!
 //! TLMInterfaceSignal provides the client side functionality for a single output interface
 //!
-class TLMInterfaceOutput : public TLMInterfaceSignal
-{
+class TLMInterfaceOutput : public TLMInterfaceSignal {
 public:
   TLMInterfaceOutput(TLMClientComm &theComm, std::string &aName, double StartTime, std::string Domain="Signal");
 

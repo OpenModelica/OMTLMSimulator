@@ -38,8 +38,7 @@ void usage() {
 }
 
 // Print all interfaces position and orientation
-void PrintInterfaceInformation(MetaModel& theModel)
-{
+void PrintInterfaceInformation(MetaModel& theModel) {
     std::ofstream interfacefile ("interfaceData.xml");
     if(interfacefile.is_open()) {
         interfacefile << "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n";

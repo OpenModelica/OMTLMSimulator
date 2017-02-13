@@ -22,6 +22,7 @@ using std::ofstream;
 using namespace tlmMisc;
 
 
+// TLMInterface constructor
 TLMInterface::TLMInterface(TLMClientComm& theComm, std::string& aName, double StartTime,
                            int dimensions, std::string causality, std::string domain):
     LastSendTime(StartTime),
@@ -35,8 +36,7 @@ TLMInterface::TLMInterface(TLMClientComm& theComm, std::string& aName, double St
     waitForShutdownFlg(false),
     Dimensions(dimensions),
     Causality(causality),
-    Domain(domain)
-{ // TLMInterface constructor
+    Domain(domain) {
     Comm.CreateInterfaceRegMessage(aName, Dimensions, Causality, Domain, Message);
     Message.SocketHandle = Comm.GetSocketHandle();
 
@@ -56,7 +56,7 @@ TLMInterface::TLMInterface(TLMClientComm& theComm, std::string& aName, double St
 }
 
 
-TLMInterface::~TLMInterface() { }
+TLMInterface::~TLMInterface() {}
 
 
 // Hermite cubic interpolation. For the given 4 data points t[i], f[i] and time,

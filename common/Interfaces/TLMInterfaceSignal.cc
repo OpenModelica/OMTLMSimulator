@@ -12,15 +12,13 @@ static const double TLM_DAMP_DELAY = 1.5;
 TLMInterfaceSignal::TLMInterfaceSignal(TLMClientComm &theComm, std::string &aName, double StartTime,
                                        int Dimensions, std::string Causality,
                                        std::string Domain)
-    : TLMInterface(theComm, aName, StartTime, Dimensions, Causality, Domain)
-{}
+    : TLMInterface(theComm, aName, StartTime, Dimensions, Causality, Domain) {}
 
 TLMInterfaceSignal::~TLMInterfaceSignal() {}
 
 
 
-void TLMInterfaceSignal::UnpackTimeData(TLMMessage &mess)
-{
+void TLMInterfaceSignal::UnpackTimeData(TLMMessage &mess) {
     Comm.UnpackTimeDataMessageSignal(mess, TimeData);
 
     NextRecvTime =  TimeData.back().time + Params.Delay;

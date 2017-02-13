@@ -17,8 +17,7 @@ class TLMTimeData1D;
 //!
 //! TLMInterface1D provides the client side functionality for a single TLM interface of one dimension
 //!
-class TLMInterface1D : public TLMInterface
-{
+class TLMInterface1D : public TLMInterface {
 public:
     TLMInterface1D(TLMClientComm &theComm, std::string &aName, double StartTime, std::string Domain="Mechanical");
 

@@ -58,8 +58,7 @@ void ManagerCommHandler::Run(CommunicationMode CommMode_In) {
 }
 
 //! Thread exception handler.
-void ManagerCommHandler::HandleThreadException(const std::string &msg)
-{
+void ManagerCommHandler::HandleThreadException(const std::string &msg) {
     exceptionLock.lock();
 
     exceptionMsg += msg + "\n";
@@ -73,8 +72,7 @@ void ManagerCommHandler::HandleThreadException(const std::string &msg)
     exceptionLock.unlock();
 }
 
-bool ManagerCommHandler::GotException(std::string &msg)
-{
+bool ManagerCommHandler::GotException(std::string &msg) {
     msg = exceptionMsg;
     return (msg.size() > 0);
 }
@@ -344,8 +342,7 @@ void ManagerCommHandler::ProcessRegInterfaceMessage(int compID, TLMMessage& mess
     }
 }
 
-void ManagerCommHandler::ProcessRegParameterMessage(int compID, TLMMessage &mess)
-{
+void ManagerCommHandler::ProcessRegParameterMessage(int compID, TLMMessage &mess) {
     if(mess.Header.MessageType != TLMMessageTypeConst::TLM_REG_PARAMETER) {
         //std::cerr << "wrong message is: " <<  mess.Header.MessageType << endl;
         //std::cerr << "wrong message is: " <<  int(mess.Header.MessageType) << endl;
@@ -404,8 +401,7 @@ void ManagerCommHandler::ProcessRegParameterMessage(int compID, TLMMessage &mess
     memcpy(& mess.Data[0], &ValueBuf, mess.Header.DataSize);
 }
 
-void ManagerCommHandler::SetupInterfaceConnectionMessage(int IfcID, std::string& aName, TLMMessage& mess)
-{    
+void ManagerCommHandler::SetupInterfaceConnectionMessage(int IfcID, std::string& aName, TLMMessage& mess) {
     // set the connected flag in the MetaModel
     TLMInterfaceProxy& ifc = TheModel.GetTLMInterfaceProxy(IfcID);
     ifc.SetConnected();
@@ -459,9 +455,7 @@ void ManagerCommHandler::SetupInterfaceConnectionMessage(int IfcID, std::string&
 
 }
 
-void ManagerCommHandler::SetupInterfaceRequestMessage(TLMMessage& mess)
-{
-
+void ManagerCommHandler::SetupInterfaceRequestMessage(TLMMessage& mess) {
     TLMConnectionParams param;
     param.Delay = 0.1;
     param.mode = 1;
@@ -594,8 +588,7 @@ void ManagerCommHandler::MarshalMessage(TLMMessage& message) {
     }
 }
 
-void ManagerCommHandler::UnpackAndStoreTimeData(TLMMessage& message) 
-{
+void ManagerCommHandler::UnpackAndStoreTimeData(TLMMessage& message) {
     if(message.Header.MessageType !=   TLMMessageTypeConst::TLM_TIME_DATA) {
         std::stringstream ss;
         ss << "Message type = " << int(message.Header.MessageType);
@@ -675,8 +668,7 @@ void ManagerCommHandler::UnpackAndStoreTimeData(TLMMessage& message)
 }
 
 
-int ManagerCommHandler::ProcessInterfaceMonitoringMessage(TLMMessage& message)
-{
+int ManagerCommHandler::ProcessInterfaceMonitoringMessage(TLMMessage& message) {
     if(message.Header.MessageType != TLMMessageTypeConst::TLM_REG_INTERFACE) {
         TLMErrorLog::FatalError("Interface monitoring registration message expected");
     }
@@ -776,8 +768,7 @@ void ManagerCommHandler::ForwardToMonitor(TLMMessage& message) {
 }
 
 
-void ManagerCommHandler::MonitorThreadRun()
-{
+void ManagerCommHandler::MonitorThreadRun() {
     TLMErrorLog::Log("In monitoring");
     
     if(TheModel.GetSimParams().GetMonitorPort() <= 0) {

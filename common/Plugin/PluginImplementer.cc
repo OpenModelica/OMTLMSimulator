@@ -22,8 +22,7 @@ TLMPlugin* TLMPlugin::CreateInstance() {
 }
 
 
-void signalHandler_(int signum)
-{
+void signalHandler_(int signum) {
     // Install default signal handler
     signal(signum, SIG_DFL);
 
@@ -44,8 +43,7 @@ PluginImplementer::PluginImplementer():
     MapID2Ind(),
     StartTime(0.0),
     EndTime(0.0),
-    MaxStep(0.0)
-{    
+    MaxStep(0.0) {
     // Install out own signal handler.
     signal(SIGABRT, signalHandler_);
     signal(SIGFPE, signalHandler_);
@@ -64,8 +62,7 @@ PluginImplementer::~PluginImplementer() {
     }
 }
 
-void PluginImplementer::HandleSignal(int signum)
-{
+void PluginImplementer::HandleSignal(int signum) {
     if(Connected) {
         Message.Header.MessageType = TLMMessageTypeConst::TLM_ABORT;
         TLMCommUtil::SendMessage(Message);
@@ -191,8 +188,7 @@ int  PluginImplementer::RegisteTLMInterface(std::string name , int dimensions,
 }
 
 
-int PluginImplementer::RegisterTLMParameter(std::string name, std::string defaultValue)
-{
+int PluginImplementer::RegisterTLMParameter(std::string name, std::string defaultValue) {
     TLMParameter *par = new TLMParameter(ClientComm, name, defaultValue);
 
     int id = par->GetParameterID();

@@ -40,12 +40,9 @@ using std::string;
 
 // Constructor
 TLMClientComm::TLMClientComm()
-    : SocketHandle(-1)
-{
-}
+    : SocketHandle(-1) {}
 
-TLMClientComm::~TLMClientComm()
-{
+TLMClientComm::~TLMClientComm() {
     if(SocketHandle != -1) {
         close(SocketHandle);
     }
@@ -274,8 +271,7 @@ TLMErrorLog::Log("Client sends nameAndType: "+specification);
     memcpy(&mess.Data[0], specification.c_str(), specification.length());
 }
 
-void TLMClientComm::CreateParameterRegMessage(std::string &Name, std::string &Value, TLMMessage &mess)
-{
+void TLMClientComm::CreateParameterRegMessage(std::string &Name, std::string &Value, TLMMessage &mess) {
     mess.Header.MessageType = TLMMessageTypeConst::TLM_REG_PARAMETER;
 
     std::string nameAndValue = Name+":"+Value;

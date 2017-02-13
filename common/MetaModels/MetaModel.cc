@@ -68,9 +68,8 @@ TLMInterfaceProxy::TLMInterfaceProxy(int CompID, int IfcID, string& aName, int a
     Causality(aCausality),
     Domain(aDomain),
     Connected(false),
-    time0Data3D()
-{
-}
+    time0Data3D() {}
+
 
 // Set the connection object attached to this interface.
 void TLMInterfaceProxy::SetConnection(TLMConnection& conn) {
@@ -79,10 +78,10 @@ void TLMInterfaceProxy::SetConnection(TLMConnection& conn) {
                 conn.GetToID():conn.GetFromID();
 }
 
+
 //! Set position and orientation of the component inertial system relative the 
 //! meta-models inertial system.
-void TLMComponentProxy::SetInertialTranformation(double pos[], double orientation[])
-{
+void TLMComponentProxy::SetInertialTranformation(double pos[], double orientation[]) {
     cX_R_cG_cG[0] = pos[0];
     cX_R_cG_cG[1] = pos[1];
     cX_R_cG_cG[2] = pos[2];
@@ -102,8 +101,7 @@ void TLMComponentProxy::SetInertialTranformation(double pos[], double orientatio
 
 //! Get position and orientation of the component inertial system relative the 
 //! meta-models inertial system.
-void TLMComponentProxy::GetInertialTranformation(double pos[3], double orientation[9])
-{
+void TLMComponentProxy::GetInertialTranformation(double pos[3], double orientation[9]) {
     pos[0] = cX_R_cG_cG[0];
     pos[1] = cX_R_cG_cG[1];
     pos[2] = cX_R_cG_cG[2];
@@ -123,12 +121,9 @@ void TLMComponentProxy::GetInertialTranformation(double pos[3], double orientati
 
 #ifdef WIN32
 // Constructor
-MetaModel::MetaModel()
-{
-}
+MetaModel::MetaModel() {}
 #else
-void child_signal_handler(int s)
-{
+void child_signal_handler(int s) {
     int pid, status;
     while(1)
     {
@@ -148,8 +143,7 @@ void child_signal_handler(int s)
 }
 
 // Constructor
-MetaModel::MetaModel()
-{
+MetaModel::MetaModel() {
     signal(SIGCHLD, child_signal_handler);
 }
 #endif
@@ -333,8 +327,7 @@ bool MetaModel::CheckProxyComm() {
 
 
 //! Print meta-model to ostream.
-void MetaModel::Print(std::ostream &os)
-{
+void MetaModel::Print(std::ostream &os) {
     os << "Components:" << std::endl;
     for(ComponentsVector::iterator it = Components.begin(); it!=Components.end(); ++it) {
         os << (*it)->GetName() << std::endl;
@@ -353,8 +346,7 @@ void MetaModel::Print(std::ostream &os)
 
 #if defined(WIN32)
 // Create a string with last error message
-std::string GetLastErrorStdStr()
-{
+std::string GetLastErrorStdStr() {
     DWORD error = GetLastError();
     if(error)
     {
@@ -488,6 +480,4 @@ TLMParameterProxy::TLMParameterProxy(int CompID, int ParID, std::string &aName, 
     ParameterID(ParID),
     ComponentID(CompID),
     Name(aName),
-    Value(aDefaultValue)
-{
-}
+    Value(aDefaultValue) {}
