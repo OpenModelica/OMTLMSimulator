@@ -15,6 +15,7 @@ using std::ofstream;
 using namespace tlmMisc;
 
 
+//! Constrctor for the TLMParameter class, which handles submodel parameters
 TLMParameter::TLMParameter(TLMClientComm& theComm, std::string& aName, std::string& aDefaultValue):
     Name(aName),
     Value(aDefaultValue),

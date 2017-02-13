@@ -1,8 +1,20 @@
+//!
+//! \file TLMInterfaceSignal.h
+//!
+//! Provides a definition for the TLMInterfaceSignal class
+//!
+//!
+//! \author   Robert Braun
+//!
+
 #ifndef TLMINTERFACESIGNAL_H
 #define TLMINTERFACESIGNAL_H
 
 #include "TLMInterface.h"
 
+//!
+//! TLMInterfaceSignal provides the base class for client side functionality for a single signal interface
+//!
 class TLMInterfaceSignal : public TLMInterface
 {
 public:

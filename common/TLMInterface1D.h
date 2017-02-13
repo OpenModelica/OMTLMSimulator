@@ -1,3 +1,12 @@
+//!
+//! \file TLMInterface1D.h
+//!
+//! Provides a definition for the TLMInterface1D class
+//!
+//!
+//! \author   Robert Braun
+//!
+
 #ifndef TLMINTERFACE1D_H
 #define TLMINTERFACE1D_H
 
@@ -5,6 +14,9 @@
 
 class TLMTimeData1D;
 
+//!
+//! TLMInterface1D provides the client side functionality for a single TLM interface of one dimension
+//!
 class TLMInterface1D : public TLMInterface
 {
 public:
