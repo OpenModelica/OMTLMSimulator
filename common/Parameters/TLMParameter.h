@@ -44,11 +44,11 @@ class TLMParameter {
     //! Name of this TLM parameter
     std::string Name;
 
-    //! TLM ID of this interface as received from the TLM manager
-    int ParameterID;
-
     //! Value of this parameter
     std::string Value;
+
+    //! TLM ID of this interface as received from the TLM manager
+    int ParameterID;
 
     //! The communication object of the client
     TLMClientComm& Comm;
