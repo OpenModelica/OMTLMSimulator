@@ -33,8 +33,8 @@
 #include "JM/jm_portability.h"
 
 // TLMPlugin includes
-#include "TLMPlugin.h"
-#include "TLMErrorLog.h"
+#include "Plugin/TLMPlugin.h"
+#include "Logging/TLMErrorLog.h"
 #include "common.h"
 
 using namespace std;
