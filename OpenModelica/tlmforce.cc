@@ -1,7 +1,7 @@
 #include "tlmforce.h"
-#include "TLMPlugin.h"
-#include "TLMErrorLog.h"
-#include "TLMInterface.h"
+#include "Plugin/TLMPlugin.h"
+#include "Logging/TLMErrorLog.h"
+#include "Interfaces/TLMInterface.h"
 #include <stdlib.h>
 #include <string>
 #include <fstream>
