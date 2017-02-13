@@ -27,14 +27,14 @@ char tmpbuf[128];
 
 //#ifndef _MSC_VER
 #ifndef WIN32
-void _strtime( char* timestring ){
+void _strtime(char* timestring) {
 
     time_t rawtime;
     struct tm * timeinfo;
 
-    time ( &rawtime );
-    timeinfo = localtime ( &rawtime );
-    strcpy( tmpbuf,asctime (timeinfo) );
+    time (&rawtime);
+    timeinfo = localtime (&rawtime);
+    strcpy(tmpbuf,asctime (timeinfo));
 
 }
 #endif
@@ -48,8 +48,8 @@ bool  TLMErrorLog::LogTimeOn = false;
 std::ostream* TLMErrorLog::outStream = NULL;
 
 
-void TLMErrorLog::Open(){
-    if(TLMErrorLog::outStream==NULL){
+void TLMErrorLog::Open() {
+    if(TLMErrorLog::outStream==NULL) {
         TLMErrorLog::outStream=new std::ofstream("TLMlogfile.log");
         *outStream << TimeStr() << " Starting log" << std::endl;
     }
@@ -66,14 +66,14 @@ void TLMErrorLog::SetDebugOut(bool Enable) {
 void TLMErrorLog::FatalError(const std::string& mess) {
     Open();
     *outStream << TimeStr() << " Fatal error: " << mess << std::endl;
-    if( NormalErrorLogOn) {
-        _strtime( tmpbuf );
+    if(NormalErrorLogOn) {
+        _strtime(tmpbuf);
 #ifdef USE_ERRORLOG
         Error("TMLLog:"+Bstring(tmpbuf)+" "+mess);
 #endif
     }
 
-    if( !ExceptionOn ){
+    if(!ExceptionOn) {
 #ifdef DEBUGFLG
         abort(); // note that abort results in strange messages on Windows
         // Useful on Linux since it generate a core
@@ -89,12 +89,12 @@ void TLMErrorLog::FatalError(const std::string& mess) {
 //
 void  TLMErrorLog::Warning(const std::string& mess) {
 
-    if( WarningOn ) {
+    if(WarningOn) {
         Open();
         *outStream << TimeStr() << " Warning: " << mess << std::endl;
 
-        if( NormalErrorLogOn) {
-            _strtime( tmpbuf );
+        if(NormalErrorLogOn) {
+            _strtime(tmpbuf);
 #ifdef USE_ERRORLOG
             ::Warning("TMLLog:"+Bstring(tmpbuf)+" "+mess);
 #endif
@@ -106,11 +106,11 @@ void  TLMErrorLog::Warning(const std::string& mess) {
 // Log function logs a message to log file
 void  TLMErrorLog::Log(const std::string& mess) {
 
-    if(!LoggingOn ) return;
+    if(!LoggingOn) return;
     Open();
     *outStream << TimeStr() << " Log: " << mess << std::endl;
-    if( NormalErrorLogOn) {
-        _strtime( tmpbuf );
+    if(NormalErrorLogOn) {
+        _strtime(tmpbuf);
 #ifdef USE_ERRORLOG
         Log1("TMLLog:"+Bstring(tmpbuf)+" "+mess);
 #endif
@@ -129,7 +129,7 @@ std::string  TLMErrorLog::ToStdStr(double val) {
 
 std::string  TLMErrorLog::TimeStr()
 {
-    if( LogTimeOn ){
+    if(LogTimeOn) {
         time_t rawtime;
         struct tm * timeinfo;
 

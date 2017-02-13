@@ -56,7 +56,7 @@ public:
     int CreateServerSocket();
 
     //! Run select on the active set of sockets
-    void SelectReadSocket( );
+    void SelectReadSocket();
 
     //! Check if the data is pending to be read on the specified socket
     //! Should be called after SelectReadSocket
@@ -64,7 +64,7 @@ public:
 
     //! Clear the active sockets set. Note that HasData function still
     //! checks the results of the last select.
-    void ClearActiveSockets( ) {
+    void ClearActiveSockets() {
         ActiveSockets.resize(0);
     }
 
@@ -82,7 +82,7 @@ public:
     void SwitchToRunningMode();
 
     //! Accept a client component connection
-    int AcceptComponentConnections() ;
+    int AcceptComponentConnections();
 
     //! Close all active sockets.
     void CloseAll();

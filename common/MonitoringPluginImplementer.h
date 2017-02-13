@@ -43,7 +43,7 @@ public:
     //! \param maxStep maximum step of the solver
     //! \param serverName IP address and port of the computer running TLM manager
     //!        separated by colon (e.g., 198.111.123.2:1111)
-    bool Init( std::string name,
+    bool Init(std::string name,
                double timeStart,
                double timeEnd,
                double maxStep,

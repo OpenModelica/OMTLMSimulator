@@ -10,7 +10,7 @@
 static const double TLM_DAMP_DELAY = 1.5;
 
 TLMInterface1D::TLMInterface1D(TLMClientComm &theComm, std::string &aName, double StartTime, std::string Domain)
-    : TLMInterface(theComm, aName, StartTime, 1, "Bidirectional", Domain){}
+    : TLMInterface(theComm, aName, StartTime, 1, "Bidirectional", Domain) {}
 
 TLMInterface1D::~TLMInterface1D() {
     if(DataToSend.size() != 0) {
@@ -36,7 +36,7 @@ void TLMInterface1D::UnpackTimeData(TLMMessage &mess)
 // the other field by interpolating/extrapolating the available data.
 void TLMInterface1D::GetTimeData(TLMTimeData1D& Instance) {
     GetTimeData(Instance, TimeData, false);
-    if( (Params.alpha > 0) && (Instance.time != TLMPlugin::TIME_WITHOUT_DATA) && (DampedTimeData.size() > 0)) {
+    if((Params.alpha > 0) && (Instance.time != TLMPlugin::TIME_WITHOUT_DATA) && (DampedTimeData.size() > 0)) {
         TLMTimeData1D Buf;
 
         Buf.time = Instance.time - Params.Delay * TLM_DAMP_DELAY;
@@ -74,14 +74,14 @@ void TLMInterface1D::GetTimeData(TLMTimeData1D& Instance, std::deque<TLMTimeData
     if((time >= Data[0].time) && (time < Data[size-1].time)) {
         // the desired time is in the Data boundaries
         // find interpolation spot in data
-        while ( Data[CurrentIntervalIndex].time < time)
+        while(Data[CurrentIntervalIndex].time < time)
             CurrentIntervalIndex++;
         while(Data[CurrentIntervalIndex].time > time)
             CurrentIntervalIndex--;
 
 #if 0
         // linear interpolation with Newton interpolation polynomial
-        if ((CurrentIntervalIndex > 1) && (CurrentIntervalIndex < size - 2)) {
+        if((CurrentIntervalIndex > 1) && (CurrentIntervalIndex < size - 2)) {
             // we use cubic interpolation with 4 points if possible
             deque<TLMTimeData>::iterator it(Data.begin() + (CurrentIntervalIndex-1));
             hermite_interpolate(Instance, it, OnlyForce);
@@ -94,13 +94,13 @@ void TLMInterface1D::GetTimeData(TLMTimeData1D& Instance, std::deque<TLMTimeData
         }
     }
     else {
-        if (time <= Data[0].time) {
+        if(time <= Data[0].time) {
             TLMErrorLog::Warning(std::string("Interface ") + GetName() + " needs to extrapolate back time= " +
                                  TLMErrorLog::ToStdStr(time));
             Instance = Data[0];
         }
-        else{
-            if (time == Data[size-1].time) {
+        else {
+            if(time == Data[size-1].time) {
                 Instance = Data[size-1];
             }
             else {
@@ -144,7 +144,7 @@ void TLMInterface1D::SetTimeData(double time,
                                  double speed) {
     // put the variables into TLMTimeData structure and the end of  DataToSend vector
     int lastInd = DataToSend.size();
-    DataToSend.resize( lastInd + 1);
+    DataToSend.resize(lastInd + 1);
     TLMTimeData1D& item = DataToSend[lastInd];
     item.time = time;
     item.Position = position;
@@ -181,14 +181,14 @@ void TLMInterface1D::SetTimeData(double time,
                      " SET for time= " + TLMErrorLog::ToStdStr(time));
 
     // Send the data if we past the synchronization point or are in data request mode.
-    if(time >= LastSendTime + Params.Delay / 2 || Params.mode > 0.0 ) {
+    if(time >= LastSendTime + Params.Delay / 2 || Params.mode > 0.0) {
         SendAllData();
     }
 
     // Remove the data that is not needed (Simulation time moved forward)
     // We leave two time points intact, so that interpolation work
     CleanTimeQueue(TimeData, time - Params.Delay);
-    CleanTimeQueue(DampedTimeData,  time - Params.Delay * ( 1 + TLM_DAMP_DELAY));
+    CleanTimeQueue(DampedTimeData,  time - Params.Delay * (1 + TLM_DAMP_DELAY));
 }
 
 
@@ -203,7 +203,7 @@ void TLMInterface1D::SendAllData() {
     DataToSend.resize(0);
 
     // In data request mode we shutdown after sending the first data package.
-    if( Params.mode > 0.0 ) waitForShutdownFlg = true;
+    if(Params.mode > 0.0) waitForShutdownFlg = true;
 }
 
 
@@ -234,7 +234,7 @@ void TLMInterface1D::InterpolateLinear(TLMTimeData1D& Instance, TLMTimeData1D& p
 
 
 void TLMInterface1D::CleanTimeQueue(std::deque<TLMTimeData1D>& Data, double CleanTime) {
-    while( (Data.size() > 3) && (CleanTime > Data[2].time)) {
+    while((Data.size() > 3) && (CleanTime > Data[2].time)) {
         Data.pop_front();
     }
 }

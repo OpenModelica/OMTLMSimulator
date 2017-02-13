@@ -118,7 +118,7 @@ class TLMCommUtil {
 public:
 
     //! Empty contructor.
-    TLMCommUtil(){}
+    TLMCommUtil() {}
 
 
     //! The IsBigEndian() function detects if the current hardware
@@ -126,7 +126,7 @@ public:
 
     static bool IsBigEndian()	{
         short word = 0x4321;
-        if((*(char *)& word) != 0x21 )
+        if((*(char *)& word) != 0x21)
             return true;
         else
             return false;
@@ -141,23 +141,23 @@ public:
     inline static void ByteSwap(void * Buff, size_t type_size, size_t items = 1);
 
     //! Send the TLMMessage pointed by mess via socket with handle SocketHandle
-    static void SendMessage( TLMMessage& mess );
+    static void SendMessage(TLMMessage& mess);
 
     //! Basic receive of a TLMMessage. Insures correct signature and
     //! fixes byte order for the message header if necessary.
     //! Note that the actual message data is not processed, just received,
     //! Returns 'true' on success, 'false' if socket is closed, aborts on error.
-    static bool ReceiveMessage( TLMMessage& mess);
+    static bool ReceiveMessage(TLMMessage& mess);
 
 };
 
-inline void TLMCommUtil::ByteSwap(void * Buff, size_t type_size, size_t items){
+inline void TLMCommUtil::ByteSwap(void * Buff, size_t type_size, size_t items) {
     register unsigned char * b = (unsigned char *)Buff;
     register size_t items_cnt = items;
     while(items_cnt-- > 0) {
         register size_t i = 0; // was int, warning removed.
         register size_t j = type_size-1;
-        while (i<j)   {
+        while(i<j)   {
             std::swap(b[i], b[j]);
             i++, j--;
         }

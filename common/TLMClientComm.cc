@@ -63,7 +63,7 @@ void TLMClientComm::PackTimeDataMessageSignal(int InterfaceID,
     out_mess.Header.SourceIsBigEndianSystem = TLMMessageHeader::IsBigEndianSystem;
     out_mess.Header.DataSize = Data.size() * sizeof(TLMTimeDataSignal);
     out_mess.Data.clear();
-    out_mess.Data.resize( out_mess.Header.DataSize );
+    out_mess.Data.resize(out_mess.Header.DataSize);
     memcpy(& out_mess.Data[0], & Data[0], out_mess.Header.DataSize);
 }
 
@@ -79,7 +79,7 @@ void TLMClientComm::PackTimeDataMessage3D(int InterfaceID,
     out_mess.Header.SourceIsBigEndianSystem = TLMMessageHeader::IsBigEndianSystem;
     out_mess.Header.DataSize = Data.size() * sizeof(TLMTimeData3D);
     out_mess.Data.clear();
-    out_mess.Data.resize( out_mess.Header.DataSize );
+    out_mess.Data.resize(out_mess.Header.DataSize);
     memcpy(& out_mess.Data[0], & Data[0], out_mess.Header.DataSize);
 }
 
@@ -94,7 +94,7 @@ void TLMClientComm::PackTimeDataMessage1D(int InterfaceID,
     out_mess.Header.SourceIsBigEndianSystem = TLMMessageHeader::IsBigEndianSystem;
     out_mess.Header.DataSize = Data.size() * sizeof(TLMTimeData1D);
     out_mess.Data.clear();
-    out_mess.Data.resize( out_mess.Header.DataSize );
+    out_mess.Data.resize(out_mess.Header.DataSize);
     memcpy(& out_mess.Data[0], & Data[0], out_mess.Header.DataSize);
 }
 
@@ -109,7 +109,7 @@ void TLMClientComm::UnpackTimeDataMessageSignal(TLMMessage &mess, std::deque<TLM
     // swapping if necessary
     bool switch_byte_order =
         (TLMMessageHeader::IsBigEndianSystem != mess.Header.SourceIsBigEndianSystem);
-    if (switch_byte_order)
+    if(switch_byte_order)
         TLMCommUtil::ByteSwap(Next, sizeof(double),  mess.Header.DataSize/sizeof(double));
 
     for(unsigned i = 0; i < mess.Header.DataSize/sizeof(TLMTimeDataSignal); i++, Next++) {
@@ -128,7 +128,7 @@ void TLMClientComm::UnpackTimeDataMessage3D(TLMMessage& mess, deque<TLMTimeData3
     // swapping if necessary
     bool switch_byte_order = 
         (TLMMessageHeader::IsBigEndianSystem != mess.Header.SourceIsBigEndianSystem);
-    if (switch_byte_order) 
+    if(switch_byte_order)
         TLMCommUtil::ByteSwap(Next, sizeof(double),  mess.Header.DataSize/sizeof(double));
 
     for(unsigned i = 0; i < mess.Header.DataSize/sizeof(TLMTimeData3D); i++, Next++) {
@@ -147,7 +147,7 @@ void TLMClientComm::UnpackTimeDataMessage1D(TLMMessage& mess, deque<TLMTimeData1
     // swapping if necessary
     bool switch_byte_order =
         (TLMMessageHeader::IsBigEndianSystem != mess.Header.SourceIsBigEndianSystem);
-    if (switch_byte_order)
+    if(switch_byte_order)
         TLMCommUtil::ByteSwap(Next, sizeof(double),  mess.Header.DataSize/sizeof(double));
 
     for(unsigned i = 0; i < mess.Header.DataSize/sizeof(TLMTimeData1D); i++, Next++) {
@@ -176,7 +176,7 @@ int TLMClientComm::ConnectManager(string& callname, int portnr) {
     char* localIP;
 
     hp = gethostbyname(callname.c_str());
-    if (hp == NULL) {
+    if(hp == NULL) {
         TLMErrorLog::FatalError(string("TLM: Cannot resolve the host ") + callname);
         return(-1);
     }
@@ -185,7 +185,7 @@ int TLMClientComm::ConnectManager(string& callname, int portnr) {
     TLMErrorLog::Log(string("Result of inet_ntoa:") + localIP);
 
     //    sa.sin_addr =*((struct in_addr *)(hp->h_addr));
-    //     if (0 == strcmp(callname.c_str(), "localhost")){
+    //     if(0 == strcmp(callname.c_str(), "localhost")) {
     sa.sin_addr.s_addr = inet_addr(localIP);
 
     sa.sin_port=htons((u_short)portnr);
@@ -198,7 +198,7 @@ int TLMClientComm::ConnectManager(string& callname, int portnr) {
     TLMErrorLog::Log("Trying to find TLM manager host " + callname);
 
     hp = gethostbyname(callname.c_str());
-    if (hp == NULL) {
+    if(hp == NULL) {
         TLMErrorLog::FatalError(string("TLM: Cannot resolve the host :") + callname + ":");
         return(-1);
     }
@@ -213,7 +213,7 @@ int TLMClientComm::ConnectManager(string& callname, int portnr) {
     s = socket(hp->h_addrtype,SOCK_STREAM,0);
 #endif
 
-    if (s < 0 ){
+    if(s < 0) {
         TLMErrorLog::FatalError("TLM: Can not contact TLM manager");
     }
     else {
@@ -222,10 +222,10 @@ int TLMClientComm::ConnectManager(string& callname, int portnr) {
 
     count = 0;
 
-    while (connect(s, (struct sockaddr *) &sa, sizeof(sa)) < 0) {
+    while(connect(s, (struct sockaddr *) &sa, sizeof(sa)) < 0) {
         count++;
         TLMErrorLog::Log(string("Connection attempt ") +  TLMErrorLog::ToStdStr(count) + " failed");
-        if (count>=10){
+        if(count>=10) {
 #ifndef WIN32
             close(s);
 #else
@@ -293,7 +293,7 @@ void TLMClientComm::UnpackRegInterfaceMessage(TLMMessage& mess, TLMConnectionPar
     // swapping if necessary
     bool switch_byte_order = 
         (TLMMessageHeader::IsBigEndianSystem != mess.Header.SourceIsBigEndianSystem);
-    if (switch_byte_order) 
+    if(switch_byte_order)
         TLMCommUtil::ByteSwap(& mess.Data[0], sizeof(double),  
         mess.Header.DataSize/sizeof(double)); 
 
@@ -316,7 +316,7 @@ void TLMClientComm::UnpackRegParameterMessage(TLMMessage &mess, std::string &Val
     // swapping if necessary
     bool switch_byte_order =
         (TLMMessageHeader::IsBigEndianSystem != mess.Header.SourceIsBigEndianSystem);
-    if (switch_byte_order)
+    if(switch_byte_order)
         TLMCommUtil::ByteSwap(& mess.Data[0], sizeof(double),
         mess.Header.DataSize/sizeof(double));
 

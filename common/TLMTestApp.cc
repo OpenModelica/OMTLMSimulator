@@ -77,7 +77,7 @@ int main(int argn, char* argv[]) {
     double ang_speed[3] = {0,0,0};
 
     string OutFN = string(Model) + ".out";
-    std::ofstream outstr( OutFN.c_str(), std::ios::out );
+    std::ofstream outstr(OutFN.c_str(), std::ios::out);
 
     // do simulation
     while(Time < TimeEnd) {

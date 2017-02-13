@@ -21,7 +21,7 @@ using namespace tlmMisc;
 // Input/Output: TheModel - structure is updated in the model representation
 void MetaModelReader::ReadComponents(xmlNode *node, bool skipInterfaces=false, std::string singleModel="") {
     for(xmlNode* curNode = node->children; curNode; curNode = curNode->next) {
-        if(    (XML_ELEMENT_NODE == curNode->type)
+        if(   (XML_ELEMENT_NODE == curNode->type)
                // A SubModel Node found, read parameters
                && (strcmp("SubModel", (const char*)(curNode->name)) == 0)) {
 
@@ -47,7 +47,7 @@ void MetaModelReader::ReadComponents(xmlNode *node, bool skipInterfaces=false, s
             // It does not seem to work properly for some reason.
             curAttrVal = FindAttributeByName(curNode, "ExactStep", false);
             bool SolverMode = false;
-            if (curAttrVal != NULL) {
+            if(curAttrVal != NULL) {
                 SolverMode = (curAttrVal->content[0] == '1');
                 if(!SolverMode && (curAttrVal->content[0] == '1')) {
                     TLMErrorLog::FatalError("Unexpected value of ExactStep attribute. Must be 0 or 1.");
@@ -56,7 +56,7 @@ void MetaModelReader::ReadComponents(xmlNode *node, bool skipInterfaces=false, s
 
             curAttrVal = FindAttributeByName(curNode, "GeometryFile", false);
             string GeometryFile = "";
-            if (curAttrVal != NULL) {
+            if(curAttrVal != NULL) {
                 GeometryFile = (const char*)curAttrVal->content;
             }
 
@@ -81,7 +81,7 @@ void MetaModelReader::ReadComponents(xmlNode *node, bool skipInterfaces=false, s
             cp.SetInertialTranformation(R, A);
 
             //double scale = ReadDoubleAttribute(curNode, "UnitScale");
-            //if( scale == 0.0 ) scale = 1.0;
+            //if(scale == 0.0) scale = 1.0;
 
             // Read the interface definitions (should be in the children nodes)
             if(!skipInterfaces) {
@@ -100,7 +100,7 @@ void MetaModelReader::ReadComponents(xmlNode *node, bool skipInterfaces=false, s
 // given SubModel XML node and its ID (ComponentID).
 void MetaModelReader::ReadTLMInterfaceNodes(xmlNode* node, int ComponentID) {
     for(xmlNode* curNode = node->children; curNode; curNode = curNode->next) {
-        if(    (XML_ELEMENT_NODE == curNode->type)
+        if(   (XML_ELEMENT_NODE == curNode->type)
                && (strcmp("InterfacePoint", (const char*)(curNode->name)) == 0)) {
             // For every InterfacePoint element that we find read its name
 
@@ -168,7 +168,7 @@ void MetaModelReader::ReadTLMInterfaceNodes(xmlNode* node, int ComponentID) {
 void MetaModelReader::ReadTLMParameters(xmlNode *node, int ComponentID)
 {
     for(xmlNode* curNode = node->children; curNode; curNode = curNode->next) {
-        if(    (XML_ELEMENT_NODE == curNode->type)
+        if(   (XML_ELEMENT_NODE == curNode->type)
                && (strcmp("Parameter", (const char*)(curNode->name)) == 0)) {
             // For every InterfacePoint element that we find read its name
 
@@ -188,10 +188,10 @@ void MetaModelReader::ReadTLMParameters(xmlNode *node, int ComponentID)
 
 
 // ReadDoubleAttribute method reads a double value attribute, if applicable.
-double MetaModelReader::ReadDoubleAttribute(xmlNode* node, const char* attribute ) {
+double MetaModelReader::ReadDoubleAttribute(xmlNode* node, const char* attribute) {
     xmlNode* curAttrVal = FindAttributeByName(node, attribute, false);
 
-    if(curAttrVal){
+    if(curAttrVal) {
         return atof((const char*)curAttrVal->content);
     }
 
@@ -203,11 +203,11 @@ double MetaModelReader::ReadDoubleAttribute(xmlNode* node, const char* attribute
 void MetaModelReader::ReadVectorAttribute(xmlNode* node, const char *attribute, double val[3]) {
     xmlNode* curAttrVal = FindAttributeByName(node, attribute, false);
 
-    if( curAttrVal ){
+    if(curAttrVal) {
         const std::string strContent = (const char*)curAttrVal->content;
         size_t c1 = strContent.find(',');
         size_t c2 = strContent.rfind(',');
-        if( c1 != std::string::npos && c1 != std::string::npos && c1 != c2 && c1 > 0){
+        if(c1 != std::string::npos && c1 != std::string::npos && c1 != c2 && c1 > 0) {
             std::string strXPos = strContent.substr(0, c1);
             std::string strYPos = strContent.substr(c1+1, c2-c1-1);
             std::string strZPos = strContent.substr(c2+1);
@@ -234,7 +234,7 @@ void MetaModelReader::ReadPositionAndOrientation(xmlNode* node, double R[3], dou
 
     double33Mat A33 = A321(double3Vec(phi[0],phi[1],phi[2]));
 
-    for( int i=0; i<9 ; i++){
+    for(int i=0; i<9; i++) {
         A[i] = A33(i/3+1, i%3+1);
     }
 }
@@ -246,7 +246,7 @@ void MetaModelReader::ReadSimParams(xmlNode* node) {
     xmlNode* curAttrVal = FindAttributeByName(node, "ManagerPort", false);
 
     int Port = 11111; // Some default port.
-    if( curAttrVal != NULL ){
+    if(curAttrVal != NULL) {
         Port = atoi((const char*)curAttrVal->content);
     }
 
@@ -256,14 +256,14 @@ void MetaModelReader::ReadSimParams(xmlNode* node) {
     curAttrVal = FindAttributeByName(node, "StopTime");
     double StopTime = atof((const char*)curAttrVal->content);
 
-    if( StartTime >= StopTime ){
+    if(StartTime >= StopTime) {
         TLMErrorLog::FatalError("StartTime must be smaller than StopTime, check your model!");
         exit(1);
     }
 
     double WriteTimeStep = (StopTime-StartTime)/1000.0;
     curAttrVal = FindAttributeByName(node, "WriteTimeStep", false);
-    if(curAttrVal != 0){
+    if(curAttrVal != 0) {
         WriteTimeStep = atof((const char*)curAttrVal->content);
     }
 
@@ -280,11 +280,11 @@ void MetaModelReader::ReadSimParams(xmlNode* node) {
 // for a given XML node. Used for looking up required sections in the XML document.
 // Returns: xmlNode* giving address of the found node or NULL if an optional node
 // is not found.
-xmlNode* MetaModelReader::FindChildByName(xmlNode* node, const char* name, bool required ){
+xmlNode* MetaModelReader::FindChildByName(xmlNode* node, const char* name, bool required) {
 
-    for(xmlNode* curNode = node->children ; curNode; curNode = curNode->next) {
-        if(    (XML_ELEMENT_NODE == curNode->type)
-               && (strcmp(name, (const char*)(curNode->name))  == 0)  ) {
+    for(xmlNode* curNode = node->children; curNode; curNode = curNode->next) {
+        if(   (XML_ELEMENT_NODE == curNode->type)
+               && (strcmp(name, (const char*)(curNode->name))  == 0) ) {
             return curNode;
         }
     }
@@ -300,7 +300,7 @@ xmlNode* MetaModelReader::FindChildByName(xmlNode* node, const char* name, bool 
 // for a given XML element node. Used for looking up required attributes while
 // building the Model structure.
 // Returns: xmlNode* providing address of the found attribute or NULL
-xmlNode* MetaModelReader::FindAttributeByName(xmlNode* node, const char* name, bool required ){
+xmlNode* MetaModelReader::FindAttributeByName(xmlNode* node, const char* name, bool required) {
 
     for(xmlAttr* curAttr = node->properties; curAttr; curAttr = curAttr->next) {
         if(strcmp(name, (const char*)curAttr->name) == 0) {
@@ -319,10 +319,10 @@ xmlNode* MetaModelReader::FindAttributeByName(xmlNode* node, const char* name, b
 void MetaModelReader::ReadTLMConnectionNode(xmlNode* node) {
 
     TLMErrorLog::Log(string("Reading definition for Connections "));
-    if( node != 0 ){
+    if(node != 0) {
         for(xmlNode* curNode = node->children; curNode; curNode = curNode->next) {
-            if(    (XML_ELEMENT_NODE == curNode->type)
-                   && (strcmp("Connection", (const char*)curNode->name)  == 0)  ) {
+            if(   (XML_ELEMENT_NODE == curNode->type)
+                   && (strcmp("Connection", (const char*)curNode->name)  == 0) ) {
 
                 TLMErrorLog::Log(string("Processing Connection: "));
 
@@ -334,7 +334,7 @@ void MetaModelReader::ReadTLMConnectionNode(xmlNode* node) {
                 int fromID, toID;
                 TLMConnectionParams conParam;
 
-                fromID = TheModel.GetTLMInterfaceID( AttrData );
+                fromID = TheModel.GetTLMInterfaceID(AttrData);
                 if(fromID < 0) {
                     TLMErrorLog::FatalError(string("Could not find definition for interface ")
                                             + AttrData);
@@ -344,7 +344,7 @@ void MetaModelReader::ReadTLMConnectionNode(xmlNode* node) {
 
                 AttrData = (const char*)curAttr->content;
                 TLMErrorLog::Log(string("To:") + AttrData);
-                toID = TheModel.GetTLMInterfaceID( AttrData );
+                toID = TheModel.GetTLMInterfaceID(AttrData);
                 if(toID < 0) {
                     TLMErrorLog::FatalError(string("Could not find definition for interface ")
                                             + AttrData);
@@ -399,7 +399,7 @@ void MetaModelReader::ReadModel(std::string &InputFile, bool InterfaceRequestMod
 
     xmlDoc* doc = xmlParseFile(InputFile.c_str()); // open XML & parse it
 
-    if (doc == NULL) {
+    if(doc == NULL) {
         TLMErrorLog::FatalError(string("Could not parse input file ") + InputFile);
     }
 

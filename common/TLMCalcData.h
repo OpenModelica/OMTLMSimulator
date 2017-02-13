@@ -28,12 +28,12 @@ public:
         //Nom_cI_A_cX,
         mode(0.0)
     {
-        for(int i=0 ; i<3 ; i++){
+        for(int i=0; i<3; i++) {
             cX_R_cG_cG[i] = 0.0;
             Nom_cI_R_cX_cX[i] = cX_R_cG_cG[i];
         }
 
-        for(int i=0 ; i<9 ; i++){
+        for(int i=0; i<9; i++) {
             cX_A_cG[i] = (i%4 == 0 ? 1.0 : 0.0);
             Nom_cI_A_cX[i] = cX_A_cG[i];
         }
@@ -129,15 +129,15 @@ public:
         GenForce[3] = 0.0; GenForce[4] = 0.0; GenForce[5] = 0.0;
     }
 
-    TLMTimeData3D& operator=(const TLMTimeData3D& td){
-        if( &td != this ){
+    TLMTimeData3D& operator=(const TLMTimeData3D& td) {
+        if(&td != this) {
             time = td.time;
 
             int i=0;
-            for( i=0; i<3 ; i++) Position[i] = td.Position[i];
-            for( i=0; i<9 ; i++) RotMatrix[i] = td.RotMatrix[i];
-            for( i=0; i<6 ; i++) Velocity[i] = td.Velocity[i];
-            for( i=0; i<6 ; i++) GenForce[i] = td.GenForce[i];
+            for(i=0; i<3; i++) Position[i] = td.Position[i];
+            for(i=0; i<9; i++) RotMatrix[i] = td.RotMatrix[i];
+            for(i=0; i<6; i++) Velocity[i] = td.Velocity[i];
+            for(i=0; i<6; i++) GenForce[i] = td.GenForce[i];
         }
         return *this;
     }
@@ -177,8 +177,8 @@ public:
         GenForce = 0.0;
     }
 
-    TLMTimeData1D& operator=(const TLMTimeData1D& td){
-        if( &td != this ){
+    TLMTimeData1D& operator=(const TLMTimeData1D& td) {
+        if(&td != this) {
             time = td.time;
 
             Position = td.Position;
@@ -208,8 +208,8 @@ public:
         Value = 0.0;
     }
 
-    TLMTimeDataSignal& operator=(const TLMTimeDataSignal& td){
-        if( &td != this ){
+    TLMTimeDataSignal& operator=(const TLMTimeDataSignal& td) {
+        if(&td != this) {
             time = td.time;
 
             Value = td.Value;

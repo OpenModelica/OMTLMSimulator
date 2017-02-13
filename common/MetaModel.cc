@@ -36,8 +36,8 @@ string SimulationParams::GetServerName() const {
     struct hostent *hp;
     hp = gethostbyname(Buf);
 
-    if (hp==NULL){
-        TLMErrorLog::FatalError("GetServerName: Failed to get my host IP") ;
+    if(hp==NULL) {
+        TLMErrorLog::FatalError("GetServerName: Failed to get my host IP");
         return string();
     }
 
@@ -73,7 +73,7 @@ TLMInterfaceProxy::TLMInterfaceProxy(int CompID, int IfcID, string& aName, int a
 }
 
 // Set the connection object attached to this interface.
-void TLMInterfaceProxy::SetConnection( TLMConnection& conn) {
+void TLMInterfaceProxy::SetConnection(TLMConnection& conn) {
     ConnectionID = conn.GetID();
     LinkedID = (conn.GetFromID() == GetID()) ?
                 conn.GetToID():conn.GetFromID();
@@ -81,7 +81,7 @@ void TLMInterfaceProxy::SetConnection( TLMConnection& conn) {
 
 //! Set position and orientation of the component inertial system relative the 
 //! meta-models inertial system.
-void TLMComponentProxy::SetInertialTranformation( double pos[], double orientation[] )
+void TLMComponentProxy::SetInertialTranformation(double pos[], double orientation[])
 {
     cX_R_cG_cG[0] = pos[0];
     cX_R_cG_cG[1] = pos[1];
@@ -102,7 +102,7 @@ void TLMComponentProxy::SetInertialTranformation( double pos[], double orientati
 
 //! Get position and orientation of the component inertial system relative the 
 //! meta-models inertial system.
-void TLMComponentProxy::GetInertialTranformation( double pos[3], double orientation[9] )
+void TLMComponentProxy::GetInertialTranformation(double pos[3], double orientation[9])
 {
     pos[0] = cX_R_cG_cG[0];
     pos[1] = cX_R_cG_cG[1];
@@ -130,17 +130,17 @@ MetaModel::MetaModel()
 void child_signal_handler(int s)
 {
     int pid, status;
-    while (1)
+    while(1)
     {
         // Catch all SIGCHLD signals
         pid = waitpid (WAIT_ANY, &status, WNOHANG);
 
-        if (pid <= 0){
+        if(pid <= 0) {
             // No child found, we simply break.
             break;
         }
 
-        if( status != 0 ){
+        if(status != 0) {
             // Here we get the actual error, typically the command could not be executed.
             TLMErrorLog::FatalError("Execution failed, please verify command (script), execution path, and check TLM logfile.");
         }
@@ -183,7 +183,7 @@ int MetaModel::RegisterTLMComponentProxy(const string& Name,
                                          const string& StartCommand,
                                          const string& ModelName,
                                          int SolverMode,
-                                         const string& GeometryFile){
+                                         const string& GeometryFile) {
     TLMComponentProxy* comp = new TLMComponentProxy(Name, StartCommand, ModelName, SolverMode, GeometryFile);
     Components.insert(Components.end(), comp);
     return Components.size() - 1;
@@ -192,7 +192,7 @@ int MetaModel::RegisterTLMComponentProxy(const string& Name,
 // Find a Component by its name and return the ID
 // Return -1 if not component was found.. 
 int MetaModel::GetTLMComponentID(const string& Name) {
-    for( int i = Components.size() - 1; i >= 0; --i) {
+    for(int i = Components.size() - 1; i >= 0; --i) {
         if(Components[i]->GetName() == Name) {
             return i;
         }
@@ -245,8 +245,8 @@ int MetaModel::RegisterTLMParameterProxy(const int ComponentID, string& Name, st
 int MetaModel::GetTLMInterfaceID(const int ComponentID, string& Name) {
     for(int i = Interfaces.size() - 1; i >= 0; i--) {
         TLMInterfaceProxy& ifc =  GetTLMInterfaceProxy(i);
-        if( (ifc.GetComponentID() == ComponentID)
-                && (ifc.GetName() == Name) ) {
+        if((ifc.GetComponentID() == ComponentID)
+                && (ifc.GetName() == Name)) {
             return i;
         }
     }
@@ -256,8 +256,8 @@ int MetaModel::GetTLMInterfaceID(const int ComponentID, string& Name) {
 int MetaModel::GetTLMParameterID(const int ComponentID, std::string &Name) {
     for(int i = Parameters.size() - 1; i >= 0; i--) {
         TLMParameterProxy& ifc =  GetTLMParameterProxy(i);
-        if( (ifc.GetComponentID() == ComponentID)
-                && (ifc.GetName() == Name) ) {
+        if((ifc.GetComponentID() == ComponentID)
+                && (ifc.GetName() == Name)) {
             return i;
         }
     }
@@ -293,18 +293,18 @@ void MetaModel::StartComponents() {
             }
         }
         if(1e150 == maxStep) maxStep = 0;
-        if(maxStep <= 0){
+        if(maxStep <= 0) {
             maxStep = 1e-4;
             TLMErrorLog::Warning(string("Too smal max time step for ") +
                                  Components[i]->GetName() + ", set default " +
-                                 TLMErrorLog::ToStdStr(maxStep) );
+                                 TLMErrorLog::ToStdStr(maxStep));
         }
         if(!Components[i]->GetSolverMode()) maxStep /= 2;
 
 
         TLMErrorLog::Log(string("Choosing the max time step for ")+
                          Components[i]->GetName() + " " +
-                         TLMErrorLog::ToStdStr(maxStep) );
+                         TLMErrorLog::ToStdStr(maxStep));
 
         Components[i]->StartComponent(SimParams, maxStep);
     }
@@ -333,7 +333,7 @@ bool MetaModel::CheckProxyComm() {
 
 
 //! Print meta-model to ostream.
-void MetaModel::Print(std::ostream &os )
+void MetaModel::Print(std::ostream &os)
 {
     os << "Components:" << std::endl;
     for(ComponentsVector::iterator it = Components.begin(); it!=Components.end(); ++it) {
@@ -356,7 +356,7 @@ void MetaModel::Print(std::ostream &os )
 std::string GetLastErrorStdStr()
 {
     DWORD error = GetLastError();
-    if (error)
+    if(error)
     {
         LPVOID lpMsgBuf;
         DWORD bufLen = FormatMessage(
@@ -367,8 +367,8 @@ std::string GetLastErrorStdStr()
                     error,
                     MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
                     (LPTSTR) &lpMsgBuf,
-                    0, NULL );
-        if (bufLen)
+                    0, NULL);
+        if(bufLen)
         {
             LPCSTR lpMsgStr = (LPCSTR)lpMsgBuf;
             std::string result(lpMsgStr, lpMsgStr+bufLen);
@@ -383,11 +383,11 @@ std::string GetLastErrorStdStr()
 #endif
 // Start the component executable
 void TLMComponentProxy::StartComponent(SimulationParams& SimParams, double MaxStep) {
-    TLMErrorLog::Log(string("Starting ") + StartCommand );
+    TLMErrorLog::Log(string("Starting ") + StartCommand);
 
     // In the special case where start-command is explicitely set to "none"
     // we skip startup. This is useful for integrated simulation/tlm-manager.
-    if( StartCommand != "none" ){
+    if(StartCommand != "none") {
         string startTime = SimParams.GetStartTimeStr();
         string endTime = SimParams.GetEndTimeStr();
         string strMaxStep = TLMErrorLog::ToStdStr(MaxStep);
@@ -397,12 +397,12 @@ void TLMComponentProxy::StartComponent(SimulationParams& SimParams, double MaxSt
         STARTUPINFO si;
         PROCESS_INFORMATION pi;
 
-        ZeroMemory( &si, sizeof(si) );
+        ZeroMemory(&si, sizeof(si));
         si.cb = sizeof(si);
-        ZeroMemory( &pi, sizeof(pi) );
+        ZeroMemory(&pi, sizeof(pi));
 
         const char* comspec = std::getenv("COMSPEC");
-        if (strcmp(comspec, "") == 0) {
+        if(strcmp(comspec, "") == 0) {
             comspec = "cmd";
         }
 
@@ -416,7 +416,7 @@ void TLMComponentProxy::StartComponent(SimulationParams& SimParams, double MaxSt
         command << " " << serverName.c_str();
         command << " " << ModelName.c_str();
         TLMErrorLog::Log(string("Starting ") + command.str());
-        if (!CreateProcessA(NULL, (char *)command.str().c_str(), NULL, NULL, FALSE, 0, NULL, NULL, &si, &pi)) {
+        if(!CreateProcessA(NULL, (char *)command.str().c_str(), NULL, NULL, FALSE, 0, NULL, NULL, &si, &pi)) {
             TLMErrorLog::FatalError("StartComponent: Failed to start the component " + Name + " with command " + StartCommand + "."
                                                                                                                                 "Error is " + GetLastErrorStdStr());
             exit(-1);
@@ -425,8 +425,8 @@ void TLMComponentProxy::StartComponent(SimulationParams& SimParams, double MaxSt
         }
 
         // Close process and thread handles.
-        CloseHandle( pi.hProcess );
-        CloseHandle( pi.hThread );
+        CloseHandle(pi.hProcess);
+        CloseHandle(pi.hThread);
 
         //	_spawnlp(_P_NOWAIT, StartCommand.c_str(), StartCommand.c_str(),
         //		 Name.c_str(),
@@ -436,7 +436,7 @@ void TLMComponentProxy::StartComponent(SimulationParams& SimParams, double MaxSt
         //		 serverName.c_str(),
         //		 ModelName.c_str(),
         //		 NULL
-        //		 );
+        //		);
 
 
 #elif defined(__CYGWIN__)
@@ -447,30 +447,30 @@ void TLMComponentProxy::StartComponent(SimulationParams& SimParams, double MaxSt
                 strMaxStep.c_str(),
                 serverName.c_str(),
                 ModelName.c_str(),
-                NULL );
+                NULL);
 #else
         // We create a child that runs the simulation program.
         pid_t child;
-        switch (child = fork()) {
+        switch(child = fork()) {
         case -1:  // failed!!!!
-            TLMErrorLog::FatalError("StartComponent: Failed to start a component") ;
+            TLMErrorLog::FatalError("StartComponent: Failed to start a component");
             break;
         case 0:   // I'm a child. I'll execute the program
-            execlp( StartCommand.c_str(), StartCommand.c_str(),
+            execlp(StartCommand.c_str(), StartCommand.c_str(),
                     Name.c_str(),
                     startTime.c_str(),
                     endTime.c_str(),
                     strMaxStep.c_str(),
                     serverName.c_str(),
                     ModelName.c_str(),
-                    NULL );
+                    NULL);
 
             // We add a try, catch around fatal error in order to force a exit-value other than 0!
             try {
             // If we get here, something went wrong.
             TLMErrorLog::FatalError("StartComponent: Failed to start the component " + Name + " with command " + StartCommand);
         }
-            catch(...){
+            catch(...) {
         }
             exit(-1);
             break;
@@ -479,8 +479,8 @@ void TLMComponentProxy::StartComponent(SimulationParams& SimParams, double MaxSt
         }
 #endif    
     }
-    else{
-        TLMErrorLog::Log( "Start command \"none\" nothing started!" );
+    else {
+        TLMErrorLog::Log("Start command \"none\" nothing started!");
     }
 }
 

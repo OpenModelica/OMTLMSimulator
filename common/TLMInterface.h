@@ -30,7 +30,7 @@ public:
     virtual ~TLMInterface();
     //! Indecates if the interface is finished and waits for shutdown.
     //! This is use for interface request mode and not simulation mode.
-    bool waitForShutdown(){ return waitForShutdownFlg; }
+    bool waitForShutdown() { return waitForShutdownFlg; }
 
     //! Get name of the interface
     const std::string& GetName() const { return Name; }
@@ -62,11 +62,11 @@ public:
 protected:
 
     //! Linear interpolation (can be used for linear extrapolation as well)
-    //! returns f(time) = ((time - t[0]) * f[1] - (time - t[1]) * f[0]) /( t[1] - t[0])
+    //! returns f(time) = ((time - t[0]) * f[1] - (time - t[1]) * f[0]) /(t[1] - t[0])
     inline static double linear_interpolate(double time,
                                             double t0, double t1,
-                                            double f0, double f1){
-        return ((time - t0) * f1 - (time - t1) * f0) / ( t1 - t0);
+                                            double f0, double f1) {
+        return ((time - t0) * f1 - (time - t1) * f0) / (t1 - t0);
     }
 
 

@@ -24,7 +24,7 @@
 using namespace tlmMisc;
 using std::string;
 
-void usage(){
+void usage() {
     string usageStr =
             "Usage: tlmmananger [-d] [-m <monitor-port>] [-p <server-port>] [-r] <metamodel>, where metamodel is a name of XML file.\n"
             "-d                 : enable debug mode\n"
@@ -41,18 +41,18 @@ void usage(){
 void PrintInterfaceInformation(MetaModel& theModel)
 {
     std::ofstream interfacefile ("interfaceData.xml");
-    if (interfacefile.is_open()) {
+    if(interfacefile.is_open()) {
         interfacefile << "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n";
         interfacefile << "<ModelData>\n";
         interfacefile << "<Interfaces>\n";
-        if( theModel.GetInterfacesNum() > 0 ) {
-            for(size_t idx=0 ; idx<theModel.GetInterfacesNum() ; idx++ ){
+        if(theModel.GetInterfacesNum() > 0) {
+            for(size_t idx=0; idx<theModel.GetInterfacesNum(); idx++) {
                 TLMInterfaceProxy& intProx = theModel.GetTLMInterfaceProxy(idx);
                 TLMComponentProxy& comProx = theModel.GetTLMComponentProxy(intProx.GetComponentID());
                 TLMTimeData3D& tlmData = intProx.getTime0Data3D();
 
                 double3Vec R(tlmData.Position[0], tlmData.Position[1], tlmData.Position[2]);
-                double33Mat A( tlmData.RotMatrix[0], tlmData.RotMatrix[1], tlmData.RotMatrix[2],
+                double33Mat A(tlmData.RotMatrix[0], tlmData.RotMatrix[1], tlmData.RotMatrix[2],
                         tlmData.RotMatrix[3], tlmData.RotMatrix[4], tlmData.RotMatrix[5],
                         tlmData.RotMatrix[6], tlmData.RotMatrix[7], tlmData.RotMatrix[8]);
                 double3Vec phi = ATophi321(A);
@@ -86,20 +86,20 @@ void PrintInterfaceInformation(MetaModel& theModel)
     } else {
         std::cout << "Error opening interfaceData.xml file." << std::endl;
 
-        if( theModel.GetInterfacesNum() == 0 ){
+        if(theModel.GetInterfacesNum() == 0) {
             std::cout << "No TLM interfaces found." << std::endl;
             return;
         }
 
         std::cout << "Positions and orientations:" << std::endl;
 
-        for(size_t idx=0 ; idx<theModel.GetInterfacesNum() ; idx++ ){
+        for(size_t idx=0; idx<theModel.GetInterfacesNum(); idx++) {
             TLMInterfaceProxy& intProx = theModel.GetTLMInterfaceProxy(idx);
             TLMComponentProxy& comProx = theModel.GetTLMComponentProxy(intProx.GetComponentID());
             TLMTimeData3D& tlmData = intProx.getTime0Data3D();
 
             double3Vec R(tlmData.Position[0], tlmData.Position[1], tlmData.Position[2]);
-            double33Mat A( tlmData.RotMatrix[0], tlmData.RotMatrix[1], tlmData.RotMatrix[2],
+            double33Mat A(tlmData.RotMatrix[0], tlmData.RotMatrix[1], tlmData.RotMatrix[2],
                     tlmData.RotMatrix[3], tlmData.RotMatrix[4], tlmData.RotMatrix[5],
                     tlmData.RotMatrix[6], tlmData.RotMatrix[7], tlmData.RotMatrix[8]);
 
@@ -125,8 +125,8 @@ int main(int argc, char* argv[]) {
     std::cout << "Debug 1\n";
 
     char c;
-    while ((c = getopt (argc, argv, "dp:m:rs:")) != -1){
-        switch (c) {
+    while((c = getopt (argc, argv, "dp:m:rs:")) != -1) {
+        switch(c) {
         case 'd':
             debugFlg = true;
             break;
@@ -150,7 +150,7 @@ int main(int argc, char* argv[]) {
     std::cout << "singleModel = " << singleModel << "\n";
 
     // Check for existing model (XML) file argument.
-    if( optind >= argc ){
+    if(optind >= argc) {
         usage();
     }
 
@@ -174,12 +174,12 @@ int main(int argc, char* argv[]) {
     }
     
     // Set preferred network port
-    if( serverPort > 0 ){
+    if(serverPort > 0) {
         theModel.GetSimParams().SetPort(serverPort);
     }
 
     // Set preferred network port for monitoring
-    if( monitorPort > 0 ){
+    if(monitorPort > 0) {
         theModel.GetSimParams().SetMonitorPort(monitorPort);
     }
 
@@ -190,7 +190,7 @@ int main(int argc, char* argv[]) {
     manager.Run(comMode);
 
     // Print interface information if needed.
-    if( comMode == ManagerCommHandler::InterfaceRequestMode ){
+    if(comMode == ManagerCommHandler::InterfaceRequestMode) {
         PrintInterfaceInformation(theModel);
         return 0;
     }

@@ -25,13 +25,13 @@ class TLMErrorLog {
 public:
     //! FatalError function writes a message to standard error output
     //! then terminates the program abnormally.
-    static void FatalError(const std::string& mess) ;
+    static void FatalError(const std::string& mess);
 
     //! Warning function prints a warning message to standard error output
-    static void Warning(const std::string& mess) ;
+    static void Warning(const std::string& mess);
 
     //! Log function logs a message to standard error output
-    static void Log(const std::string& mess) ;
+    static void Log(const std::string& mess);
 
     //! A utility function often used to log numerical information
     static std::string ToStdStr(double val);
@@ -47,23 +47,23 @@ public:
 
     //! This function enables so that logs are duplicated to the normal *.log file as well.
     //! Input: if Enable is true - output is on, othewise - off.
-    static void SetNormalErrorLogOn( bool Enable ){ NormalErrorLogOn = Enable; }
+    static void SetNormalErrorLogOn(bool Enable) { NormalErrorLogOn = Enable; }
 
     //! This function enables/disables warning messages
     //! Input: if Enable is true - output is on, othewise - off.
-    static void SetWarningOut( bool Enable ){ WarningOn = Enable; }
+    static void SetWarningOut(bool Enable) { WarningOn = Enable; }
 
     //! Sets the output stream for output of all log, warning, and error messages.
     //! Default output stream id std::cout
-    static void SetOutStream( std::ostream& of ) { outStream = &of; }
+    static void SetOutStream(std::ostream& of) { outStream = &of; }
 
     //! Sets the error mode to exception instead of abort()/exit().
     //! When exception mode is on TLMErrorLog will throw an exception on fatal error.
     //! Otherwise abort()/exit() is called on fatal error.
-    static void SetErrorException( bool Enable ) { ExceptionOn = Enable; }
+    static void SetErrorException(bool Enable) { ExceptionOn = Enable; }
 
     //! Returns the state of the error exception mode.
-    static bool ExceptionEnabled(){ return ExceptionOn; }
+    static bool ExceptionEnabled() { return ExceptionOn; }
 
     //! Return current time as string.
     static std::string TimeStr();
