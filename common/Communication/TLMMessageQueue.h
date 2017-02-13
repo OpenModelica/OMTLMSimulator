@@ -10,7 +10,7 @@
 #include <queue>
 #include <stack>
 #include "TLMThreadSynch.h"
-#include "TLMCommUtil.h"
+#include "Communication/TLMCommUtil.h"
 
 //! Class TLMMessageQueue is a thread-safe message queue as needed
 //! by the ManagerCommHandler class.

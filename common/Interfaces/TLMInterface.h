@@ -12,8 +12,8 @@
 #include <queue>
 #include <vector>
 #include <string>
-#include "TLMCommUtil.h"
-#include "TLMClientComm.h"
+#include "Communication/TLMCommUtil.h"
+#include "Communication/TLMClientComm.h"
 #include "common.h"
 
 //!

@@ -10,7 +10,7 @@
 
 // The program uses TLM plug-in as any other tool should.
 
-#include "TLMPlugin.h"
+#include "Plugin/TLMPlugin.h"
 #include <cmath>
 #include <iostream>
 #include <fstream>

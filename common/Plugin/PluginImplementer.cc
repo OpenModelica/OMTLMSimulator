@@ -1,8 +1,8 @@
 // File: PluginImplementer.cc
 // Provides the implementation of methods for PluginImplementer.
-#include "TLMPlugin.h"
-#include "TLMCommUtil.h"
-#include "PluginImplementer.h"
+#include "Plugin/TLMPlugin.h"
+#include "Communication/TLMCommUtil.h"
+#include "Plugin/PluginImplementer.h"
 #include <cassert>
 #include <iostream>
 #include <csignal>

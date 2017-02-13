@@ -12,9 +12,9 @@
 #include <map>
 // note: <map> must be above all, because of a VC2005 bug (on _Wherenode)
 
-#include "TLMCommUtil.h"
-#include "TLMManagerComm.h"
-#include "TLMMessageQueue.h"
+#include "Communication/TLMCommUtil.h"
+#include "Communication/TLMManagerComm.h"
+#include "Communication/TLMMessageQueue.h"
 #include "MetaModels/MetaModel.h"
 
 #include "TLMThreadSynch.h"

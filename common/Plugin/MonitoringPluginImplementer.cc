@@ -1,5 +1,5 @@
-#include "MonitoringPluginImplementer.h"
-#include "TLMCommUtil.h"
+#include "Plugin/MonitoringPluginImplementer.h"
+#include "Communication/TLMCommUtil.h"
 
 #include <string>
 using namespace std;

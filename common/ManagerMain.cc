@@ -11,7 +11,7 @@
 #include "TLMErrorLog.h"
 #include "MetaModels/MetaModel.h"
 #include "MetaModels/MetaModelReader.h"
-#include "ManagerCommHandler.h"
+#include "Communication/ManagerCommHandler.h"
 #include "double3Vec.h"
 #include "double33Mat.h"
 

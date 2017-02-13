@@ -7,13 +7,13 @@
 
 #include <vector>
 #include <map>
-#include "TLMClientComm.h"
+#include "Communication/TLMClientComm.h"
 #include "Interfaces/TLMInterface.h"
 #include "Interfaces/TLMInterfaceSignalInput.h"
 #include "Interfaces/TLMInterfaceSignalOutput.h"
 #include "Interfaces/TLMInterface1D.h"
 #include "Interfaces/TLMInterface3D.h"
-#include "TLMPlugin.h"
+#include "Plugin/TLMPlugin.h"
 #include "TLMParameter.h"
 
 

@@ -11,7 +11,7 @@
 #include <string>
 #include <ios>
 
-#include "TLMCommUtil.h"
+#include "Communication/TLMCommUtil.h"
 #include "TLMErrorLog.h"
 #include "Interfaces/TLMInterface.h"
 

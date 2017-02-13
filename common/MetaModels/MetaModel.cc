@@ -6,7 +6,7 @@
 #include <string>
 #include <sstream>
 #include "MetaModels/MetaModel.h"
-#include "TLMCommUtil.h"
+#include "Communication/TLMCommUtil.h"
 //#include "portability.h"
 #include <cstdlib>
 

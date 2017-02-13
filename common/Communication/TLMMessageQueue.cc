@@ -3,8 +3,8 @@
  *
  * Implementation of the MessageQueue methods
  */
-#include "TLMMessageQueue.h"
-#include "TLMCommUtil.h"
+#include "Communication/TLMMessageQueue.h"
+#include "Communication/TLMCommUtil.h"
 #include <cassert>
 
 TLMMessageQueue::~TLMMessageQueue() {
