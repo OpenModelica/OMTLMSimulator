@@ -137,7 +137,7 @@ public:
     }
 private:
     // Should never be used
-    AutoLock& operator=(AutoLock& a_in) ;
+    AutoLock& operator=(AutoLock& a_in);
 };
 
 //! Class ThreadLocal provides a simple interface to thread specific data.

@@ -48,7 +48,7 @@ public:
     //! IfcID - ID of this interface
     //! aName - name of this interface
     TLMInterfaceProxy(int CompID, int IfcID, std::string& aName, int aDimensions=6,
-                      std::string aCausality="Bidirectional", std::string aDomain="Mechanical") ;
+                      std::string aCausality="Bidirectional", std::string aDomain="Mechanical");
 
     //! Get the name of this interface
     const std::string& GetName() const {
@@ -93,7 +93,7 @@ public:
     }
 
     //! Set the connection object attached to this interface.
-    void SetConnection( TLMConnection& conn);
+    void SetConnection(TLMConnection& conn);
 
     //! Set 'connected' flag, meaning that the Proxy is connected to the
     //! simulating compontent.
@@ -107,23 +107,23 @@ public:
         return Connected;
     }
 
-    //    TLMTimeDataSignal& getTime0DataSignal(){
+    //    TLMTimeDataSignal& getTime0DataSignal() {
     //        return time0DataSignal;
     //    }
 
-    //    TLMTimeData1D& getTime0Data1D(){
+    //    TLMTimeData1D& getTime0Data1D() {
     //        return time0Data1D;
     //    }
 
     //! Access data for simulation start time.
-    TLMTimeData3D& getTime0Data3D(){
+    TLMTimeData3D& getTime0Data3D() {
         return time0Data3D;
     }
 
 private:
 
     //! Set the interface connected to this one with TLMConnection
-    void SetLinkedID( int ID) {
+    void SetLinkedID(int ID) {
         LinkedID = ID;
     }
 
@@ -167,7 +167,7 @@ class  TLMParameterProxy {
 
 public:
 
-    TLMParameterProxy(int CompID, int ParID, std::string& aName, std::string& aDefaultValue) ;
+    TLMParameterProxy(int CompID, int ParID, std::string& aName, std::string& aDefaultValue);
 
     //! Get the name of this interface
     const std::string& GetName() const {
@@ -325,11 +325,11 @@ public:
 
     //! Set position and orientation of the component inertial system relative the
     //! meta-models inertial system.
-    void SetInertialTranformation( double pos[], double orientation[] );
+    void SetInertialTranformation(double pos[], double orientation[]);
 
     //! Get position and orientation of the component inertial system relative the
     //! meta-models inertial system.
-    void GetInertialTranformation( double pos[3], double orientation[9] );
+    void GetInertialTranformation(double pos[3], double orientation[9]);
     
 };
 
@@ -413,7 +413,7 @@ public:
     }
 
     //! Set method assign the attributes of the object
-    void Set(int aPort, double StartTime, double StopTime, int aTimeout = 600, int aMonitorPort = -1 ) {
+    void Set(int aPort, double StartTime, double StopTime, int aTimeout = 600, int aMonitorPort = -1) {
         Port = aPort;
         TimeStart = StartTime;
         TimeEnd = StopTime;
@@ -470,13 +470,13 @@ public:
     std::string GetServerName() const;
 
     //! Returns communication timeout in seconds.
-    int GetTimeout(){ return Timeout; }
+    int GetTimeout() { return Timeout; }
 
     //! Returns write time step.
-    double GetWriteTimeStep(){ return WriteTimeStep; }
+    double GetWriteTimeStep() { return WriteTimeStep; }
 
     //! Set write time step.
-    void SetWriteTimeStep(double wts){ WriteTimeStep = wts; }
+    void SetWriteTimeStep(double wts) { WriteTimeStep = wts; }
 
 };
 
@@ -522,12 +522,12 @@ public:
     }
 
     //! Return the number of registered components.
-    int GetComponentsNum( ) const  {
+    int GetComponentsNum() const  {
         return static_cast<int>(Components.size());
     }
 
     //! Return the number of registered components.
-    size_t GetInterfacesNum( ) const  {
+    size_t GetInterfacesNum() const  {
         return Interfaces.size();
     }
 
@@ -539,7 +539,7 @@ public:
 
     //! Find  TLMInterface by its FullName (\<Component>.\<Interface>)
     //! and return its ID. Return -1 if not found.
-    int GetTLMInterfaceID(std::string& FullName) ;
+    int GetTLMInterfaceID(std::string& FullName);
 
     //! Add TLM interface proxy with a given name to the Model, return its ID.
     int RegisterTLMInterfaceProxy(const int ComponentID, std::string& Name, int Dimensions=6,
@@ -569,7 +569,7 @@ public:
     //! Input:
     //! ifc1, ifc2 - ID of the TLM interfaces the connection is attaching to.
     //! param - parameters of the Connection
-    int RegisterTLMConnection(int ifc1, int ifc2, TLMConnectionParams& param) ;
+    int RegisterTLMConnection(int ifc1, int ifc2, TLMConnectionParams& param);
 
     //! Get the TLMConnection associated with the ID.
     TLMConnection& GetTLMConnection(int ConnID) {
@@ -580,7 +580,7 @@ public:
     void StartComponents();
 
     //! Get the reference to the Model simulation parameters
-    SimulationParams& GetSimParams(){
+    SimulationParams& GetSimParams() {
         return SimParams;
     }
 

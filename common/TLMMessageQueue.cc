@@ -14,7 +14,7 @@ TLMMessageQueue::~TLMMessageQueue() {
 
     SendBufLock.lock();
     while(!SendBuffers.empty()) {
-        SenderWait.wait( SendBufLock);
+        SenderWait.wait(SendBufLock);
     }
     SendBufLock.unlock();
 
@@ -35,7 +35,7 @@ TLMMessage* TLMMessageQueue::GetReadSlot() {
         FreeBuffers.pop();
     }
     FreeBufLock.unlock();
-    if(ret == NULL )
+    if(ret == NULL)
         ret = new TLMMessage();
     return ret;
 }
@@ -59,7 +59,7 @@ TLMMessage* TLMMessageQueue::GetWriteSlot() {
     TLMMessage* ret = NULL;
     SendBufLock.lock();
     if(SendBuffers.empty() && !Terminated) {
-        SenderWait.wait( SendBufLock);
+        SenderWait.wait(SendBufLock);
     }
     if(SendBuffers.size() >  0) {
         ret = SendBuffers.front();
@@ -67,7 +67,7 @@ TLMMessage* TLMMessageQueue::GetWriteSlot() {
     }
     SendBufLock.unlock();
 
-    if( Terminated && (SendBuffers.size() == 0)) {
+    if(Terminated && (SendBuffers.size() == 0)) {
         SenderWait.signal(); // signal destructor in case it is waiting
     }
     return ret;

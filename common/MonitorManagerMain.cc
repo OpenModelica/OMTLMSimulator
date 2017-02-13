@@ -29,7 +29,7 @@
 using std::string;
 using namespace tlmMisc;
 
-void usage(){
+void usage() {
     string usageStr = "Usage: tlmmonitor [-d] [-n num-seps | -t time-step-size] <server:port> <metamodel>, where metamodel is an XML file.";
     TLMErrorLog::SetDebugOut(true);
     TLMErrorLog::Log(usageStr);
@@ -58,27 +58,27 @@ TLMPlugin* InitializeTLMConnection(MetaModel& model, std::string& serverName)
                        model.GetSimParams().GetStartTime(),
                        model.GetSimParams().GetEndTime(),
                        model.GetSimParams().GetWriteTimeStep(),
-                       serverName) )
+                       serverName))
     {
         TLMErrorLog::FatalError("Cannot initialize MonitoringPluginImplementer.");
         return 0;
     }
 
     int nTLMInterfaces = model.GetInterfacesNum();
-    for( int i=0 ; i<nTLMInterfaces ; i++ ){
+    for(int i=0; i<nTLMInterfaces; i++) {
         TLMInterfaceProxy& interfaceProxy = model.GetTLMInterfaceProxy(i);
         TLMComponentProxy& component = model.GetTLMComponentProxy(interfaceProxy.GetComponentID());
 
-        TLMErrorLog::Log( "Trying to register monitoring interface " + interfaceProxy.GetName() );
-        int TLMInterfaceID = TLMlink->RegisteTLMInterface( component.GetName() + "." + interfaceProxy.GetName(),
+        TLMErrorLog::Log("Trying to register monitoring interface " + interfaceProxy.GetName());
+        int TLMInterfaceID = TLMlink->RegisteTLMInterface(component.GetName() + "." + interfaceProxy.GetName(),
                                                            interfaceProxy.GetDimensions(), interfaceProxy.GetCausality(),
-                                                           interfaceProxy.GetDomain() );
+                                                           interfaceProxy.GetDomain());
 
         if(TLMInterfaceID >= 0) {
             TLMErrorLog::Log("Registration was successful");
         }
-        else{
-            TLMErrorLog::Log("Interface not connected in Meta-Model: " + component.GetName() + "." + interfaceProxy.GetName() );
+        else {
+            TLMErrorLog::Log("Interface not connected in Meta-Model: " + component.GetName() + "." + interfaceProxy.GetName());
         }
     }
 
@@ -92,11 +92,11 @@ void MonitorTimeStep(TLMPlugin* TLMlink,
                      std::map<int, TLMTimeDataSignal>& dataStorageSignal,
                      std::map<int, TLMTimeData1D>& dataStorage1D,
                      std::map<int, TLMTimeData3D>& dataStorage3D) {
-    if( TLMlink != 0 ){
+    if(TLMlink != 0) {
         // Get data from TLM-Manager here!
         int nTLMInterfaces = model.GetInterfacesNum();
 
-        for( int i=0 ; i<nTLMInterfaces ; i++ ){
+        for(int i=0; i<nTLMInterfaces; i++) {
             TLMInterfaceProxy& interfaceProxy = model.GetTLMInterfaceProxy(i);
             int interfaceID = interfaceProxy.GetID();
             int connectionID = interfaceProxy.GetConnectionID();
@@ -105,7 +105,7 @@ void MonitorTimeStep(TLMPlugin* TLMlink,
 
             TLMErrorLog::Log("Data request for " + interfaceProxy.GetName() + " for time " + ToStr(SimTime) + ", id: " + ToStr(interfaceID));
 
-            if( connectionID >= 0 ){
+            if(connectionID >= 0) {
 #define LOGGEDFORCEFIX
 #ifdef  LOGGEDFORCEFIX
                 if(dimensions == 6) {
@@ -125,7 +125,7 @@ void MonitorTimeStep(TLMPlugin* TLMlink,
                                 + PrevTimeData.GenForce[i] * alpha;
                     }
                 }
-                else if(dimensions == 1 && causality == "Bidirectional"){
+                else if(dimensions == 1 && causality == "Bidirectional") {
                     TLMTimeData1D& PrevTimeData = dataStorage1D[interfaceID];
                     TLMTimeData1D& CurTimeData = dataStorage1D[interfaceID];
 
@@ -138,7 +138,7 @@ void MonitorTimeStep(TLMPlugin* TLMlink,
                     //Apply damping factor, since this can not be done in GetTimeData (DampedTimeData is not available for monitor)
                     CurTimeData.GenForce = CurTimeData.GenForce*(1-alpha) + PrevTimeData.GenForce*alpha;
                 }
-                else if(dimensions == 1 && causality == "Output"){
+                else if(dimensions == 1 && causality == "Output") {
                     TLMTimeDataSignal& CurTimeData = dataStorageSignal[interfaceID];
                     int linkedID = interfaceProxy.GetLinkedID();
                     TLMlink->GetTimeDataSignal(interfaceID, SimTime, CurTimeData, true);
@@ -158,16 +158,16 @@ void WriteVisualXMLFile(MetaModel& model, std::string &baseFileName, std::string
     // Get data from TLM-Manager here!
     bool canWriteVisualXMLFile = false;
     int nTLMComponents = model.GetComponentsNum();
-    for (int i = 0 ; i < nTLMComponents ; i++) {
+    for (int i = 0; i < nTLMComponents; i++) {
         TLMComponentProxy& component = model.GetTLMComponentProxy(i);
-        if (!component.GetGeometryFile().empty()) {
+        if(!component.GetGeometryFile().empty()) {
             canWriteVisualXMLFile = true;
         }
     }
     // write the visual xml file
-    if (canWriteVisualXMLFile) {
+    if(canWriteVisualXMLFile) {
         std::ofstream visualFile((baseFileName + "_visual.xml").c_str());
-        if (!visualFile.good()) {
+        if(!visualFile.good()) {
             TLMErrorLog::FatalError("Failed to open outfile " + baseFileName + "_visual.xml, give up.");
             return;
         }
@@ -328,11 +328,11 @@ void WriteVisualXMLFile(MetaModel& model, std::string &baseFileName, std::string
         // components vector
         std::vector<std::string> components;
         int nTLMInterfaces = model.GetInterfacesNum();
-        for (int i = 0 ; i < nTLMInterfaces ; i++) {
+        for (int i = 0; i < nTLMInterfaces; i++) {
             TLMInterfaceProxy& interfaceProxy = model.GetTLMInterfaceProxy(i);
             TLMComponentProxy& component = model.GetTLMComponentProxy(interfaceProxy.GetComponentID());
-            if (interfaceProxy.GetConnectionID() >= 0) {
-                if (std::find(components.begin(), components.end(), component.GetName()) != components.end()) {
+            if(interfaceProxy.GetConnectionID() >= 0) {
+                if(std::find(components.begin(), components.end(), component.GetName()) != components.end()) {
                     continue;
                 }
 
@@ -417,10 +417,10 @@ void PrintHeader(MetaModel& model, std::ofstream& dataFile)
     dataFile << "\"" << "time\",";
 
     int nActiveInterfaces = 0;
-    for( int i=0 ; i<nTLMInterfaces ; i++ ){
+    for(int i=0; i<nTLMInterfaces; i++) {
         TLMInterfaceProxy& interfaceProxy = model.GetTLMInterfaceProxy(i);
         TLMComponentProxy& component = model.GetTLMComponentProxy(interfaceProxy.GetComponentID());
-        if( interfaceProxy.GetConnectionID() >= 0 ){
+        if(interfaceProxy.GetConnectionID() >= 0) {
             if(interfaceProxy.GetDimensions() == 6) {
                 // Comma between interfaces
                 if(nActiveInterfaces > 0) dataFile << ",";
@@ -494,9 +494,9 @@ void PrintData(MetaModel& model,
     bool printTimeFlg = true;
     int nActiveInterfaces = 0;
 
-    for( int i=0 ; i<nTLMInterfaces ; i++ ){
+    for(int i=0; i<nTLMInterfaces; i++) {
         TLMInterfaceProxy& interfaceProxy = model.GetTLMInterfaceProxy(i);
-        if( interfaceProxy.GetConnectionID() >= 0 ){
+        if(interfaceProxy.GetConnectionID() >= 0) {
             if(interfaceProxy.GetDimensions() == 6) {
                 std::stringstream ss;
                 ss << "Printing data for 3D interface " << interfaceProxy.GetID();
@@ -509,7 +509,7 @@ void PrintData(MetaModel& model,
                 }
 
                 // Print time only once, that is, for the first entry.
-                if( printTimeFlg ){
+                if(printTimeFlg) {
                     dataFile << timeData.time << ",";
                     printTimeFlg = false;
                 }
@@ -567,7 +567,7 @@ void PrintData(MetaModel& model,
                     timeData.time = startTime;
                 }
                 // Print time only once, that is, for the first entry.
-                if( printTimeFlg ){
+                if(printTimeFlg) {
                     dataFile << timeData.time << ",";
                     printTimeFlg = false;
                 }
@@ -619,7 +619,7 @@ void PrintData(MetaModel& model,
                     timeData.time = startTime;
                 }
                 // Print time only once, that is, for the first entry.
-                if( printTimeFlg ){
+                if(printTimeFlg) {
                     dataFile << timeData.time << ",";
                     printTimeFlg = false;
                 }
@@ -683,8 +683,8 @@ int main(int argc, char* argv[]) {
     double timeStep = 0.0;
     double nSteps = 0;
     char c;
-    while ((c = getopt (argc, argv, "dt:n:")) != -1){
-        switch (c) {
+    while((c = getopt (argc, argv, "dt:n:")) != -1) {
+        switch(c) {
         case 'd':
             debugFlg = true;
             break;
@@ -702,7 +702,7 @@ int main(int argc, char* argv[]) {
 
     // We exspect two arguments
     // tlmmonitor server-ip:port metamodel.xml
-    if( optind+1 >= argc ){
+    if(optind+1 >= argc) {
         usage();
     }
 
@@ -732,21 +732,21 @@ int main(int argc, char* argv[]) {
     
     // Open file for data logging, that is, storing the co-simulation data.
     std::ofstream outdataFile((baseFileName + ".csv").c_str());
-    if( !outdataFile.good() ){
+    if(!outdataFile.good()) {
         TLMErrorLog::FatalError("Failed to open outfile " + baseFileName + ".csv, give up.");
         exit(1);
     }
 
     // Open run file for logging of simulation progress.
     std::ofstream runFile((baseFileName + ".run").c_str());
-    if( !runFile.good() ){
+    if(!runFile.good()) {
         TLMErrorLog::FatalError("Failed to open runfile " + baseFileName + ".run, give up.");
         exit(1);
     }
 
     // Initialize TLM
     TLMPlugin* thePlugin = InitializeTLMConnection(theModel, serverStr);
-    if( !thePlugin ){
+    if(!thePlugin) {
         TLMErrorLog::FatalError("Failed to initialize TLM interface, give up.");
         exit(1);
     }
@@ -759,8 +759,8 @@ int main(int argc, char* argv[]) {
     // 1. User input specified in -t option
     // 2. User input specified in -s option
     // 3. Time step from MetaModel
-    if( timeStep == 0.0 ) {
-        if( nSteps > 0 ){
+    if(timeStep == 0.0) {
+        if(nSteps > 0) {
             timeStep = (endTime-simTime)/static_cast<double>(nSteps);
         }
         else {
@@ -781,7 +781,7 @@ int main(int argc, char* argv[]) {
         simTime += timeStep;
 
         // Adjust to meet end-time step.
-        if( simTime > endTime ) simTime = endTime;
+        if(simTime > endTime) simTime = endTime;
 
         // Data structure for data logging
         std::map<int, TLMTimeDataSignal> dataSignal;

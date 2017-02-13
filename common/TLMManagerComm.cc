@@ -53,8 +53,8 @@ int TLMManagerComm::CreateServerSocket()
     gethostname(myname,MAXHOSTNAME);
     hp = gethostbyname((const char*) myname);
 
-    if (hp==NULL){
-        TLMErrorLog::FatalError("Create server socket - failed to get my hostname, check that name resolves, e.g. /etc/hosts has "+std::string(myname)) ;
+    if(hp==NULL) {
+        TLMErrorLog::FatalError("Create server socket - failed to get my hostname, check that name resolves, e.g. /etc/hosts has "+std::string(myname));
         // See BZ2161.
 
         // Adding this line to /etc/hosts resolves (for me) the problem with
@@ -74,22 +74,22 @@ int TLMManagerComm::CreateServerSocket()
 #endif
 
     if(AF_INET != sa.sin_family) {
-        TLMErrorLog::FatalError("Unsupported address family returned by gethostbyname") ;
+        TLMErrorLog::FatalError("Unsupported address family returned by gethostbyname");
         return -1;
     }
     sa.sin_port = htons(ServerPort);
 
     int theSckt;
 
-    if ((theSckt =
+    if((theSckt =
      #ifdef WIN32
          socket(AF_INET, SOCK_STREAM,IPPROTO_TCP)
      #else
          socket(AF_INET, SOCK_STREAM,0)
 
      #endif
-         ) < 0 ) {
-        TLMErrorLog::FatalError("Create server socket - failed to get a socket handle") ;
+        ) < 0) {
+        TLMErrorLog::FatalError("Create server socket - failed to get a socket handle");
 
         return -1;
     }
@@ -97,21 +97,21 @@ int TLMManagerComm::CreateServerSocket()
     int bindCount = 0;
     int maxIterations = 1000; // BUG: should be calculated from a max. port range!
     // Bind the socket, first try the predefined port, then increase port number.
-    while (bind(theSckt,(struct sockaddr *) &sa, sizeof(struct sockaddr_in)) < 0 && bindCount < maxIterations ) {
+    while(bind(theSckt,(struct sockaddr *) &sa, sizeof(struct sockaddr_in)) < 0 && bindCount < maxIterations) {
         ServerPort++;
         bindCount++;
         sa.sin_port = htons(ServerPort);
     }
 
-    if( bindCount == maxIterations ){
+    if(bindCount == maxIterations) {
         BCloseSocket(theSckt);
-        TLMErrorLog::FatalError("Create server socket - failed to bind. Check that the port is free.") ;
+        TLMErrorLog::FatalError("Create server socket - failed to bind. Check that the port is free.");
         return -1;
     }
 
     if(listen(theSckt, NumClients) != 0) {
         BCloseSocket(theSckt);
-        TLMErrorLog::FatalError("Crate server socket - failed in listen on the server socket.") ;
+        TLMErrorLog::FatalError("Crate server socket - failed in listen on the server socket.");
     }
 
     ContactSocket = theSckt;
@@ -122,7 +122,7 @@ int TLMManagerComm::CreateServerSocket()
 }
 
 
-void TLMManagerComm::SelectReadSocket( ) {
+void TLMManagerComm::SelectReadSocket() {
 
     int maxFD = -1;
     FD_ZERO(& CurFDSet);
@@ -153,7 +153,7 @@ void TLMManagerComm::SelectReadSocket( ) {
 // Should be called after SelectReadSocket
 bool TLMManagerComm::HasData(int socket) {
     bool ret = FD_ISSET(socket, &CurFDSet);
-    //    if( ret ) FD_CLR(socket, &CurFDSet);
+    //    if(ret) FD_CLR(socket, &CurFDSet);
     return ret;
 }
 
@@ -169,7 +169,7 @@ void TLMManagerComm::SwitchToRunningMode() {
 int TLMManagerComm::AcceptComponentConnections() {
     TLMErrorLog::Log("TLM_manager - accepting connection");
     int theCon;
-    if ((theCon = accept(ContactSocket,NULL,NULL)) < 0){
+    if((theCon = accept(ContactSocket,NULL,NULL)) < 0) {
         TLMErrorLog::FatalError("Could not accept a connection");
     }
 
@@ -188,7 +188,7 @@ void TLMManagerComm::DropActiveSocket(int socket) {
 void TLMManagerComm::CloseAll()
 {
     std::vector<int>::iterator activeSockIter;
-    for( activeSockIter = ActiveSockets.begin() ; activeSockIter != ActiveSockets.end() ; activeSockIter++ ){
+    for(activeSockIter = ActiveSockets.begin(); activeSockIter != ActiveSockets.end(); activeSockIter++) {
         BCloseSocket(*activeSockIter);
     }
     BCloseSocket(ContactSocket);

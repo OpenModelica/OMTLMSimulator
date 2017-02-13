@@ -14,7 +14,7 @@ MonitoringPluginImplementer* MonitoringPluginImplementer::CreateInstance() {
     return new MonitoringPluginImplementer();
 }
 
-void MonitoringPluginImplementer::ReceiveTimeData(TLMInterface* reqIfc, double time)  {
+void MonitoringPluginImplementer::ReceiveTimeData(TLMInterface* reqIfc, double time) {
     while(time > reqIfc->GetNextRecvTime()) { // while data is needed
 
         // Receive data untill there is info for this interface
@@ -48,7 +48,7 @@ void MonitoringPluginImplementer::ReceiveTimeData(TLMInterface* reqIfc, double t
 
         if(ifc == NULL) break; // receive error - breaking
 
-        TLMErrorLog::Log(string("Got data until time=") + TLMErrorLog::ToStdStr(ifc->GetNextRecvTime()) );
+        TLMErrorLog::Log(string("Got data until time=") + TLMErrorLog::ToStdStr(ifc->GetNextRecvTime()));
     }
 }
 
@@ -78,7 +78,7 @@ bool MonitoringPluginImplementer::Init(std::string name,
     // We wait a certain time for the Manager since initialization might take time.
     const int MAX_WAITTIME = 120; // Two minutes
     int nSecs = 0;
-    while((Message.SocketHandle = ClientComm.ConnectManager(host, port)) < 0 && nSecs < MAX_WAITTIME ) {
+    while((Message.SocketHandle = ClientComm.ConnectManager(host, port)) < 0 && nSecs < MAX_WAITTIME) {
 #ifndef _MSC_VER
         sleep(1);
 #else
@@ -90,7 +90,7 @@ bool MonitoringPluginImplementer::Init(std::string name,
     Message.SocketHandle = ClientComm.ConnectManager(host, port);
 #endif
 
-    if( Message.SocketHandle < 0 ){
+    if(Message.SocketHandle < 0) {
         TLMErrorLog::Warning("In " + name + ": initialization failed, could not connect to TLM manager");
         return false;
     }

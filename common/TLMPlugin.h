@@ -57,7 +57,7 @@ public:
     //! \param maxStep maximum step of the solver
     //! \param serverName IP address and port of the computer running TLM manager
     //!        separated by colon (e.g., 198.111.123.2:1111)
-    virtual bool Init( std::string model,
+    virtual bool Init(std::string model,
                        double timeStart,
                        double timeEnd,
                        double maxStep,
@@ -67,7 +67,7 @@ public:
     //! and returns the ID for the interface. '-1' is returned if
     //! the interface is not connected in the MetaModel.
     //! \param name Name of the TLM interface
-    virtual int RegisteTLMInterface( std::string name, int dimensions=6,
+    virtual int RegisteTLMInterface(std::string name, int dimensions=6,
                                      std::string causality="Bidirectional", std::string domain="Mechanical") = 0;
 
     virtual int RegisterTLMParameter(std::string name, std::string defaultValue) = 0;

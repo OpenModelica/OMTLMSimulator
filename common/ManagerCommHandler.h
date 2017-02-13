@@ -92,8 +92,8 @@ public:
     static void* thread_ReaderThreadRun(void * arg) {
         ManagerCommHandler* con = (ManagerCommHandler*)arg;
 
-        if (con->TheModel.GetSimParams().GetMonitorPort() > 0) {
-            while (!con->MonitorConnected) {
+        if(con->TheModel.GetSimParams().GetMonitorPort() > 0) {
+            while(!con->MonitorConnected) {
 #ifndef _MSC_VER
                 usleep(10000); // micro seconds
 #else
@@ -117,21 +117,21 @@ public:
 
     //! RunStartupProtocol implements startup protocol that
     //! enables client registration at the manager
-    void RunStartupProtocol() ;
+    void RunStartupProtocol();
     
 
     //! ProcessRegComponentMessage processes the first message after "accept"
     //! It is expected to be a component registration message.
     //! The functions associates the socket handle with the component in the MetaModel.
     //! It then prepares the reply by setting TLMInterfaceID to component ID.
-    void ProcessRegComponentMessage( TLMMessage& mess) ;
+    void ProcessRegComponentMessage(TLMMessage& mess);
 
     //! ProcessRegInterfaceMessage processes a TLMInterface registration message from a client.
     //! It finds the appropriate proxy, sets its status to "connected"
     //! and prepares a reply message with interface ID and connection parameters.
     //! Note, that it's ok to try to register an interface not defined
     //! in the model. It'll just mean that no information will be sent to/from it.
-    void ProcessRegInterfaceMessage(int compID, TLMMessage& mess) ;
+    void ProcessRegInterfaceMessage(int compID, TLMMessage& mess);
 
     void ProcessRegParameterMessage(int compID, TLMMessage& mess);
 
@@ -143,8 +143,8 @@ public:
     static void* thread_WriterThreadRun(void * arg) {
         ManagerCommHandler* con = (ManagerCommHandler*)arg;
 
-        if (con->TheModel.GetSimParams().GetMonitorPort() > 0) {
-            while (!con->MonitorConnected) {
+        if(con->TheModel.GetSimParams().GetMonitorPort() > 0) {
+            while(!con->MonitorConnected) {
 #ifndef _MSC_VER
                 usleep(10000); // micro seconds
 #else
@@ -167,7 +167,7 @@ public:
     }
 
     //! Send out messages in a separate thread
-    void WriterThreadRun() ;
+    void WriterThreadRun();
 
     //! Marshal time stamped message to the right client
     void MarshalMessage(TLMMessage& message);
@@ -193,7 +193,7 @@ public:
     void MonitorThreadRun();
 
     //! Get the current running state.
-    RunningMode getRunState(){ return runningMode; }
+    RunningMode getRunState() { return runningMode; }
 
     //! Check if we got an exception and return exception message.
     //! \param[out] msg The exception message, or empty string if no exception occured.

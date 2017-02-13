@@ -45,18 +45,18 @@ public:
     {}
 
     //! Destructor
-    ~TLMMessageQueue() ;
+    ~TLMMessageQueue();
 
     //! Get a free slot that can be filled in.
-    TLMMessage* GetReadSlot() ;
+    TLMMessage* GetReadSlot();
 
     //! Put the message on the message send queue
-    void PutWriteSlot(TLMMessage* mess) ;
+    void PutWriteSlot(TLMMessage* mess);
 
     //! Get the next message to be sent. May block if there are no
     //! messages in the queue. Returns "NULL" if no messages to send
     //! left.
-    TLMMessage* GetWriteSlot() ;
+    TLMMessage* GetWriteSlot();
 
     //! Put a message back on the free slots stack.
     void ReleaseSlot(TLMMessage* mess);

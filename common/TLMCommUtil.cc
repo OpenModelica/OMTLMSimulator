@@ -27,11 +27,11 @@ TLMMessageHeader::TLMMessageHeader():
 }
 
 // Send the TLMMessage pointed by mess via socket with handle SocketHandle
-void TLMCommUtil::SendMessage( TLMMessage& mess){
+void TLMCommUtil::SendMessage(TLMMessage& mess) {
 
     int DataSize = mess.Header.DataSize;
 
-    if (doDetailedLogging) {
+    if(doDetailedLogging) {
         TLMErrorLog::Log("SendMessage: wants to send "+
                          tlmMisc::Int2Str(sizeof(TLMMessageHeader))+"+"+
                          tlmMisc::Int2Str(DataSize)+ " bytes ");
@@ -39,8 +39,8 @@ void TLMCommUtil::SendMessage( TLMMessage& mess){
 
     if(TLMMessageHeader::IsBigEndianSystem != mess.Header.SourceIsBigEndianSystem) {
         // switch byte order for DataSize and InterfaceID
-        TLMCommUtil::ByteSwap(&mess.Header.DataSize, sizeof (mess.Header.DataSize));
-        TLMCommUtil::ByteSwap(&mess.Header.TLMInterfaceID, sizeof (mess.Header.TLMInterfaceID));
+        TLMCommUtil::ByteSwap(&mess.Header.DataSize, sizeof(mess.Header.DataSize));
+        TLMCommUtil::ByteSwap(&mess.Header.TLMInterfaceID, sizeof(mess.Header.TLMInterfaceID));
     }
 
 #ifdef  WIN32
@@ -50,7 +50,7 @@ void TLMCommUtil::SendMessage( TLMMessage& mess){
     // NOTE, "MSG_MORE" flag is important for Linux socket performance!
     int sendBytes = send(mess.SocketHandle, (const char*)&(mess.Header) , sizeof(TLMMessageHeader), MSG_MORE);
 
-    if( sendBytes < 0) {
+    if(sendBytes < 0) {
         // try to resend
         TLMErrorLog::Warning("Failed to send message header, will try to continue anyway");
         sendBytes = send(mess.SocketHandle, (const char*)&(mess.Header) , sizeof(TLMMessageHeader), MSG_MORE);
@@ -61,7 +61,7 @@ void TLMCommUtil::SendMessage( TLMMessage& mess){
     if(errcode) TLMErrorLog::Warning("send() SOCKET_ERROR received, error code ="+tlmMisc::Int2Str(errcode));
 #endif
 
-    if (doDetailedLogging) {
+    if(doDetailedLogging) {
         TLMErrorLog::Log("SendMessage:send() sent "+tlmMisc::Int2Str(sendBytes)+ " bytes ");
     }
 
@@ -78,7 +78,7 @@ void TLMCommUtil::SendMessage( TLMMessage& mess){
         if(errcode) TLMErrorLog::Warning("send() SOCKET_ERROR received, error code ="+tlmMisc::Int2Str(errcode));
 #endif
 
-        if (doDetailedLogging) {
+        if(doDetailedLogging) {
             TLMErrorLog::Log("SendMessage:send()(part 2) sent "+tlmMisc::Int2Str(sendBytes)+ " bytes ");
         }
 
@@ -99,7 +99,7 @@ void TLMCommUtil::SendMessage( TLMMessage& mess){
 // Basic receive of a TLMMessage. Insures correct signature and
 // fixes byte order for the message header if necessary.
 // Note that the actual message data is not processed, just received, 
-bool TLMCommUtil::ReceiveMessage( TLMMessage& mess){
+bool TLMCommUtil::ReceiveMessage(TLMMessage& mess) {
     int bcount = recv(mess.SocketHandle, (char*)(&mess.Header), sizeof(TLMMessageHeader) , MSG_WAITALL);
     while((bcount >= 0) && (bcount <  static_cast<int>(sizeof(TLMMessageHeader)))) {
         // this should never happen, but it does...
@@ -113,7 +113,7 @@ bool TLMCommUtil::ReceiveMessage( TLMMessage& mess){
     if(bcount == -1) {
 #ifdef  WIN32
         int errcode=WSAGetLastError();
-        if (errcode==WSAECONNRESET)
+        if(errcode==WSAECONNRESET)
             // This is called by normal termination of BEAST
             TLMErrorLog::Log("SOCKET_ERROR received, error code ="+tlmMisc::Int2Str(errcode));
         else
@@ -121,7 +121,7 @@ bool TLMCommUtil::ReceiveMessage( TLMMessage& mess){
 #endif
         return false;
     }
-    if (doDetailedLogging) {
+    if(doDetailedLogging) {
         TLMErrorLog::Log("ReceiveMessage:recv() returned "+tlmMisc::Int2Str(bcount)+ " bytes ");
     }
 
@@ -150,7 +150,7 @@ bool TLMCommUtil::ReceiveMessage( TLMMessage& mess){
     if(mess.Header.DataSize > 0) {
 
         mess.Data.clear(); // just to be on the safe side.
-        mess.Data.resize( mess.Header.DataSize );
+        mess.Data.resize(mess.Header.DataSize);
         bcount = recv(mess.SocketHandle,(char*)&(mess.Data[0]), mess.Header.DataSize,  MSG_WAITALL);
         while((bcount >= 0) && (bcount <  mess.Header.DataSize)) {
             // this should never happen, but it does...
@@ -169,7 +169,7 @@ bool TLMCommUtil::ReceiveMessage( TLMMessage& mess){
 
             return false;
         }
-        if (doDetailedLogging) {
+        if(doDetailedLogging) {
             TLMErrorLog::Log("ReceiveMessage:recv()(part 2) returned "+tlmMisc::Int2Str(bcount)+ " bytes ");
         }
         if(bcount != mess.Header.DataSize) {

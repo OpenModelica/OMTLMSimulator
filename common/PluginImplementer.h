@@ -35,7 +35,7 @@ protected:
     //! SetDebugOut function enables/disables debug information
     //! output from TLM plugin.
     //! Input: if Enable is true - output is on, othewise - off.
-    virtual void SetDebugOut(bool Enable) { TLMErrorLog::SetDebugOut( Enable); }
+    virtual void SetDebugOut(bool Enable) { TLMErrorLog::SetDebugOut(Enable); }
 
     //! SetWarningOut function enables/disables warning information
     //! output from TLM plugin.
@@ -83,7 +83,7 @@ protected:
     //! initialize the object and connect to TLMManager. Will return true
     //! on success, false otherwize. Note that the method can be called
     //! only once.
-    virtual bool Init( std::string model,
+    virtual bool Init(std::string model,
                        double timeStart,
                        double timeEnd,
                        double maxStep,
