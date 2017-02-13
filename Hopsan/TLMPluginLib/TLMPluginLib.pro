@@ -38,27 +38,29 @@ include(hopsanDebugReleaseCompile.prf)
 # The compiler should be pedantic to catch all errors (optional)
 #QMAKE_CXXFLAGS += -pedantic
 
+DEFINES += INTERFACE_TYPES
+
 # -------------------------------------------------
 # Project files
 # -------------------------------------------------
 SOURCES += \
     TLMPluginLib.cc \
-    ../../common/PluginImplementer.cc \
-    ../../common/TLMClientComm.cc \
-    ../../common/TLMCommUtil.cc \
-    ../../common/TLMErrorLog.cc \
-    ../../common/TLMInterface.cc \
-    ../../common/TLMPlugin.cc \
+    ../../common/Plugin/PluginImplementer.cc \
+    ../../common/Communication/TLMClientComm.cc \
+    ../../common/Communication/TLMCommUtil.cc \
+    ../../common/Logging/TLMErrorLog.cc \
+    ../../common/Interfaces/TLMInterface.cc \
+    ../../common/Plugin/TLMPlugin.cc \
     ../../extralibs/misc/src/strConv.cc \
     ../../extralibs/misc/src/coordTrans.cc \
     ../../extralibs/misc/src/double3Vec.cc \
     ../../extralibs/misc/src/double33Mat.cc \
-    ../../common/TLMInterfaceSignal.cc \
-    ../../common/TLMInterfaceSignalInput.cc \
-    ../../common/TLMInterfaceSignalOutput.cc \
-    ../../common/TLMInterface1D.cc \
-    ../../common/TLMInterface3D.cc \
-    ../../common/TLMParameter.cc
+    ../../common/Interfaces/TLMInterfaceSignal.cc \
+    ../../common/Interfaces/TLMInterfaceSignalInput.cc \
+    ../../common/Interfaces/TLMInterfaceSignalOutput.cc \
+    ../../common/Interfaces/TLMInterface1D.cc \
+    ../../common/Interfaces/TLMInterface3D.cc \
+    ../../common/Parameters/TLMParameter.cc
 
 HEADERS += \
     TLMPluginInterfaceSignalInput.hpp \

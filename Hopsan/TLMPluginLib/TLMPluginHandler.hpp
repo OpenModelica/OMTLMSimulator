@@ -31,7 +31,7 @@
 #include "ComponentSystem.h"
 
 // TLMPlugin includes
-#include "TLMPlugin.h"
+#include "Plugin/TLMPlugin.h"
 
 namespace hopsan {
 
