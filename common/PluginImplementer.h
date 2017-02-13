@@ -28,7 +28,7 @@ class PluginImplementer: public TLMPlugin {
     ~PluginImplementer();
 
     //! Catch signals
-    void signalHandler(int signum);
+    void HandleSignal(int signum);
 
 protected:
 

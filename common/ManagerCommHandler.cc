@@ -58,7 +58,7 @@ void ManagerCommHandler::Run(CommunicationMode CommMode_In) {
 }
 
 //! Thread exception handler.
-void ManagerCommHandler::threadException(const std::string &msg)
+void ManagerCommHandler::HandleThreadException(const std::string &msg)
 {
     exceptionLock.lock();
 
@@ -68,12 +68,12 @@ void ManagerCommHandler::threadException(const std::string &msg)
     MessageQueue.Terminate();
 
     // We close all sockets on exception.
-    Comm.closeAll();
+    Comm.CloseAll();
 
     exceptionLock.unlock();
 }
 
-bool ManagerCommHandler::gotException(std::string &msg)
+bool ManagerCommHandler::GotException(std::string &msg)
 {
     msg = exceptionMsg;
     return (msg.size() > 0);
@@ -110,7 +110,7 @@ void ManagerCommHandler::RunStartupProtocol() {
         // Check for timeout.
         TM_Stop(&tInfo);
         if( tInfo.total.tv_sec > TheModel.GetSimParams().GetTimeout() ){
-            Comm.closeAll();
+            Comm.CloseAll();
             TLMErrorLog::FatalError("Timeout - failed to start all components, give up! (" 
                                     + TLMErrorLog::ToStdStr(tInfo.total.tv_sec) 
                                     + " > " + TLMErrorLog::ToStdStr(TheModel.GetSimParams().GetTimeout()) 
@@ -548,7 +548,7 @@ void ManagerCommHandler::ReaderThreadRun() {
     runningMode = ShutdownMode;
     MessageQueue.Terminate();
 
-    Comm.closeAll();
+    Comm.CloseAll();
 }
 
 void ManagerCommHandler::WriterThreadRun() {
@@ -917,5 +917,5 @@ void ManagerCommHandler::MonitorThreadRun()
     }
 
     // Close all sockets
-    monComm.closeAll();
+    monComm.CloseAll();
 }

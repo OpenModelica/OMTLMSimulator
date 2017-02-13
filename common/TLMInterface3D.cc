@@ -127,7 +127,7 @@ void TLMInterface3D::GetTimeData(TLMTimeData3D& Instance, std::deque<TLMTimeData
 #endif
         {
             // linear interpolation
-            linear_interpolate(Instance,
+            InterpolateLinear(Instance,
                                Data[CurrentIntervalIndex], Data[CurrentIntervalIndex+1],OnlyForce);
         }
     }
@@ -146,7 +146,7 @@ void TLMInterface3D::GetTimeData(TLMTimeData3D& Instance, std::deque<TLMTimeData
                                      TLMErrorLog::ToStdStr(time));
                 if(size > 1) {
                     // linear extrapolation
-                    linear_interpolate(Instance, Data[size-2], Data[size-1], OnlyForce);
+                    InterpolateLinear(Instance, Data[size-2], Data[size-1], OnlyForce);
                 }
                 else {
                     Instance = Data[0];
@@ -247,8 +247,8 @@ void TLMInterface3D::SetTimeData(double time,
 
     // Remove the data that is not needed (Simulation time moved forward)
     // We leave two time points intact, so that interpolation work
-    clean_time_queue(TimeData, time - Params.Delay);
-    clean_time_queue(DampedTimeData,  time - Params.Delay * ( 1 + TLM_DAMP_DELAY));
+    CleanTimeQueue(TimeData, time - Params.Delay);
+    CleanTimeQueue(DampedTimeData,  time - Params.Delay * ( 1 + TLM_DAMP_DELAY));
 }
 
 
@@ -319,7 +319,7 @@ void TLMInterface3D::SendAllData() {
 // computes the interpolation (or extrapolation) point with the the linear
 // interpolation (extrapolation) The points are submitted using the p0 & p1
 //  The desired time is given by the Instance.time. Results are stored in Instance
-void TLMInterface3D::linear_interpolate(TLMTimeData3D& Instance, TLMTimeData3D& p0, TLMTimeData3D& p1, bool OnlyForce) {
+void TLMInterface3D::InterpolateLinear(TLMTimeData3D& Instance, TLMTimeData3D& p0, TLMTimeData3D& p1, bool OnlyForce) {
 
     double time = Instance.time; // needed time point
     // two time points
@@ -388,7 +388,7 @@ void TLMInterface3D::linear_interpolate(TLMTimeData3D& Instance, TLMTimeData3D& 
 // The points are submitted using the iterator 'it' giving the
 // first point in the sequence. The desired time is given
 // by the Instance.time. Results are stored in Instance
-void TLMInterface3D::hermite_interpolate(TLMTimeData3D& Instance, std::deque<TLMTimeData3D>::iterator& it, bool OnlyForce) {
+void TLMInterface3D::InterpolateHermite(TLMTimeData3D& Instance, std::deque<TLMTimeData3D>::iterator& it, bool OnlyForce) {
     TLMTimeData3D* p[4]; // pointers to the four data points, get them from iterators
     p[0] = &(*it);
     ++it;
@@ -412,7 +412,7 @@ void TLMInterface3D::hermite_interpolate(TLMTimeData3D& Instance, std::deque<TLM
         while(i-- > 0) {
             f[i] = p[i]->GenForce[j];
         }
-        Instance.GenForce[j] = TLMInterface::hermite_interpolate(time, t, f);
+        Instance.GenForce[j] = TLMInterface::InterpolateHermite(time, t, f);
     }
 
     if(OnlyForce) return;
@@ -425,7 +425,7 @@ void TLMInterface3D::hermite_interpolate(TLMTimeData3D& Instance, std::deque<TLM
         while(i-- > 0) {
             f[i] = p[i]->Position[j];
         }
-        Instance.Position[j] = TLMInterface::hermite_interpolate(time, t, f);
+        Instance.Position[j] = TLMInterface::InterpolateHermite(time, t, f);
     }
 
     // interpolation of angles require special treatment.
@@ -459,7 +459,7 @@ void TLMInterface3D::hermite_interpolate(TLMTimeData3D& Instance, std::deque<TLM
         while(i-- > 0) {
             f[i] = phi[i](j);
         }
-        phi_out(j) = TLMInterface::hermite_interpolate(time, t, f);
+        phi_out(j) = TLMInterface::InterpolateHermite(time, t, f);
     }
     // now get the matrix (into A[0]):
     A[0] *= A321(phi_out);
@@ -471,7 +471,7 @@ void TLMInterface3D::hermite_interpolate(TLMTimeData3D& Instance, std::deque<TLM
 }
 
 
-void TLMInterface3D::clean_time_queue(std::deque<TLMTimeData3D>& Data, double CleanTime) {
+void TLMInterface3D::CleanTimeQueue(std::deque<TLMTimeData3D>& Data, double CleanTime) {
     while( (Data.size() > 3) && (CleanTime > Data[2].time)) {
         Data.pop_front();
     }

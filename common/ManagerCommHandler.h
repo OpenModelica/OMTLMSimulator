@@ -107,10 +107,10 @@ public:
             con->ReaderThreadRun();
         }
         catch(std::string& msg) {
-            con->threadException(msg);
+            con->HandleThreadException(msg);
         }
         catch(...) {
-            con->threadException("Manager run thread caught exception");
+            con->HandleThreadException("Manager run thread caught exception");
         }
         return NULL;
     };
@@ -158,10 +158,10 @@ public:
             con->WriterThreadRun();
         }
         catch(std::string& msg) {
-            con->threadException(msg);
+            con->HandleThreadException(msg);
         }
         catch(...) {
-            con->threadException("Manager writer thread caught exception");
+            con->HandleThreadException("Manager writer thread caught exception");
         }
         return NULL;
     };
@@ -180,10 +180,10 @@ public:
             con->MonitorThreadRun();
         }
         catch(std::string& msg) {
-            con->threadException(msg);
+            con->HandleThreadException(msg);
         }
         catch(...) {
-            con->threadException("Manager monitor thread caught exception");
+            con->HandleThreadException("Manager monitor thread caught exception");
         }
 
         return NULL;
@@ -198,7 +198,7 @@ public:
     //! Check if we got an exception and return exception message.
     //! \param[out] msg The exception message, or empty string if no exception occured.
     //! \return True if an exception occured, false otherwise.
-    bool gotException(std::string &msg);
+    bool GotException(std::string &msg);
 
 private:
     //! Setup interface connection message. 
@@ -224,7 +224,7 @@ private:
     //! Thread exception handler.
     //! Shuts down all communications and sets the exception message.
     //! Invoked by threads.
-    void threadException(const std::string& msg);
+    void HandleThreadException(const std::string& msg);
 };
 
 #endif

@@ -72,7 +72,7 @@ class TLMInterface {
 
         //! Hermite cubic interpolation. For the given 4 data points t[i], f[i] and time,
     //! such that t[0]<t[1]<time<t[2]<t[3], returns f(time). .
-    static double hermite_interpolate(double time, double t[4], double f[4]);
+    static double InterpolateHermite(double time, double t[4], double f[4]);
 
     //! Last time when the data was sent
     double LastSendTime;

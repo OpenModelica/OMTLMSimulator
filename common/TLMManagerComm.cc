@@ -185,7 +185,7 @@ void TLMManagerComm::DropActiveSocket(int socket) {
 }
 
 // Close all active sockets
-void TLMManagerComm::closeAll()
+void TLMManagerComm::CloseAll()
 {
     std::vector<int>::iterator activeSockIter;
     for( activeSockIter = ActiveSockets.begin() ; activeSockIter != ActiveSockets.end() ; activeSockIter++ ){

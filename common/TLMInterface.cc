@@ -69,7 +69,7 @@ TLMInterface::~TLMInterface() { }
 
 // Hermite cubic interpolation. For the given 4 data points t[i], f[i] and time,
 // such that t[0]<t[1]<time<t[2]<t[3], returns f(time). .
-double TLMInterface::hermite_interpolate(double time, double t[4], double f[4]){
+double TLMInterface::InterpolateHermite(double time, double t[4], double f[4]){
     double fa = f[1];
     double fb = f[2];
     double  ta = t[1];

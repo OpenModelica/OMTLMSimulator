@@ -28,7 +28,7 @@ void signalHandler_( int signum )
   signal(signum, SIG_DFL);
 
   if( PluginImplementerInstance != 0){
-    PluginImplementerInstance->signalHandler(signum);
+    PluginImplementerInstance->HandleSignal(signum);
   }
 
   // Call default handler.
@@ -64,7 +64,7 @@ PluginImplementer::~PluginImplementer() {
   }
 }
 
-void PluginImplementer::signalHandler( int signum )
+void PluginImplementer::HandleSignal( int signum )
 {
   if(Connected) {
     Message.Header.MessageType = TLMMessageTypeConst::TLM_ABORT;

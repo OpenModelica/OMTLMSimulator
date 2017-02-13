@@ -85,7 +85,7 @@ class TLMManagerComm {
     int AcceptComponentConnections() ;
 
     //! Close all active sockets.
-    void closeAll();
+    void CloseAll();
 
     //! Return the actual server port.
     //! This port might be different from the server 
