@@ -90,7 +90,7 @@ void TLMInterface1D::GetTimeData(TLMTimeData1D& Instance, std::deque<TLMTimeData
 #endif
         {
             // linear interpolation
-            linear_interpolate(Instance, Data[CurrentIntervalIndex], Data[CurrentIntervalIndex+1],OnlyForce);
+            InterpolateLinear(Instance, Data[CurrentIntervalIndex], Data[CurrentIntervalIndex+1],OnlyForce);
         }
     }
     else {
@@ -108,7 +108,7 @@ void TLMInterface1D::GetTimeData(TLMTimeData1D& Instance, std::deque<TLMTimeData
                                      TLMErrorLog::ToStdStr(time));
                 if(size > 1) {
                     // linear extrapolation
-                    linear_interpolate(Instance, Data[size-2], Data[size-1], OnlyForce);
+                    InterpolateLinear(Instance, Data[size-2], Data[size-1], OnlyForce);
                 }
                 else {
                     Instance = Data[0];
@@ -187,8 +187,8 @@ void TLMInterface1D::SetTimeData(double time,
 
     // Remove the data that is not needed (Simulation time moved forward)
     // We leave two time points intact, so that interpolation work
-    clean_time_queue(TimeData, time - Params.Delay);
-    clean_time_queue(DampedTimeData,  time - Params.Delay * ( 1 + TLM_DAMP_DELAY));
+    CleanTimeQueue(TimeData, time - Params.Delay);
+    CleanTimeQueue(DampedTimeData,  time - Params.Delay * ( 1 + TLM_DAMP_DELAY));
 }
 
 
@@ -211,7 +211,7 @@ void TLMInterface1D::SendAllData() {
 // computes the interpolation (or extrapolation) point with the the linear
 // interpolation (extrapolation) The points are submitted using the p0 & p1
 //  The desired time is given by the Instance.time. Results are stored in Instance
-void TLMInterface1D::linear_interpolate(TLMTimeData1D& Instance, TLMTimeData1D& p0, TLMTimeData1D& p1, bool OnlyForce) {
+void TLMInterface1D::InterpolateLinear(TLMTimeData1D& Instance, TLMTimeData1D& p0, TLMTimeData1D& p1, bool OnlyForce) {
 
     double time = Instance.time; // needed time point
     // two time points
@@ -233,7 +233,7 @@ void TLMInterface1D::linear_interpolate(TLMTimeData1D& Instance, TLMTimeData1D& 
 }
 
 
-void TLMInterface1D::clean_time_queue(std::deque<TLMTimeData1D>& Data, double CleanTime) {
+void TLMInterface1D::CleanTimeQueue(std::deque<TLMTimeData1D>& Data, double CleanTime) {
     while( (Data.size() > 3) && (CleanTime > Data[2].time)) {
         Data.pop_front();
     }

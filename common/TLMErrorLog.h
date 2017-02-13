@@ -66,7 +66,7 @@ public:
     static bool ExceptionEnabled(){ return ExceptionOn; }
 
     //! Return current time as string.
-    static std::string timeStr();
+    static std::string TimeStr();
 private:
 
     //! LoggingOn flags tells if logging is enabled.
@@ -91,7 +91,7 @@ private:
     static std::ostream* outStream;
 
     //! Open log file
-    static  void open();
+    static  void Open();
 };
 
 

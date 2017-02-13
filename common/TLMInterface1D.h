@@ -40,7 +40,7 @@ public:
   //! interpolation (extrapolation) The points are submitted using the p0 & p1
   //!  The desired time is given by the Instance.time. Results are stored in Instance.
   //! If OnleForce is set, then the position and velocity are not computed.
-  static void linear_interpolate(TLMTimeData1D& Instance, TLMTimeData1D& p0, TLMTimeData1D& p1, bool OnlyForce);
+  static void InterpolateLinear(TLMTimeData1D& Instance, TLMTimeData1D& p0, TLMTimeData1D& p1, bool OnlyForce);
 
 
   //! hermite_interpolate is called with a vector containing 4 points
@@ -51,11 +51,11 @@ public:
   //! first point in the sequence. The desired time is given
   //! by the Instance.time. Results are stored in Instance.
   //! If OnleForce is set, then the position and velocity are not computed.
-  static void hermite_interpolate(TLMTimeData1D& Instance, std::deque<TLMTimeData1D>::iterator& it, bool OnlyForce);
+  static void InterpolateHermite(TLMTimeData1D& Instance, std::deque<TLMTimeData1D>::iterator& it, bool OnlyForce);
 
   // Remove the data that is not needed (Simulation time moved forward)
   // We leave two time points intact, so that interpolation work
-  static void clean_time_queue(std::deque<TLMTimeData1D> &Data, double CleanTime);
+  static void CleanTimeQueue(std::deque<TLMTimeData1D> &Data, double CleanTime);
 };
 
 #endif // TLMINTERFACE1D_H

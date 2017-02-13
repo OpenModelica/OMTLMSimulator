@@ -38,7 +38,7 @@ void usage(){
 }
 
 // Print all interfaces position and orientation
-void print_interface_information(MetaModel& theModel)
+void PrintInterfaceInformation(MetaModel& theModel)
 {
   std::ofstream interfacefile ("interfaceData.xml");
   if (interfacefile.is_open()) {
@@ -191,7 +191,7 @@ int main(int argc, char* argv[]) {
 
     // Print interface information if needed.
     if( comMode == ManagerCommHandler::InterfaceRequestMode ){
-        print_interface_information(theModel);
+        PrintInterfaceInformation(theModel);
         return 0;
     }
 

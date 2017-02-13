@@ -48,10 +48,10 @@ bool  TLMErrorLog::LogTimeOn = false;
 std::ostream* TLMErrorLog::outStream = NULL;
 
 
-void TLMErrorLog::open(){
+void TLMErrorLog::Open(){
     if(TLMErrorLog::outStream==NULL){
         TLMErrorLog::outStream=new std::ofstream("TLMlogfile.log");
-        *outStream << timeStr() << " Starting log" << std::endl;
+        *outStream << TimeStr() << " Starting log" << std::endl;
     }
 }
 
@@ -64,8 +64,8 @@ void TLMErrorLog::SetDebugOut(bool Enable) {
 // FatalError function writes a message to log file
 // then terminates the program abnormally.
 void TLMErrorLog::FatalError(const std::string& mess) {
-    open();
-    *outStream << timeStr() << " Fatal error: " << mess << std::endl;
+    Open();
+    *outStream << TimeStr() << " Fatal error: " << mess << std::endl;
     if( NormalErrorLogOn) {
         _strtime( tmpbuf );
 #ifdef USE_ERRORLOG
@@ -90,8 +90,8 @@ void TLMErrorLog::FatalError(const std::string& mess) {
 void  TLMErrorLog::Warning(const std::string& mess) {
 
     if( WarningOn ) {
-        open();
-        *outStream << timeStr() << " Warning: " << mess << std::endl;
+        Open();
+        *outStream << TimeStr() << " Warning: " << mess << std::endl;
 
         if( NormalErrorLogOn) {
             _strtime( tmpbuf );
@@ -107,8 +107,8 @@ void  TLMErrorLog::Warning(const std::string& mess) {
 void  TLMErrorLog::Log(const std::string& mess) {
 
     if(!LoggingOn ) return; 
-    open();
-    *outStream << timeStr() << " Log: " << mess << std::endl;
+    Open();
+    *outStream << TimeStr() << " Log: " << mess << std::endl;
     if( NormalErrorLogOn) {
         _strtime( tmpbuf );
 #ifdef USE_ERRORLOG
@@ -127,7 +127,7 @@ std::string  TLMErrorLog::ToStdStr(double val) {
     return std::string(buf);
 }
 
-std::string  TLMErrorLog::timeStr()
+std::string  TLMErrorLog::TimeStr()
 {
     if( LogTimeOn ){
         time_t rawtime;

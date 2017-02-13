@@ -46,7 +46,7 @@ public:
   //! first point in the sequence. The desired time is given
   //! by the Instance.time. Results are stored in Instance.
   //! If OnleForce is set, then the position and velocity are not computed.
-  static void hermite_interpolate(TLMTimeDataSignal& Instance, std::deque<TLMTimeDataSignal>::iterator& it);
+  static void InterpolateHermite(TLMTimeDataSignal& Instance, std::deque<TLMTimeDataSignal>::iterator& it);
 };
 
 #endif // TLMINTERFACESIGNAL_H

@@ -48,7 +48,7 @@ struct Color {
   }
 };
 
-TLMPlugin* initializeTLMConnection(MetaModel& model, std::string& serverName)
+TLMPlugin* InitializeTLMConnection(MetaModel& model, std::string& serverName)
 {
     TLMPlugin* TLMlink = MonitoringPluginImplementer::CreateInstance();
 
@@ -153,7 +153,7 @@ void MonitorTimeStep(TLMPlugin* TLMlink,
     }
 }
 
-void writeVisualXMLFile(MetaModel& model, std::string &baseFileName, std::string &path)
+void WriteVisualXMLFile(MetaModel& model, std::string &baseFileName, std::string &path)
 {
   // Get data from TLM-Manager here!
   bool canWriteVisualXMLFile = false;
@@ -408,7 +408,7 @@ void writeVisualXMLFile(MetaModel& model, std::string &baseFileName, std::string
   }
 }
 
-void printHeader(MetaModel& model, std::ofstream& dataFile)
+void PrintHeader(MetaModel& model, std::ofstream& dataFile)
 {
     // Get data from TLM-Manager here!
     int nTLMInterfaces = model.GetInterfacesNum();
@@ -480,7 +480,7 @@ void printHeader(MetaModel& model, std::ofstream& dataFile)
     dataFile << std::endl;
 }
 
-void printData(MetaModel& model,
+void PrintData(MetaModel& model,
                std::ofstream& dataFile,
                std::map<int, TLMTimeDataSignal> &dataStorageSignal,
                std::map<int, TLMTimeData1D>& dataStorage1D,
@@ -636,7 +636,7 @@ void printData(MetaModel& model,
     dataFile << std::endl;
 }
 
-void printRunStatus(MetaModel& model, std::ofstream& runFile, tTM_Info& tInfo, double SimTime)
+void PrintRunStatus(MetaModel& model, std::ofstream& runFile, tTM_Info& tInfo, double SimTime)
 {
     double startTime = model.GetSimParams().GetStartTime();
     double endTime = model.GetSimParams().GetEndTime();
@@ -745,7 +745,7 @@ int main(int argc, char* argv[]) {
     }
 
     // Initialize TLM
-    TLMPlugin* thePlugin = initializeTLMConnection(theModel, serverStr);
+    TLMPlugin* thePlugin = InitializeTLMConnection(theModel, serverStr);
     if( !thePlugin ){
         TLMErrorLog::FatalError("Failed to initialize TLM interface, give up.");
         exit(1);
@@ -769,7 +769,7 @@ int main(int argc, char* argv[]) {
     }
 
     // Print/log the header information
-    printHeader(theModel, outdataFile);
+    PrintHeader(theModel, outdataFile);
 
     // Setup timer for run-time estimation.
     tTM_Info tInfo;
@@ -794,10 +794,10 @@ int main(int argc, char* argv[]) {
         TM_Stop(&tInfo);
 
         // Print data row
-        printData(theModel, outdataFile, dataSignal, data1D, data3D);
+        PrintData(theModel, outdataFile, dataSignal, data1D, data3D);
 
         // Update run status
-        printRunStatus(theModel, runFile, tInfo, simTime);
+        PrintRunStatus(theModel, runFile, tInfo, simTime);
 
     } while(simTime < endTime);
 
