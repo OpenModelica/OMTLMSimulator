@@ -5,7 +5,7 @@
 */
 #include "Communication/TLMCommUtil.h"
 #include "Communication/TLMClientComm.h"
-#include "TLMErrorLog.h"
+#include "Logging/TLMErrorLog.h"
 #include "Interfaces/TLMInterface.h"
 #include "strConv.h"
 #include <vector>

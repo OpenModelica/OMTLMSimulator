@@ -4,7 +4,7 @@
 * Implementat of the functions used for error logging 
 */
 
-#include "TLMErrorLog.h"
+#include "Logging/TLMErrorLog.h"
 #include <iostream>
 #include <cstdlib>
 #include <cstring>

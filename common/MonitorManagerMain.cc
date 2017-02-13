@@ -9,7 +9,7 @@
 #include <cstring>
 #include <map>
 #include <sstream>
-#include "TLMErrorLog.h"
+#include "Logging/TLMErrorLog.h"
 #include "MetaModels/MetaModel.h"
 #include "MetaModels/MetaModelReader.h"
 #include "Communication/ManagerCommHandler.h"
