@@ -35,7 +35,7 @@ public:
     static TLMPlugin* CreateInstance();
     
     //! Destructor. Close TCP/IP connection and release memory.
-    virtual ~TLMPlugin() {};
+    virtual ~TLMPlugin() {}
 
     //! SetDebugOut function enables/disables debug information
     //! output from TLM plugin.

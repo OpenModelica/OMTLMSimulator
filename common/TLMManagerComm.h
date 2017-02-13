@@ -50,7 +50,7 @@ public:
           NumClients(numClients)
     {
         FD_ZERO(& CurFDSet);
-    };
+    }
 
     //! Create socket that will accept the client connections on port ServerPort
     int CreateServerSocket();

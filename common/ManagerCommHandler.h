@@ -81,7 +81,7 @@ public:
         exceptionMsg(""),
         exceptionLock()
     {
-    };
+    }
 
     //! Run method executes all the protocols in the right order:
     //! Startup, Check then Simulate
@@ -113,7 +113,7 @@ public:
             con->HandleThreadException("Manager run thread caught exception");
         }
         return NULL;
-    };
+    }
 
     //! RunStartupProtocol implements startup protocol that
     //! enables client registration at the manager
@@ -164,7 +164,7 @@ public:
             con->HandleThreadException("Manager writer thread caught exception");
         }
         return NULL;
-    };
+    }
 
     //! Send out messages in a separate thread
     void WriterThreadRun() ;
@@ -187,7 +187,7 @@ public:
         }
 
         return NULL;
-    };
+    }
 
     //! Initialize and run the monitoring thread.
     void MonitorThreadRun();
