@@ -29,18 +29,18 @@ MISCHOME=../extralibs/misc
 
 INCLUDES=  -I. \
 	-I"../FMIWrapper" \
-    -I"../FMIWrapper/FMILibrary-2.0.1/install/include" \
-    -I"../common" -I"../extralibs/misc/include" \
-    -I"cvode-2.9.0/include" \
-    -I"ida-2.9.0/include"
+	-I"../FMIWrapper/FMILibrary-2.0.1/install/include" \
+	-I"../common" -I"../extralibs/misc/include" \
+	-I"cvode-2.9.0/include" \
+	-I"ida-2.9.0/include"
     
 ifeq ($(OS),Windows_NT)
 	LIBS = 	-lws2_32 \
 	        -LFMILibrary-2.0.1/install/lib \
-  	      -llibfmilib_shared 
+		-llibfmilib_shared 
 else
 	LIBS = 	-LFMILibrary-2.0.1/install/lib \
-  	      -lfmilib_shared 
+		-lfmilib_shared 
 endif
 
 $(ABI)/%.o: %.cpp
@@ -69,18 +69,18 @@ $(ABI)/%.o: ida-2.9.0/src/ida/%.c
     
 OBJS=  main.o 
 
-EXT_OBJS = PluginImplementer.o \
-	TLMClientComm.o \
-	TLMCommUtil.o \
-	TLMInterface.o \
-	TLMInterfaceSignal.o \
-	TLMInterfaceSignalInput.o \
-	TLMInterfaceSignalOutput.o \
-	TLMInterface1D.o \
-	TLMInterface3D.o \
-	TLMParameter.o \
-	TLMErrorLog.o \
-	TLMPlugin.o \
+EXT_OBJS = Plugin/PluginImplementer.o \
+	Communication/TLMClientComm.o \
+	Communication/TLMCommUtil.o \
+	Interfaces/TLMInterface.o \
+	Interfaces/TLMInterfaceSignal.o \
+	Interfaces/TLMInterfaceSignalInput.o \
+	Interfaces/TLMInterfaceSignalOutput.o \
+	Interfaces/TLMInterface1D.o \
+	Interfaces/TLMInterface3D.o \
+	Parameters/TLMParameter.o \
+	Logging/TLMErrorLog.o \
+	Plugin/TLMPlugin.o \
 	coordTrans.o \
 	double3Vec.o \
 	double33Mat.o \
@@ -114,6 +114,11 @@ install: default
 
 dirs:
 	-mkdir -p $(ABI)
+	-mkdir -p $(ABI)/Plugin
+	-mkdir -p $(ABI)/Parameters
+	-mkdir -p $(ABI)/Interfaces
+	-mkdir -p $(ABI)/Logging
+	-mkdir -p $(ABI)/Communication
 
 fmil:
 	mkdir -p FMILibrary-2.0.1/build
@@ -129,6 +134,11 @@ dirs_unix:
 
 clean:
 	rm -rf $(ABI)
+	rm -rf $(ABI)/Plugin
+	rm -rf $(ABI)/Parameters
+	rm -rf $(ABI)/Logging
+	rm -rf $(ABI)/Interfaces
+	rm -rf $(ABI)/Communication
 	rm -rf $(BINDIR)/FMIWrapper$(FEXT)
 	rm -rf $(BINDIR)/StartTLMFmiWrapper*
 	rm -rf FMILibrary-2.0.1/build
