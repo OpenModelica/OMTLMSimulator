@@ -338,6 +338,9 @@ void MetaModelReader::ReadTLMConnectionNode(xmlNode* node) {
                                             + AttrData);
                 }
 
+                TLMInterfaceProxy& fromIfc = TheModel.GetTLMInterfaceProxy(fromID);
+                TLMInterfaceProxy& toIfc = TheModel.GetTLMInterfaceProxy(toID);
+
                 curAttr = FindAttributeByName(curNode, "To");
 
                 AttrData = (const char*)curAttr->content;
@@ -351,30 +354,33 @@ void MetaModelReader::ReadTLMConnectionNode(xmlNode* node) {
                 curAttr = FindAttributeByName(curNode, "Delay");
                 conParam.Delay = atof((const char*)curAttr->content);
 
-                curAttr = FindAttributeByName(curNode, "Zf");
-                conParam.Zf = atof((const char*)curAttr->content);
-
-                curAttr = FindAttributeByName(curNode, "Zfr",false);
-                if(curAttr) {
-                    conParam.Zfr = atof((const char*)curAttr->content);
-                }
-                else {
-                    TLMErrorLog::Warning(string("No impedance for rotation (Zfr) is defined, Zf will be used"));
-                    conParam.Zfr = conParam.Zf;
+                if(fromIfc.GetCausality() == "Bidirectional") {
+                    curAttr = FindAttributeByName(curNode, "Zf");
+                    conParam.Zf = atof((const char*)curAttr->content);
                 }
 
-
-                curAttr = FindAttributeByName(curNode, "alpha",false);
-                if(curAttr) {
-                    conParam.alpha =  atof((const char*)curAttr->content);
+                if(fromIfc.GetCausality() == "Bidirectional" && fromIfc.GetDimensions() > 1) {
+                    curAttr = FindAttributeByName(curNode, "Zfr",false);
+                    if(curAttr) {
+                        conParam.Zfr = atof((const char*)curAttr->content);
+                    }
+                    else {
+                        TLMErrorLog::Warning(string("No impedance for rotation (Zfr) is defined, Zf will be used"));
+                        conParam.Zfr = conParam.Zf;
+                    }
                 }
-                else {
-                    TLMErrorLog::Warning(string("No damping coefficient (alpha) is defined, assume no damping"));
-                    conParam.alpha = 0.0;
+
+                if(fromIfc.GetCausality() == "Bidirectional") {
+                    curAttr = FindAttributeByName(curNode, "alpha",false);
+                    if(curAttr) {
+                        conParam.alpha =  atof((const char*)curAttr->content);
+                    }
+                    else {
+                        TLMErrorLog::Warning(string("No damping coefficient (alpha) is defined, assume no damping"));
+                        conParam.alpha = 0.0;
+                    }
                 }
 
-                TLMInterfaceProxy& fromIfc = TheModel.GetTLMInterfaceProxy(fromID);
-                TLMInterfaceProxy& toIfc = TheModel.GetTLMInterfaceProxy(toID);
                 int conID = TheModel.RegisterTLMConnection(fromID, toID, conParam);
                 TLMConnection& con = TheModel.GetTLMConnection(conID);
 
