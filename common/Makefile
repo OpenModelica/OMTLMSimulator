@@ -28,7 +28,7 @@ SRCCLT= Plugin/PluginImplementer.cc \
 	Plugin/TLMPlugin.cc 
 
 
-SRCMGR= ManagerCommHandler.cc \
+SRCMGR= Communication/ManagerCommHandler.cc \
 	ManagerMain.cc	\
 	MetaModels/MetaModel.cc \
 	MetaModels/MetaModelReader.cc \
@@ -37,7 +37,7 @@ SRCMGR= ManagerCommHandler.cc \
 	Communication/TLMMessageQueue.cc \
 	Logging/TLMErrorLog.cc
 
-SRCSRVLIB= ManagerCommHandler.cc \
+SRCSRVLIB= Communication/ManagerCommHandler.cc \
 	MetaModels/MetaModel.cc \
 	Communication/TLMCommUtil.cc \
 	Communication/TLMManagerComm.cc \
@@ -46,7 +46,7 @@ SRCSRVLIB= ManagerCommHandler.cc \
 
 SRCMONITOR= $(SRCCLT) \
 	MetaModels/MetaModel.cc \
-	MetaModelReader.cc \
+	MetaModels/MetaModelReader.cc \
 	MonitorMain.cc
 
 CP=cp
