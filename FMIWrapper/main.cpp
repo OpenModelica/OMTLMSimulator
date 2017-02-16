@@ -684,31 +684,45 @@ int simulate_fmi2_me()
   }
 
   /* Set the vector absolute tolerance */
+  TLMErrorLog::Log("n_states = "+TLMErrorLog::ToStdStr(int(n_states)));
   for(size_t i=0; i<n_states; ++i) {
     Ith(abstol,i+1) = states_abstol[i];
+    TLMErrorLog::Log("abstol["+TLMErrorLog::ToStdStr(int(i))+"] = "+TLMErrorLog::ToStdStr(Ith(abstol,i+1)));
   }
 
   if(simConfig.solver == CVODE) {
+    TLMErrorLog::Log("Initializing CVODE solver.");
+
+    if(n_states == 0) {
+      TLMErrorLog::FatalError("At least one state variable is required for model exchange (n_states == 0)");
+    }
+
     /* Call CVodeCreate to create the solver memory and specify the
    * Backward Differentiation Formula and the use of a Newton iteration */
+    TLMErrorLog::Log("Creating solver.");
     mem = CVodeCreate(CV_BDF, CV_NEWTON);
     if (check_flag((void *)mem, "CVodeCreate", 0)) return(1);
 
     /* Call CVodeInit to initialize the integrator memory and specify the
    * user's right hand side function in y'=f(t,y), the inital time T0, and
    * the initial dependent variable vector y. */
+    TLMErrorLog::Log("Initializing solver memory.");
     flag = CVodeInit(mem, rhs, tstart, y);
     if (check_flag(&flag, "CVodeInit", 1)) return(1);
 
     /* Call CVodeSVtolerances to specify the scalar relative tolerance
    * and vector absolute tolerances */
+    TLMErrorLog::Log("Specifying tolerances.");
+    //TLMErrorLog::Log("abstol = "+TLMErrorLog::ToStdStr(abstol));
     flag = CVodeSVtolerances(mem, reltol, abstol);
     if (check_flag(&flag, "CVodeSVtolerances", 1)) return(1);
 
     /* Call CVDense to specify the CVDENSE dense linear solver */
+    TLMErrorLog::Log("Specifying linear solver (dense).");
     flag = CVDense(mem, n_states);
     if (check_flag(&flag, "CVDense", 1)) return(1);
 
+    TLMErrorLog::Log("Specifying maximum step size.");
     flag = CVodeSetMaxStep(mem, tlmConfig.hmax);
     if (check_flag(&flag, "CVodeSetMaxStep", 1)) return(1);
 
@@ -717,24 +731,35 @@ int simulate_fmi2_me()
     //if (check_flag(&flag, "CVDlsSetDenseJacFn", 1)) return(1);
   }
   else if(simConfig.solver == IDA) {
-    /* Call IDACreate to create the solver memory and specify the
+    TLMErrorLog::Log("Initializing IDA solver.");
+
+    if(n_states == 0) {
+      TLMErrorLog::FatalError("At least one state variable is required for model exchange (n_states == 0)");
+    }
+
+      /* Call IDACreate to create the solver memory and specify the
      * Backward Differentiation Formula and the use of a Newton iteration */
+    TLMErrorLog::Log("Creating solver.");
     mem = IDACreate();
     if (check_flag((void *)mem, "IDACreate", 0)) return(1);
 
     /* Call IDAInit and IDAInit to initialize IDA memory */
+    TLMErrorLog::Log("Initializing solver memory.");
     flag = IDAInit(mem, rhs_ida, tstart, y, yp);
     if (check_flag(&flag, "IDAInit", 1)) return(1);
 
     /* Call IDASVtolerances to specify the scalar relative tolerance
    * and vector absolute tolerances */
+    TLMErrorLog::Log("Spcifying tolerances.");
     flag = IDASVtolerances(mem, reltol, abstol);
     if (check_flag(&flag, "IDASVtolerances", 1)) return(1);
 
     /* Call IDADense to specify the CVDENSE dense linear solver */
+    TLMErrorLog::Log("Specifying linear solver (dense).");
     flag = IDADense(mem, n_states);
     if (check_flag(&flag, "IDADense", 1)) return(1);
 
+    TLMErrorLog::Log("Specifying maximum step size.");
     flag = IDASetMaxStep(mem, tlmConfig.hmax);
     if (check_flag(&flag, "IDASetMaxStep", 1)) return(1);
 
@@ -744,6 +769,7 @@ int simulate_fmi2_me()
   }
 
   double tc=tstart; //Cvode time
+  TLMErrorLog::Log("Starting simulation loop.");
   while ((tcur < tend) && (!(eventInfo.terminateSimulation || terminateSimulation))) {
     logAllVariables(tcur);
     size_t k;
@@ -870,6 +896,7 @@ int simulate_fmi2_me()
     fmistatus = fmi2_import_completed_integrator_step(fmu, fmi2_true, &callEventUpdate,
                                                       &terminateSimulation);
   }
+  TLMErrorLog::Log("Simulation ended.");
 
   fmistatus = fmi2_import_terminate(fmu);
 
@@ -1004,7 +1031,7 @@ void readFmiConfigFile()
 
     // Print log output
     TLMErrorLog::Log("---"+string(FMI_CONFIG_FILE_NAME)+"---");
-    TLMErrorLog::Log("Number of interfaces: "+TLMErrorLog::ToStdStr(fmiConfig.nInterfaces));
+    TLMErrorLog::Log("Number of interfaces: "+TLMErrorLog::ToStdStr(int(fmiConfig.nInterfaces)));
     for(size_t i=0; i<fmiConfig.nInterfaces; ++i) {
       TLMErrorLog::Log("Name: "+fmiConfig.interfaceNames[i]);
       int nP,nO,nS,nA,nF,nV;
@@ -1289,12 +1316,15 @@ int main(int argc, char* argv[])
   // Start simulation
   switch(kind) {
     case fmi2_fmu_kind_cs:
+      TLMErrorLog::Log("FMU kind is co-simulation.");
       simulate_fmi2_cs();
       break;
     case fmi2_fmu_kind_me:
+      TLMErrorLog::Log("FMU kind is model exchange.");
       simulate_fmi2_me();
       break;
     case fmi2_fmu_kind_me_and_cs:         //Not sure how to handle FMUs that can be both kinds, guess ME better than CS
+      TLMErrorLog::Log("FMU kind is either co-simulation or model exchange.");
       simulate_fmi2_me();
       break;
     case fmi2_fmu_kind_unknown:
