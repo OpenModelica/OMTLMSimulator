@@ -1135,10 +1135,10 @@ int main(int argc, char* argv[])
   }
 
   std::string path = argv[1];
-  std::string FMUPath = path+"\\"+argv[2];
-  std::string tmpPath = path+"\\"+TEMP_DIR_NAME;
-  std::string fmiConfigPath = path+"\\"+FMI_CONFIG_FILE_NAME;
-  std::string tlmConfigPath = path+"\\"+TLM_CONFIG_FILE_NAME;
+  std::string FMUPath = path+"/"+argv[2];
+  std::string tmpPath = path+"/"+TEMP_DIR_NAME;
+  std::string fmiConfigPath = path+"/"+FMI_CONFIG_FILE_NAME;
+  std::string tlmConfigPath = path+"/"+TLM_CONFIG_FILE_NAME;
 
   simConfig.solver = ExplicitEuler;
 

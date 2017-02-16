@@ -3,6 +3,8 @@ CONFIG += console
 CONFIG -= app_bundle
 CONFIG -= qt
 
+DEFINES += INTERFACE_TYPES
+
 TARGET = ../../bin/FMIWrapper
 
 unix {
