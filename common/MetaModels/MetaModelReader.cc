@@ -33,7 +33,8 @@ void MetaModelReader::ReadComponents(xmlNode *node, bool skipInterfaces=false, s
                 continue; //Don't load other models than the single model
             }
 
-            TLMErrorLog::Log(string("Processing SubModel ") + Name);
+            TLMErrorLog::Log(string("-----  Processing SubModel  ----- "));
+            TLMErrorLog::Log("Name: "+Name);
 
             curAttrVal = FindAttributeByName(curNode, "StartCommand");
             string StartCommand((const char*)curAttrVal->content);
@@ -117,7 +118,6 @@ void MetaModelReader::ReadTLMInterfaceNodes(xmlNode* node, int ComponentID) {
             curAttrVal = FindAttributeByName(curNode, "Causality");
             if(curAttrVal) {
                 Causality = (const char*)curAttrVal->content;
-                TLMErrorLog::Log("Reading causality: "+Causality);
             }
 
             string Domain="Mechanical";
@@ -151,9 +151,6 @@ void MetaModelReader::ReadTLMInterfaceNodes(xmlNode* node, int ComponentID) {
             //              type = ((const char*)curAttrVal->content);
             //            }
 
-            std::stringstream ss;
-            ss << "Registering TLM interface " << Name << " with " << Dimensions << " dimensions.";
-            TLMErrorLog::Log(ss.str());
             int ipID = TheModel.RegisterTLMInterfaceProxy(ComponentID, Name, Dimensions, Causality, Domain);
 
             // Get/Set position and orientation if available in XML file.
@@ -177,9 +174,6 @@ void MetaModelReader::ReadTLMParameters(xmlNode *node, int ComponentID) {
             curAttrVal = FindAttributeByName(curNode, "Value");
             string Value((const char*)curAttrVal->content);
 
-            std::stringstream ss;
-            ss << "Registering TLM parameter " << Name << " with value " << Value;
-            TLMErrorLog::Log(ss.str());
             TheModel.RegisterTLMParameterProxy(ComponentID, Name, Value);
         }
     }
@@ -241,6 +235,7 @@ void MetaModelReader::ReadPositionAndOrientation(xmlNode* node, double R[3], dou
 // from XML-element node for a TLMConnection
 void MetaModelReader::ReadSimParams(xmlNode* node) {
 
+    TLMErrorLog::Log(string("-----  Reading simulation parameters  ----- "));
     xmlNode* curAttrVal = FindAttributeByName(node, "ManagerPort", false);
 
     int Port = 11111; // Some default port.
@@ -271,6 +266,10 @@ void MetaModelReader::ReadSimParams(xmlNode* node) {
     // Note, order is important here!
     TheModel.GetSimParams().Set(Port, StartTime, StopTime);
     TheModel.GetSimParams().SetWriteTimeStep(WriteTimeStep);
+
+    TLMErrorLog::Log("StartTime     = "+TLMErrorLog::ToStdStr(StartTime)+" s");
+    TLMErrorLog::Log("StopTime      = "+TLMErrorLog::ToStdStr(StopTime)+" s");
+    TLMErrorLog::Log("WriteTimeStep = "+TLMErrorLog::ToStdStr(WriteTimeStep)+" s");
 }
 
 
@@ -322,7 +321,7 @@ void MetaModelReader::ReadTLMConnectionNode(xmlNode* node) {
             if(   (XML_ELEMENT_NODE == curNode->type)
                    && (strcmp("Connection", (const char*)curNode->name)  == 0) ) {
 
-                TLMErrorLog::Log(string("Processing Connection: "));
+                TLMErrorLog::Log(string("-----  Processing Connection  ----- "));
 
                 // Read connection attributes:
                 xmlNode* curAttr = FindAttributeByName(curNode, "From");
@@ -338,9 +337,6 @@ void MetaModelReader::ReadTLMConnectionNode(xmlNode* node) {
                                             + AttrData);
                 }
 
-                TLMInterfaceProxy& fromIfc = TheModel.GetTLMInterfaceProxy(fromID);
-                TLMInterfaceProxy& toIfc = TheModel.GetTLMInterfaceProxy(toID);
-
                 curAttr = FindAttributeByName(curNode, "To");
 
                 AttrData = (const char*)curAttr->content;
@@ -351,12 +347,18 @@ void MetaModelReader::ReadTLMConnectionNode(xmlNode* node) {
                                             + AttrData);
                 }
 
+                TLMInterfaceProxy& fromIfc = TheModel.GetTLMInterfaceProxy(fromID);
+                TLMInterfaceProxy& toIfc = TheModel.GetTLMInterfaceProxy(toID);
+
                 curAttr = FindAttributeByName(curNode, "Delay");
                 conParam.Delay = atof((const char*)curAttr->content);
+
+                TLMErrorLog::Log("Delay = "+TLMErrorLog::ToStdStr(conParam.Delay)+" s");
 
                 if(fromIfc.GetCausality() == "Bidirectional") {
                     curAttr = FindAttributeByName(curNode, "Zf");
                     conParam.Zf = atof((const char*)curAttr->content);
+                    TLMErrorLog::Log("Zf    = "+TLMErrorLog::ToStdStr(conParam.Zf));
                 }
 
                 if(fromIfc.GetCausality() == "Bidirectional" && fromIfc.GetDimensions() > 1) {
@@ -368,6 +370,7 @@ void MetaModelReader::ReadTLMConnectionNode(xmlNode* node) {
                         TLMErrorLog::Warning(string("No impedance for rotation (Zfr) is defined, Zf will be used"));
                         conParam.Zfr = conParam.Zf;
                     }
+                    TLMErrorLog::Log("Zf    = "+TLMErrorLog::ToStdStr(conParam.Zfr));
                 }
 
                 if(fromIfc.GetCausality() == "Bidirectional") {
@@ -379,6 +382,7 @@ void MetaModelReader::ReadTLMConnectionNode(xmlNode* node) {
                         TLMErrorLog::Warning(string("No damping coefficient (alpha) is defined, assume no damping"));
                         conParam.alpha = 0.0;
                     }
+                    TLMErrorLog::Log("alpha = "+TLMErrorLog::ToStdStr(conParam.alpha));
                 }
 
                 int conID = TheModel.RegisterTLMConnection(fromID, toID, conParam);
@@ -401,6 +405,7 @@ void MetaModelReader::ReadTLMConnectionNode(xmlNode* node) {
 // Input/Output: TheModel - model structure to be build.
 void MetaModelReader::ReadModel(std::string &InputFile, bool InterfaceRequestMode, std::string singleModel) {
 
+    TLMErrorLog::Log("----------------------  Reading composite model  ---------------------- ");
     xmlDoc* doc = xmlParseFile(InputFile.c_str()); // open XML & parse it
 
     if(doc == NULL) {
@@ -426,7 +431,7 @@ void MetaModelReader::ReadModel(std::string &InputFile, bool InterfaceRequestMod
 
     ReadSimParams(sim_params);
 
-    TLMErrorLog::Log(" ----------------------  Meta-model is read  ----------------------");
+    TLMErrorLog::Log("----------------------  Composite model is read  ---------------------- ");
 
     // free the document and the global vars
     xmlFreeDoc(doc);

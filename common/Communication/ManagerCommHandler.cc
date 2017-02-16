@@ -94,7 +94,7 @@ void ManagerCommHandler::RunStartupProtocol() {
     // Start the external components forming "coupled simulation"
     TheModel.StartComponents();
 
-    TLMErrorLog::Log("Components were started, waiting for registration requests");
+    TLMErrorLog::Log("-----  Waiting for registration requests  ----- ");
     Comm.AddActiveSocket(acceptSocket);
     
     // Setup timer
@@ -110,7 +110,7 @@ void ManagerCommHandler::RunStartupProtocol() {
         if(tInfo.total.tv_sec > TheModel.GetSimParams().GetTimeout()) {
             Comm.CloseAll();
             TLMErrorLog::FatalError("Timeout - failed to start all components, give up! ("
-                                    + TLMErrorLog::ToStdStr(tInfo.total.tv_sec)
+                                    + TLMErrorLog::ToStdStr(int(tInfo.total.tv_sec))
                                     + " > " + TLMErrorLog::ToStdStr(TheModel.GetSimParams().GetTimeout())
                                     + ")");
             break;
