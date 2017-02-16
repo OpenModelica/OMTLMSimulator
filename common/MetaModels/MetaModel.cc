@@ -213,10 +213,13 @@ int MetaModel::RegisterTLMInterfaceProxy(const int ComponentID, string& Name, in
     TLMInterfaceProxy* ifc =
             new TLMInterfaceProxy(ComponentID, Interfaces.size(), Name, Dimensions, Causality, Domain);
 
-    std::stringstream ss;
-    ss << "Registering interface proxy. Id = " << Interfaces.size() << ", Name = " << Name << ", Dimensions = " << Dimensions <<
-          ", Causality = " << Causality << ", Domain = " << Domain;
-    TLMErrorLog::Log(ss.str());
+    TLMErrorLog::Log("Registering interface proxy."
+                     " Id = "+TLMErrorLog::ToStdStr(int(Interfaces.size()))+
+                     ", ComponentId = "+TLMErrorLog::ToStdStr(ComponentID)+
+                     ", Name = " + Name+
+                     ", Dimensions = " + TLMErrorLog::ToStdStr(Dimensions)+
+                     ", Causality = " + Causality+
+                     ", Domain = " + Domain);
 
     Interfaces.insert(Interfaces.end(), ifc);
     return Interfaces.size()-1;
@@ -225,9 +228,11 @@ int MetaModel::RegisterTLMInterfaceProxy(const int ComponentID, string& Name, in
 int MetaModel::RegisterTLMParameterProxy(const int ComponentID, string& Name, string& DefaultValue) {
     TLMParameterProxy* par = new TLMParameterProxy(ComponentID, Parameters.size(), Name, DefaultValue);
 
-    std::stringstream ss;
-    ss << "Registering parameter proxy. Id = " << Parameters.size() << ", Name = " << Name << ", DefaultValue = " << DefaultValue;
-    TLMErrorLog::Log(ss.str());
+    TLMErrorLog::Log("Registering parameter proxy."
+                     " Id = " + TLMErrorLog::ToStdStr(int(Parameters.size()))+
+                     ", ComponentId = "+TLMErrorLog::ToStdStr(ComponentID)+
+                     ", Name = " + Name+
+                     ", DefaultValue = " + DefaultValue);
 
     Parameters.insert(Parameters.end(), par);
     return Parameters.size()-1;
@@ -272,19 +277,31 @@ int MetaModel::RegisterTLMConnection(int ifc1, int ifc2, TLMConnectionParams& pa
 // Start components
 void MetaModel::StartComponents() {
     for(unsigned i = 0; i < Components.size(); i++) {
+        TLMErrorLog::Log(string("-----  Starting External Tool  ----- "));
+        TLMErrorLog::Log("Name: "+Components[i]->GetName());
         double maxStep = 1e150;
         for(unsigned j = 0; j < Interfaces.size(); j++) {
             // check that the interface belongs to this component
-            if((unsigned)Interfaces[j]->GetComponentID() != i) continue;
+            if((unsigned)Interfaces[j]->GetComponentID() != i) {
+                TLMErrorLog::Log("Wrong component ID.");
+                continue;
+            }
             // check that interface is connected
             int conID = Interfaces[j]->GetConnectionID();
-            if(conID < 0) continue;
+            if(conID < 0) {
+                TLMErrorLog::Log("Interface not connected.");
+                continue;
+            }
+
+            TLMErrorLog::Log("Found interface: "+Interfaces[j]->GetName());
 
             TLMConnection& conn = GetTLMConnection(conID);
 
             if(maxStep > conn.GetParams().Delay) {
                 maxStep = conn.GetParams().Delay;
             }
+
+            TLMErrorLog::Log("Connection delay = "+TLMErrorLog::ToStdStr(conn.GetParams().Delay));
         }
         if(1e150 == maxStep) maxStep = 0;
         if(maxStep <= 0) {

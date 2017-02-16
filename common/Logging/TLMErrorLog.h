@@ -33,8 +33,9 @@ public:
     //! Log function logs a message to standard error output
     static void Log(const std::string& mess);
 
-    //! A utility function often used to log numerical information
+    //! Utility functions often used to log numerical information
     static std::string ToStdStr(double val);
+    static std::string ToStdStr(int val);
 
     //! LogEnabled returnes the value of LoggingOn flag. Used for checking
     //! if logging is enabled.

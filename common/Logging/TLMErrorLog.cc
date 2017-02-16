@@ -127,6 +127,15 @@ std::string  TLMErrorLog::ToStdStr(double val) {
     return std::string(buf);
 }
 
+// A utility function often used to log numerical information
+std::string  TLMErrorLog::ToStdStr(int val) {
+    char buf[30];
+
+    sprintf(buf, "%d", val);
+
+    return std::string(buf);
+}
+
 std::string  TLMErrorLog::TimeStr() {
     if(LogTimeOn) {
         time_t rawtime;
