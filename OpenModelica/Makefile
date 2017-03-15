@@ -55,7 +55,7 @@ $(ABI)/%.o: $(MISCHOME)/src/%.cc
 
 OBJS=  tlmforce.o 
 
-EXT_OBJS = PluginImplementer.o \
+EXT_OBJS = Plugin/PluginImplementer.o \
 	Communication/TLMClientComm.o \
 	Communication/TLMCommUtil.o \
 	Interfaces/TLMInterface.o \
