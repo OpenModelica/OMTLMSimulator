@@ -1,6 +1,6 @@
 model doublePendulum2 "Simple double pendulum with two revolute joints and two bodies"
   inner Modelica.Mechanics.MultiBody.World world(enableAnimation = false, animateWorld = false, animateGravity = false) annotation(Placement(transformation(extent = {{-88,0},{-68,20}}, rotation = 0)));
-  Modelica.Mechanics.MultiBody.Parts.BodyBox boxBody1(r = {0.25,0,0}, width = 0.06, r_0.start = {0.25,0,0}, r_0.fixed = true, v_0.fixed = true) annotation(Placement(transformation(extent = {{-10,0},{10,20}}, rotation = 0)));
+  Modelica.Mechanics.MultiBody.Parts.BodyBox boxBody1(r = {0.25,0,0}, r_0(fixed = true, start = {0.0, 0, 0}), v_0(fixed = true), width = 0.06) annotation(Placement(transformation(extent = {{-10,0},{10,20}}, rotation = 0)));
   Modelica.Mechanics.MultiBody.Joints.Revolute revolute2(phi(fixed = true), w(fixed = true)) annotation(Placement(transformation(extent = {{32,0},{52,20}}, rotation = 0)));
   Modelica.Mechanics.MultiBody.Parts.BodyBox boxBody2(r = {0.5,0,0}, width = 0.06, r_0.start = {0.5,0,0}) annotation(Placement(transformation(extent = {{74,0},{94,20}}, rotation = 0)));
   TLM.TLM_Interface_3D.TLMInterface3D mbs_tlminterface1 annotation(Placement(visible = true, transformation(origin = {-12.2244,-19.6393}, extent = {{-10,-10},{10,10}}, rotation = 0)));
@@ -25,4 +25,3 @@ ALT=\"model Examples.Elementary.DoublePendulum\">
 
 </HTML>"));
 end doublePendulum2;
-
