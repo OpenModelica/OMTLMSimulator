@@ -359,20 +359,20 @@ void WriteVisualXMLFile(MetaModel& model, std::string &baseFileName, std::string
                 visualFile << "    <ident>" << name << "</ident>\n";
                 visualFile << "    <type>file://" << path << "/" << component.GetName() << "/" << component.GetGeometryFile() << "</type>\n";
                 visualFile << "    <T>\n";
-                visualFile << "      <cref>" << name << ".A(1,1)</cref>\n";
-                visualFile << "      <cref>" << name << ".A(1,2)</cref>\n";
-                visualFile << "      <cref>" << name << ".A(1,3)</cref>\n";
-                visualFile << "      <cref>" << name << ".A(2,1)</cref>\n";
-                visualFile << "      <cref>" << name << ".A(2,2)</cref>\n";
-                visualFile << "      <cref>" << name << ".A(2,3)</cref>\n";
-                visualFile << "      <cref>" << name << ".A(3,1)</cref>\n";
-                visualFile << "      <cref>" << name << ".A(3,2)</cref>\n";
-                visualFile << "      <cref>" << name << ".A(3,3)</cref>\n";
+                visualFile << "      <cref>" << name << ".A(1,1) [-]</cref>\n";
+                visualFile << "      <cref>" << name << ".A(1,2) [-]</cref>\n";
+                visualFile << "      <cref>" << name << ".A(1,3) [-]</cref>\n";
+                visualFile << "      <cref>" << name << ".A(2,1) [-]</cref>\n";
+                visualFile << "      <cref>" << name << ".A(2,2) [-]</cref>\n";
+                visualFile << "      <cref>" << name << ".A(2,3) [-]</cref>\n";
+                visualFile << "      <cref>" << name << ".A(3,1) [-]</cref>\n";
+                visualFile << "      <cref>" << name << ".A(3,2) [-]</cref>\n";
+                visualFile << "      <cref>" << name << ".A(3,3) [-]</cref>\n";
                 visualFile << "    </T>\n";
                 visualFile << "    <r>\n";
-                visualFile << "      <cref>" << name << ".R[cG][cG](1)</cref>\n";
-                visualFile << "      <cref>" << name << ".R[cG][cG](2)</cref>\n";
-                visualFile << "      <cref>" << name << ".R[cG][cG](3)</cref>\n";
+                visualFile << "      <cref>" << name << ".R[cG][cG](1) [m]</cref>\n";
+                visualFile << "      <cref>" << name << ".R[cG][cG](2) [m]</cref>\n";
+                visualFile << "      <cref>" << name << ".R[cG][cG](3) [m]</cref>\n";
                 visualFile << "    </r>\n";
                 visualFile << "    <r_shape>\n";
                 visualFile << "      <exp>" << r_shape(1) << "</exp>\n";
@@ -424,15 +424,15 @@ void PrintHeader(MetaModel& model, std::ofstream& dataFile) {
 
                 // Add all TLM variable names for all active interfaces
                 std::string name = component.GetName() + "." + interfaceProxy.GetName();
-                dataFile << "\"" << name << ".R[cG][cG](1)\",\"" << name << ".R[cG][cG](2)\",\"" << name << ".R[cG][cG](3)\","; // Position vector
-                dataFile << "\"" << name << ".phi[cG](1)\",\"" << name << ".phi[cG](2)\",\"" << name << ".phi[cG](3)\","; // Orientation vector (three angles)
-                dataFile << "\"" << name << ".A(1,1)\",\"" << name << ".A(1,2)\",\"" << name << ".A(1,3)\",\""
-                         << name << ".A(2,1)\",\"" << name << ".A(2,2)\",\"" << name << ".A(2,3)\",\""
-                         << name << ".A(3,1)\",\"" << name << ".A(3,2)\",\"" << name << ".A(3,3)\","; // Transformation matrix
-                dataFile << "\"" << name << ".vR[cG][cG,cG](1)\",\"" << name << ".vR[cG][cG,cG](2)\",\"" << name << ".vR[cG][cG,cG](3)\","; // velocity
-                dataFile << "\"" << name << ".Omega[cG][cG](1)\",\"" << name << ".Omega[cG][cG](2)\",\"" << name << ".Omega[cG][cG](3)\","; // angular velocity
-                dataFile << "\"" << name << ".F_tie[cG](1)\",\"" << name << ".F_tie[cG](2)\",\"" << name << ".F_tie[cG](3)\","; // force vector
-                dataFile << "\"" << name << ".M_tie[cG][cG](1)\",\"" << name << ".M_tie[cG][cG](2)\",\"" << name << ".M_tie[cG][cG](3)\""; // torque vector
+                dataFile << "\"" << name << ".R[cG][cG](1) [m]\",\"" << name << ".R[cG][cG](2) [m]\",\"" << name << ".R[cG][cG](3) [m]\","; // Position vector
+                dataFile << "\"" << name << ".phi[cG](1) [rad]\",\"" << name << ".phi[cG](2) [rad]\",\"" << name << ".phi[cG](3) [rad]\","; // Orientation vector (three angles)
+                dataFile << "\"" << name << ".A(1,1) [-]\",\"" << name << ".A(1,2) [-]\",\"" << name << ".A(1,3) [-]\",\""
+                         << name << ".A(2,1) [-]\",\"" << name << ".A(2,2) [-]\",\"" << name << ".A(2,3) [-]\",\""
+                         << name << ".A(3,1) [-]\",\"" << name << ".A(3,2) [-]\",\"" << name << ".A(3,3) [-]\","; // Transformation matrix
+                dataFile << "\"" << name << ".vR[cG][cG,cG](1) [m/s]\",\"" << name << ".vR[cG][cG,cG](2) [m/s]\",\"" << name << ".vR[cG][cG,cG](3) [m/s]\","; // velocity
+                dataFile << "\"" << name << ".Omega[cG][cG](1) [rad/s]\",\"" << name << ".Omega[cG][cG](2) [rad/s]\",\"" << name << ".Omega[cG][cG](3) [rad/s]\","; // angular velocity
+                dataFile << "\"" << name << ".F_tie[cG](1) [N]\",\"" << name << ".F_tie[cG](2) [N]\",\"" << name << ".F_tie[cG](3) [N]\","; // force vector
+                dataFile << "\"" << name << ".M_tie[cG][cG](1) [Nm]\",\"" << name << ".M_tie[cG][cG](2) [Nm]\",\"" << name << ".M_tie[cG][cG](3) [Nm]\""; // torque vector
 
                 nActiveInterfaces++;
             }
@@ -444,19 +444,23 @@ void PrintHeader(MetaModel& model, std::ofstream& dataFile) {
                 // Add all TLM variable names for all active interfaces
                 std::string name = component.GetName() + "." + interfaceProxy.GetName();
                 if(interfaceProxy.GetDomain() == "Hydraulic") {
-                    dataFile << "\"" << name << ".q\","; // Volume flow
-                    dataFile << "\"" << name << ".p\""; // Pressure
+                    dataFile << "\"" << name << ".q [m^3/s]\","; // Volume flow
+                    dataFile << "\"" << name << ".p [Pa]\""; // Pressure
                 }
                 else if(interfaceProxy.GetDomain() == "Mechanical") {
-                    dataFile << "\"" << name << ".x\","; // Position
-                    dataFile << "\"" << name << ".v\","; // Speed
-                    dataFile << "\"" << name << ".F\""; // Force
+                    dataFile << "\"" << name << ".x [m]\","; // Position
+                    dataFile << "\"" << name << ".v [m/s]\","; // Speed
+                    dataFile << "\"" << name << ".F [N]\""; // Force
                 }
                 else if(interfaceProxy.GetDomain() == "Rotational") {
-                    dataFile << "\"" << name << ".phi\","; // Position
-                    dataFile << "\"" << name << ".w\","; // Speed
-                    dataFile << "\"" << name << ".T\""; // Force
+                    dataFile << "\"" << name << ".phi [rad]\","; // Position
+                    dataFile << "\"" << name << ".w [rad/s]\","; // Speed
+                    dataFile << "\"" << name << ".T [Nm]\""; // Force
                 }
+                else if(interfaceProxy.GetDomain() == "Electric") {
+                  dataFile << "\"" << name << ".I [A]\","; // Current
+                  dataFile << "\"" << name << ".U [V]\""; // Voltage
+              }
 
                 nActiveInterfaces++;
             }
@@ -598,7 +602,10 @@ void PrintData(MetaModel& model,
                     dataFile << timeData.Velocity << ",";   //Angular velocity
                     dataFile << force;                      //Torque
                 }
-
+                else if(interfaceProxy.GetDomain() == "Electric") {
+                  dataFile << timeData.Velocity << ",";     //Current
+                  dataFile << force;                        //Voltage
+              }
 
                 nActiveInterfaces++;
             }
