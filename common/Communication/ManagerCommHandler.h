@@ -15,7 +15,7 @@
 #include "Communication/TLMCommUtil.h"
 #include "Communication/TLMManagerComm.h"
 #include "Communication/TLMMessageQueue.h"
-#include "MetaModels/MetaModel.h"
+#include "CompositeModels/CompositeModel.h"
 
 #include "TLMThreadSynch.h"
 
@@ -35,7 +35,7 @@ private:
     TLMManagerComm Comm;
 
     //! Meta-model
-    MetaModel& TheModel;
+    CompositeModel& TheModel;
 
     bool MonitorConnected;
 
@@ -69,7 +69,7 @@ private:
 
 public:
     //! Constructor.
-    ManagerCommHandler(MetaModel& Model):
+    ManagerCommHandler(CompositeModel& Model):
         MessageQueue(),
         Comm(Model.GetComponentsNum(), Model.GetSimParams().GetPort()),
         TheModel(Model),
@@ -122,7 +122,7 @@ public:
 
     //! ProcessRegComponentMessage processes the first message after "accept"
     //! It is expected to be a component registration message.
-    //! The functions associates the socket handle with the component in the MetaModel.
+    //! The functions associates the socket handle with the component in the CompositeModel.
     //! It then prepares the reply by setting TLMInterfaceID to component ID.
     void ProcessRegComponentMessage(TLMMessage& mess);
 

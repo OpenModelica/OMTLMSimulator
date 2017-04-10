@@ -9,8 +9,8 @@
 #include <cstdlib>
 #include <cstring>
 #include "Logging/TLMErrorLog.h"
-#include "MetaModels/MetaModel.h"
-#include "MetaModels/MetaModelReader.h"
+#include "CompositeModels/CompositeModel.h"
+#include "CompositeModels/CompositeModelReader.h"
 #include "Communication/ManagerCommHandler.h"
 #include "double3Vec.h"
 #include "double33Mat.h"
@@ -26,7 +26,7 @@ using std::string;
 
 void usage() {
     string usageStr =
-            "Usage: tlmmananger [-d] [-m <monitor-port>] [-p <server-port>] [-r] <metamodel>, where metamodel is a name of XML file.\n"
+            "Usage: tlmmananger [-d] [-m <monitor-port>] [-p <server-port>] [-r] <compositemodel>, where compositemodel is a name of XML file.\n"
             "-d                 : enable debug mode\n"
             "-m <monitor-port>  : set the port for monitoring connections\n"
             "-p <server-port>   : set the server network port for communication with the simulation tools\n"
@@ -38,7 +38,7 @@ void usage() {
 }
 
 // Print all interfaces position and orientation
-void PrintInterfaceInformation(MetaModel& theModel) {
+void PrintInterfaceInformation(CompositeModel& theModel) {
     std::ofstream interfacefile ("interfaceData.xml");
     if(interfacefile.is_open()) {
         interfacefile << "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n";
@@ -159,11 +159,11 @@ int main(int argc, char* argv[]) {
     }
     
     // Create the meta model object
-    MetaModel theModel;
+    CompositeModel theModel;
 
     {
         // Create model reader for the model
-        MetaModelReader modelReader(theModel);
+        CompositeModelReader modelReader(theModel);
 
         std::string inFile(argv[optind]);
 

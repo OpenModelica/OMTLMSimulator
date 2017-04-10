@@ -1,23 +1,43 @@
 \chapter{Modelica TLM Plugin}
-A Modelica TLM library has been implemented for the purpose of co-simulation. The library consists of TLM functions, sensors and the TLM interface for 1D and 3D modeling. In this report we will illustrate how to use the TLM interface together with the Modelica Multi-Body Library. The Library has been tested and verified in \emph{Wolfram SystemModeler}, \emph{Dymola}, and \emph{OpenModelica}.
+A Modelica TLM library has been implemented for the purpose of co-simulation.
+The library consists of TLM functions, sensors and the TLM interface for 1D and 3D modeling. 
+In this report we will illustrate how to use the TLM interface together with the Modelica Multi-Body Library. 
+The Library has been tested and verified in \emph{Wolfram SystemModeler}, \emph{Dymola}, and \emph{OpenModelica}.
 
 \image{!hbtp}{0.3}{TLMModelicaLib.png}{Modelica TLM Library}{Modelica TLM Library}
 
-~\\In this chapter we will describe the implementation of the TLM interface for Modelica. The component of interest is the 3D TLM interface from the TLM Modelica library. The 3D TLM component is the interface for co-simulation between Modelica multi-body models and external models. The design of the 3D TLM interface is given in Figure: (\ref{fig:TLMModelicaCode.png}).~\\
+~\\In this chapter we will describe the implementation of the TLM interface for Modelica. 
+The component of interest is the 3D TLM interface from the TLM Modelica library. 
+The 3D TLM component is the interface for co-simulation between Modelica multi-body models and external models. 
+The design of the 3D TLM interface is given in Figure: (\ref{fig:TLMModelicaCode.png}).~\\
 
 \image{!hbtp}{}{TLMModelicaCode.png}{3D TLM Modelica component text view}{3D TLM Modelica component text view}
 
-~\\The main functions in the 3D multi-body TLM component are the C-functions \emph{TLMSetMotion()} and \emph{TLMGetMotion()}. These two functions receive and send the model-name, time, position, orientation, velocity and the angular-velocity between a Modelica model and an external model. The \emph{TLMSetMotion()} sends the above mentioned variables between each sub-model within a user-defined TLM Time Delay. The TLM Time Delay is defined in an XML file, which describes the relationship between each Modelica sub-model.
+~\\The main functions in the 3D multi-body TLM component are the C-functions \emph{TLMSetMotion()} and \emph{TLMGetMotion()}. 
+These two functions receive and send the model-name, time, position, orientation, velocity and the angular-velocity between a Modelica model and an external model. 
+The \emph{TLMSetMotion()} sends the above mentioned variables between each sub-model within a user-defined TLM Time Delay. 
+The TLM Time Delay is defined in an XML file, which describes the relationship between each Modelica sub-model.
 
-~\\The cut-force and cut-torque acting on the mechanical component the TLM component is connected to is calculated based on the data received from the \emph{TLMGetForce()} function. The force and torque calculation takes place in the C-functions.
+~\\The cut-force and cut-torque acting on the mechanical component the TLM component is connected to is calculated based on the data received from the \emph{TLMGetForce()} function. 
+The force and torque calculation takes place in the C-functions.
 
 %\image{!hbtp}{}{xml.png}{XML file for co-simulation}{XML file for co-simulation}
 
-~\\On Figure: (\ref{fig:ModelicaTLMFlowDiagram.pdf}) a flow chart of the Modelica TLM interface co-simulation is given. The first step in the TLM Modelica co-simulation is to split a model into two or more sub-models (in cases where the co-simulation is undertaken within two Modelica tools). A TLM interface component has to be connected to each sub-model.
+~\\On Figure: (\ref{fig:ModelicaTLMFlowDiagram.pdf}) a flow chart of the Modelica TLM interface co-simulation is given. 
+The first step in the TLM Modelica co-simulation is to split a model into two or more sub-models (in cases where the co-simulation is undertaken within two Modelica tools). 
+A TLM interface component has to be connected to each sub-model.
 
-~\\The second step is to prepare the files for the simulation. The first step in the co-simulation process is to write an XML file. In the XML file the user defines the TLM tie relationship between each sub-model that has to be included in the co-simulation in Modelica. See Figure: (\ref{fig:xml.png}) for an example of an XML file. The XML file contains the model connection description, TLM Time Delay, physical connection parameters, and the simulation time.
+~\\The second step is to prepare the files for the simulation. 
+The first step in the co-simulation process is to write an XML file. 
+In the XML file the user defines the TLM tie relationship between each sub-model that has to be included in the co-simulation in Modelica. 
+See Figure: (\ref{fig:xml.png}) for an example of an XML file. 
+The XML file contains the model connection description, TLM Time Delay, physical connection parameters, and the simulation time.
 
-~\\When the XML file has been created a simulation using the TLM Manager can now be undertaken. When the user executes the TLM manager the TLM manager executes the BAT file, which contains the information about the simulation, i.e. simulation solver, variables to be saved in the result file, step time, numbers of interval etc., and generates a MOS file needed for the Modelica Engine to start a simulation. Based on the MOS file (which is generated for each sub-model) a simulation is started. When the simulation is finished a result file is written, currently a MAT file (the user can chose the type of result file from the simulation in the BAT file). The result file can now be loaded into a Modelica GUI and an analysis of the results can be undertaken.
+~\\When the XML file has been created a simulation using the TLM Manager can now be undertaken. 
+When the user executes the TLM manager the TLM manager executes the BAT file, which contains the information about the simulation, i.e. simulation solver, variables to be saved in the result file, step time, numbers of interval etc., and generates a MOS file needed for the Modelica Engine to start a simulation. 
+Based on the MOS file (which is generated for each sub-model) a simulation is started. 
+When the simulation is finished a result file is written, currently a MAT file (the user can chose the type of result file from the simulation in the BAT file). 
+The result file can now be loaded into a Modelica GUI and an analysis of the results can be undertaken.
 
 \image{!hbtp}{}{ModelicaTLMFlowDiagram.pdf}{Modelica TLM co-simulation flow chart}{Modelica TLM co-simulation flow chart}
 
