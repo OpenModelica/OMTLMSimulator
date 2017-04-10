@@ -4,33 +4,108 @@ The main component used in the TLMManager is an instance of {\em ManagerCommHand
 {\scriptsize
 \begin{verbatim}
     //! Constructor.
-    ManagerCommHandler(MetaModel& Model):
-        MessageQueue(),
-        Comm(Model.GetComponentsNum(), Model.GetSimParams().GetPort()),
-        TheModel(Model),
-        CommMode(CoSimulationMode),
-        monitorInterfaceMap(),
-        monitorMapLock(),
-        runningMode(StartUpMode)
+    ManagerCommHandler(CompositeModel& Model):
+                       MessageQueue(),
+                       Comm(Model.GetComponentsNum(), 
+                            Model.GetSimParams().GetPort()),
+                       TheModel(Model),
+                       MonitorConnected(false),
+                       CommMode(CoSimulationMode),
+                       monitorInterfaceMap(),
+                       monitorMapLock(),
+                       runningMode(StartUpMode),
+                       exceptionMsg(""),
+                       exceptionLock()
     {
     };
 \end{verbatim}
 }
 
-A {\em MetaModel} instance can be generated in different ways. 
+A {\em CompositeModel} instance can be generated in different ways. 
 The default TLM co-simulation implementation contains an XML composite model reader, see also Figure~\ref{fig:MetaModelReader}. 
 For details about the XML composite model description see Section~\ref{meta}.
 
 \begin{figure}[ht]
 \begin{center}
-  {\includegraphics[width=4cm]{figs/classMetaModelReader__coll__graph.png}}
+	\begin{tikzpicture}
+	\def\dx{0.8cm}
+	\node[thick,draw,rectangle,
+	      minimum width=3.3*\dx,
+	      minimum height=0.5*\dx,
+	      font=\sffamily\tiny,
+	      text width=3*\dx] () {SimulationParams};
+	\node[thick,draw,rectangle,
+	      minimum width=3.3*\dx,
+	      minimum height=1.8*\dx,
+	      font=\sffamily\tiny,
+	      yshift=-1.15*\dx,align=left,
+	      text width=3*\dx] () {- TimeStart\\- TimeEnd\\- Port\\- MonitorPort\\- Timeout};
+	\node[thick,draw,rectangle,
+	      minimum width=3.3*\dx,
+	      minimum height=4.0*\dx,
+	      font=\sffamily\tiny,
+	      yshift=-4.05*\dx,align=left,
+	      text width=3*\dx] (a) {+ SimulationParams()\\+ Set()\\+ GetPort()\\+ SetPort()\\+ GetMonitorPort()\\+ SetMonitorPort()\\ + GetStartTimeStr()\\+ SetStartTimeStr()\\+ GetEndTimeStr()\\+ SetEndTimeStr()\\+ GetServerName()\\+ GetTimeout()};	
+	      
+	\node[thick,draw,rectangle,
+	      minimum width=3.3*\dx,
+	      minimum height=0.58*\dx,
+	      font=\sffamily\tiny,
+	      yshift=-7.5*\dx,
+	      text width=4.2*\dx] (b) {CompositeModel};
+	\node[thick,draw,rectangle,
+	      minimum width=3.3*\dx,
+	      minimum height=1.5*\dx,
+	      font=\sffamily\tiny,
+	      yshift=-8.54*\dx,align=left,
+	      text width=4.2*\dx] () {- Components\\- Interfaces\\- Connections\\- SimParams};
+	\node[thick,draw,rectangle,
+	      minimum width=3.3*\dx,
+	      minimum height=5.5*\dx,
+	      font=\sffamily\tiny,
+	      yshift=-12.04*\dx,align=left,
+	      text width=4.2*\dx] (c) {+ CompositeModel()\\+ \texttt{\textasciitilde}CompositeModel()\\+ RegisterTLMComponentProxy()\\+ GetTLMComponentProxy()\\+ GetComponentsNum()\\+ GetInterfacesNum()\\ + GetTLMComponentID()\\+ GetTLMInterfaceID()\\+ RegisterTLMInterfaceProxy()\\+ GetTLMInterfaceProxy()\\+ GetTLMInterfaceID()\\+ RegisterTLMConnection()\\+ GetTLMConnection()\\+ StartComponents()\\+ GetSimParams()\\+ CheckProxyComm()\\+ Print()};	
+	      
+	\node[thick,draw,rectangle,
+	      minimum width=3.3*\dx,
+	      minimum height=0.58*\dx,
+	      font=\sffamily\tiny,
+	      yshift=-16.2*\dx,
+	      text width=4.2*\dx,
+	      fill=gray!40] (d) {CompositeModelReader};
+	\node[thick,draw,rectangle,
+	      minimum width=3.3*\dx,
+	      minimum height=0.58*\dx,
+	      font=\sffamily\tiny,
+	      yshift=-16.78*\dx,align=left,
+	      text width=4.2*\dx,
+	      fill=gray!40] () {- TheModel};
+	\node[thick,draw,rectangle,
+	      minimum width=3.3*\dx,
+	      minimum height=2.8*\dx,
+	      font=\sffamily\tiny,
+	      yshift=-18.47*\dx,align=left,
+	      text width=4.2*\dx,
+	      fill=gray!40] () {+ CompositeModelReader()\\
+	      	                + ReadModel()\\
+	      	                - ReadComponents()\\
+	      	                - ReadTLMInterfaceNodes()\\
+	      	                - ReadSimParams()\\
+	      	                - FindChildByName()\\ 
+	      	                - FindAttributeByName()\\
+	      	                - ReadTLMConnectionNode()};	
+	      	                  
+    \draw[thick,->,dashed] (b) --node[right]{\tiny\sffamily SimParams}(a);	      	                  	          	            
+    \draw[thick,->,dashed] (d) --node[right]{\tiny\sffamily TheModel}(c);	      	                  	          	            
+	\end{tikzpicture}
+  %{\includegraphics[width=4cm]{figs/classMetaModelReader__coll__graph.png}}
 \end{center}
-\caption{UML collaboration diagram of the MetaModelReader class. The
-  MetaModel reader initialized the MetaModel data structure.}
-\label{fig:MetaModelReader}
+\caption{UML collaboration diagram of the CompositeModelReader class. The
+  CompositeModelReader initialized the CompositeModel data structure.}
+\label{fig:CompositeModelReader}
 \end{figure}
 
-The {\em MetaModelReader} parses the XML composite model file and initializes {\em MetaModel} and {\em SimulationParams} data structures, that is, set-up co-simulation parameters. 
+The {\em CompositeModelReader} parses the XML composite model file and initializes {\em CompositeModel} and {\em SimulationParams} data structures, that is, set-up co-simulation parameters. 
 Simulation parameters define global co-simulation settings, e.g., start and end time. 
 Composite model parameters define the co-simulation components (simulation models) and their interconnection.
 
