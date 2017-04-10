@@ -1,8 +1,7 @@
 \chapter{BEAST TLM Plugin}
 
-BEAST integrates the TLM plugin directly into the source code. Any
-coordinate system in BEAST has an TLM-enable flag to turn this
-coordinate system into a TLM interface.
+BEAST integrates the TLM plugin directly into the source code. 
+Any coordinate system in BEAST has an TLM-enable flag to turn this coordinate system into a TLM interface.
 
 {\scriptsize
 \begin{verbatim}
@@ -24,29 +23,19 @@ public:
 \end{verbatim}
 }
 
-The BEAST TLM co-simulation part is based on two C++ classes, these
-are:
+The BEAST TLM co-simulation part is based on two C++ classes:
 \begin{description}
-\item[TLMInterfaceHandler] takes care of creating and initializing all
-  additional components for the TLM co-simulation, this is, a global
-  (cB) coordinate system, necessary connection instances, and the
-  necessary TLMTies.
-\item[TLMTie] A TLMTie is created for each TLM interface, that is, for
-  each TLM enabled coordinate system. It ties the interface to a
-  global coordinate system for correct motion computation. The {\em
-    TLMTie} functions as the communication port between the actual TLM
-  interface in the co-simulation manager.
+\item[TLMInterfaceHandler] takes care of creating and initializing all additional components for the TLM co-simulation, this is, a global (cB) coordinate system, necessary connection instances, and the necessary TLMTies.
+\item[TLMTie] A TLMTie is created for each TLM interface, that is, for each TLM enabled coordinate system. 
+It ties the interface to a global coordinate system for correct motion computation. 
+The {\em TLMTie} functions as the communication port between the actual TLM interface in the co-simulation manager.
 \end{description}
 
 
 \section{The TLMInterfaceHandler}
-
-The {\em TLMInterfaceHander} stores a list of all TLM enabled coordinate
-systems in the Beast model. In the initial phase of the co-simulation
-it creates all necessary {\em TLMTies} for the communication with the
-TLM manager. This includes creation of a global control point that is
-needed for the {\em TLMTie} and creation of all necessary {\em
-  cBBodyConnections}.
+The {\em TLMInterfaceHander} stores a list of all TLM-enabled coordinate systems in the Beast model. 
+In the initial phase of the co-simulation it creates all necessary {\em TLMTies} for the communication with the TLM manager. 
+This includes creation of a global control point that is needed for the {\em TLMTie} and creation of all necessary {\em cBBodyConnections}.
 
 {\scriptsize
 \begin{verbatim}
@@ -93,11 +82,10 @@ void TLMInterfaceHandler::EnableTLMCtlPoint(CtlPoint* ctl)
 
 \section{The TLMTie}
 
-During the co-simulation the {\em TLMTie} is responsible for the
-communication with the TLM co-simulation manager and takes care of
-force evaluation and motion propagation in the TLM interface. There
-are three phases. First phase is the preparation of the force
-evaluation. This is done in {\em TLMTie::ComputeMasterBefore()}:
+During the co-simulation the {\em TLMTie} is responsible for the communication with the TLM co-simulation manager and takes care of force evaluation and motion propagation in the TLM interface. 
+There are three phases. 
+First phase is the preparation of the force evaluation. 
+This is done in {\em TLMTie::ComputeMasterBefore()}:
 
 {\scriptsize
 \begin{verbatim}
@@ -113,15 +101,11 @@ void TLMTie::ComputeMasterBefore()
 \end{verbatim}
 }
 
-{\em TLMlink->GetTimeData(...)} makes sure that force and moment data
-for the current time step is available in the interface. If it is not
-yet available it waits until the data has been received though the TLM
-manager from the connected simulation tool.
+{\em TLMlink->GetTimeData(...)} makes sure that force and moment data for the current time step is available in the interface. 
+If it is not yet available it waits until the data has been received though the TLM manager from the connected simulation tool.
 
-Second phase is to evaluate force and moment and update the internal
-states of the coordinate system. This happens in {\em
-  TLMTie::calcChildForceMoment(...)}:
-
+Second phase is to evaluate force and moment and update the internal states of the coordinate system. 
+This happens in {\em TLMTie::calcChildForceMoment(...)}:
 
 {\scriptsize
 \begin{verbatim}
@@ -169,17 +153,13 @@ void TLMTie::calcChildForceMoment(const MotionVar& ctl2_M_ctl1_ctl1)
 \end{verbatim}
 }
 
-Note, that in a parallel BEAST simulation {\em
-  TLMTie::calcChildForceMoment(...)} is invoked on the slaves. Slaves
-do not have a TLMPlugin instance but use the static {\em
-  TLMPlugin::GetForce(...)}  instead that requires the TLM parameters
-as input. Time-data and TLM parameters are therefore send to all the
-slaves using the standard packing mechanism.
+Note, that in a parallel BEAST simulation {\em TLMTie::calcChildForceMoment(...)} is invoked on the slaves. 
+Slaves do not have a TLMPlugin instance but use the static {\em TLMPlugin::GetForce(...)} instead that requires the TLM parameters as input. 
+Time-data and TLM parameters are therefore send to all the slaves using the standard packing mechanism.
 
-
-The third phase is to send the necessary response to the TLM
-interface. This is done for final/converged solver steps only. In
-BEAST we can check this the {\em RHSFinal} flag:
+The third phase is to send the necessary response to the TLM interface. 
+This is done for final/converged solver steps only. 
+In BEAST we can check this the {\em RHSFinal} flag:
 
 {\scriptsize
 \begin{verbatim}

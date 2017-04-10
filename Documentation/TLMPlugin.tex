@@ -18,6 +18,8 @@
 \usepackage[font=small,labelfont=bf]{caption}
 \usepackage{titlesec}
 \usepackage{afterpage} % Clear floats after each page
+\usepackage{datetime}
+\usepackage{tikz}
 
 \usepackage{eepic}
 \usepackage{epic}
@@ -125,12 +127,12 @@
 \thispagestyle{empty}
 
 %\tableofcontents
-\listoffigures
+%\listoffigures
 %\listoftables
 \mainmatter
 \tableofcontents
 
-%\chapter{Background}
+%\chapter{Background%}
 \input{TLMCoSim}
 \input{TLM_background}
 
@@ -147,7 +149,7 @@
 \input{MM_Beast}
 \input{MM_Modelica}
 
-\input{RunningMMCoSim}
+%\input{RunningMMCoSim}
 
 \input{bibliography}
 

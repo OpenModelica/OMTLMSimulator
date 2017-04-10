@@ -6,37 +6,30 @@
 
 \newcommand{\makefrontpage}
 {\begin{titlepage}%
-    \begin{pspicture}(0cm,0cm)(15cm,20.5cm)
-      %\psgrid
-       %\rput[bl](-1.7,-3.9){\includegraphics[width=0.4\textwidth]{figs/mathcore}}
-      \rput[tr](15.8cm,23cm){\includegraphics[width=0.25\textwidth]{figs/skf_logo}}
-      \rput[tl](0.75,17.2){
-        \begin{minipage}[t]{14cm}
-
-          \textit{\textsf{\Large{
-                \begingroup
-                \tabcolsep -2mm
-                \begin{tabular}{l}
-                \end{tabular}
-                \endgroup }}}
-
-
-           \vspace*{2cm}
-
+      \hfill\includegraphics[width=0.25\textwidth]{figs/skf_logo}
+      \vfill
           \begin{flushleft}
-            \Huge{\textsf{\textbf{Transmission Line Modeling and Simulation}}}
+            \Huge{\textsf{\textbf{TLMSimulator}}}
           \end{flushleft}
 
           \vspace*{0.5cm}
 
           \begin{flushleft}
-            \LARGE{\textsf{\textbf{Co-simulation for multiple modeling and simulation software}}}
+            \LARGE{\textsf{\textbf{A Framework for Composite Modelling and Co-simulation}}}
           \end{flushleft}
+          
+          \vspace*{0.5cm}
+    
+	      \newdateformat{monthyeardate}{%
+    	  \monthname[\THEMONTH] \THEYEAR}
+    
+		  \begin{flushleft}
+   	      \textsf{\monthyeardate\today}
+          \end{flushleft}
+          	
+          \vfill
+          \vfill
 
-          \vspace*{1.0cm}
-          \textsf{\Large{January 2014}}
-        \end{minipage}}
-    \end{pspicture}
    \end{titlepage}%
   \setcounter{footnote}{0}
   %

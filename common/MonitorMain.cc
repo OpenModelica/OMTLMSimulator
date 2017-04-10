@@ -10,8 +10,8 @@
 #include <map>
 #include <sstream>
 #include "Logging/TLMErrorLog.h"
-#include "MetaModels/MetaModel.h"
-#include "MetaModels/MetaModelReader.h"
+#include "CompositeModels/CompositeModel.h"
+#include "CompositeModels/CompositeModelReader.h"
 #include "Communication/ManagerCommHandler.h"
 #include "Plugin/MonitoringPluginImplementer.h"
 #include "double3Vec.h"
@@ -30,7 +30,7 @@ using std::string;
 using namespace tlmMisc;
 
 void usage() {
-    string usageStr = "Usage: tlmmonitor [-d] [-n num-seps | -t time-step-size] <server:port> <metamodel>, where metamodel is an XML file.";
+    string usageStr = "Usage: tlmmonitor [-d] [-n num-seps | -t time-step-size] <server:port> <compositemodel>, where compositemodel is an XML file.";
     TLMErrorLog::SetDebugOut(true);
     TLMErrorLog::Log(usageStr);
     std::cout << usageStr << std::endl;
@@ -48,7 +48,7 @@ struct Color {
     }
 };
 
-TLMPlugin* InitializeTLMConnection(MetaModel& model, std::string& serverName) {
+TLMPlugin* InitializeTLMConnection(CompositeModel& model, std::string& serverName) {
     TLMPlugin* TLMlink = MonitoringPluginImplementer::CreateInstance();
 
     TLMErrorLog::Log("Trying to register TLM monitor on host " + serverName);
@@ -86,7 +86,7 @@ TLMPlugin* InitializeTLMConnection(MetaModel& model, std::string& serverName) {
 
 //! Evaluate the data needed for the current time step.
 void MonitorTimeStep(TLMPlugin* TLMlink,
-                     MetaModel& model,
+                     CompositeModel& model,
                      double SimTime,
                      std::map<int, TLMTimeDataSignal>& dataStorageSignal,
                      std::map<int, TLMTimeData1D>& dataStorage1D,
@@ -152,7 +152,7 @@ void MonitorTimeStep(TLMPlugin* TLMlink,
     }
 }
 
-void WriteVisualXMLFile(MetaModel& model, std::string &baseFileName, std::string &path) {
+void WriteVisualXMLFile(CompositeModel& model, std::string &baseFileName, std::string &path) {
     // Get data from TLM-Manager here!
     bool canWriteVisualXMLFile = false;
     int nTLMComponents = model.GetComponentsNum();
@@ -406,7 +406,7 @@ void WriteVisualXMLFile(MetaModel& model, std::string &baseFileName, std::string
     }
 }
 
-void PrintHeader(MetaModel& model, std::ofstream& dataFile) {
+void PrintHeader(CompositeModel& model, std::ofstream& dataFile) {
     // Get data from TLM-Manager here!
     int nTLMInterfaces = model.GetInterfacesNum();
 
@@ -481,7 +481,7 @@ void PrintHeader(MetaModel& model, std::ofstream& dataFile) {
     dataFile << std::endl;
 }
 
-void PrintData(MetaModel& model,
+void PrintData(CompositeModel& model,
                std::ofstream& dataFile,
                std::map<int, TLMTimeDataSignal> &dataStorageSignal,
                std::map<int, TLMTimeData1D>& dataStorage1D,
@@ -639,7 +639,7 @@ void PrintData(MetaModel& model,
     dataFile << std::endl;
 }
 
-void PrintRunStatus(MetaModel& model, std::ofstream& runFile, tTM_Info& tInfo, double SimTime)  {
+void PrintRunStatus(CompositeModel& model, std::ofstream& runFile, tTM_Info& tInfo, double SimTime)  {
     double startTime = model.GetSimParams().GetStartTime();
     double endTime = model.GetSimParams().GetEndTime();
     double timeStep = model.GetSimParams().GetWriteTimeStep();
@@ -703,7 +703,7 @@ int main(int argc, char* argv[]) {
     }
 
     // We exspect two arguments
-    // tlmmonitor server-ip:port metamodel.xml
+    // tlmmonitor server-ip:port compositemodel.xml
     if(optind+1 >= argc) {
         usage();
     }
@@ -722,11 +722,11 @@ int main(int argc, char* argv[]) {
     std::string baseFileName = inFile.substr(0, inFile.rfind('.'));
 
     // Create the meta model object
-    MetaModel theModel;
+    CompositeModel theModel;
 
     {
         // Create model reader for the model
-        MetaModelReader modelReader(theModel);
+        CompositeModelReader modelReader(theModel);
 
         // read the XML file and build the model
         modelReader.ReadModel(inFile);
@@ -760,7 +760,7 @@ int main(int argc, char* argv[]) {
     // Setup time step for output logging according to priority:
     // 1. User input specified in -t option
     // 2. User input specified in -s option
-    // 3. Time step from MetaModel
+    // 3. Time step from CompositeModel
     if(timeStep == 0.0) {
         if(nSteps > 0) {
             timeStep = (endTime-simTime)/static_cast<double>(nSteps);

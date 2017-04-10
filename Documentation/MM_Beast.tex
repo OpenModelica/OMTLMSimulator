@@ -1,48 +1,39 @@
 \chapter{External BEAST Models}
 \label{MMBEAST}
-The TLM-Plugin has been implemented for BEAST. This section describes
-how to integrate BEAST models into Meta-Models and Meta-Model
-simulations.
+The TLM-Plugin has been implemented for BEAST. 
+This section describes how to integrate BEAST models into composite models and co-simulations.
 
 \section{TLM Enabled BEAST models}
-A BEAST model needs to be ``TLM enabled'' to participate in a
-Meta-Model simulation. The TLM-plugin has been integrated into the
-BEAST code and is thus always available in BEAST models.
+A BEAST model needs to be ``TLM enabled'' to participate in a co-simulation. 
+The TLM-plugin has been integrated into the BEAST code and is thus always available in BEAST models.
 
-Control-points are the interfaces for TLM connections in BEAST. One
-can enable any fixed and flexible control-point in BEAST for TLM
-connections. For TLM connections it is, however, recommended to use
-control-points that are not connected to a tie.
+Control-points are the interfaces for TLM connections in BEAST. 
+One can enable any fixed and flexible control-point in BEAST for TLM connections. 
+For TLM connections it is, however, recommended to use control-points that are not connected to a tie.
 
-Any BEAST model that has at least one TLM enabled control-point can
-participate in a Meta-Model (co-)simulation. To enable a control-point
-for TLM communication one needs to set the {\em TLMEnabledFlg} for
-this control point in the following way:
+Any BEAST model that has at least one TLM enabled control-point can participate in a co-simulation. 
+To enable a control-point for TLM communication one needs to set the {\em TLMEnabledFlg} for this control point in the following way:
 \begin{itemize}
 \item Right-click on the control point in the model-browser
-\item From the pop-up menu select {\em Edit Variables...} and then
-{\em TLM}
+\item From the pop-up menu select {\em Edit Variables...} and then {\em TLM}
 \item In the dialog set the {\em TLMEnabledFlg} to {\em Yes}.
 \end{itemize}
 
 
-The BEAST model can then be saved and integrated into as an external
-model into a Meta-Model.
+The BEAST model can then be saved and integrated into as an external model into a composite model.
 
 
 \section{BEAST Startup Script}
-A startup script for running the BEAST simulation needs to be created
-as well. A default script is distributed with the BEAST/MME
-installation. It is called StartTLMBeast.bat.
+A startup script for running the BEAST simulation needs to be created as well. 
+A default script is distributed with the BEAST/CME installation. 
+It is called StartTLMBeast.bat.
 
-{\bf Note:} The default \verb!StartTLMBeast.bat! Windows script needs to
-be checked. This should probably be done together with a system
-administrator and a member of the BEAST team. However below is a short
-discussion of the script for advanced users.
+{\bf Note:} The default \verb!StartTLMBeast.bat! Windows script needs to be checked. 
+This should probably be done together with a system administrator and a member of the BEAST team. 
+However below is a short discussion of the script for advanced users.
 
 Figure \ref{figStartBeast} presents a template for the start script.
-The \verb!StartTLMBeast.bat! should first generate a file \verb!<CaseName>.tlm!
-that will contain the parameter send to it by TLM manager.
+The \verb!StartTLMBeast.bat! should first generate a file \verb!<CaseName>.tlm! that will contain the parameter send to it by TLM manager.
 Only the line giving start command for BEAST needs to be changed.
 
 \begin{figure}[h]

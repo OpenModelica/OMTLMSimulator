@@ -30,23 +30,23 @@ SRCCLT= Plugin/PluginImplementer.cc \
 
 SRCMGR= Communication/ManagerCommHandler.cc \
 	ManagerMain.cc	\
-	MetaModels/MetaModel.cc \
-	MetaModels/MetaModelReader.cc \
+	CompositeModels/CompositeModel.cc \
+	CompositeModels/CompositeModelReader.cc \
 	Communication/TLMCommUtil.cc \
 	Communication/TLMManagerComm.cc \
 	Communication/TLMMessageQueue.cc \
 	Logging/TLMErrorLog.cc
 
 SRCSRVLIB= Communication/ManagerCommHandler.cc \
-	MetaModels/MetaModel.cc \
+	CompositeModels/CompositeModel.cc \
 	Communication/TLMCommUtil.cc \
 	Communication/TLMManagerComm.cc \
 	Communication/TLMMessageQueue.cc \
 	Logging/TLMErrorLog.cc
 
 SRCMONITOR= $(SRCCLT) \
-	MetaModels/MetaModel.cc \
-	MetaModels/MetaModelReader.cc \
+	CompositeModels/CompositeModel.cc \
+	CompositeModels/CompositeModelReader.cc \
 	MonitorMain.cc
 
 CP=cp
@@ -149,7 +149,7 @@ $(ABI)/makedepend.tail: $(ABI)
 $(ABI):
 	mkdir -p $@
 	mkdir -p $@/Interfaces
-	mkdir -p $@/MetaModels
+	mkdir -p $@/CompositeModels
 	mkdir -p $@/Plugin
 	mkdir -p $@/Communication
 	mkdir -p $@/Parameters

@@ -198,7 +198,7 @@ void ManagerCommHandler::RunStartupProtocol() {
 
 // ProcessRegComponentMessage processes the first message after "accept"
 // It is expected to be a component registration message.
-// The functions associates the socket handle with the component in the MetaModel.
+// The functions associates the socket handle with the component in the CompositeModel.
 // It then prepares the reply by setting TLMInterfaceID to component ID.
 void ManagerCommHandler::ProcessRegComponentMessage(TLMMessage& mess) {
 
@@ -314,7 +314,7 @@ void ManagerCommHandler::ProcessRegInterfaceMessage(int compID, TLMMessage& mess
         // interface not found
         TLMErrorLog::Warning(string("Interface ") +
                              TheModel.GetTLMComponentProxy(compID).GetName() + '.'
-                             + aName + " not defined in metamodel. Ignored.");
+                             + aName + " not defined in composite model. Ignored.");
         return;
     }
 
@@ -384,7 +384,7 @@ void ManagerCommHandler::ProcessRegParameterMessage(int compID, TLMMessage &mess
         // interface not found
         TLMErrorLog::Warning(string("Parameter ") +
                              TheModel.GetTLMComponentProxy(compID).GetName() + '.'
-                             + aName + " not defined in metamodel. Ignored.");
+                             + aName + " not defined in composite model. Ignored.");
         return;
     }
 
@@ -402,7 +402,7 @@ void ManagerCommHandler::ProcessRegParameterMessage(int compID, TLMMessage &mess
 }
 
 void ManagerCommHandler::SetupInterfaceConnectionMessage(int IfcID, std::string& aName, TLMMessage& mess) {
-    // set the connected flag in the MetaModel
+    // set the connected flag in the CompositeModel
     TLMInterfaceProxy& ifc = TheModel.GetTLMInterfaceProxy(IfcID);
     ifc.SetConnected();
 

@@ -1,10 +1,10 @@
 /**
- * File: MetaModelReader.cc
+ * File: CompositeModelReader.cc
  *
- * Defines the MetaModelReader class methods
+ * Defines the CompositeModel class methods
  */
 
-#include "MetaModels/MetaModelReader.h"
+#include "CompositeModels/CompositeModelReader.h"
 #include "Logging/TLMErrorLog.h"
 #include "Interfaces/TLMInterface.h"
 #include "double3Vec.h"
@@ -19,7 +19,7 @@ using namespace tlmMisc;
 // Input: node - pointer to the "SubModels" element node 
 //   - parent to all the SubModels
 // Input/Output: TheModel - structure is updated in the model representation
-void MetaModelReader::ReadComponents(xmlNode *node, bool skipInterfaces=false, std::string singleModel="") {
+void CompositeModelReader::ReadComponents(xmlNode *node, bool skipInterfaces=false, std::string singleModel="") {
     for(xmlNode* curNode = node->children; curNode; curNode = curNode->next) {
         if(   (XML_ELEMENT_NODE == curNode->type)
                // A SubModel Node found, read parameters
@@ -99,7 +99,7 @@ void MetaModelReader::ReadComponents(xmlNode *node, bool skipInterfaces=false, s
 
 // ReadTLMInterfaceNodes method reads in TLM interface definitions for a
 // given SubModel XML node and its ID (ComponentID).
-void MetaModelReader::ReadTLMInterfaceNodes(xmlNode* node, int ComponentID) {
+void CompositeModelReader::ReadTLMInterfaceNodes(xmlNode* node, int ComponentID) {
     for(xmlNode* curNode = node->children; curNode; curNode = curNode->next) {
         if(   (XML_ELEMENT_NODE == curNode->type)
                && (strcmp("InterfacePoint", (const char*)(curNode->name)) == 0)) {
@@ -162,7 +162,7 @@ void MetaModelReader::ReadTLMInterfaceNodes(xmlNode* node, int ComponentID) {
     }
 }
 
-void MetaModelReader::ReadTLMParameters(xmlNode *node, int ComponentID) {
+void CompositeModelReader::ReadTLMParameters(xmlNode *node, int ComponentID) {
     for(xmlNode* curNode = node->children; curNode; curNode = curNode->next) {
         if(   (XML_ELEMENT_NODE == curNode->type)
                && (strcmp("Parameter", (const char*)(curNode->name)) == 0)) {
@@ -181,7 +181,7 @@ void MetaModelReader::ReadTLMParameters(xmlNode *node, int ComponentID) {
 
 
 // ReadDoubleAttribute method reads a double value attribute, if applicable.
-double MetaModelReader::ReadDoubleAttribute(xmlNode* node, const char* attribute) {
+double CompositeModelReader::ReadDoubleAttribute(xmlNode* node, const char* attribute) {
     xmlNode* curAttrVal = FindAttributeByName(node, attribute, false);
 
     if(curAttrVal) {
@@ -193,7 +193,7 @@ double MetaModelReader::ReadDoubleAttribute(xmlNode* node, const char* attribute
 
 // ReadVectorAttribute method reads a nodes 3D vector attribute if applicable.
 // For instance, reads a position vector "x,y,z", that is, Position="0.0,1.0,-0.3"
-void MetaModelReader::ReadVectorAttribute(xmlNode* node, const char *attribute, double val[3]) {
+void CompositeModelReader::ReadVectorAttribute(xmlNode* node, const char *attribute, double val[3]) {
     xmlNode* curAttrVal = FindAttributeByName(node, attribute, false);
 
     if(curAttrVal) {
@@ -218,7 +218,7 @@ void MetaModelReader::ReadVectorAttribute(xmlNode* node, const char *attribute, 
 
 // ReadVectorAttribute method reads a nodes 3D vector attribute if applicable.
 // For instance, reads a position vector "x,y,z", that is, Position="0.0,1.0,-0.3"
-void MetaModelReader::ReadPositionAndOrientation(xmlNode* node, double R[3], double A[9]) {
+void CompositeModelReader::ReadPositionAndOrientation(xmlNode* node, double R[3], double A[9]) {
     double phi[3] = {0.0, 0.0, 0.0};
 
     ReadVectorAttribute(node, "Position", R);
@@ -233,7 +233,7 @@ void MetaModelReader::ReadPositionAndOrientation(xmlNode* node, double R[3], dou
 
 // ReadSimParams method reads in simulation parameters (Port, StartTime, StopTime)
 // from XML-element node for a TLMConnection
-void MetaModelReader::ReadSimParams(xmlNode* node) {
+void CompositeModelReader::ReadSimParams(xmlNode* node) {
 
     TLMErrorLog::Log(string("-----  Reading simulation parameters  ----- "));
     xmlNode* curAttrVal = FindAttributeByName(node, "ManagerPort", false);
@@ -277,7 +277,7 @@ void MetaModelReader::ReadSimParams(xmlNode* node) {
 // for a given XML node. Used for looking up required sections in the XML document.
 // Returns: xmlNode* giving address of the found node or NULL if an optional node
 // is not found.
-xmlNode* MetaModelReader::FindChildByName(xmlNode* node, const char* name, bool required) {
+xmlNode* CompositeModelReader::FindChildByName(xmlNode* node, const char* name, bool required) {
 
     for(xmlNode* curNode = node->children; curNode; curNode = curNode->next) {
         if(   (XML_ELEMENT_NODE == curNode->type)
@@ -297,7 +297,7 @@ xmlNode* MetaModelReader::FindChildByName(xmlNode* node, const char* name, bool 
 // for a given XML element node. Used for looking up required attributes while
 // building the Model structure.
 // Returns: xmlNode* providing address of the found attribute or NULL
-xmlNode* MetaModelReader::FindAttributeByName(xmlNode* node, const char* name, bool required) {
+xmlNode* CompositeModelReader::FindAttributeByName(xmlNode* node, const char* name, bool required) {
 
     for(xmlAttr* curAttr = node->properties; curAttr; curAttr = curAttr->next) {
         if(strcmp(name, (const char*)curAttr->name) == 0) {
@@ -313,7 +313,7 @@ xmlNode* MetaModelReader::FindAttributeByName(xmlNode* node, const char* name, b
 // ReadTLMConnectionNode method processes an TLM connection definition in XML file.
 // The definition is submitted as xmlNode* and is registered in TheModel as a 
 // result of the method.
-void MetaModelReader::ReadTLMConnectionNode(xmlNode* node) {
+void CompositeModelReader::ReadTLMConnectionNode(xmlNode* node) {
 
     TLMErrorLog::Log(string("Reading definition for Connections "));
     if(node != 0) {
@@ -400,10 +400,10 @@ void MetaModelReader::ReadTLMConnectionNode(xmlNode* node) {
 } // ReadTLMConnectionNode(xmlNode* node)
 
 
-// ReadModel method processes input XML file and creates MetaModel definition.
+// ReadModel method processes input XML file and creates CompositeModel definition.
 // Input: InputFile - input XML file name
 // Input/Output: TheModel - model structure to be build.
-void MetaModelReader::ReadModel(std::string &InputFile, bool InterfaceRequestMode, std::string singleModel) {
+void CompositeModelReader::ReadModel(std::string &InputFile, bool InterfaceRequestMode, std::string singleModel) {
 
     TLMErrorLog::Log("----------------------  Reading composite model  ---------------------- ");
     xmlDoc* doc = xmlParseFile(InputFile.c_str()); // open XML & parse it

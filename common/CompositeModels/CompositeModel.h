@@ -1,10 +1,10 @@
 //!
-//!  \file MetaModel.h
+//!  \file CompositeModel.h
 //! 
-//! Defines the classes used for MetaModel representation on Manager
+//! Defines the classes used for CompositeModel representation on Manager
 //!
-#ifndef MetaModel_h_
-#define MetaModel_h_
+#ifndef CompositeModel_h_
+#define CompositeModel_h_
 
 #include <vector>
 #include <cstdio>
@@ -22,20 +22,20 @@ class TLMParameterProxy;
 class TLMConnection;
 class SimulationParams;
 
-// Type synonims for the arrays of MetaModel parts.
-//! ComponentsVector is an array of components as stored in MetaModel on the TLM manager
+// Type synonims for the arrays of CompositeModel parts.
+//! ComponentsVector is an array of components as stored in CompositeModel on the TLM manager
 typedef std::vector<TLMComponentProxy*> ComponentsVector;
 
-//!  TLMInterfacesVector is an array of TLMInterfaceProxy as stored in MetaModel on the TLM manager
+//!  TLMInterfacesVector is an array of TLMInterfaceProxy as stored in CompositeModel on the TLM manager
 typedef std::vector<TLMInterfaceProxy*> TLMInterfacesVector;
 
-//!  TLMParametersVector is an array of TLMParameterProxy as stored in MetaModel on the TLM manager
+//!  TLMParametersVector is an array of TLMParameterProxy as stored in CompositeModel on the TLM manager
 typedef std::vector<TLMParameterProxy*> TLMParametersVector;
 
-//!  ConnectionsVector is an array of components as stored in MetaModel on the TLM manager
+//!  ConnectionsVector is an array of components as stored in CompositeModel on the TLM manager
 typedef std::vector<TLMConnection*> ConnectionsVector;
 
-//! TLMInterfaceProxy class represents a part of the MetaModel and resides in the server.
+//! TLMInterfaceProxy class represents a part of the CompositeModel and resides in the server.
 //! TLM Manager operates in terms of InterfaceProxies. Proxy becomes connected
 //! when the corresponding component sends a registration message.
 class  TLMInterfaceProxy {
@@ -246,7 +246,7 @@ class TLMComponentProxy {
 public:
 
     //! Constructor.
-    //! \param aName - component name in the MetaModel
+    //! \param aName - component name in the CompositeModel
     //! \param aStartCommand - script used to start the component
     //! \param aSolverMode - solver mode of the component (exact time equidistant steps supported)
     TLMComponentProxy(const std::string& aName,
@@ -480,11 +480,11 @@ public:
 
 };
 
-//! Class MetaModel
+//! Class CompositeModel
 
 //! The class is responsible for the dynamic storage and access to the
 //! meta-model.
-class MetaModel {
+class CompositeModel {
 
     //! Array of ComponentProxies keeping track of the TLMComponents in the model
     ComponentsVector Components;
@@ -504,10 +504,10 @@ class MetaModel {
 public:
     
     //! Constructor
-    MetaModel();
+    CompositeModel();
 
     //! Destructor
-    ~MetaModel();
+    ~CompositeModel();
 
     //! Add ComponentProxy to the model and return its ID.
     int RegisterTLMComponentProxy(const std::string& Name,
