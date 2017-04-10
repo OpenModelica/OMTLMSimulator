@@ -1,0 +1,26 @@
+<?xml version='1.0' encoding='ISO-8859-1'?>
+<!-- The root node is the meta-model -->
+<Model Name="doublePendulum">
+  <!-- List of connected sub-models -->
+  <SubModels>
+    <SubModel Position="0,-5e-21,0" ExactStep="0" StartCommand="StartTLMOpenModelica" GeometryFile="doublePendulum1.stl" ModelFile="doublePendulum1.mo" Angle321="0,0,8.61706e-15" Name="doublePendulum1">
+      <Annotation Extent="{-10,-10,10,10}" Visible="true" Rotation="0" Origin="{-30,6}"/>
+      <!-- TLM interface points for SubModel A -->
+      <InterfacePoint Position="0.25,-2.15426e-015,0" Angle321="0,0,-8.61706e-015" Name="tlm"/>
+    </SubModel>
+    <SubModel Position="0.25,3.56779e-13,0" ExactStep="0" StartCommand="StartTLMOpenModelica" GeometryFile="doublePendulum2.stl" ModelFile="doublePendulum2.mo" Angle321="0,0,0" Name="doublePendulum2">
+      <Annotation Extent="{-10,-10,10,10}" Visible="true" Rotation="0" Origin="{32,-16}"/>
+      <!-- TLM interface points for SubModel C -->
+      <InterfacePoint Causality="Bidirectional" Dimensions="6" Position="0,-3.56779e-13,0" Domain="Mechanical" Angle321="0,0,0" Name="tlm"/>
+    </SubModel>
+  </SubModels>
+  <!-- List of TLM connections -->
+  <Connections>
+    <!-- Some more physical values: Delay="1e-5" Zf="8e4" Zfr="400" alpha="0.2" -->
+    <Connection To="doublePendulum2.tlm" alpha="0.9" Delay="2e-4" From="doublePendulum1.tlm" Zfr="1" Zf="2000">
+      <Annotation Points="{{-19,14},{-19,13.25},{27,13.25},{27,13},{43,13},{43,-8}}"/>
+    </Connection>
+  </Connections>
+  <!-- Parameters for the simulation -->
+  <SimulationParams StartTime="0" ManagerPort="11113" StopTime="3"/>
+</Model>

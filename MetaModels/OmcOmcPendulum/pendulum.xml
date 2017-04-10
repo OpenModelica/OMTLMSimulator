@@ -1,0 +1,30 @@
+<?xml version='1.0' encoding='ISO-8859-1'?>
+<!-- The root node is the meta-model -->
+<Model Name="Pendulum">
+  <!-- List of connected external-models -->
+  <SubModels>
+    <!-- external model "shaft1" positioned at (0,0,0) inside meta-model  -->
+    <SubModel GeometryFile="shaft1.stl" Name="shaft1" ModelFile="shaft1.mo" Position="0,0,0" StartCommand="StartTLMOpenModelica" Angle321="0,0,0" ExactStep="0">
+      <Annotation Extent="{-10,-10,10,10}" Rotation="0" Visible="true" Origin="{0,-10}"/>
+      <!-- TLM interface points for external-model shaft1 -->
+      <!-- positioned (0,0,0.5) inside external-model -->
+      <InterfacePoint Name="tlm" Domain="Signal" Type="SignalOutput" Position="-2.54961e-014,0,0.5" Angle321="0,-5.09923e-014,0"/>
+    </SubModel>
+    <!-- external model "shaft2" positioned at (0,0,0.5) inside meta-model  -->
+    <SubModel GeometryFile="shaft2.stl" Name="shaft2" ModelFile="shaft2.mo" Position="-2.54961e-14,3.0581e-13,0.5" StartCommand="StartTLMOpenModelica" Angle321="0,-5.09923e-14,0" ExactStep="0">
+      <Annotation Extent="{-10,-10,10,10}" Rotation="0" Visible="true" Origin="{-30,30}"/>
+      <!-- TLM interface points for external-model shaft2 -->
+      <!-- positioned (0,0,0) inside external-model -->
+      <InterfacePoint Name="tlm" Domain="Signal" Type="SignalInput" Position="0,-3.0581e-013,0" Angle321="0,0,0"/>
+    </SubModel>
+  </SubModels>
+  <!-- List of TLM connections -->
+  <Connections>
+    <!-- Some more physical values: Delay="1e-5" Zf="8e4" Zfr="400" alpha="0.2" -->
+    <Connection Delay="1e-4" alpha="0.2" Zfr="100" To="shaft2.tlm" Zf="10000" From="shaft1.tlm">
+      <Annotation Points="{{12,-2},{20,-2},{20,38},{-18,38},{-18,38}}"/>
+    </Connection>
+  </Connections>
+  <!-- Parameters for the simulation -->
+  <SimulationParams StopTime="1" StartTime="0"/>
+</Model>

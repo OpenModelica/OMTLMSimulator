@@ -1,0 +1,32 @@
+#!/bin/csh -f
+
+# Set the parameters to the beast script in the line below:
+set BeastCmd="beast -v --serial"
+
+#############################################################
+#------ Changes below this line should not be needed     ----
+
+if("a$1" == "a") then
+echo This script is used by TLM manager to start beast simulations
+echo It should result in a call to the beast script with
+echo any parameters that you like on the input file $1.in
+exit 1
+endif
+
+cd $1
+
+set xname=`basename $6 .in`
+
+echo Starting a Beast simulation with input file: ${xname}.in
+echo Make sure that:
+echo time = $2
+echo timeEnd = $3
+echo MaxTimeStep "<"= $4
+echo Writing component name $1 and server name $5 to file ${xname}.tlm
+echo $1 $5 > ${xname}.tlm
+echo $2 $3 $4 >> ${xname}.tlm
+
+echo Starting beast
+echo $BeastCmd ${xname}.in
+
+$BeastCmd ${xname}.in > ${xname}.simlog

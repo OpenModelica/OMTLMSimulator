@@ -1,0 +1,53 @@
+rem /////////////////////SET PATHS////////////////////////////////////////////////////
+rem set path to TLMPlugin (i.e. c:\TLMPlugin)
+setx TLMPluginPath =%BEAST%\src\TLMPlugin
+set TLMPluginPath = %BEAST%\src\TLMPlugin
+
+rem set path to Wolfram SystemModeler installation folder
+set WSMPath=c:\Program Files (x86)\Wolfram Research\SystemModeler 4.0
+
+rem set path to Microsoft Visual Studio installation folder
+set VC32Path="c:\Program Files (x86)\Microsoft Visual Studio 9.0"
+
+rem /////////////////////COMPILE AND INSTALL WOLFRAM SYSTEMMODELER LIB////////////////
+echo DOS BAT file to Mingw-make
+
+rem create dir for libraries and include files 
+mkdir %TLMPluginPath%\Modelica\Resources\Library
+mkdir %TLMPluginPath%\Modelica\Resources\Include
+
+rem Add the Modelica bin path to the Windows System Environment Variables:
+reg add "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Environment" /v Path /t REG_EXPAND_SZ /d "%TLMPluginPath%\bin;%path%" /f
+rem this is needed to acces g++.exe
+path=%WSMPath%\MinGW\bin;%PATH%
+rem run mingw32-make.exe
+set ABI=MINGW64
+rem delete old MINGW64 folder
+rmdir /s /q MINGW64
+"%WSMPath%\MinGW\bin\mingw32-make.exe" -f MakeMingwLib
+rem copy generated libtlmmodelica.a file to resource folder
+copy %TLMPluginPath%\Modelica\MINGW64\libtlmmodelica.a %TLMPluginPath%\Modelica\Resources\Library\libtlmmodelica.a
+
+echo DOS BAT file to vc++-make
+
+rem set path to Microsoft Visual Studio installation folder
+call %VC32Path%\Common7\Tools\vsvars32.bat 
+rem run nmake.exe 
+set ABI=VC32
+rem delete old VC32 folder
+rmdir /s /q VC32
+nmake.exe -f MakeVcLib.vc default
+rem copy generated tlmmodelica.lib file to the resource folder
+copy %TLMPluginPath%\Modelica\%ABI%\tlmmodelica.lib %TLMPluginPath%\Modelica\Resources\Library
+rem delete old VC32 folder
+rmdir /s /q VC32
+
+rem copy generated tlmforce.h filde to resource folder
+copy %TLMPluginPath%\Modelica\tlmforce.h  %TLMPluginPath%\Modelica\Resources\Include
+rmdir /s /q MINGW64
+
+
+rem /////////////////////COMPILE AND INSTALL TLM MANAGER///////////////////////////////
+rem set path to Microsoft Visual Studio installation folder
+call %VC32Path%\Common7\Tools\vsvars32.bat 
+call CompileTLMManager.bat
