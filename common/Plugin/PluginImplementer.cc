@@ -140,7 +140,7 @@ bool PluginImplementer::Init(std::string model,
 
 // Register TLM interface sends a registration request to TLMManager
 // and returns the ID for the interface. '-1' is returned if
-// the interface is not connected in the MetaModel.
+// the interface is not connected in the CompositeModel.
 int  PluginImplementer::RegisteTLMInterface(std::string name , int dimensions,
                                             std::string causality, std::string domain) {
     TLMErrorLog::Log(string("Register Interface ") + name);

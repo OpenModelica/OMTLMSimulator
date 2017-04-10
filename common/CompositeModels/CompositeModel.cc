@@ -1,5 +1,5 @@
 /**
- * File: MetaModel.cc
+ * File: CompositeModel.cc
  *
  * Implementation of methods for classes defined in CompositeModel.h
  */
@@ -121,7 +121,7 @@ void TLMComponentProxy::GetInertialTranformation(double pos[3], double orientati
 
 #ifdef WIN32
 // Constructor
-MetaModel::MetaModel() {}
+CompositeModel::CompositeModel() {}
 #else
 void child_signal_handler(int s) {
     int pid, status;
@@ -143,13 +143,13 @@ void child_signal_handler(int s) {
 }
 
 // Constructor
-MetaModel::MetaModel() {
+CompositeModel::CompositeModel() {
     signal(SIGCHLD, child_signal_handler);
 }
 #endif
 
 // Destructor
-MetaModel::~MetaModel() {
+CompositeModel::~CompositeModel() {
     // Clean-up memory allocated by arrays
     {
         for(ComponentsVector::iterator i = Components.begin();
@@ -173,7 +173,7 @@ MetaModel::~MetaModel() {
 
 
 // Add ComponentProxy to the model and return its ID.
-int MetaModel::RegisterTLMComponentProxy(const string& Name, 
+int CompositeModel::RegisterTLMComponentProxy(const string& Name,
                                          const string& StartCommand,
                                          const string& ModelName,
                                          int SolverMode,
@@ -185,7 +185,7 @@ int MetaModel::RegisterTLMComponentProxy(const string& Name,
 
 // Find a Component by its name and return the ID
 // Return -1 if not component was found.. 
-int MetaModel::GetTLMComponentID(const string& Name) {
+int CompositeModel::GetTLMComponentID(const string& Name) {
     for(int i = Components.size() - 1; i >= 0; --i) {
         if(Components[i]->GetName() == Name) {
             return i;
@@ -194,7 +194,7 @@ int MetaModel::GetTLMComponentID(const string& Name) {
     return -1;
 }
 
-int MetaModel::GetTLMInterfaceID(string& FullName) {
+int CompositeModel::GetTLMInterfaceID(string& FullName) {
 
     string::size_type DotPos = FullName.find('.');  // Component name is the part before '.'
     string ComponentName = FullName.substr(0, DotPos);
@@ -208,7 +208,7 @@ int MetaModel::GetTLMInterfaceID(string& FullName) {
 }
 
 // Add TLM interface proxy with a given name to the Model, return its ID.
-int MetaModel::RegisterTLMInterfaceProxy(const int ComponentID, string& Name, int Dimensions,
+int CompositeModel::RegisterTLMInterfaceProxy(const int ComponentID, string& Name, int Dimensions,
                                          std::string Causality, std::string Domain) {
     TLMInterfaceProxy* ifc =
             new TLMInterfaceProxy(ComponentID, Interfaces.size(), Name, Dimensions, Causality, Domain);
@@ -225,7 +225,7 @@ int MetaModel::RegisterTLMInterfaceProxy(const int ComponentID, string& Name, in
     return Interfaces.size()-1;
 }
 
-int MetaModel::RegisterTLMParameterProxy(const int ComponentID, string& Name, string& DefaultValue) {
+int CompositeModel::RegisterTLMParameterProxy(const int ComponentID, string& Name, string& DefaultValue) {
     TLMParameterProxy* par = new TLMParameterProxy(ComponentID, Parameters.size(), Name, DefaultValue);
 
     TLMErrorLog::Log("Registering parameter proxy."
@@ -241,7 +241,7 @@ int MetaModel::RegisterTLMParameterProxy(const int ComponentID, string& Name, st
 
 // Find TLMInterface belonging to a given component (ID)
 // with a specified name and return its ID.
-int MetaModel::GetTLMInterfaceID(const int ComponentID, string& Name) {
+int CompositeModel::GetTLMInterfaceID(const int ComponentID, string& Name) {
     for(int i = Interfaces.size() - 1; i >= 0; i--) {
         TLMInterfaceProxy& ifc =  GetTLMInterfaceProxy(i);
         if((ifc.GetComponentID() == ComponentID)
@@ -252,7 +252,7 @@ int MetaModel::GetTLMInterfaceID(const int ComponentID, string& Name) {
     return -1;
 }
 
-int MetaModel::GetTLMParameterID(const int ComponentID, std::string &Name) {
+int CompositeModel::GetTLMParameterID(const int ComponentID, std::string &Name) {
     for(int i = Parameters.size() - 1; i >= 0; i--) {
         TLMParameterProxy& ifc =  GetTLMParameterProxy(i);
         if((ifc.GetComponentID() == ComponentID)
@@ -268,14 +268,14 @@ int MetaModel::GetTLMParameterID(const int ComponentID, std::string &Name) {
 // Input:
 // ifc1, ifc2 - ID of the TLM interfaces the connection is attaching to.
 // param - parameters of the Connection
-int MetaModel::RegisterTLMConnection(int ifc1, int ifc2, TLMConnectionParams& param) {
+int CompositeModel::RegisterTLMConnection(int ifc1, int ifc2, TLMConnectionParams& param) {
     TLMConnection* conn = new TLMConnection(Connections.size(), ifc1, ifc2, param);
     Connections.insert(Connections.end(), conn);
     return Connections.size() - 1;
 }
 
 // Start components
-void MetaModel::StartComponents() {
+void CompositeModel::StartComponents() {
     for(unsigned i = 0; i < Components.size(); i++) {
         TLMErrorLog::Log(string("-----  Starting External Tool  ----- "));
         TLMErrorLog::Log("Name: "+Components[i]->GetName());
@@ -321,7 +321,7 @@ void MetaModel::StartComponents() {
     }
 }
 
-bool MetaModel::CheckProxyComm() {
+bool CompositeModel::CheckProxyComm() {
     for(ComponentsVector::iterator it = Components.begin(); it!=Components.end(); ++it) {
         if(((*it)->GetSocketHandle() < 0) || !(*it)->GetReadyToSim()) {
             TLMErrorLog::Log(string("Component ") + (*it)->GetName() + " is not ready for simulation");
@@ -344,7 +344,7 @@ bool MetaModel::CheckProxyComm() {
 
 
 //! Print meta-model to ostream.
-void MetaModel::Print(std::ostream &os) {
+void CompositeModel::Print(std::ostream &os) {
     os << "Components:" << std::endl;
     for(ComponentsVector::iterator it = Components.begin(); it!=Components.end(); ++it) {
         os << (*it)->GetName() << std::endl;
