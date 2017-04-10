@@ -143,6 +143,13 @@ protected:
                     double ang_speed[],
                     double* force);
 
+#ifdef PROVIDE_WAVE_IMPEDANCE
+    void GetWaveImpedance1D(int interfaceID,
+                            double time,
+                            double *wave,
+                            double *impedance);
+#endif
+
     //! Set the motion of a TLM interface after a successful integration step.
     //! The information is eventually sent to the TLM manager and forwarded
     //! to the coupled simulation.

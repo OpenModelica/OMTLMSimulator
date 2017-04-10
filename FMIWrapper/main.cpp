@@ -27,10 +27,12 @@
 #include "sundials/sundials_types.h"
 
 // FMILibrary includes
+//#include "../../src/Import/src/FMI2/fmi2_import_impl.h"
 #include "FMI/fmi_import_context.h"
 #include "FMI1/fmi1_import.h"
 #include "FMI2/fmi2_import.h"
 #include "JM/jm_portability.h"
+//#include "../../src/Import/src/FMI2/fmi2_import_impl.h"
 
 // TLMPlugin includes
 #include "Plugin/TLMPlugin.h"
@@ -54,6 +56,12 @@ struct fmiConfig_t {
   std::vector<fmi2_value_reference_t*> ang_speed_vr;
   std::vector<fmi2_value_reference_t*> force_vr;
   std::vector<fmi2_value_reference_t*> value_vr;
+#ifdef SEND_WAVE_IMPEDANCE
+  std::vector<fmi2_value_reference_t*> wave_vr;
+  std::vector<fmi2_value_reference_t*> impedance_vr;
+  std::vector<fmi2_value_reference_t*> wave_data_vr;
+  std::vector<fmi2_value_reference_t*> time_data_vr;
+#endif
 };
 
 // TLM config data
@@ -150,11 +158,24 @@ void setParameters()
     for(it=parameterMap.begin(); it!=parameterMap.end(); ++it) {
         fmi2_value_reference_t vr = it->first;
         std::string value = it->second;
-        double value_real = atof(value.c_str());
-        std::stringstream ss;
-        ss << "Setting parameter: " << vr << " to " << value_real;
-        TLMErrorLog::Log(ss.str());
-        fmi2_import_set_real(fmu,&vr,1,&value_real);
+
+        fmi2_import_variable_t* realVar = fmi2_import_get_variable_by_vr(fmu,fmi2_base_type_real,vr);
+        if(realVar &&
+           fmi2_import_get_variable_base_type(realVar) == fmi2_base_type_real) {
+            double value_real = atof(value.c_str());
+            fmi2_import_set_real(fmu,&vr,1,&value_real);
+            TLMErrorLog::Log("Setting real parameter: "+TLMErrorLog::ToStdStr(int(vr))+
+                             " to "+TLMErrorLog::ToStdStr(value_real));
+        }
+
+        fmi2_import_variable_t* intVar = fmi2_import_get_variable_by_vr(fmu,fmi2_base_type_int,vr);
+        if(intVar &&
+           fmi2_import_get_variable_base_type(intVar) == fmi2_base_type_int) {
+            int value_int = atoi(value.c_str());
+            fmi2_import_set_integer(fmu,&vr,1,&value_int);
+            TLMErrorLog::Log("Setting integer parameter: "+TLMErrorLog::ToStdStr(int(vr))+
+                             " to "+TLMErrorLog::ToStdStr(value_int));
+        }
     }
 }
 
@@ -198,6 +219,7 @@ void forceFromTlmToFmu(double tcur)
 
           // Write force to FMU
           fmistatus = fmi2_import_set_real(fmu,fmiConfig.force_vr[j],1,&force);
+          TLMErrorLog::Log("Sending F="+TLMErrorLog::ToStdStr(force));
         }
         else if(fmiConfig.dimensions[j] == 1 &&
                 fmiConfig.causalities[j] == "Input" ) {
@@ -412,8 +434,42 @@ int simulate_fmi2_cs()
 
             force = -force;
 
-            //Write force to FMU
             fmistatus = fmi2_import_set_real(fmu,fmiConfig.force_vr[j],1,&force);
+            TLMErrorLog::Log("Sending F="+TLMErrorLog::ToStdStr(force));
+
+
+#ifdef SEND_WAVE_IMPEDANCE
+          double wave,impedance;
+          plugin->GetWaveImpedance1D(fmiConfig.interfaceIds[j], tcur, &wave, &impedance);
+          fmistatus = fmi2_import_set_real(fmu,fmiConfig.wave_vr[j],1,&wave);
+          fmistatus = fmi2_import_set_real(fmu,fmiConfig.impedance_vr[j],1,&impedance);
+
+          double nextWave;
+          fmi2_real_t hmax = tlmConfig.hmax;
+          plugin->GetWaveImpedance1D(fmiConfig.interfaceIds[j], tcur+hmax*2.0, &nextWave, &impedance);
+          double dC = (nextWave-wave)/(hmax*2.0);
+          int order=1;
+          fmistatus = fmi2_import_set_real_input_derivatives(fmu,fmiConfig.wave_vr[j],1,&order,&dC);
+
+          TLMErrorLog::Log("wave = " +TLMErrorLog::ToStdStr(wave)+", nextWave = "+TLMErrorLog::ToStdStr(nextWave)+", hsub = "+TLMErrorLog::ToStdStr(hmax));
+          TLMErrorLog::Log("Sending C="+TLMErrorLog::ToStdStr(wave)+" and dC="+TLMErrorLog::ToStdStr(dC));
+
+          //Send data for exact interpolation table
+
+          size_t nData = 10;
+          for(size_t i=1; i<=nData; ++i) {
+              double T = tcur+hmax*2.0*double(i)/double(nData);
+              plugin->GetWaveImpedance1D(fmiConfig.interfaceIds[j], T, &wave, &impedance);
+              fmistatus = fmi2_import_set_real(fmu,fmiConfig.wave_data_vr[j], 1, &wave);
+              fmistatus = fmi2_import_set_real(fmu,fmiConfig.time_data_vr[j], 1, &T);
+              TLMErrorLog::Log("Sending C="+TLMErrorLog::ToStdStr(wave)+
+                               +" for time t="+TLMErrorLog::ToStdStr(T));
+          }
+
+          //fmu->capi
+#endif
+
+
           }
           else if(fmiConfig.dimensions[j] == 1 &&
                   fmiConfig.causalities[j] == "Input") {
@@ -929,12 +985,52 @@ void csvToIntArray(std::string csv, int length, fmi2_value_reference_t *array[])
 
 
 
+void generateFmiConfigFile()
+{
+  std::ifstream testfile(FMI_CONFIG_FILE_NAME);
+  if(testfile.good()) {
+    return; //File exists
+  }
+  testfile.close();
+
+  std::ofstream outfile(FMI_CONFIG_FILE_NAME);
+
+  //outfile.open(FMI_CONFIG_FILE_NAME);
+  outfile << "substeps,1\n\n";
+  fmi2_import_variable_list_t *list = fmi2_import_get_variable_list(fmu,0);
+  size_t nVar = fmi2_import_get_variable_list_size(list);
+  for(size_t i=0; i<nVar; ++i) {
+    fmi2_import_variable_t* var = fmi2_import_get_variable(list,i);
+    fmi2_causality_enu_t causality = fmi2_import_get_causality(var);
+    if(causality == fmi2_causality_enu_input) {
+      std::string name = fmi2_import_get_variable_name(var);
+      outfile << "name," << name << ",\n";
+      outfile << "domain,Signal\n";
+      outfile << "causality,Input\n";
+      outfile << "dimensions,1\n";
+      outfile << "value," << fmi2_import_get_variable_vr(var) << "\n\n";
+    }
+    else if(causality == fmi2_causality_enu_output) {
+      std::string name = fmi2_import_get_variable_name(var);
+      outfile << "name," << name << ",\n";
+      outfile << "domain,Signal\n";
+      outfile << "causality,Output\n";
+      outfile << "dimensions,1\n";
+      outfile << "value," << fmi2_import_get_variable_vr(var) << "\n\n";
+    }
+  }
+  outfile.close();
+}
+
+
+
 // Reads interface data (Value references for FMI mapped to TLM connections) from FMI configuration file
 // Todo: Add error handling
 void readFmiConfigFile()
 {
   fmiConfig.nInterfaces=0;
   std::ifstream infile(FMI_CONFIG_FILE_NAME);
+
   if(infile.is_open()) {
     for( std::string line; getline( infile, line ); ) {
       std::stringstream ss(line);
@@ -959,6 +1055,12 @@ void readFmiConfigFile()
         fmiConfig.ang_speed_vr.push_back(new fmi2_value_reference_t);
         fmiConfig.force_vr.push_back(new fmi2_value_reference_t);
         fmiConfig.value_vr.push_back(new fmi2_value_reference_t);
+#ifdef SEND_WAVE_IMPEDANCE
+        fmiConfig.wave_vr.push_back(new fmi2_value_reference_t);
+        fmiConfig.impedance_vr.push_back(new fmi2_value_reference_t);
+        fmiConfig.wave_data_vr.push_back(new fmi2_value_reference_t);
+        fmiConfig.time_data_vr.push_back(new fmi2_value_reference_t);
+#endif
       }
       else if(word == "dimensions") {
         getline(ss, word, ',');
@@ -1015,8 +1117,30 @@ void readFmiConfigFile()
       else if(word == "force" &&
               fmiConfig.dimensions[fmiConfig.dimensions.size()-1] == 1 &&
               fmiConfig.causalities[fmiConfig.dimensions.size()-1] == "Bidirectional") {
-        csvToIntArray(ss.str(),1,&(fmiConfig.force_vr.back()));
+          csvToIntArray(ss.str(),1,&(fmiConfig.force_vr.back()));
       }
+#ifdef SEND_WAVE_IMPEDANCE
+      else if(word == "wave" &&
+              fmiConfig.dimensions[fmiConfig.dimensions.size()-1] == 1 &&
+              fmiConfig.causalities[fmiConfig.dimensions.size()-1] == "Bidirectional") {
+          csvToIntArray(ss.str(),1,&(fmiConfig.wave_vr.back()));
+      }
+      else if(word == "impedance" &&
+              fmiConfig.dimensions[fmiConfig.dimensions.size()-1] == 1 &&
+              fmiConfig.causalities[fmiConfig.dimensions.size()-1] == "Bidirectional") {
+          csvToIntArray(ss.str(),1,&(fmiConfig.impedance_vr.back()));
+      }
+      else if(word == "wavedata" &&
+              fmiConfig.dimensions[fmiConfig.dimensions.size()-1] == 1 &&
+              fmiConfig.causalities[fmiConfig.dimensions.size()-1] == "Bidirectional") {
+          csvToIntArray(ss.str(),1,&(fmiConfig.wave_data_vr.back()));
+      }
+      else if(word == "timedata" &&
+              fmiConfig.dimensions[fmiConfig.dimensions.size()-1] == 1 &&
+              fmiConfig.causalities[fmiConfig.dimensions.size()-1] == "Bidirectional") {
+          csvToIntArray(ss.str(),1,&(fmiConfig.time_data_vr.back()));
+      }
+#endif
       else if(word == "value" &&
               fmiConfig.dimensions[fmiConfig.dimensions.size()-1] == 1 &&
               fmiConfig.causalities[fmiConfig.dimensions.size()-1] == "Input") {
@@ -1027,6 +1151,7 @@ void readFmiConfigFile()
               fmiConfig.causalities[fmiConfig.dimensions.size()-1] == "Output") {
           csvToIntArray(ss.str(),1,&(fmiConfig.value_vr.back()));
       }
+
     }
 
     // Print log output
@@ -1035,6 +1160,10 @@ void readFmiConfigFile()
     for(size_t i=0; i<fmiConfig.nInterfaces; ++i) {
       TLMErrorLog::Log("Name: "+fmiConfig.interfaceNames[i]);
       int nP,nO,nS,nA,nF,nV;
+#ifdef SEND_WAVE_IMPEDANCE
+      int nC=0;
+      int nZ=0;
+#endif
       if(fmiConfig.dimensions[i] == 6 &&
          fmiConfig.causalities[i] == "Bidirectional") {
           nP = nS = nA = 3;
@@ -1047,6 +1176,10 @@ void readFmiConfigFile()
           nP = nS = nF = 1;
           nA = nO = 0;
           nV = 0;
+#ifdef SEND_WAVE_IMPEDANCE
+          nC = 1;
+          nZ = 1;
+#endif
       }
       else /*if(fmiConfig.causalities[i] == "Input" || fmiConfig.causalities[i] == "Output")*/ {
           nP = nS = nF = nA = nO = 0;
@@ -1082,6 +1215,20 @@ void readFmiConfigFile()
       for(int j=0; j<nF; ++j) {
         output << " " << fmiConfig.force_vr[i][j];
       }
+#ifdef SEND_WAVE_IMPEDANCE
+      TLMErrorLog::Log(output.str());
+      output.str("");
+      output << "Wave:";
+      for(int j=0; j<nC; ++j) {
+        output << " " << fmiConfig.wave_vr[i][j];
+      }
+      TLMErrorLog::Log(output.str());
+      output.str("");
+      output << "Impedance:";
+      for(int j=0; j<nZ; ++j) {
+        output << " " << fmiConfig.impedance_vr[i][j];
+      }
+#endif
       TLMErrorLog::Log(output.str());
       output.str("");
       output << "Value:";
@@ -1202,15 +1349,49 @@ int main(int argc, char* argv[])
   // Create and clear temporary directory
   createAndClearTempDirectory(tmpPath);
 
-  // Read TLM configuration
-  readFmiConfigFile();
+  jm_callbacks callbacks;
+  fmi_import_context_t* context;
+  fmi_version_enu_t version;
+
+  callbacks.malloc = malloc;
+  callbacks.calloc = calloc;
+  callbacks.realloc = realloc;
+  callbacks.free = free;
+  callbacks.logger = fmiLogger;
+  callbacks.log_level = jm_log_level_warning;   //Log level
+  callbacks.context = 0;
+
+  context = fmi_import_allocate_context(&callbacks);
+
+  // Check version of FMU
+  version = fmi_import_get_fmi_version(context, FMUPath.c_str(), tmpPath.c_str());
+  if(version != fmi_version_2_0_enu) {
+    TLMErrorLog::FatalError("The code only supports version 2.0");
+  }
+
+  // Parse modelDescription.xml
+  fmu = fmi2_import_parse_xml(context, tmpPath.c_str(), 0);
+
+  TLMErrorLog::Log("Apor!");
+
+  TLMErrorLog::Log("Giraffer!");
+
+  // Generate FMI configuration if needed
+  generateFmiConfigFile();
+
+  TLMErrorLog::Log("Lejon!");
 
   // Read FMI configuration
+  readFmiConfigFile();
+
+  // Read TLM configuration
   readTlmConfigFile();
 
   // Instantiate the TLMPlugin
   plugin = TLMPlugin::CreateInstance();
 
+
+  TLMErrorLog::Log("Bufflar!");
 
   // Initialize the TLMPlugin
     if(!plugin->Init(tlmConfig.model,
@@ -1236,32 +1417,11 @@ int main(int argc, char* argv[])
                                                             fmiConfig.domains[i]);
   }
 
-  jm_callbacks callbacks;
-  fmi_import_context_t* context;
-  fmi_version_enu_t version;
-
-  callbacks.malloc = malloc;
-  callbacks.calloc = calloc;
-  callbacks.realloc = realloc;
-  callbacks.free = free;
-  callbacks.logger = fmiLogger;
-  callbacks.log_level = jm_log_level_warning;   //Log level
-  callbacks.context = 0;
-
-  context = fmi_import_allocate_context(&callbacks);
-
-  // Check version of FMU
-  version = fmi_import_get_fmi_version(context, FMUPath.c_str(), tmpPath.c_str());
-  if(version != fmi_version_2_0_enu) {
-    TLMErrorLog::FatalError("The code only supports version 2.0");
-  }
-
-  // Parse modelDescription.xml
-  fmu = fmi2_import_parse_xml(context, tmpPath.c_str(), 0);
-
   if(!fmu) {
     TLMErrorLog::FatalError("Error parsing XML, exiting");
   }
+
+  TLMErrorLog::Log("Hundar!");
 
   // Check FMU kind (CS or ME)
   fmi2_fmu_kind_enu_t kind = fmi2_import_get_fmu_kind(fmu);
@@ -1312,6 +1472,8 @@ int main(int argc, char* argv[])
         parameterMap.insert(std::pair<fmi2_value_reference_t,std::string>(vr,value));
       }
   }
+
+  TLMErrorLog::Log("Grisar!");
 
   // Start simulation
   switch(kind) {

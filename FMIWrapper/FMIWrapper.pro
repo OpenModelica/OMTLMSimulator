@@ -4,6 +4,8 @@ CONFIG -= app_bundle
 CONFIG -= qt
 
 DEFINES += INTERFACE_TYPES
+DEFINES += SEND_WAVE_IMPEDANCE
+DEFINES += PROVIDE_WAVE_IMPEDANCE
 
 TARGET = ../../bin/FMIWrapper
 
@@ -61,12 +63,21 @@ SOURCES += main.cpp \
     ../common/TLMInterfaceSignal.cc \
     ../common/TLMInterfaceSignalInput.cc \
     ../common/TLMInterfaceSignalOutput.cc \
-    ../common/TLMParameter.cc
+    ../common/TLMParameter.cc \
+    FMILibrary-2.0.1/src/Import/src/FMI2/fmi2_import_capi.c \
+    FMILibrary-2.0.1/src/CAPI/src/FMI2/fmi2_capi_cs.c \
+    FMILibrary-2.0.1/src/CAPI/src/FMI2/fmi2_capi.c \
+    FMILibrary-2.0.1/src/Import/src/FMI/fmi_import_context.c \
+    FMILibrary-2.0.1/src/Import/src/FMI/fmi_import_util.c \
+    FMILibrary-2.0.1/src/Import/src/FMI2/fmi2_import.c
 
 HEADERS += \
     FMILibrary-2.0.1/install/include/JM/jm_portability.h \
     FMILibrary-2.0.1/install/include/FMI/fmi_import_context.h \
     FMILibrary-2.0.1/install/include/FMI1/fmi1_import.h \
     FMILibrary-2.0.1/install/include/FMI2/fmi2_import.h \
-    FMILibrary-2.0.1/install/include/fmilib_config.h
+    FMILibrary-2.0.1/install/include/fmilib_config.h \
+    FMILibrary-2.0.1/src/CAPI/include/FMI2/fmi2_capi.h \
+    FMILibrary-2.0.1/src/Import/include/FMI/fmi_import_context.h \
+    FMILibrary-2.0.1/src/Import/include/FMI/fmi_import_util.h
 

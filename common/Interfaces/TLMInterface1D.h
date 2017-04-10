@@ -46,6 +46,10 @@ public:
     void SetTimeData(double time, double position, double speed);
     void SendAllData();
 
+#ifdef PROVIDE_WAVE_IMPEDANCE
+    void GetWaveImpedance(double time, double *wave, double *impedance);
+#endif
+
     //! linear_interpolate is called with a vector containing 2 points
     //! computes the interpolation (or extrapolation) point with the the linear
     //! interpolation (extrapolation) The points are submitted using the p0 & p1

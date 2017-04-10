@@ -132,10 +132,21 @@ void TLMInterface1D::GetForce(double time,
     else {
         TLMPlugin::GetForce1D(speed, request, Params, force);
     }
-
-
 }
 
+#ifdef PROVIDE_WAVE_IMPEDANCE
+void TLMInterface1D::GetWaveImpedance(double time,
+                                      double *wave,
+                                      double *impedance) {
+    TLMTimeData1D request;
+    request.time = time - Params.Delay;
+    GetTimeData(request);
+
+    (*impedance) = Params.Zf;
+    (*wave) = request.GenForce;
+}
+
+#endif
 
 // Set motion data and communicate if necessary.
 void TLMInterface1D::SetTimeData(double time,

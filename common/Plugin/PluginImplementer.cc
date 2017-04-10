@@ -319,6 +319,35 @@ void PluginImplementer::GetForce1D(int interfaceID, double time, double speed, d
     ifc->GetForce(time, speed, force);
 }
 
+#ifdef PROVIDE_WAVE_IMPEDANCE
+void PluginImplementer::GetWaveImpedance1D(int interfaceID, double time, double *wave, double *impedance) {
+    if(!ModelChecked) CheckModel();
+
+    // Use the ID to get to the right interface object
+    int idx = GetInterfaceIndex(interfaceID);
+    TLMInterface1D* ifc = dynamic_cast<TLMInterface1D*>(Interfaces[idx]);
+
+    assert(!ifc || (ifc -> GetInterfaceID() == interfaceID));
+
+    if(!ifc) {
+        (*wave) = 0.0;
+        (*impedance) = 1.0;
+
+        TLMErrorLog::Warning(string("No interface in GetWaveImpedance1D()"));
+
+        return;
+    }
+
+    // Check if the interface expects more data from the coupled simulation
+    // Receive if necessary .Note that potentially more that one receive is possible
+    ReceiveTimeData(ifc, time);
+
+    // evaluate the reaction force from the TLM connection
+    ifc->GetWaveImpedance(time, wave, impedance);
+}
+
+#endif
+
 
 void PluginImplementer::GetForce3D(int interfaceID,
                                    double time,

@@ -107,6 +107,13 @@ public:
                             double ang_speed[],
                             double* force)  = 0;
 
+#ifdef PROVIDE_WAVE_IMPEDANCE
+    virtual void GetWaveImpedance1D(int interfaceID,
+                                    double time,
+                                    double *wave,
+                                    double *impedance) = 0;
+#endif
+
     //! Set the motion of a TLM interface after a successful integration step.
     //! The information is eventually sent to the TLM manager and forwarded
     //! to the coupled simulation.
@@ -174,7 +181,6 @@ public:
                            TLMTimeData3D& Data,
                            TLMConnectionParams& Params,
                            double* force);
-
 
     //! TIME_WITHOUT_DATA is a large negative constant used to
     //! indicate lack of data during simulation startup.

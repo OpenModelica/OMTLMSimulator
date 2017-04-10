@@ -23,6 +23,8 @@ include $(MAKEFILEHEADHOME)/Makefile.head
 
 CC += -pipe -O2 -frtti -Wall -Wextra -fexceptions -DUNICODE -DINTERFACE_TYPES
 cc += -pipe -O2 -frtti -Wall -Wextra -fexceptions -DUNICODE -DINTERFACE_TYPES
+CC += -pipe -O2 -frtti -Wall -Wextra -fexceptions -DUNICODE -DINTERFACE_TYPES -DSEND_WAVE_IMPEDANCE -DPROVIDE_WAVE_IMPEDANCE
+cc += -pipe -O2 -frtti -Wall -Wextra -fexceptions -DUNICODE -DINTERFACE_TYPES -DSEND_WAVE_IMPEDANCE -DPROVIDE_WAVE_IMPEDANCE
 
 BNAME=FMIWrapper$(FEXT)
 MISCHOME=../extralibs/misc
@@ -109,6 +111,7 @@ default: dirs fmil $(ABIOBJS)
 install: default
 	cp $(ABI)/$(BNAME) $(BINDIR)
 	cp StartTLMFmiWrapper* $(BINDIR)
+	cp FMILibrary-2.0.1/build/libfmilib_shared.so $(BINDIR)
 
 .PHONY: dirs clean
 
