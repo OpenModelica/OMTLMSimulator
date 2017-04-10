@@ -10,8 +10,8 @@
 #include <map>
 #include <sstream>
 #include "Logging/TLMErrorLog.h"
-#include "MetaModels/MetaModel.h"
-#include "MetaModels/MetaModelReader.h"
+#include "CompositeModels/CompositeModel.h"
+#include "CompositeModels/CompositeModelReader.h"
 #include "Communication/ManagerCommHandler.h"
 #include "Plugin/MonitoringPluginImplementer.h"
 #include "double3Vec.h"

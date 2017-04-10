@@ -1,5 +1,5 @@
 //!
-//!  \file MetaModel.h
+//!  \file CompositeModel.h
 //! 
 //! Defines the classes used for MetaModel representation on Manager
 //!

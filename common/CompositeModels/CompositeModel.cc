@@ -1,11 +1,11 @@
 /**
  * File: MetaModel.cc
  *
- * Implementation of methods for classes defined in MetaModel.h
+ * Implementation of methods for classes defined in CompositeModel.h
  */
 #include <string>
 #include <sstream>
-#include "MetaModels/MetaModel.h"
+#include "CompositeModels/CompositeModel.h"
 #include "Communication/TLMCommUtil.h"
 //#include "portability.h"
 #include <cstdlib>

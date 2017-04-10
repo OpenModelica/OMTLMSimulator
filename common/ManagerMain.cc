@@ -9,8 +9,8 @@
 #include <cstdlib>
 #include <cstring>
 #include "Logging/TLMErrorLog.h"
-#include "MetaModels/MetaModel.h"
-#include "MetaModels/MetaModelReader.h"
+#include "CompositeModels/CompositeModel.h"
+#include "CompositeModels/CompositeModelReader.h"
 #include "Communication/ManagerCommHandler.h"
 #include "double3Vec.h"
 #include "double33Mat.h"

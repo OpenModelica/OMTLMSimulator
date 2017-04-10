@@ -1,10 +1,10 @@
 /**
- * File: MetaModelReader.cc
+ * File: CompositeModelReader.cc
  *
  * Defines the MetaModelReader class methods
  */
 
-#include "MetaModels/MetaModelReader.h"
+#include "CompositeModels/CompositeModelReader.h"
 #include "Logging/TLMErrorLog.h"
 #include "Interfaces/TLMInterface.h"
 #include "double3Vec.h"

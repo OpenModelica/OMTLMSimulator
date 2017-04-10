@@ -1,17 +1,17 @@
-//! \file: MetaModelReader.h
+//! \file: CompositeModelReader.h
 //!
 //! Defines the MetaModelReader class which provides an interface
 //! for reading in the meta-model information from xml file
 //!
-#ifndef MetaModelReader_h
-#define MetaModelReader_h
+#ifndef CompositeModelReader_h
+#define CompositeModelReader_h
 
 #include <cstdio>
 #include <string>
 #include <fstream>
 #include <iostream>
 
-#include "MetaModels/MetaModel.h"
+#include "CompositeModels/CompositeModel.h"
 
 #include <libxml/parser.h>
 #include <libxml/tree.h>
