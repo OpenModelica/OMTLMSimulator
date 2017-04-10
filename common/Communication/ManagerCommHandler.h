@@ -15,7 +15,7 @@
 #include "Communication/TLMCommUtil.h"
 #include "Communication/TLMManagerComm.h"
 #include "Communication/TLMMessageQueue.h"
-#include "MetaModels/MetaModel.h"
+#include "CompositeModels/CompositeModel.h"
 
 #include "TLMThreadSynch.h"
 
