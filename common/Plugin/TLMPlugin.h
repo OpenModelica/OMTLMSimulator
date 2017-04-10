@@ -65,7 +65,7 @@ public:
 
     //! Register TLM interface sends a registration request to TLMManager
     //! and returns the ID for the interface. '-1' is returned if
-    //! the interface is not connected in the MetaModel.
+    //! the interface is not connected in the CompositeModel.
     //! \param name Name of the TLM interface
     virtual int RegisteTLMInterface(std::string name, int dimensions=6,
                                      std::string causality="Bidirectional", std::string domain="Mechanical") = 0;
@@ -190,7 +190,7 @@ private:
     //! Initialized flag tells if the init method was called
     bool Initialized;
 
-    //! Name of this component in the MetaModel
+    //! Name of this component in the CompositeModel
     std::string CompName;
     
     //! Start time for the simulation

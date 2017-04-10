@@ -1,6 +1,6 @@
 //! \file: CompositeModelReader.h
 //!
-//! Defines the MetaModelReader class which provides an interface
+//! Defines the CompositeModelReader class which provides an interface
 //! for reading in the meta-model information from xml file
 //!
 #ifndef CompositeModelReader_h
@@ -16,13 +16,13 @@
 #include <libxml/parser.h>
 #include <libxml/tree.h>
 
-//! Class MetaModelReader is responsible for reading meta model definition from
-//! an XML file and passing the information to the MetaModel classes
+//! Class CompositeModelReader is responsible for reading meta model definition from
+//! an XML file and passing the information to the CompositeModel classes
 //! to create the internal representation of the model.
-class MetaModelReader {
+class CompositeModelReader {
 
     //! The model object to be filled in during reading
-    MetaModel& TheModel;
+    CompositeModel& TheModel;
 
     //! ReadComponents method reads in Components (SubModels) definition from
     //! the XML file starting from the given xml node that should be "SubModels".
@@ -85,10 +85,10 @@ class MetaModelReader {
 public:
 
     //! Constructor
-    MetaModelReader(MetaModel& model) : TheModel(model) {}
+    CompositeModelReader(CompositeModel& model) : TheModel(model) {}
 
 
-    //! ReadModel method processes input XML file and creates MetaModel definition.
+    //! ReadModel method processes input XML file and creates CompositeModel definition.
     //! Input: InputFile - input XML file name
     //! Input/Output: TheModel - model structure to be build.
     void ReadModel(std::string& InputFile, bool SkipConnections=false, std::string singleModel="");
