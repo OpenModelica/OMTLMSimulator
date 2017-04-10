@@ -1,15 +1,12 @@
 \chapter{MSC.Adams TLM Plugin}
 
-{\bf Important note:}\\ The current version of the meta-model
-simulation environment does not propagate delay time (max. time step)
-from the meta-model to the MSC.ADAMS models automatically. Instead
-these values must be set in the Adams Command File (.acf). See
-Section~\ref{adams:startup-script} for details.
+{\bf Important note:}\\ The current version of the co-simulation environment does not propagate delay time (maximum time step) from the composite model to the MSC.ADAMS models automatically. 
+Instead these values must be set in the Adams Command File (.acf). 
+See Section~\ref{adams:startup-script} for details.
 
 
-MSC.Adams supports a C subroutine application programming interface
-(API) that can be integrated with your C/C++ code. It it is based
-on some C header files, for instance:
+MSC.Adams supports a C subroutine application programming interface (API) that can be integrated with your C/C++ code. 
+It it is based on some C header files, for instance:
 
 {
 \scriptsize
@@ -23,9 +20,8 @@ on some C header files, for instance:
 }
 
 
-The MSC.Adams TLMplugin implementation is based on the Adams {\em
-  GFOSUB} subroutine. This subroutine can be called from a general
-force element in Adams.
+The MSC.Adams TLMplugin implementation is based on the Adams {\em GFOSUB} subroutine. 
+This subroutine can be called from a general force element in Adams.
 
 {
 \scriptsize
@@ -59,9 +55,8 @@ VOID_FUNCTION GFOSUB(int *id, REAL *time, REAL *par, int *nPar, BOOL *dflag, BOO
 \end{verbatim}
 }
 
-The {\em c\_sysary} function lets a user-written subroutine read
-information from ADAMS. Here we need it to get the displacement and
-velocity.
+The {\em c\_sysary} function lets a user-written subroutine read information from ADAMS. 
+Here we need it to get the displacement and velocity.
 
 {
 \scriptsize
@@ -99,8 +94,9 @@ velocity.
 \end{verbatim}
 }
 
-Adams also supports unit scales. This is useful since we assume SI
-units in the TLM interface, thus we can convert into the correct unit.
+Adams also supports unit scales. 
+This is useful since we assume SI units in the TLM interface. 
+Thus, we can convert into the correct unit.
 
 {
 \scriptsize
@@ -137,13 +133,9 @@ units in the TLM interface, thus we can convert into the correct unit.
 \end{verbatim}
 }
 
-Finally we can call {\em calc\_tlm\_force(...)} that invokes both, {\em
-  SetMotion(...)} and {\em GetForce(...)} in the TLM interface. In
-order to handle ``final'' or ``converged'' solver steps we invoke the
-Adams function {\em c\_timget(...)} that returns the last converged
-time step. This information is passed on to the TLM interface for the
-correct TLM parameter communication with the connected simulation
-tools, that is, data is send for converged steps only.
+Finally we can call {\em calc\_tlm\_force(...)} that invokes both, {\em SetMotion(...)} and {\em GetForce(...)} in the TLM interface. 
+In order to handle ``final'' or ``converged'' solver steps we invoke the Adams function {\em c\_timget(...)} that returns the last converged time step. 
+This information is passed on to the TLM interface for the correct TLM parameter communication with the connected simulation tools, that is, data is send for converged steps only.
 
 {
 \scriptsize
@@ -166,8 +158,7 @@ tools, that is, data is send for converged steps only.
 \end{verbatim}
 }
 
-The calculated load (force and moment) response needs to be converted
-back to Adams units.
+The calculated load (force and moment) response needs to be converted back to Adams units.
 
 {
 \scriptsize
@@ -190,19 +181,12 @@ back to Adams units.
 }
 
 
-In the ADAMS TLM plugin implementation we keep track of the last
-converged time step in order to send data only if needed, that is,
-when we have a converged step. This is implemented in the
-{\em TLM\_force::GetForce(...)} function that is invoked by {\em
-  calc\_tlm\_force(...)}, see File~{\em tlmforce.c} in the TLMPlugin/ADAMS
-directory.
+In the ADAMS TLM plugin implementation we keep track of the last converged time step in order to send data only if needed, that is, when we have a converged step. 
+This is implemented in the {\em TLM\_force::GetForce(...)} function that is invoked by {\em calc\_tlm\_force(...)}, see File~{\em tlmforce.c} in the TLMPlugin/ADAMS directory.
 
-What happens is that we always store the motion data of the last time
-step that ADAMS invoked {\em calc\_tlm\_force(...)} for. For each step
-we check if the last step was a converged step (based on the
-information we got from the ADAMS solver and the data that we stored).
-If it was a converged step we send the data that we have cached, that
-is, the last time step.
+What happens is that we always store the motion data of the last time step that ADAMS invoked {\em calc\_tlm\_force(...)} for. 
+For each step we check if the last step was a converged step (based on the information we got from the ADAMS solver and the data that we stored).
+If it was a converged step we send the data that we have cached, that is, the last time step.
 
 {
 \scriptsize
