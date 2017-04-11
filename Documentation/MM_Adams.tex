@@ -5,13 +5,11 @@
 \label{secPrepareADAMS}
 The TLM Plugin interface was implemented for ADAMS 2005. 
 It has been tested with \verb!C++! solvers only. 
-It is installed with the BEAST installation and located in the BEAST bin directory.
+It is installed with TLMSimulator and located in the bin folder.
 
 ADAMS simulation is performed in batch mode, therefore the solver data set (adm file) needs to be generated.
 Before you can export the file from ADAMS/View you need to introduce TLM Interfaces in your model. 
 TLM interfaces in ADAMS models are represented by GFORCE elements acting between a marker on the action part and a marker on ground. 
-Note that different coordinate systems are often used in Beast and ADAMS.
-Typically, the gravity points in the X-negative direction for BEAST models and Y-negative for ADAMS.
 
 \section{Modifying an ADAMS model step-by-step}
 \label{secADAMSsteps}
@@ -150,9 +148,8 @@ A startup script for running the ADAMS simulation needs to be created as well.
 A default script is distributed with TLMSimulator. 
 It is called StartTLMAdams.bat.
 
-{\bf Note:} The default \verb!StartTLMAdams.bat! Windows script needs to be checked. 
-This should probably be done together with a system administrator and a member of the BEAST team. 
-However below is a short discussion of the script for advanced users.
+{\bf Note:} The default \verb!StartTLMAdams.bat! Windows script may need to be modified. 
+Below is a short discussion of the script.
 
 Figure \ref{figStartadams} presents a template for the start script.
 The \verb!StartTLMAdams.bat! should first generate a file \verb!tlm.config! that will contain the parameter send to it by TLM manager.

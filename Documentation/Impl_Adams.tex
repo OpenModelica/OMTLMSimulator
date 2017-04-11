@@ -133,7 +133,7 @@ Thus, we can convert into the correct unit.
 \end{verbatim}
 }
 
-Finally we can call {\em calc\_tlm\_force(...)} that invokes both, {\em SetMotion(...)} and {\em GetForce(...)} in the TLM interface. 
+Finally we can call {\em calc\_tlm\_force(...)} that invokes both, {\em SetMotion3D(...)} and {\em GetForce3D(...)} in the TLM interface. 
 In order to handle ``final'' or ``converged'' solver steps we invoke the Adams function {\em c\_timget(...)} that returns the last converged time step. 
 This information is passed on to the TLM interface for the correct TLM parameter communication with the connected simulation tools, that is, data is send for converged steps only.
 
@@ -182,7 +182,7 @@ The calculated load (force and moment) response needs to be converted back to Ad
 
 
 In the ADAMS TLM plugin implementation we keep track of the last converged time step in order to send data only if needed, that is, when we have a converged step. 
-This is implemented in the {\em TLM\_force::GetForce(...)} function that is invoked by {\em calc\_tlm\_force(...)}, see File~{\em tlmforce.c} in the TLMPlugin/ADAMS directory.
+This is implemented in the {\em TLM\_force::GetForce(...)} function that is invoked by {\em calc\_tlm\_force(...)}, see File~{\em tlmforce.c} in the TLMSimulator/ADAMS directory.
 
 What happens is that we always store the motion data of the last time step that ADAMS invoked {\em calc\_tlm\_force(...)} for. 
 For each step we check if the last step was a converged step (based on the information we got from the ADAMS solver and the data that we stored).
@@ -219,12 +219,12 @@ void TLM_force::GetForce(bool derCalc,
                     int curID = it->second.ID;
                     int index = it->second.index;
                     MarkerMotionData& toSend = LastMarkerMotion[index];
-                    Plugin->SetMotion(curID,          // Send data to the Plugin
-                                  toSend.Time,
-                                  toSend.Position,
-                                  toSend.Orientation,
-                                  toSend.Speed,
-                                  toSend.Ang_speed);
+                    Plugin->SetMotion3D(curID,          // Send data to the Plugin
+                                        toSend.Time,
+                                        toSend.Position,
+                                        toSend.Orientation,
+                                        toSend.Speed,
+                                        toSend.Ang_speed);
                     // invalidate time to avoid resend
                     toSend.Time = param.Time;
                 }
@@ -235,13 +235,13 @@ void TLM_force::GetForce(bool derCalc,
     }
 
     // Call the plugin to get reaction force
-    Plugin->GetForce(interfaceID,
-                     param.Time,
-                     param.Position,
-                     param.Orientation,
-                     param.Speed,
-                     param.Ang_speed,
-                     force);
+    Plugin->GetForce3D(interfaceID,
+                       param.Time,
+                       param.Position,
+                       param.Orientation,
+                       param.Speed,
+                       param.Ang_speed,
+                       force);
 }
 
 \end{verbatim}

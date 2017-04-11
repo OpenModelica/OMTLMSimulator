@@ -96,12 +96,12 @@ void TLMTie::ComputeMasterBefore()
     assert(ModelMode != SlaveMode);
 
     // Get the time data for the specified time
-    TLMlink->GetTimeData(ForceID, SimTime, CurTimeData);
+    TLMlink->GetTimeData3D(ForceID, SimTime, CurTimeData);
 }
 \end{verbatim}
 }
 
-{\em TLMlink->GetTimeData(...)} makes sure that force and moment data for the current time step is available in the interface. 
+{\em TLMlink->GetTimeData3D(...)} makes sure that force and moment data for the current time step is available in the interface. 
 If it is not yet available it waits until the data has been received though the TLM manager from the connected simulation tool.
 
 Second phase is to evaluate force and moment and update the internal states of the coordinate system. 
@@ -115,12 +115,12 @@ void TLMTie::calcChildForceMoment(const MotionVar& ctl2_M_ctl1_ctl1)
 
     // Get the motion.
     ctl2_M_ctl1_ctl1.Get(ctl2_R_ctl1_ctl1,
-			 ctl2_A_ctl1,
-			 ctl2_vR_ctl1_ctl1_ctl1,
-			 ctl2_Omega_ctl1_ctl1);
+                         ctl2_A_ctl1,
+                         ctl2_vR_ctl1_ctl1_ctl1,
+                         ctl2_Omega_ctl1_ctl1);
 
     if(RHSFinalFlg) {
-	ctl2_M_ctl1_ctl1_Final =  ctl2_M_ctl1_ctl1;
+        ctl2_M_ctl1_ctl1_Final =  ctl2_M_ctl1_ctl1;
     }
 
     double forceOut[6];
@@ -128,16 +128,16 @@ void TLMTie::calcChildForceMoment(const MotionVar& ctl2_M_ctl1_ctl1)
     // Note that the static function is used here.
     // This is necessary since the force might be
     // evaluated several times and on a slave.
-    TLMPlugin::GetForce(&ctl2_R_ctl1_ctl1(1),
-			&ctl2_A_ctl1(1,1),
-			&ctl2_vR_ctl1_ctl1_ctl1(1),
-			&ctl2_Omega_ctl1_ctl1(1),
-			CurTimeData,
-			Params,
-			forceOut);
+    TLMPlugin::GetForce3D(&ctl2_R_ctl1_ctl1(1),
+                          &ctl2_A_ctl1(1,1),
+                          &ctl2_vR_ctl1_ctl1_ctl1(1),
+                          &ctl2_Omega_ctl1_ctl1(1),
+                          CurTimeData,
+                          Params,
+                          forceOut);
 
     // pc is equal ctl2 for now, i.e. ConLoc12 =1.0
-    pc_ctl1_ctl1 = ctl2_R_ctl1_ctl1;;
+    pc_ctl1_ctl1 = ctl2_R_ctl1_ctl1;
 
     double3 F_pc_ctl1_tmp(forceOut[0], forceOut[1],forceOut[2]);
     double3 M_pc_ctl1_tmp(forceOut[3], forceOut[4],forceOut[5]);
@@ -154,7 +154,7 @@ void TLMTie::calcChildForceMoment(const MotionVar& ctl2_M_ctl1_ctl1)
 }
 
 Note, that in a parallel BEAST simulation {\em TLMTie::calcChildForceMoment(...)} is invoked on the slaves. 
-Slaves do not have a TLMPlugin instance but use the static {\em TLMPlugin::GetForce(...)} instead that requires the TLM parameters as input. 
+Slaves do not have a TLMPlugin instance but use the static {\em TLMPlugin::GetForce3D(...)} instead that requires the TLM parameters as input. 
 Time-data and TLM parameters are therefore send to all the slaves using the standard packing mechanism.
 
 The third phase is to send the necessary response to the TLM interface. 
@@ -170,18 +170,18 @@ void TLMTie::ComputeMasterAfter()
 
     if(RHSFinalFlg) {
 	// Get the motion.
-	ctl2_M_ctl1_ctl1_Final.Get(ctl2_R_ctl1_ctl1,
-				   ctl2_A_ctl1,
-				   ctl2_vR_ctl1_ctl1_ctl1,
-				   ctl2_Omega_ctl1_ctl1);
+    ctl2_M_ctl1_ctl1_Final.Get(ctl2_R_ctl1_ctl1,
+                               ctl2_A_ctl1,
+                               ctl2_vR_ctl1_ctl1_ctl1,
+                               ctl2_Omega_ctl1_ctl1);
 
 	// Set it in TLM Plugin, socket communication might happen
-	TLMlink->SetMotion(ForceID,
-			   SimTime,
-			   &ctl2_R_ctl1_ctl1(1),
-			   &ctl2_A_ctl1(1,1),
-			   &ctl2_vR_ctl1_ctl1_ctl1(1),
-			   &ctl2_Omega_ctl1_ctl1(1));
+    TLMlink->SetMotion3D(ForceID,
+                         SimTime,
+                         &ctl2_R_ctl1_ctl1(1),
+                         &ctl2_A_ctl1(1,1),
+                         &ctl2_vR_ctl1_ctl1_ctl1(1),
+                         &ctl2_Omega_ctl1_ctl1(1));
     }
 }
 \end{verbatim}

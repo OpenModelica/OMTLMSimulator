@@ -118,8 +118,8 @@ The Simulink TLM-plugin consists of three files:
 \item A start-up script, StartTLMSimulink
 \end{itemize}
 
-The start script is located in the {\tt \$BEAST/bin} directory. 
-The tlmforce S-Function mex and the TLMLib.mdl files are placed in the {\tt \$BEAST/bin/\$ABI/Simulink} directory. 
+The start script is located in the {\tt bin} directory in the TLMSimulator folder. 
+The tlmforce S-Function mex and the TLMLib.mdl files are placed in the {\tt bin/\$ABI/Simulink} directory. 
 There is a Linux and a MS-Windows version of the plugin available.
 
 It is important that the TLMLib.mdl and tlmforce.mex* file are within the Matlab {\tt Search Path}. 
@@ -128,12 +128,10 @@ This can be achieved with the {\tt Select Path} dialog that can be opened from t
 Changes to the StartTLMSimulink script are typically not necessary. 
 Note that there are two versions of the script, a MS Windows batch script and a c-shells script for Linux/Unix
 systems. 
-In case the system requires a special setup for running Matlab/Simulink it is recommended to make changes to the script together with member of the BEAST team. 
-Here, however, the c-shell version of the script:
+In case the system requires a special setup for running Matlab/Simulink it is recommended to make changes to the script. 
+Below is the c-shell version of the script:
 \begin{verbatim}
 #!/bin/csh -f
-
-# Set the parameters to the beast script in the line below:
 
 setenv PATH ${PATH}:/home/alex/bin/matlab2006b/bin
 set SIMCOMMAND="matlab -nosplash -nodesktop -nojvm -r"
