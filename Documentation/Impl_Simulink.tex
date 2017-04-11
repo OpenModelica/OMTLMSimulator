@@ -1,6 +1,7 @@
 \chapter{Simulink TLM Plugin}
 
 The Matlab/Simulink TLMPlugin implementation is based on a Matlab S-function interface.
+There are blocks for 3D force interfaces, 1D signal input interfaces and 1D signal output interfaces.
 
 {\scriptsize
 \begin{verbatim}
@@ -17,7 +18,7 @@ The Matlab/Simulink TLMPlugin implementation is based on a Matlab S-function int
 \end{verbatim}
 }
 
-TLM delay is set in the initialization of the S-Function interface function {\em mdlInitializeSampleTimes(...).}
+\noindent TLM delay is set in the initialization of the S-Function interface function {\em mdlInitializeSampleTimes(...).}
 
 {\scriptsize
 \begin{verbatim}
@@ -46,7 +47,7 @@ static void mdlInitializeSampleTimes(SimStruct *S)
 \end{verbatim}
 }
 
-Note, that the first call to {\em TLM\_InterfaceReg::GetInstance(...)} initialized the TLM plugin, that is, it reads the TLM configuration parameters form the config file.
+\noindent Note, that the first call to {\em TLM\_InterfaceReg::GetInstance(...)} initialized the TLM plugin, that is, it reads the TLM configuration parameters form the config file.
 
 Communication with Simulink is based on the C structure {\em SimStruct}. 
 Initially we need to setup the size (of the data that we want to communicate in the structure. 
@@ -94,7 +95,7 @@ static void mdlInitializeSizes(SimStruct *S)
 \end{verbatim}
 }
 
-The force calculation in the TLM interface takes place in the S-Function interface function {\em mdlOutputs(...)}. 
+\noindent The force calculation in the TLM interface takes place in the S-Function interface function {\em mdlOutputs(...)}. 
 This function is called by Simuink for a given time instance. 
 The motion of the interface can be extracted from the {\em SimStruct} structure that has been setup before, see {\em mdlInitializeSizes} above. 
 The resulting load (force and moment) is stored in the same structure.
@@ -125,21 +126,21 @@ static void mdlOutputs(SimStruct *S, int_T tid)
 
     /* output */
     double force[6];
-    TLMTimeData CurTimeData;
+    TLMTimeData3D CurTimeData;
 
     if( ifID >= 0 ) {
-        TLM_InterfaceReg::GetInstance()->GetPlugin()->GetForce(ifID,
-                                                               time,
-                                                               R,
-                                                               A,
-                                                               vR,
-                                                               Omega,
-                                                               force);
+        TLM_InterfaceReg::GetInstance()->GetPlugin()->GetForce3D(ifID,
+                                                                 time,
+                                                                 R,
+                                                                 A,
+                                                                 vR,
+                                                                 Omega,
+                                                                 force);
 
         /* Get Position and Orientation */
-        TLM_InterfaceReg::GetInstance()->GetPlugin()->GetTimeData(ifID,
-                                                                  time,
-                                                                  CurTimeData);
+        TLM_InterfaceReg::GetInstance()->GetPlugin()->GetTimeData3D(ifID,
+                                                                    time,
+                                                                    CurTimeData);
 
     }
     else {
@@ -175,7 +176,7 @@ static void mdlOutputs(SimStruct *S, int_T tid)
 \end{verbatim}
 }
 
-{\em TLM::SetMotion(...)} is called when we want to update the states for a ``final'' integration step. In the S-Function interface this is handled in the function {\em mdlUpdate(...)}. 
+{\em TLMPlugin::SetMotion3D(...)} is called when we want to update the states for a ``final'' integration step. In the S-Function interface this is handled in the function {\em mdlUpdate(...)}. 
 This triggers the communication with the connected simulation tools in order to propagate the states.
 
 {\scriptsize
@@ -203,14 +204,17 @@ This triggers the communication with the connected simulation tools in order to 
 
           if( ifID >= 0 ){
             // Send data to the Plugin
-            TLM_InterfaceReg::GetInstance()->GetPlugin()->SetMotion(ifID,
-                                                                    time,
-                                                                    R,
-                                                                    A,
-                                                                    vR,
-                                                                    Omega);
+            TLM_InterfaceReg::GetInstance()->GetPlugin()->SetMotion3D(ifID,
+                                                                      time,
+                                                                      R,
+                                                                      A,
+                                                                      vR,
+                                                                      Omega);
           }
       }
   }
 \end{verbatim}
 } 
+
+The code for signal interfaces use the same functions as above.
+However, it calls \texttt{GetValueSignal()} instead of \texttt{GetForce3D()} and \texttt{SetValueSignal()} instead of \texttt{SetMotion3D()}.

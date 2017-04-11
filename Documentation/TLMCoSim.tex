@@ -1,4 +1,4 @@
-\chapter{TLMSimulator Co-Simulation Framework}
+\chapter{TLMSimulator Co-Simulation \\Framework}
 \label{framework}
 A general framework for composite modeling and co-simulations has previously been designed~\cite{Siemers+Nakhimovski+Fritzson-05}. 
 The design goals for the simulation part of the framework were portability, simplicity to incorporate new simulation tools, and computational efficiency.
@@ -36,6 +36,12 @@ Any simulation program that has incorporated the interface plug-in as a part of 
 A small script that takes the general parameters as input and starts the specific simulation tool is an additional requirement. 
 This intermediate step is necessary since the simulation manager needs a common way to start all the components and each tool might have some specific start procedures.
 %\end{itemize}
+
+\section{Graphical User Interface}
+The TLMSimulator in itself provides no graphical user interface.
+Simulations are started by command line calls to the simulation manager.
+However, graphical user interface exists both in SKF BEAST and OpenModelica Connection Editor (OMEdit) \cite{alachew2015}. 
+
 
 \section{Requirements on External Model Simulators}
 \label{sec:requirements}
@@ -76,7 +82,7 @@ This can be	achieved by a tool specific API ({\em Application Programming Interf
 
 \end{itemize}
 
-\noindent Additionally it is desirable that the simulation tool can export surface geometry (graphics) for visualisation in the composite model environment. 
+\noindent Additionally, it is desirable that the simulation tool can provide access to the model parameters, so that they can be modified from the composite model. Furthermore, it is useful if the simulation tool can export any surface geometry (graphics) for 3D visualisation in the composite model environment. 
 Surface geometry is not required for correct composite modelling but beneficial for visual model verification.
 
 %These requirements are met by all the simulation tools investigated in
@@ -369,6 +375,8 @@ A composite model contains the following XML nodes:
 It defines a sub-model name used in the composite model and the start method and the simulation tool specific model files that needed to run the simulation. 
 Each {\tt SubModel} node also contains a list of {\tt InterfacePoint} nodes.
 \item[InterfacePoint] nodes are used to specify the TLM interfaces of each external model, that is, each {\tt SubModel}. 
+It defines the name of a certain interface in the external model.
+\item[Parameter] nodes specify {\tt SubModel} parameters which can be changed prior to simulation.
 It defines the name of a certain interface in the external model.
 \item[Connections] is the node that contains the list of all {\tt Connection} nodes.
 \item[Connection] nodes define connections between two connected {\tt InterfacePoint}s, that is, a connection between two TLM interfaces. 

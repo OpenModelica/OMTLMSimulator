@@ -19,11 +19,11 @@ Run the script \textit{InstallTlmForWsm.bat} in MS DOS.
 \subsubsection{In Dymola}
 Run the script \textit{InstallTlmForDymola.bat} in MS DOS.
 
-~\\The above mentioned script files are located in \textit{\textbackslash TLMPlugin\textbackslash Modelica}.
+~\\The above mentioned script files are located in \textit{\textbackslash TLMSimulator\textbackslash Modelica}.
 
 ~\\Note: The default Windows TLM installation BAT script may need some modifications.
-The main issue is to modify the script file so the Modelica tool, Microsoft Visual Studio and the TLMPlugin folder paths are correct. 
-Furthermore, it is important to add the TLMPlugin/bin folder path to the Windows System Environment Path. 
+The main issue is to modify the script file so the Modelica tool, Microsoft Visual Studio and the TLMSimulator folder paths are correct. 
+Furthermore, it is important to add the TLMSimulator/bin folder path to the Windows System Environment Path. 
  
 
 ~\\ The installation script will set all the necessary paths in order to use the TLM interface. 
@@ -72,7 +72,7 @@ Save the file to the top folder (\textit{\textbackslash CompositeModels \textbac
 \subsection{Set up simulation settings}
 The next step is to set up the simulation settings. 
 For OpenModelica and Dymola all the simulation settings have to be modified in a BAT script. 
-The BAT script is located in the bin folder: (\textit{\textbackslash TLMPlugin\textbackslash bin\textbackslash}).
+The BAT script is located in the bin folder: (\textit{\textbackslash TLMSimulator\textbackslash bin\textbackslash}).
 
 
 \begin{itemize}
@@ -89,12 +89,12 @@ Using the Simulation Center, the user can follow the simulation 'live'.
 
 \section{How to start a TLM simulation.}
 
-To start a TLM simulation, follow these 5 steps (please note the paths below are relative and needs to be fully specified according to the TLMPlugin installation folder).
+To start a TLM simulation, follow these 5 steps (please note the paths below are relative and needs to be fully specified according to the TLMSimulator installation folder).
 
 \begin{itemize}
   \item Start a commando prompt.
   \item Go to your CompositeModels folder, e.i. 
-\textit{cd /TLMPlugin/CompositeModels/OmcOmcDoublePendulum/}
+\textit{cd /TLMSimulator/CompositeModels/OmcOmcDoublePendulum/}
   \item To start the simulation run the following: \textit{tlmmanager.exe doublePendulum.xml}
 \end{itemize}
 

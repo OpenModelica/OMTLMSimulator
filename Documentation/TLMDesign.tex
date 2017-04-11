@@ -22,7 +22,7 @@ The main component used in the TLMManager is an instance of {\em ManagerCommHand
 }
 
 A {\em CompositeModel} instance can be generated in different ways. 
-The default TLM co-simulation implementation contains an XML composite model reader, see also Figure~\ref{fig:MetaModelReader}. 
+The default TLM co-simulation implementation contains an XML composite model reader, see also Figure~\ref{fig:CompositeModelReader}. 
 For details about the XML composite model description see Section~\ref{meta}.
 
 \begin{figure}[ht]
@@ -478,8 +478,10 @@ void ManagerCommHandler::RunStartupProtocol() {
 }
 \end{verbatim}
 }
-The above method has two main tasks, first to check for new connections from any external model. 
-Second to check if already registered components need to register any TLM interfaces.
+\noindent The above method has three main tasks.
+First, it checks for new connections from any external model. 
+Second, it checks if already registered components need to register any parameters.
+Finally, it checks if already registered components need to register any TLM interfaces.
 
 The initialization protocol looks the following way:
 \begin{enumerate}
@@ -488,6 +490,9 @@ The initialization protocol looks the following way:
 \item The external model send an interface registration message (TLMMessageTypeConst::TLM\_REG\_INTERFACE).
 \item The manager answers with the same message head and adds the connection parameters as stored in the composite model XML file to the data section of the message.
 \item The external model repeats the interface registration for all its external (TLM) interfaces.
+\item The external model send a parameter registration message (TLMMessageTypeConst::TLM\_REG\_PARAMETER).
+\item The manager answers with the same message head and adds the default parameter value as stored in the composite model XML file to the data section of the message.
+\item The external model repeats the parameter registration for all its model parameters.
 \item Finally the external model sends a TLMMessageTypeConst::TLM\_CHECK\_MODEL that tells that it is ready to simulate.
 \item The TLMManager puts the component into {\em ready for simulation} mode.
 \end{enumerate}
