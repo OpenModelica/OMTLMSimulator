@@ -1,0 +1,30 @@
+<?xml version='1.0' encoding='ISO-8859-1'?>
+<!-- The root node is the composite model -->
+<Model Name="OmcOmcStiffPendulum">
+  <!-- List of connected external-models -->
+  <SubModels>
+    <!-- external model "shaft1" positioned at (0,0,0) inside meta-model  -->
+    <SubModel StartCommand="StartTLMOpenModelica" Angle321="0,0,0" ExactStep="0" Name="pendulum1" GeometryFile="pendulum1.stl" ModelFile="pendulum1.mo" Position="0,0,0">
+      <Annotation Rotation="0" Extent="{-10,-10,10,10}" Origin="{0,-10}" Visible="true"/>
+      <!-- TLM interface points for external-model shaft1 -->
+      <!-- positioned (0,0,0.5) inside external-model -->
+      <InterfacePoint Dimensions="6" Angle321="0,0,0" Domain="Mechanical" Name="tlm" Position="0,0,0.5" Causality="Bidirectional"/>
+    </SubModel>
+    <!-- external model "shaft2" positioned at (0,0,0.5) inside meta-model  -->
+    <SubModel StartCommand="StartTLMOpenModelica" Angle321="0,0,0" ExactStep="0" Name="pendulum2" GeometryFile="pendulum2.stl" ModelFile="pendulum2.mo" Position="0,0,0.5">
+      <Annotation Rotation="0" Extent="{-10,-10,10,10}" Origin="{-30,30}" Visible="true"/>
+      <!-- TLM interface points for external-model shaft2 -->
+      <!-- positioned (0,0,0) inside external-model -->
+      <InterfacePoint Dimensions="6" Angle321="0,0,0" Domain="Mechanical" Name="tlm" Position="0,0,0" Causality="Bidirectional"/>
+    </SubModel>
+  </SubModels>
+  <!-- List of TLM connections -->
+  <Connections>
+    <!-- Some more physical values: Delay="1e-5" Zf="8e4" Zfr="400" alpha="0.2" -->
+    <Connection From="pendulum1.tlm" Zf="10000" alpha="0.2" To="pendulum2.tlm" Delay="1e-4" Zfr="100">
+      <Annotation Points="{{12,-2},{20,-2},{20,38},{-18,38},{-18,38}}"/>
+    </Connection>
+  </Connections>
+  <!-- Parameters for the simulation -->
+  <SimulationParams StartTime="0" StopTime="3"/>
+</Model>
