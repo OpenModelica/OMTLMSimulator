@@ -1,0 +1,23 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!-- The root node is the meta-model -->
+<Model Name="OmcOmcRotationalSpringDampers">
+  <!-- List of connected sub-models -->
+  <SubModels>
+    <SubModel StartCommand="StartTLMOpenModelica" Angle321="0,0,0" ExactStep="false" Name="RotationalSpringDamper1" ModelFile="RotationalSpringDamper1.mo" Position="0,0,0">
+      <Annotation Rotation="0" Extent="{-10,-10,10,10}" Origin="{0,14}" Visible="true"/>
+      <InterfacePoint Dimensions="1" Angle321="0,0,0" Domain="Rotational" Name="tlm" Position="0,0,0" Causality="Bidirectional"/>
+    </SubModel>
+    <SubModel StartCommand="StartTLMOpenModelica" Angle321="0,0,0" ExactStep="false" Name="RotationalSpringDamper2" ModelFile="RotationalSpringDamper2.mo" Position="0,0,0">
+      <Annotation Rotation="0" Extent="{-10,-10,10,10}" Origin="{0,-16}" Visible="true"/>
+      <InterfacePoint Dimensions="1" Angle321="0,0,0" Domain="Rotational" Name="tlm" Position="0,0,0" Causality="Bidirectional"/>
+    </SubModel>
+  </SubModels>
+  <!-- List of TLM connections -->
+  <Connections>
+    <Connection From="RotationalSpringDamper1.tlm" Zf="10000" To="RotationalSpringDamper2.tlm" alpha="0.2" Delay="1e-4">
+      <Annotation Points="{{12,22},{22,22},{22,-8},{12,-8},{12,-8}}"/>
+    </Connection>
+  </Connections>
+  <!-- Parameters for the simulation -->
+  <SimulationParams StartTime="0" StopTime="5"/>
+</Model>
