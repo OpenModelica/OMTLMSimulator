@@ -35,7 +35,7 @@ class CompositeModelReader {
     //! given SubModel XML node and its ID (ComponentID).
     void ReadTLMInterfaceNodes(xmlNode* node, int ComponentID);
 
-    void ReadTLMParameters(xmlNode* node, int ComponentID);
+    void ReadComponentParameters(xmlNode* node, int ComponentID);
 
 
     //! ReadSimParams method reads in simulation parameters (Port, StartTime, StopTime)

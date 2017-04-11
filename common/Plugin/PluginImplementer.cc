@@ -188,8 +188,8 @@ int  PluginImplementer::RegisteTLMInterface(std::string name , int dimensions,
 }
 
 
-int PluginImplementer::RegisterTLMParameter(std::string name, std::string defaultValue) {
-    TLMParameter *par = new TLMParameter(ClientComm, name, defaultValue);
+int PluginImplementer::RegisterComponentParameter(std::string name, std::string defaultValue) {
+    ComponentParameter *par = new ComponentParameter(ClientComm, name, defaultValue);
 
     int id = par->GetParameterID();
 
@@ -559,7 +559,7 @@ void PluginImplementer::GetTimeData3D(int interfaceID, double time, TLMTimeData3
 
 void PluginImplementer::GetParameterValue(int parameterID, std::string &Name, std::string &Value) {
     int idx = GetParameterIndex(parameterID);
-    TLMParameter* pPar = Parameters[idx];
+    ComponentParameter* pPar = Parameters[idx];
     Name = pPar->GetName();
     Value = pPar->GetValue();
 }

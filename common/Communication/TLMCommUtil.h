@@ -88,7 +88,7 @@ struct TLMMessageHeader {
     int  TLMInterfaceID;
 
     //! Source parameter ID (not used for registration messages)
-    int TLMParameterID;
+    int ComponentParameterID;
 };
 
 //! TLMMessage structure is used to encapsulate all the TLM messages

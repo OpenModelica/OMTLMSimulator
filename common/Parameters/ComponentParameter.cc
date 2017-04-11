@@ -1,4 +1,4 @@
-#include "Parameters/TLMParameter.h"
+#include "Parameters/ComponentParameter.h"
 #include "Plugin/TLMPlugin.h"
 #include <deque>
 #include <string>
@@ -15,8 +15,8 @@ using std::ofstream;
 using namespace tlmMisc;
 
 
-//! Constrctor for the TLMParameter class, which handles submodel parameters
-TLMParameter::TLMParameter(TLMClientComm& theComm, std::string& aName, std::string& aDefaultValue):
+//! Constrctor for the ComponentParameter class, which handles submodel parameters
+ComponentParameter::ComponentParameter(TLMClientComm& theComm, std::string& aName, std::string& aDefaultValue):
     Name(aName),
     Value(aDefaultValue),
     ParameterID(-1),
@@ -30,7 +30,7 @@ TLMParameter::TLMParameter(TLMClientComm& theComm, std::string& aName, std::stri
     while(Message.Header.MessageType != TLMMessageTypeConst::TLM_REG_PARAMETER) {
         TLMCommUtil::ReceiveMessage(Message);
     }
-    ParameterID =  Message.Header.TLMParameterID;
+    ParameterID =  Message.Header.ComponentParameterID;
 
     Comm.UnpackRegParameterMessage(Message, Value);
 

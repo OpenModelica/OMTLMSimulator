@@ -1,14 +1,14 @@
 //!
 //! \file TLMInterface.h
 //!
-//! Provides a definition for the TLMParameter class
+//! Provides a definition for the ComponentParameter class
 //!
 //!
 //! \author Robert Braun
 //!
 
-#ifndef TLMPARAMETER_H
-#define TLMPARAMETER_H
+#ifndef COMPONENTPARAMETER_H
+#define COMPONENTPARAMETER_H
 
 
 #include <queue>
@@ -20,16 +20,16 @@
 
 
 //!
-//! TLMParameter provides the client side functionality for a single sub-model parameter
+//! ComponentParameter provides the client side functionality for a single sub-model parameter
 //! (not to be confused with TLM connection parameters)
 //!
-class TLMParameter {
+class ComponentParameter {
 
  public:
 
-    //! TLMParameter constructor. Sends a registration message to the TLM manager
+    //! ComponentParameter constructor. Sends a registration message to the TLM manager
     //! and prepares the object for simulation.
-    TLMParameter(TLMClientComm& theComm, std::string& aName, std::string& aDefaultValue);
+    ComponentParameter(TLMClientComm& theComm, std::string& aName, std::string& aDefaultValue);
 
     //! Get name of the parameter
     const std::string& GetName() const { return Name; }
@@ -57,4 +57,4 @@ class TLMParameter {
     TLMMessage Message;
 };
 
-#endif // TLMPARAMETER_H
+#endif // COMPONENTPARAMETER_H

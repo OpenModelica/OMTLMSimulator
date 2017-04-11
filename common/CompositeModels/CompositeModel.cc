@@ -225,17 +225,17 @@ int CompositeModel::RegisterTLMInterfaceProxy(const int ComponentID, string& Nam
     return Interfaces.size()-1;
 }
 
-int CompositeModel::RegisterTLMParameterProxy(const int ComponentID, string& Name, string& DefaultValue) {
-    TLMParameterProxy* par = new TLMParameterProxy(ComponentID, Parameters.size(), Name, DefaultValue);
+int CompositeModel::RegisterComponentParameterProxy(const int ComponentID, string& Name, string& DefaultValue) {
+    ComponentParameterProxy* par = new ComponentParameterProxy(ComponentID, ComponentParameters.size(), Name, DefaultValue);
 
     TLMErrorLog::Log("Registering parameter proxy."
-                     " Id = " + TLMErrorLog::ToStdStr(int(Parameters.size()))+
+                     " Id = " + TLMErrorLog::ToStdStr(int(ComponentParameters.size()))+
                      ", ComponentId = "+TLMErrorLog::ToStdStr(ComponentID)+
                      ", Name = " + Name+
                      ", DefaultValue = " + DefaultValue);
 
-    Parameters.insert(Parameters.end(), par);
-    return Parameters.size()-1;
+    ComponentParameters.insert(ComponentParameters.end(), par);
+    return ComponentParameters.size()-1;
 }
 
 
@@ -252,9 +252,9 @@ int CompositeModel::GetTLMInterfaceID(const int ComponentID, string& Name) {
     return -1;
 }
 
-int CompositeModel::GetTLMParameterID(const int ComponentID, std::string &Name) {
-    for(int i = Parameters.size() - 1; i >= 0; i--) {
-        TLMParameterProxy& ifc =  GetTLMParameterProxy(i);
+int CompositeModel::GetComponentParameterID(const int ComponentID, std::string &Name) {
+    for(int i = ComponentParameters.size() - 1; i >= 0; i--) {
+        ComponentParameterProxy& ifc =  GetComponentParameterProxy(i);
         if((ifc.GetComponentID() == ComponentID)
                 && (ifc.GetName() == Name)) {
             return i;
@@ -493,7 +493,7 @@ void TLMComponentProxy::StartComponent(SimulationParams& SimParams, double MaxSt
     }
 }
 
-TLMParameterProxy::TLMParameterProxy(int CompID, int ParID, std::string &aName, std::string &aDefaultValue) :
+ComponentParameterProxy::ComponentParameterProxy(int CompID, int ParID, std::string &aName, std::string &aDefaultValue) :
     ParameterID(ParID),
     ComponentID(CompID),
     Name(aName),

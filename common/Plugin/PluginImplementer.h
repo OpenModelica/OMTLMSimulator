@@ -14,7 +14,7 @@
 #include "Interfaces/TLMInterface1D.h"
 #include "Interfaces/TLMInterface3D.h"
 #include "Plugin/TLMPlugin.h"
-#include "Parameters/TLMParameter.h"
+#include "Parameters/ComponentParameter.h"
 
 
 //! PluginImplemneter class implements the  TLMPlugin interface.
@@ -59,7 +59,7 @@ protected:
     std::vector<TLMInterface*> Interfaces;
 
     //! Registered parameters
-    std::vector<TLMParameter*> Parameters;
+    std::vector<ComponentParameter*> Parameters;
     
     //! The communication object
     TLMClientComm ClientComm;
@@ -96,7 +96,7 @@ protected:
     int RegisteTLMInterface(std::string name, int dimensions=6 ,
                             std::string causality="Bidirectional", std::string domain="Mechanical");
 
-    int RegisterTLMParameter(std::string name, std::string defaultValue);
+    int RegisterComponentParameter(std::string name, std::string defaultValue);
 
     //! ReceiveTimeData receives time-stamped data from coupled simulations
     //! if the specified interface needs more data for the given time..
