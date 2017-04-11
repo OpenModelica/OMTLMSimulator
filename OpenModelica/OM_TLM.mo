@@ -92,7 +92,6 @@ package TLM
       parameter String interfaceName = "tlm";
       parameter Boolean debugFlg = false;
       Real w(start = 0);
-      constant Real phi = 0;
       Real t(start = 0);
       Real tlmDelay = TLM_Functions.TLMGetDelay(interfaceName);
     initial algorithm
@@ -102,7 +101,7 @@ package TLM
       w = der(flange_b.phi);
       flange_b.tau = t;
     algorithm
-      t := TLM_Functions.TLMGetTorque1D(tlmPlugin, interfaceName, time, phi, w);
+      t := TLM_Functions.TLMGetTorque1D(tlmPlugin, interfaceName, time, flange_b.phi, w);
       annotation(Diagram, Icon(coordinateSystem(preserveAspectRatio = false, extent = {{-100, -100}, {100, 100}}, initialScale = 0.1, grid = {10, 10}), graphics = {Line(visible = true, points = {{-63.226, -2.581}, {-28.387, -2.581}}, color = {170, 0, 127}, thickness = 5), Rectangle(visible = true, lineColor = {128, 0, 128}, fillColor = {0, 0, 255}, fillPattern = FillPattern.HorizontalCylinder, extent = {{-29.548, -45.806}, {96.90300000000001, 42.581}}, radius = 20), Text(visible = true, origin = {35, -1.626}, textColor = {255, 255, 255}, extent = {{-55, -26.837}, {55, 26.837}}, textString = "1D Torque")}));
     end TLMTorque1D;
 
@@ -112,7 +111,6 @@ model TLMForce1D
   parameter String interfaceName = "tlm";
   parameter Boolean debugFlg = false;
   Real v(start = 0);
-  constant Real x = 0;
   Real f(start = 0);
   Real tlmDelay = TLM_Functions.TLMGetDelay(interfaceName);
 initial algorithm
@@ -122,7 +120,7 @@ equation
   v = der(flange_b.s);
   flange_b.f = f;
 algorithm
-  f := TLM_Functions.TLMGetForce1D(tlmPlugin, interfaceName, time, x, v);
+  f := TLM_Functions.TLMGetForce1D(tlmPlugin, interfaceName, time, flange_b.s, v);
   annotation(Diagram, Icon(coordinateSystem(preserveAspectRatio = false, extent = {{-100, -100}, {100, 100}}, initialScale = 0.1, grid = {10, 10}), graphics = {Rectangle(visible = true, lineColor = {128, 0, 128}, fillColor = {128, 0, 128}, fillPattern = FillPattern.HorizontalCylinder, extent = {{-29.548, -45.806}, {96.90300000000001, 42.581}}, radius = 20), Line(visible = true, points = {{-63.226, -2.581}, {-28.387, -2.581}}, color = {128, 0, 128}, thickness = 5), Text(visible = true, origin = {33.696, 0}, textColor = {255, 255, 255}, extent = {{-53.696, -30}, {53.696, 30}}, textString = "1D Force")}));
 end TLMForce1D;
 
