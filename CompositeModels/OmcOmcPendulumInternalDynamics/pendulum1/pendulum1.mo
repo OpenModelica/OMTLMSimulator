@@ -1,4 +1,4 @@
-model doublePendulum1 "Simple double pendulum with two revolute joints and two bodies"
+model pendulum1 "Simple double pendulum with two revolute joints and two bodies"
   inner Modelica.Mechanics.MultiBody.World world(enableAnimation = false, animateWorld = false, animateGravity = false) annotation(Placement(transformation(extent = {{-88,0},{-68,20}}, rotation = 0, origin = {0,0}), visible = true));
   TLM.TLM_Interface_3D.TLMInterface3D mbs_tlminterface1 annotation(Placement(visible = true, transformation(origin = {89.1062, 27.4148}, extent = {{-10,-10},{10,10}}, rotation = 0)));
   Modelica.Mechanics.Rotational.Components.Damper damper(d = 0.1) annotation(Placement(visible = true, transformation(origin = {-46.8176,53.2064}, extent = {{-10,-10},{10,10}}, rotation = 0)));
@@ -26,4 +26,4 @@ ALT=\"model Examples.Elementary.DoublePendulum\">
 </td></tr></table>
 
 </HTML>"));
-end doublePendulum1;
+end pendulum1;

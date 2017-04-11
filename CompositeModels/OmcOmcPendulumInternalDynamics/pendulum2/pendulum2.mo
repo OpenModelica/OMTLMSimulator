@@ -1,4 +1,4 @@
-model doublePendulum2 "Simple double pendulum with two revolute joints and two bodies"
+model pendulum2 "Simple double pendulum with two revolute joints and two bodies"
   inner Modelica.Mechanics.MultiBody.World world(enableAnimation = false, animateWorld = false, animateGravity = false) annotation(Placement(transformation(extent = {{-88,0},{-68,20}}, rotation = 0)));
   Modelica.Mechanics.MultiBody.Parts.BodyBox boxBody1(r = {0.25,0,0}, r_0(fixed = true, start = {0.0, 0, 0}), v_0(fixed = true), width = 0.06) annotation(Placement(transformation(extent = {{-10,0},{10,20}}, rotation = 0)));
   Modelica.Mechanics.MultiBody.Joints.Revolute revolute2(phi(fixed = true), w(fixed = true)) annotation(Placement(transformation(extent = {{32,0},{52,20}}, rotation = 0)));
@@ -24,4 +24,4 @@ ALT=\"model Examples.Elementary.DoublePendulum\">
 </td></tr></table>
 
 </HTML>"));
-end doublePendulum2;
+end pendulum2;
