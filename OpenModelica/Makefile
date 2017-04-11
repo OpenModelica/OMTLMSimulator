@@ -21,8 +21,8 @@ include $(MAKEFILEHEADHOME)/Makefile.head
 #CC=mycl cl -DWIN32 -D_WIN32 -DXMSTATIC -DYY_NEVER_INTERACTIVE  /EHsc
 #cc=mycl cl -DWIN32 -D_WIN32 -DXMSTATIC -DYY_NEVER_INTERACTIVE  /EHsc
 
-CC += -DYY_NEVER_INTERACTIVE -fPIC
-cc += -DYY_NEVER_INTERACTIVE -fPIC
+CC += -DYY_NEVER_INTERACTIVE -fPIC -DINTERFACE_TYPES
+cc += -DYY_NEVER_INTERACTIVE -fPIC -DINTERFACE_TYPES
 
 #################################################################################
 #
