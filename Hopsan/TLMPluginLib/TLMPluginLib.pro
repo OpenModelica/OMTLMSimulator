@@ -60,7 +60,7 @@ SOURCES += \
     ../../common/Interfaces/TLMInterfaceSignalOutput.cc \
     ../../common/Interfaces/TLMInterface1D.cc \
     ../../common/Interfaces/TLMInterface3D.cc \
-    ../../common/Parameters/TLMParameter.cc
+    ../../common/Parameters/ComponentParameter.cc
 
 HEADERS += \
     TLMPluginInterfaceSignalInput.hpp \

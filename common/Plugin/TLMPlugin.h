@@ -70,7 +70,7 @@ public:
     virtual int RegisteTLMInterface(std::string name, int dimensions=6,
                                      std::string causality="Bidirectional", std::string domain="Mechanical") = 0;
 
-    virtual int RegisterTLMParameter(std::string name, std::string defaultValue) = 0;
+    virtual int RegisterComponentParameter(std::string name, std::string defaultValue) = 0;
 
     //! Evaluate the reaction force from the TLM connection
     //! for a specified interface. This function might result in a request sent

@@ -90,7 +90,7 @@ void CompositeModelReader::ReadComponents(xmlNode *node, bool skipInterfaces=fal
             }
 
             if(!skipInterfaces) {
-                ReadTLMParameters(curNode, compID);
+                ReadComponentParameters(curNode, compID);
             }
         }
     }
@@ -162,11 +162,10 @@ void CompositeModelReader::ReadTLMInterfaceNodes(xmlNode* node, int ComponentID)
     }
 }
 
-void CompositeModelReader::ReadTLMParameters(xmlNode *node, int ComponentID) {
+void CompositeModelReader::ReadComponentParameters(xmlNode *node, int ComponentID) {
     for(xmlNode* curNode = node->children; curNode; curNode = curNode->next) {
         if(   (XML_ELEMENT_NODE == curNode->type)
                && (strcmp("Parameter", (const char*)(curNode->name)) == 0)) {
-            // For every InterfacePoint element that we find read its name
 
             xmlNode* curAttrVal = FindAttributeByName(curNode, "Name");
             string Name((const char*)curAttrVal->content);
@@ -174,7 +173,7 @@ void CompositeModelReader::ReadTLMParameters(xmlNode *node, int ComponentID) {
             curAttrVal = FindAttributeByName(curNode, "Value");
             string Value((const char*)curAttrVal->content);
 
-            TheModel.RegisterTLMParameterProxy(ComponentID, Name, Value);
+            TheModel.RegisterComponentParameterProxy(ComponentID, Name, Value);
         }
     }
 }

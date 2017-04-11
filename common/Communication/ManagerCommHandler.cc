@@ -368,7 +368,7 @@ void ManagerCommHandler::ProcessRegParameterMessage(int compID, TLMMessage &mess
         }
     }
 
-    int ParID = TheModel.GetTLMParameterID(compID, aName);
+    int ParID = TheModel.GetComponentParameterID(compID, aName);
 
     mess.Header.SourceIsBigEndianSystem = TLMMessageHeader::IsBigEndianSystem;
     mess.Header.DataSize = 0;
@@ -376,8 +376,8 @@ void ManagerCommHandler::ProcessRegParameterMessage(int compID, TLMMessage &mess
     if(ParID < 0 && CommMode == InterfaceRequestMode) {
         // interface not found, create it
         //std::string type = "1D";                                //HARD-CODED /robbr
-        TheModel.RegisterTLMParameterProxy(compID, aName, aValue);
-        ParID = TheModel.GetTLMParameterID(compID, aName);
+        TheModel.RegisterComponentParameterProxy(compID, aName, aValue);
+        ParID = TheModel.GetComponentParameterID(compID, aName);
     }
 
     if(ParID < 0) {
@@ -392,10 +392,10 @@ void ManagerCommHandler::ProcessRegParameterMessage(int compID, TLMMessage &mess
     ss << "Assigning parameter ID = " << ParID;
     TLMErrorLog::Log(ss.str());
 
-    mess.Header.TLMParameterID = ParID;
+    mess.Header.ComponentParameterID = ParID;
 
     char ValueBuf[100];
-    sprintf(ValueBuf, "%.99s", TheModel.GetTLMParameterProxy(ParID).GetValue().c_str());
+    sprintf(ValueBuf, "%.99s", TheModel.GetComponentParameterProxy(ParID).GetValue().c_str());
     mess.Header.DataSize = sizeof(ValueBuf);
     mess.Data.resize(sizeof(TLMConnectionParams));
     memcpy(& mess.Data[0], &ValueBuf, mess.Header.DataSize);

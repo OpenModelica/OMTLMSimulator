@@ -71,8 +71,8 @@ void PrintInterfaceInformation(CompositeModel& theModel) {
         interfacefile << "</Interfaces>\n";
 
         interfacefile << "<Parameters>\n";
-        for(size_t idx=0; idx<theModel.GetParametersNum(); ++idx) {
-            TLMParameterProxy& parProx = theModel.GetTLMParameterProxy(idx);
+        for(size_t idx=0; idx<theModel.GetComponentParametersNum(); ++idx) {
+            ComponentParameterProxy& parProx = theModel.GetComponentParameterProxy(idx);
             TLMComponentProxy& comProx = theModel.GetTLMComponentProxy(parProx.GetComponentID());
 
             interfacefile << "\t<Parameter model=\"" + comProx.GetName() +

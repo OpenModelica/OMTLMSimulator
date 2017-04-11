@@ -18,7 +18,7 @@
 // Classes defined later in this file
 class TLMComponentProxy;
 class TLMInterfaceProxy;
-class TLMParameterProxy;
+class ComponentParameterProxy;
 class TLMConnection;
 class SimulationParams;
 
@@ -29,8 +29,8 @@ typedef std::vector<TLMComponentProxy*> ComponentsVector;
 //!  TLMInterfacesVector is an array of TLMInterfaceProxy as stored in CompositeModel on the TLM manager
 typedef std::vector<TLMInterfaceProxy*> TLMInterfacesVector;
 
-//!  TLMParametersVector is an array of TLMParameterProxy as stored in CompositeModel on the TLM manager
-typedef std::vector<TLMParameterProxy*> TLMParametersVector;
+//!  ComponentParametersVector is an array of ComponentParameterProxy as stored in CompositeModel on the TLM manager
+typedef std::vector<ComponentParameterProxy*> ComponentParametersVector;
 
 //!  ConnectionsVector is an array of components as stored in CompositeModel on the TLM manager
 typedef std::vector<TLMConnection*> ConnectionsVector;
@@ -163,11 +163,11 @@ private:
 
 
 
-class  TLMParameterProxy {
+class  ComponentParameterProxy {
 
 public:
 
-    TLMParameterProxy(int CompID, int ParID, std::string& aName, std::string& aDefaultValue);
+    ComponentParameterProxy(int CompID, int ParID, std::string& aName, std::string& aDefaultValue);
 
     //! Get the name of this interface
     const std::string& GetName() const {
@@ -492,8 +492,8 @@ class CompositeModel {
     //! Array of InterfaceProxies keeping tract of the TLMInterfaces in the model
     TLMInterfacesVector Interfaces;
 
-    //! Array of ParameterProxies keeping track of the TLMParameters in the model
-    TLMParametersVector Parameters;
+    //! Array of ComponentParameterProxies keeping track of the ComponentParameters in the model
+    ComponentParametersVector ComponentParameters;
 
     //! Array of TLMConnections. The essential part of meta-model.
     ConnectionsVector Connections;
@@ -531,7 +531,7 @@ public:
         return Interfaces.size();
     }
 
-    size_t GetParametersNum() const { return Parameters.size(); }
+    size_t GetComponentParametersNum() const { return ComponentParameters.size(); }
 
     //! Find a Component by its name and return the ID
     //! Return -1 if not component was found..
@@ -545,25 +545,25 @@ public:
     int RegisterTLMInterfaceProxy(const int ComponentID, std::string& Name, int Dimensions=6,
                                   std::string Causality="Bidirectional", std::string Domain="Mechanical");
 
-    int RegisterTLMParameterProxy(const int ComponentID, std::string& Name, std::string& DefaultValue);
+    int RegisterComponentParameterProxy(const int ComponentID, std::string& Name, std::string& DefaultValue);
 
     //! Return the TLMInterfaceProxy associated with the given ID.
     TLMInterfaceProxy& GetTLMInterfaceProxy(const int ID) {
         return *(Interfaces[ID]);
     }
 
-    // Return the TLMParameterProxy associated with the given ID.
-    TLMParameterProxy& GetTLMParameterProxy(const int ID) {
-        return *(Parameters[ID]);
+    // Return the ComponentParameterProxy associated with the given ID.
+    ComponentParameterProxy& GetComponentParameterProxy(const int ID) {
+        return *(ComponentParameters[ID]);
     }
 
     //! Find TLMInterface belonging to a given component (ID)
     //! with a specified name and return its ID.
     int GetTLMInterfaceID(const int ComponentID, std::string& Name);
 
-    //! Find TLMParameter belonging to a given component (ID)
+    //! Find ComponentParameter belonging to a given component (ID)
     //! with a specified name and return its ID.
-    int GetTLMParameterID(const int ComponentID, std::string& Name);
+    int GetComponentParameterID(const int ComponentID, std::string& Name);
 
     //! Add a TLMConnection to the model.
     //! Input:
