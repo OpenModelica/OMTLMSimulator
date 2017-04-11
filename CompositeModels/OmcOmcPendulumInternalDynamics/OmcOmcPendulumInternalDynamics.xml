@@ -6,7 +6,7 @@
     <SubModel Position="0,0,0" ExactStep="0" StartCommand="StartTLMOpenModelica" GeometryFile="pendulum1.stl" ModelFile="pendulum1.mo" Angle321="0,0,0" Name="pendulum1">
       <Annotation Extent="{-10,-10,10,10}" Visible="true" Rotation="0" Origin="{-30,6}"/>
       <!-- TLM interface points for SubModel A -->
-      <InterfacePoint Position="0.25,0,0" Angle321="0,0,0" Name="tlm"/>
+      <InterfacePoint Position="0.25,0,0" Angle321="0,0,0" Name="tlm" Causality="Bidirectional" Dimensions="6" Domain="Mechanical"/>
     </SubModel>
     <SubModel Position="0.25,0,0" ExactStep="0" StartCommand="StartTLMOpenModelica" GeometryFile="pendulum2.stl" ModelFile="pendulum2.mo" Angle321="0,0,0" Name="pendulum2">
       <Annotation Extent="{-10,-10,10,10}" Visible="true" Rotation="0" Origin="{32,-16}"/>
