@@ -1,0 +1,35 @@
+<?xml version='1.0' encoding='ISO-8859-1'?>
+<!-- The root node is the composite model -->
+<Model Name="OmcOmcTriplePendulum">
+  <!-- List of connected sub-models -->
+  <SubModels>
+    <SubModel StartCommand="StartTLMOpenModelica" Angle321="0,0,0" ExactStep="0" Name="pendulum1" ModelFile="pendulum1.mo" GeometryFile="pendulum1.stl" Position="0,0,0">
+      <Annotation Rotation="0" Extent="{-10,-10,10,10}" Origin="{-46,8}" Visible="true"/>
+      <!-- TLM interface points for SubModel A -->
+      <InterfacePoint Dimensions="6" Angle321="0,0,0" Domain="Mechanical" Name="tlm" Position="0.25,0,0" Causality="Bidirectional"/>
+    </SubModel>
+    <SubModel StartCommand="StartTLMOpenModelica" Angle321="0,0,0" ExactStep="0" Name="pendulum2" ModelFile="pendulum2.mo" GeometryFile="pendulum2.stl" Position="0.25,0,0">
+      <Annotation Rotation="0" Extent="{-10,-10,10,10}" Origin="{10,-16}" Visible="true"/>
+      <!-- TLM interface points for SubModel C -->
+      <InterfacePoint Dimensions="6" Angle321="0,0,0" Domain="Mechanical" Name="tlm" Position="0,0,0" Causality="Bidirectional"/>
+      <InterfacePoint Dimensions="6" Angle321="0,0,0" Domain="Mechanical" Name="tlm2" Position="0.25,0,0" Causality="Bidirectional"/>
+    </SubModel>
+    <SubModel StartCommand="StartTLMOpenModelica" Angle321="0,0,0" ExactStep="0" Name="pendulum3" ModelFile="pendulum3.mo" GeometryFile="pendulum3.stl" Position="0.5,0,0">
+      <Annotation Rotation="0" Extent="{-10,-10,10,10}" Origin="{8,-50}" Visible="true"/>
+      <!-- TLM interface points for SubModel C -->
+      <InterfacePoint Dimensions="6" Angle321="0,0,0" Domain="Mechanical" Name="tlm" Position="0,0,0" Causality="Bidirectional"/>
+    </SubModel>
+  </SubModels>
+  <!-- List of TLM connections -->
+  <Connections>
+    <!-- Some more physical values: Delay="1e-5" Zf="8e4" Zfr="400" alpha="0.2" -->
+    <Connection From="pendulum1.tlm" Zf="2000" alpha="0.2" To="pendulum2.tlm" Zfr="0" Delay="2e-4">
+      <Annotation Points="{{-35,16.5},{-35,13.25},{21,13.25},{21,-7.5}}"/>
+    </Connection>
+    <Connection From="pendulum2.tlm2" Zf="2000" To="pendulum3.tlm" alpha="0.2" Delay="2e-4" Zfr="0">
+      <Annotation Points="{{22,-12},{30,-12},{30,-42},{20,-42},{20,-42}}"/>
+    </Connection>
+  </Connections>
+  <!-- Parameters for the simulation -->
+  <SimulationParams StartTime="0" StopTime="3" ManagerPort="11113"/>
+</Model>
