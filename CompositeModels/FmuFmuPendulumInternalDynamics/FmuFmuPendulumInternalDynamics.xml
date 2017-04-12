@@ -1,0 +1,116 @@
+<?xml version='1.0' encoding='ISO-8859-1'?>
+<Model Name="FmuFmuPendulumInternalDynamics">
+  <SubModels>
+    <SubModel GeometryFile="pendulum1.stl" StartCommand="StartTLMFmiWrapper" Name="pendulum1" Angle321="0,0,0" Position="0,0,0" ModelFile="pendulum1.fmu">
+      <Annotation Origin="{-40,-10}" Rotation="0" Extent="{-10,-10,10,10}" Visible="true"/>
+      <InterfacePoint Causality="Bidirectional" Domain="Mechanical" Dimensions="6" Name="tlm" Angle321="0,0,0" Position="0.25,0,0"/>
+      <Parameter Value="0" Name="boxBody1.angles_start[1]"/>
+      <Parameter Value="0" Name="boxBody1.angles_start[2]"/>
+      <Parameter Value="0" Name="boxBody1.angles_start[3]"/>
+      <Parameter Value="7700" Name="boxBody1.density"/>
+      <Parameter Value="0" Name="boxBody1.frameTranslation.extra"/>
+      <Parameter Value="0" Name="boxBody1.innerWidth"/>
+      <Parameter Value="0" Name="boxBody1.w_0_start[1]"/>
+      <Parameter Value="0" Name="boxBody1.w_0_start[2]"/>
+      <Parameter Value="0" Name="boxBody1.w_0_start[3]"/>
+      <Parameter Value="0.06" Name="boxBody1.width"/>
+      <Parameter Value="0" Name="boxBody1.z_0_start[1]"/>
+      <Parameter Value="0" Name="boxBody1.z_0_start[2]"/>
+      <Parameter Value="0" Name="boxBody1.z_0_start[3]"/>
+      <Parameter Value="0.1" Name="damper.d"/>
+      <Parameter Value="0.0001" Name="damper.phi_nominal"/>
+      <Parameter Value="40" Name="world.defaultFrameDiameterFraction"/>
+      <Parameter Value="1000" Name="world.defaultN_to_m"/>
+      <Parameter Value="1000" Name="world.defaultNm_to_m"/>
+      <Parameter Value="0.7" Name="world.defaultSpecularCoefficient"/>
+      <Parameter Value="20" Name="world.defaultWidthFraction"/>
+      <Parameter Value="9.81" Name="world.g"/>
+      <Parameter Value="0" Name="world.gravityArrowTail[1]"/>
+      <Parameter Value="0" Name="world.gravityArrowTail[2]"/>
+      <Parameter Value="0" Name="world.gravityArrowTail[3]"/>
+      <Parameter Value="1.2742e+07" Name="world.gravitySphereDiameter"/>
+      <Parameter Value="3.986e+14" Name="world.mue"/>
+      <Parameter Value="1" Name="world.nominalLength"/>
+      <Parameter Value="" Name="revolute1.stateSelect"/>
+      <Parameter Value="1" Name="boxBody1.animation"/>
+      <Parameter Value="0" Name="boxBody1.body.animation"/>
+      <Parameter Value="0" Name="boxBody1.enforceStates"/>
+      <Parameter Value="0" Name="fmi.debugFlg"/>
+      <Parameter Value="1" Name="revolute1.animation"/>
+      <Parameter Value="0" Name="world.animateGravity"/>
+      <Parameter Value="0" Name="world.animateWorld"/>
+      <Parameter Value="1" Name="world.axisShowLabels"/>
+      <Parameter Value="1" Name="world.driveTrainMechanics3D"/>
+      <Parameter Value="box" Name="boxBody1.frameTranslation.shapeType"/>
+      <Parameter Value="fmitlm" Name="fmi.interfaceName"/>
+      <Parameter Value="x" Name="world.label1"/>
+      <Parameter Value="y" Name="world.label2"/>
+    </SubModel>
+    <SubModel GeometryFile="pendulum2.stl" StartCommand="StartTLMFmiWrapper" Name="pendulum2" Angle321="0,0,0" Position="0.25,0,0" ModelFile="pendulum2.fmu">
+      <Annotation Origin="{14,-10}" Rotation="0" Extent="{-10,-10,10,10}" Visible="true"/>
+      <InterfacePoint Causality="Bidirectional" Domain="Mechanical" Dimensions="6" Name="tlm" Angle321="0,0,0" Position="0,0,0"/>
+      <Parameter Value="0" Name="boxBody1.angles_start[1]"/>
+      <Parameter Value="0" Name="boxBody1.angles_start[2]"/>
+      <Parameter Value="0" Name="boxBody1.angles_start[3]"/>
+      <Parameter Value="7700" Name="boxBody1.density"/>
+      <Parameter Value="0" Name="boxBody1.frameTranslation.extra"/>
+      <Parameter Value="0" Name="boxBody1.innerWidth"/>
+      <Parameter Value="0" Name="boxBody1.w_0_start[1]"/>
+      <Parameter Value="0" Name="boxBody1.w_0_start[2]"/>
+      <Parameter Value="0" Name="boxBody1.w_0_start[3]"/>
+      <Parameter Value="0.06" Name="boxBody1.width"/>
+      <Parameter Value="0" Name="boxBody1.z_0_start[1]"/>
+      <Parameter Value="0" Name="boxBody1.z_0_start[2]"/>
+      <Parameter Value="0" Name="boxBody1.z_0_start[3]"/>
+      <Parameter Value="0" Name="boxBody2.angles_start[1]"/>
+      <Parameter Value="0" Name="boxBody2.angles_start[2]"/>
+      <Parameter Value="0" Name="boxBody2.angles_start[3]"/>
+      <Parameter Value="7700" Name="boxBody2.density"/>
+      <Parameter Value="0" Name="boxBody2.frameTranslation.extra"/>
+      <Parameter Value="0" Name="boxBody2.innerWidth"/>
+      <Parameter Value="0" Name="boxBody2.w_0_start[1]"/>
+      <Parameter Value="0" Name="boxBody2.w_0_start[2]"/>
+      <Parameter Value="0" Name="boxBody2.w_0_start[3]"/>
+      <Parameter Value="0.06" Name="boxBody2.width"/>
+      <Parameter Value="0" Name="boxBody2.z_0_start[1]"/>
+      <Parameter Value="0" Name="boxBody2.z_0_start[2]"/>
+      <Parameter Value="0" Name="boxBody2.z_0_start[3]"/>
+      <Parameter Value="40" Name="world.defaultFrameDiameterFraction"/>
+      <Parameter Value="1000" Name="world.defaultN_to_m"/>
+      <Parameter Value="1000" Name="world.defaultNm_to_m"/>
+      <Parameter Value="0.7" Name="world.defaultSpecularCoefficient"/>
+      <Parameter Value="20" Name="world.defaultWidthFraction"/>
+      <Parameter Value="9.81" Name="world.g"/>
+      <Parameter Value="0" Name="world.gravityArrowTail[1]"/>
+      <Parameter Value="0" Name="world.gravityArrowTail[2]"/>
+      <Parameter Value="0" Name="world.gravityArrowTail[3]"/>
+      <Parameter Value="1.2742e+07" Name="world.gravitySphereDiameter"/>
+      <Parameter Value="3.986e+14" Name="world.mue"/>
+      <Parameter Value="1" Name="world.nominalLength"/>
+      <Parameter Value="" Name="revolute2.stateSelect"/>
+      <Parameter Value="1" Name="boxBody1.animation"/>
+      <Parameter Value="0" Name="boxBody1.body.animation"/>
+      <Parameter Value="0" Name="boxBody1.enforceStates"/>
+      <Parameter Value="1" Name="boxBody2.animation"/>
+      <Parameter Value="0" Name="boxBody2.body.animation"/>
+      <Parameter Value="0" Name="boxBody2.enforceStates"/>
+      <Parameter Value="0" Name="fmi.debugFlg"/>
+      <Parameter Value="1" Name="revolute2.animation"/>
+      <Parameter Value="0" Name="world.animateGravity"/>
+      <Parameter Value="0" Name="world.animateWorld"/>
+      <Parameter Value="1" Name="world.axisShowLabels"/>
+      <Parameter Value="1" Name="world.driveTrainMechanics3D"/>
+      <Parameter Value="box" Name="boxBody1.frameTranslation.shapeType"/>
+      <Parameter Value="box" Name="boxBody2.frameTranslation.shapeType"/>
+      <Parameter Value="fmitlm" Name="fmi.interfaceName"/>
+      <Parameter Value="x" Name="world.label1"/>
+      <Parameter Value="y" Name="world.label2"/>
+    </SubModel>
+  </SubModels>
+  <Connections>
+    <Connection From="pendulum1.tlm" Zf="10000" To="pendulum2.tlm" Delay="1e-4" Zfr="100" alpha="0.2">
+      <Annotation Points="{{-28,-2},{-12,-2},{-12,10},{34,10},{34,-2},{26,-2},{26,-2}}"/>
+    </Connection>
+  </Connections>
+  <SimulationParams ManagerPort="11113" StartTime="0" StopTime="3"/>
+</Model>
