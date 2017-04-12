@@ -1034,6 +1034,9 @@ void readFmiConfigFile()
     TLMErrorLog::Log("Number of interfaces: "+TLMErrorLog::ToStdStr(int(fmiConfig.nInterfaces)));
     for(size_t i=0; i<fmiConfig.nInterfaces; ++i) {
       TLMErrorLog::Log("Name: "+fmiConfig.interfaceNames[i]);
+      TLMErrorLog::Log("Causality: "+fmiConfig.causalities[i]);
+      TLMErrorLog::Log("Dimensions: "+TLMErrorLog::ToStdStr(fmiConfig.dimensions[i]));
+      TLMErrorLog::Log("Domain: "+fmiConfig.domains[i]);
       int nP,nO,nS,nA,nF,nV;
       if(fmiConfig.dimensions[i] == 6 &&
          fmiConfig.causalities[i] == "Bidirectional") {
