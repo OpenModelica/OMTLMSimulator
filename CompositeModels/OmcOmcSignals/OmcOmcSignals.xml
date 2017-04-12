@@ -1,0 +1,33 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!-- The root node is the composite-model -->
+<Model Name="OmcOmcSignals">
+  <!-- List of connected sub-models -->
+  <SubModels>
+    <SubModel Name="OutputInput" Position="0.0,0.0,0.0" StartCommand="StartTLMOpenModelica" Angle321="0.0,0.0,0.0" ModelFile="OutputInput.mo">
+      <Annotation Rotation="0" Visible="true" Extent="{-10,-10,10,10}" Origin="{-58,6}"/>
+      <InterfacePoint Domain="Signal" Dimensions="1" Name="tlm1" Position="0,0,0" Angle321="0,0,0" Causality="Input"/>
+      <InterfacePoint Domain="Signal" Dimensions="1" Name="tlm2" Position="1,0,0" Angle321="0,0,0" Causality="Output"/>
+      <InterfacePoint Domain="Signal" Dimensions="1" Name="tlm3" Position="0,0,0" Angle321="0,0,0" Causality="Input"/>
+    </SubModel>
+    <SubModel Name="InputOutput" Position="0.0,0.0,0.0" StartCommand="StartTLMOpenModelica" Angle321="0.0,0.0,0.0" ModelFile="InputOutput.mo">
+      <Annotation Rotation="0" Visible="true" Extent="{-10,-10,10,10}" Origin="{4,-18}"/>
+      <InterfacePoint Domain="Signal" Dimensions="1" Name="tlm2" Position="0,0,0" Angle321="0,0,0" Causality="Input"/>
+      <InterfacePoint Domain="Signal" Dimensions="1" Name="tlm1" Position="1,0,0" Angle321="0,0,0" Causality="Output"/>
+      <InterfacePoint Domain="Signal" Dimensions="1" Name="tlm3" Position="1,0,0" Angle321="0,0,0" Causality="Output"/>
+    </SubModel>
+  </SubModels>
+  <!-- List of TLM connections -->
+  <Connections>
+    <Connection Delay="1e-3" To="InputOutput.tlm1" From="OutputInput.tlm1">
+      <Annotation Points="{{-46,14},{32,14},{32,-14},{16,-14},{16,-14}}"/>
+    </Connection>
+    <Connection Delay="1e-3" To="OutputInput.tlm2" From="InputOutput.tlm2">
+      <Annotation Points="{{16,-10},{28,-10},{28,10},{-46,10}}"/>
+    </Connection>
+    <Connection Delay="2e-3" To="InputOutput.tlm3" From="OutputInput.tlm3">
+      <Annotation Points="{{-46,6},{24,6},{24,-18},{16,-18}}"/>
+    </Connection>
+  </Connections>
+  <!-- Parameters for the simulation -->
+  <SimulationParams StopTime="10" StartTime="0"/>
+</Model>
