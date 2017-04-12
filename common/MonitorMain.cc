@@ -558,7 +558,7 @@ void PrintData(CompositeModel& model,
             else if(interfaceProxy.GetDimensions() == 1 &&
                     interfaceProxy.GetCausality() == "Bidirectional") {
                 std::stringstream ss;
-                ss << "Printing data for 3D interface " << interfaceProxy.GetID();
+                ss << "Printing data for 1D interface " << interfaceProxy.GetID();
                 TLMErrorLog::Log(ss.str());
 
                 TLMTimeData1D& timeData = dataStorage1D.at(interfaceProxy.GetID());
@@ -613,7 +613,7 @@ void PrintData(CompositeModel& model,
                     interfaceProxy.GetCausality() == "Output") {
 
                 std::stringstream ss;
-                ss << "Printing data for 3D interface " << interfaceProxy.GetID();
+                ss << "Printing data for output interface " << interfaceProxy.GetID();
                 TLMErrorLog::Log(ss.str());
 
                 TLMTimeDataSignal& timeData = dataStorageSignal.at(interfaceProxy.GetID());
@@ -714,6 +714,8 @@ int main(int argc, char* argv[]) {
     TLMErrorLog::SetOutStream(logfile);
     if(debugFlg) {
         TLMErrorLog::SetDebugOut(true);
+        TLMErrorLog::SetNormalErrorLogOn(true);
+        TLMErrorLog::SetWarningOut(true);
     }
 
     // Get input strings, server name and meta-model XML file.
