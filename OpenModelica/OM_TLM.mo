@@ -16,6 +16,22 @@ package TLM
       end destructor;
     end TLMPlugin;
 
+    function TLMRegisterInterface
+      input TLMPlugin tlmPlugin;
+      input String name "Name of the interface";
+      input String causality "Input/Output/Bidirectional";
+      input Integer dimensions "Dimension of the interface";
+      input String domain "Domain of the interface";
+      
+      external "C" register_tlm_interface(tlmPlugin, name, causality, dimensions, domain) annotation(Include = "#include<tlmforce.h>", Library = "tlmopenmodelica", IncludeDirectory = "modelica://TLM/Resources/Include", LibraryDirectory = "modelica://TLM/Resources/Library", __OpenModelica_Impure = true);
+      annotation(Icon(coordinateSystem(extent = {{-100, -100}, {100, 100}}, preserveAspectRatio = true, initialScale = 0.1, grid = {10, 10}), graphics = {Rectangle(visible = true, fillColor = {255, 85, 0}, fillPattern = FillPattern.Solid, extent = {{-100, -100}, {100, 100}}, radius = 20), Text(visible = true, origin = {3.13, 5}, textColor = {255, 255, 255}, extent = {{-66.87, -65}, {66.87, 65}}, textString = "F")}));
+    end TLMRegisterInterface;
+
+
+
+
+  
+  
     function TLMSetMotion
       input TLMPlugin tlmPlugin;
       input String name "Name of the interface";
@@ -67,6 +83,28 @@ package TLM
       external "C" calc_tlm_torque_1d(tlmPlugin, name, time_in, phi, w, t) annotation(Include = "#include<tlmforce.h>", Library = "tlmopenmodelica", IncludeDirectory = "modelica://TLM/Resources/Include", LibraryDirectory = "modelica://TLM/Resources/Library");
       annotation(Icon(coordinateSystem(extent = {{-100, -100}, {100, 100}}, preserveAspectRatio = true, initialScale = 0.1, grid = {10, 10}), graphics = {Rectangle(visible = true, fillColor = {255, 85, 0}, fillPattern = FillPattern.Solid, extent = {{-100, -100}, {100, 100}}, radius = 20), Text(visible = true, origin = {3.13, 5}, textColor = {255, 255, 255}, extent = {{-66.87, -65}, {66.87, 65}}, textString = "F")}));
     end TLMGetTorque1D;
+    
+    function TLMGetInputValue
+      input TLMPlugin tlmPlugin;
+      input String name "Name of the interface";
+      input Real time_in "Simulation time";
+      output Real x "Value";
+  
+      external "C" get_tlm_input_value(tlmPlugin, name, time_in, x) annotation(Include = "#include<tlmforce.h>", Library = "tlmopenmodelica", IncludeDirectory = "modelica://TLM/Resources/Include", LibraryDirectory = "modelica://TLM/Resources/Library");
+      annotation(Icon(coordinateSystem(extent = {{-100, -100}, {100, 100}}, preserveAspectRatio = true, initialScale = 0.1, grid = {10, 10}), graphics = {Rectangle(visible = true, fillColor = {255, 85, 0}, fillPattern = FillPattern.Solid, extent = {{-100, -100}, {100, 100}}, radius = 20), Text(visible = true, origin = {3.13, 5}, textColor = {255, 255, 255}, extent = {{-66.87, -65}, {66.87, 65}}, textString = "F")}));
+    end TLMGetInputValue;
+
+  
+    function TLMSetOutputValue
+      input TLMPlugin tlmPlugin;
+      input String name "Name of the interface";
+      input Real time_in "Simulation time";
+      input Real x "Value";
+  
+      external "C" set_tlm_output_value(tlmPlugin, name, time_in, x) annotation(Include = "#include<tlmforce.h>", Library = "tlmopenmodelica", IncludeDirectory = "modelica://TLM/Resources/Include", LibraryDirectory = "modelica://TLM/Resources/Library");
+      annotation(Icon(coordinateSystem(extent = {{-100, -100}, {100, 100}}, preserveAspectRatio = true, initialScale = 0.1, grid = {10, 10}), graphics = {Rectangle(visible = true, fillColor = {255, 85, 0}, fillPattern = FillPattern.Solid, extent = {{-100, -100}, {100, 100}}, radius = 20), Text(visible = true, origin = {3.13, 5}, textColor = {255, 255, 255}, extent = {{-66.87, -65}, {66.87, 65}}, textString = "F")}));
+    end TLMSetOutputValue;
+
   
     function TLMGetDelay
       input String name "Name of the interface";
@@ -84,6 +122,57 @@ package TLM
     end TLMSetDebugMode;
     annotation(Icon(coordinateSystem(extent = {{-100, -100}, {100, 100}}, preserveAspectRatio = true, initialScale = 0.1, grid = {10, 10}), graphics = {Rectangle(visible = true, fillColor = {255, 85, 0}, fillPattern = FillPattern.Solid, extent = {{-100, -100}, {100, 100}}, radius = 20), Text(visible = true, origin = {3.13, 5}, textColor = {255, 255, 255}, extent = {{-66.87, -65}, {66.87, 65}}, textString = "F")}), Diagram(coordinateSystem(extent = {{-148.5, -105}, {148.5, 105}}, preserveAspectRatio = true, initialScale = 0.1, grid = {5, 5})));
   end TLM_Functions;
+
+
+package TLM_Interface_Signal
+    model TLMInput
+      TLM_Functions.TLMPlugin tlmPlugin = TLM_Functions.TLMPlugin();
+      Modelica.Blocks.Interfaces.RealOutput y annotation(Placement(visible = true, transformation(origin = {-76.77419999999999, -1.93548}, extent = {{-12, -12}, {12, 12}}, rotation = 0), iconTransformation(origin = {-76.77419999999999, -1.93548}, extent = {{-12, -12}, {12, 12}}, rotation = 0)));
+      parameter String interfaceName = "tlm";
+      parameter Boolean debugFlg = false;
+      Real tlmDelay = TLM_Functions.TLMGetDelay(interfaceName);
+    initial algorithm
+      assert(tlmDelay > 0.0, "Bad TLM delay in" + interfaceName + ", give up");
+      TLM_Functions.TLMSetDebugMode(debugFlg);  
+    algorithm
+      TLM_Functions.TLMSetDebugMode(debugFlg);
+      y := TLM_Functions.TLMGetInputValue(tlmPlugin, interfaceName, time);
+      annotation(Diagram, Icon(coordinateSystem(preserveAspectRatio = false, extent = {{-100, -100}, {100, 100}}, initialScale = 0.1, grid = {10, 10}), graphics = {Line(visible = true, points = {{-63.226, -2.581}, {-28.387, -2.581}}, color = {170, 0, 127}, thickness = 5), Rectangle(visible = true, lineColor = {128, 0, 128}, fillColor = {0, 0, 255}, fillPattern = FillPattern.HorizontalCylinder, extent = {{-29.548, -45.806}, {96.90300000000001, 42.581}}, radius = 20), Text(visible = true, origin = {35, -1.626}, textColor = {255, 255, 255}, extent = {{-55, -26.837}, {55, 26.837}}, textString = "1D Torque")}));
+    end TLMInput;
+
+
+
+
+
+
+
+
+
+
+model TLMOutput
+  TLM_Functions.TLMPlugin tlmPlugin = TLM_Functions.TLMPlugin();
+  Modelica.Blocks.Interfaces.RealInput u annotation(Placement(visible = true, transformation(origin = {-76.77419999999999, -1.93548}, extent = {{-12, -12}, {12, 12}}, rotation = 0), iconTransformation(origin = {-76.77419999999999, -1.93548}, extent = {{-12, -12}, {12, 12}}, rotation = 0)));
+  parameter String interfaceName = "tlm";
+  parameter Boolean debugFlg = false;
+  Real tlmDelay = TLM_Functions.TLMGetDelay(interfaceName);
+initial algorithm
+  assert(tlmDelay > 0.0, "Bad TLM delay in" + interfaceName + ", give up");
+  TLM_Functions.TLMSetDebugMode(debugFlg);
+algorithm
+  TLM_Functions.TLMSetDebugMode(debugFlg);
+  TLM_Functions.TLMSetOutputValue(tlmPlugin, interfaceName, time, u);
+  annotation(Diagram, Icon(coordinateSystem(preserveAspectRatio = false, extent = {{-100, -100}, {100, 100}}, initialScale = 0.1, grid = {10, 10}), graphics = {Rectangle(visible = true, lineColor = {128, 0, 128}, fillColor = {128, 0, 128}, fillPattern = FillPattern.HorizontalCylinder, extent = {{-29.548, -45.806}, {96.90300000000001, 42.581}}, radius = 20), Line(visible = true, points = {{-63.226, -2.581}, {-28.387, -2.581}}, color = {128, 0, 128}, thickness = 5), Text(visible = true, origin = {33.696, 0}, textColor = {255, 255, 255}, extent = {{-53.696, -30}, {53.696, 30}}, textString = "1D Force")}));
+end TLMOutput;
+
+
+
+
+
+
+
+    annotation(Icon(coordinateSystem(extent = {{-100, -100}, {100, 100}}, preserveAspectRatio = true, initialScale = 0.1, grid = {10, 10}), graphics = {Rectangle(visible = true, fillColor = {170, 9, 95}, fillPattern = FillPattern.Solid, extent = {{-100, -100}, {100, 100}}, radius = 20), Text(visible = true, origin = {0, 2.861}, textColor = {255, 255, 255}, extent = {{-84.78700000000001, -62.861}, {84.78700000000001, 62.861}}, textString = "1D")}), Diagram(coordinateSystem(extent = {{-148.5, -105}, {148.5, 105}}, preserveAspectRatio = true, initialScale = 0.1, grid = {5, 5})));
+  end TLM_Interface_Signal;
+
 
   package TLM_Interface_1D
     model TLMTorque1D
@@ -127,6 +216,7 @@ end TLMForce1D;
 
     annotation(Icon(coordinateSystem(extent = {{-100, -100}, {100, 100}}, preserveAspectRatio = true, initialScale = 0.1, grid = {10, 10}), graphics = {Rectangle(visible = true, fillColor = {170, 9, 95}, fillPattern = FillPattern.Solid, extent = {{-100, -100}, {100, 100}}, radius = 20), Text(visible = true, origin = {0, 2.861}, textColor = {255, 255, 255}, extent = {{-84.78700000000001, -62.861}, {84.78700000000001, 62.861}}, textString = "1D")}), Diagram(coordinateSystem(extent = {{-148.5, -105}, {148.5, 105}}, preserveAspectRatio = true, initialScale = 0.1, grid = {5, 5})));
   end TLM_Interface_1D;
+
 
   package TLM_Interface_3D
     model TLMInterface3D
