@@ -1304,7 +1304,7 @@ int main(int argc, char* argv[])
             value = value_str;
         }
 
-        int parId = plugin->RegisterTLMParameter(name,value);
+        int parId = plugin->RegisterComponentParameter(name,value);
 
         plugin->GetParameterValue(parId, name, value);
         TLMErrorLog::Log("Received value: "+value+" for parameter "+name);
