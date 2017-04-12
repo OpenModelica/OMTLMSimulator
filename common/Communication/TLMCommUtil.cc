@@ -107,7 +107,11 @@ bool TLMCommUtil::ReceiveMessage(TLMMessage& mess) {
                        (char*)(&mess.Header) + bcount,
                        sizeof(TLMMessageHeader) - bcount,
                        MSG_WAITALL);
-        if(bcount == 0) return false; // seems like on windows this may indicate "socket closed"
+        if(bcount == 0)
+        {
+            TLMErrorLog::Warning("Received 0 bits. Socket is probably closed.");
+            return false; // seems like on windows this may indicate "socket closed"
+        }
     }
     if(bcount == -1) {
 #ifdef  WIN32
