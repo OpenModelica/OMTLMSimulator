@@ -12,6 +12,12 @@ extern "C" {
 //! Enable, disable debug output.
 void set_debug_mode(int debugFlgIn);
 
+void register_tlm_interface(void* in_TLMPluginStructObj,
+                            const char* interfaceID,
+                            const char* causality,
+                            int dimensions,
+                            const char* domain);
+
 //! Get the TLM delay for the interface.
 double get_tlm_delay();
 
@@ -65,18 +71,28 @@ void calc_tlm_force(void* in_TLMPluginStructObj,
 
 
 void calc_tlm_force_1d(void* in_TLMPluginStructObj,
-                    const char* interfaceID,   // The calling marker ID
-                    double simTime,    // Current simulation time
-                    double position, // Marker position data
-                    double speed,      // Marker translational velocity
-                    double force[]);   // Output force
+                       const char* interfaceID,   // The calling marker ID
+                       double simTime,    // Current simulation time
+                       double position, // Marker position data
+                       double speed,      // Marker translational velocity
+                       double force[]);   // Output force
 
 void calc_tlm_torque_1d(void* in_TLMPluginStructObj,
-                    const char* interfaceID,   // The calling marker ID
-                    double simTime,    // Current simulation time
-                    double angle, // Marker position data
-                    double speed,      // Marker translational velocity
-                    double torque[]);   // Output force
+                        const char* interfaceID,   // The calling marker ID
+                        double simTime,    // Current simulation time
+                        double angle, // Marker position data
+                        double speed,      // Marker translational velocity
+                        double torque[]);   // Output force
+
+void get_tlm_input_value(void* in_TLMPluginStructObj,
+                         const char* interfaceID,   // The calling marker ID
+                         double simTime,    // Current simulation time
+                         double value[]);   // Input value
+
+void set_tlm_output_value(void* in_TLMPluginStructObj,
+                          const char* interfaceID,   // The calling marker ID
+                          double simTime,    // Current simulation time
+                          double value);   // Output value
 #ifdef __cplusplus
 }
 #endif

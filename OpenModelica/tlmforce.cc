@@ -20,6 +20,7 @@ using std::cerr;
 typedef struct {
   TLMPlugin* Plugin;
   int referenceCount;
+  int registerCount;
 } TLMPluginStruct;
 
 TLMPluginStruct* TLMPluginStructObj = 0;
@@ -66,6 +67,7 @@ void* initialize_TLM()
     // Create the plugin
     TLMPluginStructObj->Plugin = TLMPlugin::CreateInstance();
     TLMPluginStructObj->referenceCount = 1;
+    TLMPluginStructObj->registerCount = 0;
 
     // Read parameters from a file
     ifstream tlmConfigFile(TLM_CONFIG_FILE_NAME);
@@ -137,6 +139,21 @@ void set_debug_mode(int debugFlgIn)
         debugOutFile.close();
     }
 }
+
+void register_tlm_interface(void *in_TLMPluginStructObj, const char *interfaceID, const char *causality, int dimensions, const char *domain)
+{
+   TLMPluginStruct* TLMPluginStructObj = (TLMPluginStruct*)in_TLMPluginStructObj;
+
+   //Check if interface is registered. If it's not, register it
+    if( MarkerIDmap.find(interfaceID) == MarkerIDmap.end() ){
+        MarkerIDmap[interfaceID] = TLMPluginStructObj->Plugin->RegisteTLMInterface(interfaceID,
+                                                                                   dimensions,
+                                                                                   causality,
+                                                                                   domain);
+        TLMPluginStructObj->registerCount += 1;
+    }
+}
+
 
 double get_tlm_delay()
 {
@@ -214,6 +231,28 @@ void set_tlm_motion_1d(void* in_TLMPluginStructObj,
 }
 
 
+void set_tlm_value_1d(void* in_TLMPluginStructObj,
+            const char* interfaceID,   // The calling marker ID
+                    double simTime,    // Current simulation time
+                    double value)      // Marker translational velocity
+{
+    TLMPluginStruct* TLMPluginStructObj = (TLMPluginStruct*)in_TLMPluginStructObj;
+    if( MarkerIDmap.find(interfaceID) != MarkerIDmap.end() ){
+        int id = MarkerIDmap.find(interfaceID)->second;
+
+        if( id >= 0 ){
+            TLMPluginStructObj->Plugin->SetValueSignal(id,          // Send data to the Plugin
+                                                       simTime,
+                                                       value);
+        }
+
+    }
+    else {
+        TLMErrorLog::Warning( "set_tlm_value_1d(...), called for non initialized interface " + std::string(interfaceID));
+    }
+}
+
+
 // The calc_tlm_force function is called directly from the Modelica interface function
 // It needs special declaration
 void calc_tlm_force(void* in_TLMPluginStructObj,
@@ -233,17 +272,15 @@ void calc_tlm_force(void* in_TLMPluginStructObj,
 
     // defined in OpenModelica dassl.c
     extern int RHSFinalFlag;
-    static bool firstFinalStepReached = false;
 
-    if( RHSFinalFlag ){
+    bool allRegistered = (TLMPluginStructObj->referenceCount == TLMPluginStructObj->registerCount);
+
+    if( RHSFinalFlag && allRegistered){
       set_tlm_motion(TLMPluginStructObj, interfaceID, simTime, position, orientation, speed, ang_speed);
-      firstFinalStepReached = true;
     }
 
     // Check if interface is registered. If it's not, register it
-    if( MarkerIDmap.find(interfaceID) == MarkerIDmap.end() ){
-        MarkerIDmap[interfaceID] = TLMPluginStructObj->Plugin->RegisteTLMInterface(interfaceID, 6, "Bidirectional", "Mechanical");
-    }
+    register_tlm_interface(TLMPluginStructObj,interfaceID, "Bidirectional", 6, "Mechanical");
 
     // Interface force ID in TLM manager
     int id = MarkerIDmap[interfaceID];
@@ -251,7 +288,7 @@ void calc_tlm_force(void* in_TLMPluginStructObj,
     // Note, we make sure that we do not use the interface before the first final RHS
     // so that all interfaces are registered before we start exchanging data. Also
     // This gives a well defined start condition where all forces and moments are 0.0
-    if( id >= 0 && firstFinalStepReached ){
+    if( id >= 0 && allRegistered ){
         // Call the plugin to get reaction force
 	TLMPluginStructObj->Plugin->GetForce3D(id,
 					     simTime,
@@ -292,19 +329,15 @@ void calc_tlm_force_1d(void* in_TLMPluginStructObj,
 
     // defined in OpenModelica dassl.c
     extern int RHSFinalFlag;
-    static bool firstFinalStepReached = false;
 
-    if( RHSFinalFlag ){
+    bool allRegistered = (TLMPluginStructObj->referenceCount == TLMPluginStructObj->registerCount);
+
+    if( RHSFinalFlag && allRegistered){
       set_tlm_motion_1d(TLMPluginStructObj, interfaceID, simTime, position, speed);
-      firstFinalStepReached = true;
     }
 
     // Check if interface is registered. If it's not, register it
-    if( MarkerIDmap.find(interfaceID) == MarkerIDmap.end() ){
-        MarkerIDmap[interfaceID] = TLMPluginStructObj->Plugin->RegisteTLMInterface(interfaceID, 1,
-                                                                                   "Bidirectional",
-                                                                                   "Mechanical");
-    }
+    register_tlm_interface(TLMPluginStructObj,interfaceID, "Bidirectional", 1, "Mechanical");
 
     // Interface force ID in TLM manager
     int id = MarkerIDmap[interfaceID];
@@ -312,7 +345,7 @@ void calc_tlm_force_1d(void* in_TLMPluginStructObj,
     // Note, we make sure that we do not use the interface before the first final RHS
     // so that all interfaces are registered before we start exchanging data. Also
     // This gives a well defined start condition where all forces and moments are 0.0
-    if( id >= 0 && firstFinalStepReached ){
+    if( id >= 0 && allRegistered ){
         // Call the plugin to get reaction force
     TLMPluginStructObj->Plugin->GetForce1D(id,
                          simTime,
@@ -347,19 +380,15 @@ void calc_tlm_torque_1d(void* in_TLMPluginStructObj,
 
     // defined in OpenModelica dassl.c
     extern int RHSFinalFlag;
-    static bool firstFinalStepReached = false;
 
-    if( RHSFinalFlag ){
+    bool allRegistered = (TLMPluginStructObj->referenceCount == TLMPluginStructObj->registerCount);
+
+    if( RHSFinalFlag && allRegistered ){
       set_tlm_motion_1d(TLMPluginStructObj, interfaceID, simTime, angle, speed);
-      firstFinalStepReached = true;
     }
 
     // Check if interface is registered. If it's not, register it
-    if( MarkerIDmap.find(interfaceID) == MarkerIDmap.end() ){
-        MarkerIDmap[interfaceID] = TLMPluginStructObj->Plugin->RegisteTLMInterface(interfaceID, 1,
-                                                                                   "Bidirectional",
-                                                                                   "Rotational");
-    }
+    register_tlm_interface(TLMPluginStructObj,interfaceID, "Bidirectional", 1, "Rotational");
 
     // Interface force ID in TLM manager
     int id = MarkerIDmap[interfaceID];
@@ -367,7 +396,7 @@ void calc_tlm_torque_1d(void* in_TLMPluginStructObj,
     // Note, we make sure that we do not use the interface before the first final RHS
     // so that all interfaces are registered before we start exchanging data. Also
     // This gives a well defined start condition where all forces and moments are 0.0
-    if( id >= 0 && firstFinalStepReached ){
+    if( id >= 0 && allRegistered ){
         // Call the plugin to get reaction force
     TLMPluginStructObj->Plugin->GetForce1D(id,
                          simTime,
@@ -387,6 +416,64 @@ void calc_tlm_torque_1d(void* in_TLMPluginStructObj,
 }
 
 
+// The get_tlm_input_value function is called directly from the Modelica interface function
+// It needs special declaration
+void get_tlm_input_value(void* in_TLMPluginStructObj,
+            const char* interfaceID,   // The calling marker ID
+                    double simTime,    // Current simulation time
+                    double value[])   // Output value
+{
+    TLMErrorLog::Log("CALLING: get_tlm_input_value(time = "+TLMErrorLog::ToStdStr(simTime)+")");
+    TLMPluginStruct* TLMPluginStructObj = (TLMPluginStruct*)in_TLMPluginStructObj;
+
+    bool allRegistered = (TLMPluginStructObj->referenceCount == TLMPluginStructObj->registerCount);
+
+    // Check if interface is registered. If it's not, register it
+    register_tlm_interface(in_TLMPluginStructObj, interfaceID, "Input", 1, "Signal");
+
+    // Interface force ID in TLM manager
+    int id = MarkerIDmap.find(interfaceID)->second;
+
+    // Note, we make sure that we do not use the interface before the first final RHS
+    // so that all interfaces are registered before we start exchanging data. Also
+    // This gives a well defined start condition where all forces and moments are 0.0
+    if( id >= 0 && allRegistered ){
+        // Call the plugin to get reaction force
+    TLMPluginStructObj->Plugin->GetValueSignal(id,
+                         simTime,
+                         value);
+    }
+    else {
+        /* Not connected */
+        value[0] = 0.0;
+    }
+}
+
+
+// The set_tlm_output_value function is called directly from the Modelica interface function
+// It needs special declaration
+void set_tlm_output_value(void* in_TLMPluginStructObj,
+                          const char* interfaceID,   // The calling marker ID
+                          double simTime,    // Current simulation time
+                          double value)   // Output force
+{
+    TLMErrorLog::Log("CALLING: set_tlm_output_value(time = "+TLMErrorLog::ToStdStr(simTime)+")");
+    TLMPluginStruct* TLMPluginStructObj = (TLMPluginStruct*)in_TLMPluginStructObj;
+
+    // Check if interface is registered. If it's not, register it
+    register_tlm_interface(in_TLMPluginStructObj, interfaceID, "Output", 1, "Signal");
+
+    bool allRegistered = (TLMPluginStructObj->referenceCount == TLMPluginStructObj->registerCount);
+
+    if( allRegistered ){
+      set_tlm_value_1d(TLMPluginStructObj, interfaceID, simTime, value);
+    }
+}
+
+
 #ifdef __cplusplus
 }
 #endif
+
+
+
