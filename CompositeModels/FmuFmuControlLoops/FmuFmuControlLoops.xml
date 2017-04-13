@@ -1,0 +1,47 @@
+<?xml version='1.0' encoding='ISO-8859-1'?>
+<Model Name="FmuFmuControlLoops">
+  <SubModels>
+    <SubModel StartCommand="StartTLMFmiWrapper" Name="PathGenerators" Angle321="0,0,0" ModelFile="PathGenerators.fmu" Position="0,0,0">
+      <Annotation Extent="{-10,-10,10,10}" Visible="true" Origin="{-50,14}" Rotation="0"/>
+      <InterfacePoint Causality="Output" Name="phi_ref" Angle321="0,0,0" Dimensions="1" Position="1,0,0" Domain="Signal"/>
+      <Parameter Name="sine1.amplitude" Value="1"/>
+      <Parameter Name="sine1.freqHz" Value="0.4"/>
+      <Parameter Name="sine1.offset" Value="0"/>
+      <Parameter Name="sine1.phase" Value="0"/>
+      <Parameter Name="sine1.startTime" Value="0"/>
+    </SubModel>
+    <SubModel StartCommand="StartTLMFmiWrapper" Name="Actuators" Angle321="0,0,0" ModelFile="Actuators.fmu" Position="0,0,0">
+      <Annotation Extent="{-10,-10,10,10}" Visible="true" Origin="{-10,14}" Rotation="0"/>
+      <InterfacePoint Causality="Input" Name="phi_ref" Angle321="0,0,0" Dimensions="1" Position="0,0,0" Domain="Signal"/>
+      <InterfacePoint Causality="Input" Name="phi" Angle321="0,0,0" Dimensions="1" Position="0,0,0" Domain="Signal"/>
+      <InterfacePoint Causality="Bidirectional" Name="P1" Angle321="0,0,0" Dimensions="1" Position="0,0,0" Domain="Rotational"/>
+      <Parameter Name="Kp_phi" Value="10000"/>
+      <Parameter Name="inertia.J" Value="0.5"/>
+      <Parameter Name="fmi.debugFlg" Value="0"/>
+      <Parameter Name="fmi.interfaceName" Value="fmitlm"/>
+    </SubModel>
+    <SubModel StartCommand="StartTLMFmiWrapper" Name="Loads" Angle321="0,0,0" ModelFile="Loads.fmu" Position="0,0,0">
+      <Annotation Extent="{-10,-10,10,10}" Visible="true" Origin="{52,14}" Rotation="0"/>
+      <InterfacePoint Causality="Output" Name="phi" Angle321="0,0,0" Dimensions="1" Position="1,0,0" Domain="Signal"/>
+      <InterfacePoint Causality="Bidirectional" Name="P2" Angle321="0,0,0" Dimensions="1" Position="0,0,0" Domain="Rotational"/>
+      <Parameter Name="fixed1.phi0" Value="0"/>
+      <Parameter Name="damper.d" Value="100"/>
+      <Parameter Name="damper.phi_nominal" Value="0.0001"/>
+      <Parameter Name="inertia.J" Value="0.5"/>
+      <Parameter Name="fmi.debugFlg" Value="0"/>
+      <Parameter Name="fmi.interfaceName" Value="fmitlm"/>
+    </SubModel>
+  </SubModels>
+  <Connections>
+    <Connection Delay="1e-3" To="PathGenerators.phi_ref" From="Actuators.phi_ref">
+      <Annotation Points="{{1,22.5},{8,22.5},{8,28},{-30,28},{-30,22},{-38,22}}"/>
+    </Connection>
+    <Connection Delay="1e-3" To="Loads.phi" From="Actuators.phi">
+      <Annotation Points="{{2,18},{18,18},{18,28},{68,28},{68,22},{64,22},{64,22}}"/>
+    </Connection>
+    <Connection Zf="10000" Delay="1e-3" alpha="0.2" To="Actuators.P1" From="Loads.P2">
+      <Annotation Points="{{64,18},{68,18},{68,0},{8,0},{8,14},{2,14},{2,14},{2,14}}"/>
+    </Connection>
+  </Connections>
+  <SimulationParams ManagerPort="11113" StartTime="0" StopTime="3"/>
+</Model>
