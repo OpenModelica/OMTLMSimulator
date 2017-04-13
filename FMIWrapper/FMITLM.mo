@@ -3,6 +3,46 @@ package FMITLM
 
 
   package FMITLM_Interface_3D
+  
+  model FMITLMInterfaceRotational1D
+      Modelica.Mechanics.Rotational.Interfaces.Flange_a flange_a annotation(Placement(visible = true, transformation(origin = {-67.9907, -3.03738}, extent = {{-12, -12}, {12, 12}}, rotation = 0), iconTransformation(origin = {-67.9907, -3.03738}, extent = {{-12, -12}, {12, 12}}, rotation = 0)));
+      parameter String interfaceName = "fmitlm";
+      parameter Boolean debugFlg = false;
+      output Real w;
+      input Real tau(start = 0);
+      output Real phi;
+    equation
+      phi = flange_a.phi;
+      w = der(flange_a.phi);
+      flange_a.tau = tau;
+      annotation(Diagram, Icon(coordinateSystem(preserveAspectRatio = false, extent = {{-100, -100}, {100, 100}}, initialScale = 0.1, grid = {10, 10}), graphics = {Rectangle(visible = true, lineColor = {255, 255, 255}, fillColor = {0, 0, 255}, fillPattern = FillPattern.HorizontalCylinder, extent = {{-29.548, -45.806}, {96.90300000000001, 42.581}}, radius = 20), Line(visible = true, points = {{-63.226, -2.581}, {-28.387, -2.581}}, color = {0, 0, 255}, thickness = 5), Text(origin = {35.194, -1.225}, extent = {{-59.815, -21.225}, {59.815, 21.225}}, lineColor = {255, 255, 255}, fontSize = 12, textString = "FMITLM1D")}));
+    end FMITLMInterfaceRotational1D;
+
+
+
+  
+  model FMITLMInterface1D
+      Modelica.Mechanics.Translational.Interfaces.Flange_a flange_a annotation(Placement(visible = true, transformation(origin = {-67.9907, -3.03738}, extent = {{-12, -12}, {12, 12}}, rotation = 0), iconTransformation(origin = {-67.9907, -3.03738}, extent = {{-12, -12}, {12, 12}}, rotation = 0)));
+      parameter String interfaceName = "fmitlm";
+      parameter Boolean debugFlg = false;
+      output Real v;
+      input Real f(start = 0);
+      output Real x;
+    equation
+      x = flange_a.s;
+      v = der(flange_a.s);
+      flange_a.f = f;
+      annotation(Diagram, Icon(coordinateSystem(preserveAspectRatio = false, extent = {{-100, -100}, {100, 100}}, initialScale = 0.1, grid = {10, 10}), graphics = {Rectangle(visible = true, lineColor = {255, 255, 255}, fillColor = {0, 0, 255}, fillPattern = FillPattern.HorizontalCylinder, extent = {{-29.548, -45.806}, {96.90300000000001, 42.581}}, radius = 20), Line(visible = true, points = {{-63.226, -2.581}, {-28.387, -2.581}}, color = {0, 0, 255}, thickness = 5), Text(origin = {35.194, -1.225}, extent = {{-59.815, -21.225}, {59.815, 21.225}}, lineColor = {255, 255, 255}, fontSize = 12, textString = "DFMITLM")}));
+    end FMITLMInterface1D;
+
+
+
+
+
+
+
+  
+  
   model FMITLMInterface3D
       import F = Modelica.Mechanics.MultiBody.Frames;
       import M = Modelica.Mechanics.MultiBody.Frames.TransformationMatrices;
@@ -89,6 +129,8 @@ package FMITLM
     annotation(Icon(coordinateSystem(extent = {{-100, -100}, {100, 100}}, preserveAspectRatio = true, initialScale = 0.1, grid = {10, 10}), graphics={  Rectangle(visible = true, fillColor = {0, 170, 0},
               fillPattern =                                                                                                    FillPattern.Solid, extent = {{-100, -100}, {100, 100}}, radius = 20), Text(visible = true, origin = {-3.808, 3.341}, textColor = {255, 255, 255}, extent = {{-78.774, -56.659}, {78.774, 56.659}}, textString = "3D")}), Diagram(coordinateSystem(extent = {{-148.5, -105}, {148.5, 105}}, preserveAspectRatio = true, initialScale = 0.1, grid = {5, 5})));
   end FMITLM_Interface_3D;
+
+
   annotation(Icon(coordinateSystem(extent = {{-100, -100}, {100, 100}}, preserveAspectRatio = true, initialScale = 0.1, grid = {10, 10}), graphics={  Rectangle(visible = true, fillColor = {0, 0, 255},
             fillPattern =                                                                                                    FillPattern.Solid, extent = {{-100, -100}, {100, 100}}, radius = 20), Text(visible = true, textColor = {255, 255, 255}, extent = {{-86.59099999999999, -54.721}, {86.59099999999999, 54.721}}, textString = "TLM")}), uses(Modelica(
           version="3.2.1")));
