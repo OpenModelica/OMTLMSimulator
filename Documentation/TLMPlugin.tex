@@ -20,11 +20,13 @@
 \usepackage{afterpage} % Clear floats after each page
 \usepackage{datetime}
 \usepackage{tikz}
+\usepackage{listings}
 
 \usepackage{eepic}
 \usepackage{epic}
 \usepackage{rotating}
 
+\input{listings-modelica.cfg}
 
 \titleformat{\chapter}[display]{\normalfont\Large\bfseries\color[rgb]{0,0.4,0.796078431372549}}{\normalfont\huge\bfseries\chaptername \space \thechapter}{16pt}{\Huge}
 \titleformat{\part}[display]{\centering\normalfont\Large\bfseries\color[rgb]{0,0.4,0.796078431372549}}{\centering\normalfont\huge\bfseries\partname~\thepart}{16pt}{\Huge}
@@ -142,12 +144,14 @@
 \input{Impl_Adams}
 \input{Impl_BEAST}
 \input{Impl_Modelica}
+\input{Impl_FMI}
 
 %\chapter{Modelling}
 \input{MM_Adams}
 \input{MM_Simulink}
 \input{MM_Beast}
 \input{MM_Modelica}
+\input{MM_FMI}
 
 %\input{RunningMMCoSim}
 
