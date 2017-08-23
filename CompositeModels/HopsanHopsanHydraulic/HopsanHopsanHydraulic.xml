@@ -1,0 +1,30 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<Model Name="HopsanHopsanHydraulic">
+  <SubModels>
+    <SubModel ModelFile="left.hmf" StartCommand="StartTLMHopsan" Name="left" ExactStep="0" Position="0,0,0" Angle321="0,0,0">
+      <Annotation Rotation="0" Visible="true" Origin="{-54,14}" Extent="{-10,-10,10,10}"/>
+      <InterfacePoint Name="tlm1" Causality="Bidirectional" Dimensions="1" Domain="Hydraulic" Position="0,0,0" Angle321="0,0,0"/>
+      <InterfacePoint Name="tlm2" Causality="Bidirectional" Dimensions="1" Domain="Hydraulic" Position="0,0,0" Angle321="0,0,0"/>
+      <InterfacePoint Name="in" Causality="Input" Dimensions="1" Domain="Signal" Position="0,0,0" Angle321="0,0,0"/>
+      <Parameter Value="0.001" Name="Kp"/>
+    </SubModel>
+    <SubModel ModelFile="right.hmf" StartCommand="StartTLMHopsan" Name="right" ExactStep="0" Position="0,0,0" Angle321="0,0,0">
+      <Annotation Rotation="0" Visible="true" Origin="{8,12}" Extent="{-10,-10,10,10}"/>
+      <InterfacePoint Name="tlm1" Causality="Bidirectional" Dimensions="1" Domain="Hydraulic" Position="0,0,0" Angle321="0,0,0"/>
+      <InterfacePoint Name="tlm2" Causality="Bidirectional" Dimensions="1" Domain="Hydraulic" Position="0,0,0" Angle321="0,0,0"/>
+      <InterfacePoint Name="out" Causality="Output" Dimensions="1" Domain="Signal" Position="1,0,0" Angle321="0,0,0"/>
+    </SubModel>
+  </SubModels>
+  <Connections>
+    <Connection Delay="1e-4" alpha="0.3" To="right.tlm1" From="left.tlm1" Zf="100000000">
+      <Annotation Points="{{-43,22.5},{-34,22.5},{-34,-16},{28,-16},{28,20},{19,20},{19,20.5}}"/>
+    </Connection>
+    <Connection Delay="1e-4" alpha="0.3" To="right.tlm2" From="left.tlm2" Zf="100000000">
+      <Annotation Points="{{-43,18.5},{-38,18.5},{-38,-18},{26,-18},{26,16},{19,16},{19,16.5}}"/>
+    </Connection>
+    <Connection Delay="1e-4" To="right.out" From="left.in">
+      <Annotation Points="{{-42,14},{-22,14},{-22,-8},{24,-8},{24,12},{20,12},{20,12}}"/>
+    </Connection>
+  </Connections>
+  <SimulationParams StopTime="2" StartTime="0"/>
+</Model>
