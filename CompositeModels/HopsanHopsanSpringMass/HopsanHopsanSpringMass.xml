@@ -1,19 +1,19 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <Model Name="HopsanHopsanSpringMass">
   <SubModels>
-    <SubModel Name="left" Angle321="0,0,0" ExactStep="0" StartCommand="StartTLMHopsan" Position="0,0,0" ModelFile="left.hmf">
-      <Annotation Origin="{-54,14}" Visible="true" Rotation="0" Extent="{-10,-10,10,10}"/>
-      <InterfacePoint Name="TLM_Plugin_Interface1D" Angle321="0,0,0" Position="0,0,0"/>
+    <SubModel Name="left" ExactStep="0" StartCommand="StartTLMHopsan" Angle321="0,0,0" Position="0,0,0" ModelFile="left.hmf">
+      <Annotation Visible="true" Extent="{-10,-10,10,10}" Origin="{-54,14}" Rotation="0"/>
+      <InterfacePoint Name="tlm" Dimensions="1" Angle321="0,0,0" Domain="Mechanical" Position="0,0,0" Causality="Bidirectional"/>
     </SubModel>
-    <SubModel Name="right" Angle321="0,0,0" ExactStep="0" StartCommand="StartTLMHopsan" Position="0,0,0" ModelFile="right.hmf">
-      <Annotation Origin="{8,12}" Visible="true" Rotation="0" Extent="{-10,-10,10,10}"/>
-      <InterfacePoint Name="TLM_Plugin_Interface1D" Angle321="0,0,0" Position="0,0,0"/>
+    <SubModel Name="right" ExactStep="0" StartCommand="StartTLMHopsan" Angle321="0,0,0" Position="0,0,0" ModelFile="right.hmf">
+      <Annotation Visible="true" Extent="{-10,-10,10,10}" Origin="{8,12}" Rotation="0"/>
+      <InterfacePoint Name="tlm" Dimensions="1" Angle321="0,0,0" Domain="Mechanical" Position="0,0,0" Causality="Bidirectional"/>
     </SubModel>
   </SubModels>
   <Connections>
-    <Connection From="left.TLM_Plugin_Interface1D" alpha="0.9" Zf="10000" Zfr="100" To="right.TLM_Plugin_Interface1D" Delay="1e-4">
+    <Connection Delay="1e-4" alpha="0.9" From="left.tlm" Zf="10000" To="right.tlm">
       <Annotation Points="{{-42,18},{-22,18},{-22,36},{36,36},{36,16},{20,16},{20,16}}"/>
     </Connection>
   </Connections>
-  <SimulationParams StartTime="0" StopTime="10"/>
+  <SimulationParams StopTime="10" StartTime="0"/>
 </Model>
