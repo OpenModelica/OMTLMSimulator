@@ -96,7 +96,7 @@ namespace hopsan {
                 HString parValue;
                 mpSystemParent->getParameterValue(parNames[i],parValue);
                 TLMErrorLog::Log("Registers parameter: "+h2s(parNames[i]));
-                mParIds.push_back(mpPlugin->RegisterTLMParameter(h2s(parNames[i]),h2s(parValue)));
+                mParIds.push_back(mpPlugin->RegisterComponentParameter(h2s(parNames[i]),h2s(parValue)));
                 std::stringstream ss;
                 ss << "Hopsan got parameter ID: " << mParIds[mParIds.size()-1];
                 TLMErrorLog::Log(ss.str());
