@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<hopsanmodelfile hmfversion="0.4" hopsancoreversion="2.8.0.20170714.2220" hopsanguiversion="2.8.0.20170725.2313">
+  <requirements>
+    <componentlibrary>TLMPluginLib</componentlibrary>
+    <componentlibrary>HopsanDefaultComponentLibrary</componentlibrary>
+    <componentlibrary>HopsanExampleComponentLibrary</componentlibrary>
+  </requirements>
+  <system cqstype="UndefinedCQSType" subtypename="" disabled="false" locked="false" typename="Subsystem" name="Ramp">
+    <simulationtime inherit_timestep="true" timestep="0.001" stop="10" start="0"/>
+    <simulationlogsettings numsamples="2048" starttime="0"/>
+    <parameters/>
+    <aliases/>
+    <hopsangui>
+      <pose x="0" y="0" flipped="false" a="0"/>
+      <nametext visible="0" position="0"/>
+      <animation hydraulicminpressure="0" hydraulicmaxpressure="20000000" flowspeed="100"/>
+      <viewport x="2498.68" y="2499.05" zoom="1.3225"/>
+      <ports hidden="1"/>
+      <names hidden="1"/>
+      <graphics type="user"/>
+      <scriptfile path=""/>
+      <hopsanobjectappearance version="0.3">
+        <modelobject displayname="Ramp" typename="Subsystem">
+          <icons>
+            <icon type="defaultmissing" path="subsystemDefault.svg"/>
+          </icons>
+          <ports/>
+          <animation hydraulicminpressure="0" hydraulicmaxpressure="20000000" flowspeed="100"/>
+        </modelobject>
+      </hopsanobjectappearance>
+      <optimization>
+        <settings>
+          <iterations>100</iterations>
+          <nsearchp>8</nsearchp>
+          <refcoeff>1.3</refcoeff>
+          <randfac>0.3</randfac>
+          <forgfac>0</forgfac>
+          <partol>0.0001</partol>
+          <plot>true</plot>
+          <savecsv>false</savecsv>
+          <savecsv>true</savecsv>
+          <logpar>false</logpar>
+        </settings>
+        <parameters/>
+        <objectives/>
+      </optimization>
+      <senstivitityanalysis>
+        <settings>
+          <iterations>100</iterations>
+          <distribution>uniform</distribution>
+        </settings>
+        <parameters/>
+        <plotvariables/>
+      </senstivitityanalysis>
+    </hopsangui>
+    <objects>
+      <component cqstype="C" subtypename="" disabled="false" locked="false" typename="TLMPluginInterfaceSignalOutput" name="out">
+        <parameters>
+          <parameter type="bool" unit="" value="0" name="Debug"/>
+          <parameter type="double" unit="" value="0" name="in#Value"/>
+        </parameters>
+        <ports>
+          <port porttype="ReadPortType" nodetype="NodeSignal" name="in"/>
+        </ports>
+        <hopsangui>
+          <pose x="2560.559546" y="2581.850662" flipped="false" a="0"/>
+          <nametext visible="0" position="0"/>
+          <animation hydraulicminpressure="0" hydraulicmaxpressure="20000000" flowspeed="100"/>
+          <hopsanobjectappearance version="0.3">
+            <modelobject displayname="out" typename="TLMPluginInterfaceSignalOutput">
+              <ports/>
+            </modelobject>
+          </hopsanobjectappearance>
+        </hopsangui>
+      </component>
+      <component cqstype="C" subtypename="" disabled="false" locked="false" typename="TLMPluginHandler" name="TLM_Plugin_Handler">
+        <parameters>
+          <parameter type="bool" unit="" value="0" name="Debug"/>
+        </parameters>
+        <ports/>
+        <hopsangui>
+          <pose x="2362.249527" y="2477.618147" flipped="false" a="0"/>
+          <nametext visible="0" position="0"/>
+          <animation hydraulicminpressure="0" hydraulicmaxpressure="20000000" flowspeed="100"/>
+          <hopsanobjectappearance version="0.3">
+            <modelobject displayname="TLM_Plugin_Handler" typename="TLMPluginHandler">
+              <ports/>
+            </modelobject>
+          </hopsanobjectappearance>
+        </hopsangui>
+      </component>
+      <component cqstype="S" subtypename="" disabled="false" locked="false" typename="SignalRamp" name="Ramp">
+        <parameters>
+          <parameter type="double" unit="" value="1" name="y_0#Value"/>
+          <parameter type="double" unit="" value="2" name="y_A#Value"/>
+          <parameter type="double" unit="s" value="0.1" name="t_start#Value"/>
+          <parameter type="double" unit="s" value="0.9" name="t_end#Value"/>
+        </parameters>
+        <ports>
+          <port nodetype="NodeSignal" name="y_0"/>
+          <port nodetype="NodeSignal" name="y_A"/>
+          <port nodetype="NodeSignal" name="t_start"/>
+          <port nodetype="NodeSignal" name="t_end"/>
+          <port porttype="WritePortType" nodetype="NodeSignal" name="out"/>
+        </ports>
+        <hopsangui>
+          <pose x="2357.816635" y="2581.850662" flipped="false" a="0"/>
+          <nametext visible="0" position="0"/>
+          <animation hydraulicminpressure="0" hydraulicmaxpressure="20000000" flowspeed="100"/>
+          <hopsanobjectappearance version="0.3">
+            <modelobject displayname="Ramp" typename="SignalRamp">
+              <ports/>
+            </modelobject>
+          </hopsanobjectappearance>
+        </hopsangui>
+      </component>
+    </objects>
+    <connections>
+      <connect startport="out" startcomponent="Ramp" endport="in" endcomponent="out">
+        <hopsangui>
+          <coordinates>
+            <coordinate x="2370.31663500000013300451" y="2581.85066199999982927693"/>
+            <coordinate x="2509.05954599999995480175" y="2581.85066199999982927693"/>
+          </coordinates>
+          <geometries>
+            <geometry>diagonal</geometry>
+          </geometries>
+          <style>solid</style>
+        </hopsangui>
+      </connect>
+    </connections>
+  </system>
+</hopsanmodelfile>
