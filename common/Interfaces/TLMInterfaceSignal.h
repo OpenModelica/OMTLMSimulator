@@ -34,6 +34,8 @@ public:
 
   void GetTimeData(TLMTimeDataSignal &Instance);
   void GetTimeData(TLMTimeDataSignal &Instance, std::deque<TLMTimeDataSignal> &Data);
+  void SetTimeData(double time, double value);
+  void GetValue(double time, double *value);
   void UnpackTimeData(TLMMessage &mess);
   void SendAllData();
 
