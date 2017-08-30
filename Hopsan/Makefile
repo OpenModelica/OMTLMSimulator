@@ -13,10 +13,13 @@ include $(MAKEFILEHEADHOME)/Makefile.head
 INSTDIR=$(BINDIR)/Hopsan
 LIBDIR=$(INSTDIR)/TLMPluginLib
 
-install:
+default:
+	cd TLMPluginLib; qmake TLMPluginLib.pro
+	cd TLMPluginLib; make
+
+install: default
 	-mkdir -p $(INSTDIR)
 	-mkdir -p $(LIBDIR)
-	cp TLMPluginLib/TLMPluginLib.dll $(LIBDIR)
 	cp TLMPluginLib/TLMPluginLib.xml $(LIBDIR)
 	cp TLMPluginLib/TLMPluginLib.cc $(LIBDIR)
 	cp TLMPluginLib/common.h $(LIBDIR)
@@ -43,5 +46,6 @@ install:
 clean:
 	rm -rf $(INSTDIR)
 	rm $(BINDIR)/StartTLMHopsan.bat
+	cd TLMPlugin; make clean
 
 # DO NOT DELETE

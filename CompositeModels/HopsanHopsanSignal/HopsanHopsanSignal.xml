@@ -1,24 +1,24 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <Model Name="HopsanHopsanSignal">
   <SubModels>
-    <SubModel ExactStep="0" Position="0,0,0" ModelFile="left.hmf" Name="left" Angle321="0,0,0" StartCommand="StartTLMHopsan">
-      <Annotation Extent="{-10,-10,10,10}" Rotation="0" Origin="{8,14}" Visible="true"/>
-      <InterfacePoint Position="0,0,0" Name="Input1DIN" Angle321="0,0,0"/>
-      <InterfacePoint Position="0,0,0" Name="Output1DOUT" Angle321="0,0,0"/>
+    <SubModel Name="left" ExactStep="0" StartCommand="StartTLMHopsan" Angle321="0,0,0" Position="0,0,0" ModelFile="left.hmf">
+      <Annotation Visible="true" Extent="{-10,-10,10,10}" Origin="{8,14}" Rotation="0"/>
+      <InterfacePoint Name="Input1DIN" Angle321="0,0,0" Position="0,0,0" Causality="Input" Dimensions="1" Domain="Signal"/>
+      <InterfacePoint Name="Output1DOUT" Angle321="0,0,0" Position="0,0,0" Causality="Output" Dimensions="1" Domain="Signal"/>
     </SubModel>
-    <SubModel ExactStep="0" Position="0,0,0" ModelFile="right.hmf" Name="right" Angle321="0,0,0" StartCommand="StartTLMHopsan">
-      <Annotation Extent="{-10,-10,10,10}" Rotation="0" Origin="{8,-14}" Visible="true"/>
-      <InterfacePoint Position="0,0,0" Name="Input1DIN" Angle321="0,0,0"/>
-      <InterfacePoint Position="0,0,0" Name="Output1DOUT" Angle321="0,0,0"/>
+    <SubModel Name="right" ExactStep="0" StartCommand="StartTLMHopsan" Angle321="0,0,0" Position="0,0,0" ModelFile="right.hmf">
+      <Annotation Visible="true" Extent="{-10,-10,10,10}" Origin="{8,-14}" Rotation="0"/>
+      <InterfacePoint Name="Input1DIN" Angle321="0,0,0" Position="0,0,0" Causality="Input" Dimensions="1" Domain="Signal"/>
+      <InterfacePoint Name="Output1DOUT" Angle321="0,0,0" Position="0,0,0" Causality="Output" Dimensions="1" Domain="Signal"/>
     </SubModel>
   </SubModels>
   <Connections>
-    <Connection Delay="0.001" alpha="0.0" From="left.Input1DIN" Zfr="0" To="right.Output1DOUT" Zf="0">
+    <Connection Delay="0.001" alpha="0.0" From="left.Input1DIN" Zfr="0" Zf="0" To="right.Output1DOUT">
       <Annotation Points="{{19,22},{19,23},{37,23},{37,-10},{19,-10}}"/>
     </Connection>
-    <Connection Delay="0.001" alpha="0.0" From="right.Input1DIN" Zfr="0" To="left.Output1DOUT" Zf="0">
+    <Connection Delay="0.001" alpha="0.0" From="right.Input1DIN" Zfr="0" Zf="0" To="left.Output1DOUT">
       <Annotation Points="{{19,-6},{32,-6},{32,18},{19,18}}"/>
     </Connection>
   </Connections>
-  <SimulationParams StartTime="0" StopTime="10"/>
+  <SimulationParams StopTime="10" StartTime="0"/>
 </Model>
