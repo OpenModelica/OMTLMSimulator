@@ -262,12 +262,13 @@ void PluginImplementer::ReceiveTimeData(TLMInterface* reqIfc, double time) {
     }
 }
 
+
 void PluginImplementer::GetValueSignal(int interfaceID, double time, double *value) {
     if(!ModelChecked) CheckModel();
 
     // Use the ID to get to the right interface object
     int idx = GetInterfaceIndex(interfaceID);
-    TLMInterfaceInput* ifc = dynamic_cast<TLMInterfaceInput*>(Interfaces[idx]);
+    TLMInterfaceSignal* ifc = dynamic_cast<TLMInterfaceSignal*>(Interfaces[idx]);
 
     assert(!ifc || (ifc -> GetInterfaceID() == interfaceID));
 
@@ -285,7 +286,6 @@ void PluginImplementer::GetValueSignal(int interfaceID, double time, double *val
 
     // evaluate the reaction force from the TLM connection
     ifc->GetValue(time, value);
-    //ifc->SetTimeData(time, *value);  //We need to write something as well
 }
 
 //This function is for backwards compatibility, remove when position variables has been removed from all wrappers
@@ -407,7 +407,7 @@ void PluginImplementer::SetValueSignal(int valueID,
 
     // Find the interface object by its ID
     int idx = GetInterfaceIndex(valueID);
-    TLMInterfaceOutput* ifc = dynamic_cast<TLMInterfaceOutput*>(Interfaces[idx]);
+    TLMInterfaceSignal* ifc = dynamic_cast<TLMInterfaceSignal*>(Interfaces[idx]);
     assert(ifc -> GetInterfaceID() == valueID);
 
     if(!ifc->waitForShutdown()) {

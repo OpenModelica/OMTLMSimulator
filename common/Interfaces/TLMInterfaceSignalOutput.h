@@ -21,8 +21,6 @@ public:
 
   //! Destructor. Sends the rest of the data if necessary.
   ~TLMInterfaceOutput();
-
-  void SetTimeData(double time, double value);
 };
 
 #endif // TLMINTERFACESIGNALOUTPUT_H

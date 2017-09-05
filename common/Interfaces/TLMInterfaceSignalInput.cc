@@ -17,14 +17,7 @@ TLMInterfaceInput::~TLMInterfaceInput() {}
 
 
 
-void TLMInterfaceInput::GetValue( double time,
-                                   double* value) {
-    TLMTimeDataSignal request;
-    request.time = time - Params.Delay;
-    GetTimeData(request);
 
-    TLMPlugin::GetValueSignal(request, Params, value);
-}
 
 
 

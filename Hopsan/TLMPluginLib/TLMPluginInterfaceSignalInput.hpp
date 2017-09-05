@@ -78,6 +78,9 @@ namespace hopsan {
         {
             // Get force from TLM interface
             mpPlugin->GetValueSignal(mInterfaceId,mTime,mpP1_x);
+
+            //Receive dummy variable (since connection must be bi-directional)
+            mpPlugin->SetValueSignal(mInterfaceId,mTime, 0);
         }
 
 
