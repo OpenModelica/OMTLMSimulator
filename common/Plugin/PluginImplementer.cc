@@ -21,6 +21,41 @@ TLMPlugin* TLMPlugin::CreateInstance() {
     return PluginImplementerInstance;
 }
 
+void PluginImplementer::SetInitialForce3D(int interfaceID, double f1, double f2, double f3, double t1, double t2, double t3)
+{
+    // Use the ID to get to the right interface object
+    int idx = GetInterfaceIndex(interfaceID);
+    TLMInterface3D* ifc = dynamic_cast<TLMInterface3D*>(Interfaces[idx]);
+
+    assert(!ifc || (ifc -> GetInterfaceID() == interfaceID));
+
+    ifc->SetInitialForce(f1,f2,f3,t1,t2,t3);
+}
+
+void PluginImplementer::SetInitialValue(int interfaceID, double value)
+{
+    // Use the ID to get to the right interface object
+    int idx = GetInterfaceIndex(interfaceID);
+    TLMInterfaceSignal* ifc = dynamic_cast<TLMInterfaceSignal*>(Interfaces[idx]);
+
+    assert(!ifc || (ifc -> GetInterfaceID() == interfaceID));
+
+    ifc->SetInitialValue(value);
+}
+
+void PluginImplementer::SetInitialForce1D(int interfaceID, double force)
+{
+    //if(!ModelChecked) CheckModel();
+
+    // Use the ID to get to the right interface object
+    int idx = GetInterfaceIndex(interfaceID);
+    TLMInterface1D* ifc = dynamic_cast<TLMInterface1D*>(Interfaces[idx]);
+
+    assert(!ifc || (ifc -> GetInterfaceID() == interfaceID));
+
+    ifc->SetInitialForce(force);
+}
+
 
 void signalHandler_(int signum) {
     // Install default signal handler

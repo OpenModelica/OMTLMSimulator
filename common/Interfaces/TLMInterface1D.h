@@ -38,6 +38,9 @@ public:
     //!  DataToSend stores the motion data from the interface. The data is sent
     //! in packet for a time period of [half] TLM delay [depends on solver type]
     std::vector<TLMTimeData1D> DataToSend;
+
+    double InitialForce = 0;
+
     void UnpackTimeData(TLMMessage &mess);
 
     void GetTimeData(TLMTimeData1D &Instance);
@@ -45,6 +48,7 @@ public:
     void GetForce(double time, double speed, double *force);
     void SetTimeData(double time, double position, double speed);
     void SendAllData();
+    void SetInitialForce(double force);
 
     //! linear_interpolate is called with a vector containing 2 points
     //! computes the interpolation (or extrapolation) point with the the linear

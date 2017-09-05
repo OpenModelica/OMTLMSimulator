@@ -159,6 +159,9 @@ void TLMInterface1D::SetTimeData(double time,
         DampedTimeData.push_back(request);
     }
 
+    //Default value is the initial value
+    item.GenForce=InitialForce;
+
     if(Domain == "Hydraulic") {
         TLMPlugin::GetForce1D(-speed, request, Params, &item.GenForce);
     }
@@ -202,6 +205,11 @@ void TLMInterface1D::SendAllData() {
 
     // In data request mode we shutdown after sending the first data package.
     if(Params.mode > 0.0) waitForShutdownFlg = true;
+}
+
+void TLMInterface1D::SetInitialForce(double force)
+{
+    InitialForce = force;
 }
 
 

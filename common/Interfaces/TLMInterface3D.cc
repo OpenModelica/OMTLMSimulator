@@ -209,6 +209,13 @@ void TLMInterface3D::SetTimeData(double time,
         DampedTimeData.push_back(request);
     }
 
+    item.GenForce[0] = InitialForce[0];
+    item.GenForce[1] = InitialForce[1];
+    item.GenForce[2] = InitialForce[2];
+    item.GenForce[3] = InitialForce[3];
+    item.GenForce[4] = InitialForce[4];
+    item.GenForce[5] = InitialForce[5];
+
     TLMPlugin::GetForce3D(position, orientation,
                           speed, ang_speed,
                           request, Params,
@@ -306,6 +313,16 @@ void TLMInterface3D::SendAllData() {
 
     // In data request mode we shutdown after sending the first data package.
     if(Params.mode > 0.0) waitForShutdownFlg = true;
+}
+
+void TLMInterface3D::SetInitialForce(double f1, double f2, double f3, double t1, double t2, double t3)
+{
+    InitialForce[0] = f1;
+    InitialForce[1] = f2;
+    InitialForce[2] = f3;
+    InitialForce[3] = t1;
+    InitialForce[4] = t2;
+    InitialForce[5] = t3;
 }
 
 
