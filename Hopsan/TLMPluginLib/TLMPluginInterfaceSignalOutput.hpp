@@ -72,6 +72,8 @@ namespace hopsan {
 
             // Register TLM Interface
             mInterfaceId = mpPlugin->RegisteTLMInterface(this->getName().c_str(), 1, "Output", "Signal");
+
+            mpPlugin->SetInitialValue(mInterfaceId,*mpP1_x);
         }
 
 

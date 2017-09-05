@@ -39,6 +39,8 @@ public:
     //! in packet for a time period of [half] TLM delay [depends on solver type]
     std::vector<TLMTimeData3D> DataToSend;
 
+    double InitialForce[6] = {0,0,0,0,0,0};
+
     //! Evaluate the data from deque for the time specified by this Instance
     //! If OnleForce is set, then the position and velocity are not computed.
     void GetTimeData(TLMTimeData3D& Instance, std::deque<TLMTimeData3D>&  Data, bool OnlyForce);
@@ -49,6 +51,7 @@ public:
     void SetTimeData(double time, double position[], double orientation[], double speed[], double ang_speed[]);
     void TransformTimeDataToCG(std::vector<TLMTimeData3D> &timeData, TLMConnectionParams &params);
     void SendAllData();
+    void SetInitialForce(double f1, double f2, double f3, double t1, double t2, double t3);
 
     //! linear_interpolate is called with a vector containing 2 points
     //! computes the interpolation (or extrapolation) point with the the linear
