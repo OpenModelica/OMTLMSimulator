@@ -38,6 +38,11 @@ void TLMInterfaceSignal::SendAllData() {
     if( Params.mode > 0.0 ) waitForShutdownFlg = true;
 }
 
+void TLMInterfaceSignal::SetInitialValue(double value)
+{
+    InitialValue = value;
+}
+
 void TLMInterfaceSignal::clean_time_queue(std::deque<TLMTimeDataSignal>& Data, double CleanTime) {
     while( (Data.size() > 3) && (CleanTime > Data[2].time)) {
         Data.pop_front();
@@ -164,6 +169,9 @@ void TLMInterfaceSignal::GetValue( double time,
     TLMTimeDataSignal request;
     request.time = time - Params.Delay;
     GetTimeData(request);
+
+    //Default value is the initial value
+    (*value)=InitialValue;
 
     TLMPlugin::GetValueSignal(request, Params, value);
 }

@@ -78,6 +78,8 @@ namespace hopsan {
 
             // Register TLM Interface
             mInterfaceId = mpPlugin->RegisteTLMInterface(this->getName().c_str(),1,"Bidirectional","Hydraulic");
+
+            mpPlugin->SetInitialForce1D(mInterfaceId,*mpP1_p);
         }
 
 
