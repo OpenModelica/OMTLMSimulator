@@ -30,6 +30,11 @@ public:
     //! Catch signals
     void HandleSignal(int signum);
 
+    void SetInitialForce3D(int interfaceID,
+                           double f1, double f2, double f3,
+                           double t1, double t2, double t3);
+    void SetInitialForce1D(int interfaceID, double force);
+    void SetInitialValue(int interfaceID, double value);
 protected:
 
     //! SetDebugOut function enables/disables debug information

@@ -32,12 +32,15 @@ public:
   //! in packet for a time period of [half] TLM delay [depends on solver type]
   std::vector<TLMTimeDataSignal> DataToSend;
 
+  double InitialValue = 0;
+
   void GetTimeData(TLMTimeDataSignal &Instance);
   void GetTimeData(TLMTimeDataSignal &Instance, std::deque<TLMTimeDataSignal> &Data);
   void SetTimeData(double time, double value);
   void GetValue(double time, double *value);
   void UnpackTimeData(TLMMessage &mess);
   void SendAllData();
+  void SetInitialValue(double value);
 
   // Remove the data that is not needed (Simulation time moved forward)
   // We leave two time points intact, so that interpolation work

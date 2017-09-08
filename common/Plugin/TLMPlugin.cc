@@ -53,9 +53,8 @@ void  TLMPlugin::GetForce3D(double position[],
                             double* force) {
 
     if(Data.time == TIME_WITHOUT_DATA) {
-        for(int i = 0; i < 6; i++) {
-            force[i] = 0.0;
-        }
+        //Do nothing, default value should be initial value
+        return;
     }
     else {
         double f[3] = {Data.GenForce[0], Data.GenForce[1], Data.GenForce[2]};
@@ -78,7 +77,8 @@ void TLMPlugin::GetValueSignal(TLMTimeDataSignal &Data,
                                TLMConnectionParams &Params,
                                double *value) {
     if(Data.time == TIME_WITHOUT_DATA) {
-        (*value) = 0.0;
+        //Do nothing, default value should be initial value
+        return;
     }
     else {
         //No physical connection, so just return the value
@@ -93,7 +93,8 @@ void TLMPlugin::GetForce1D(double speed,
                            double *force) {
 
     if(Data.time == TIME_WITHOUT_DATA) {
-        (*force) = 0.0;
+        //Do nothing, default force should be initial value
+        return;
     }
     else {
         double f = Data.GenForce;
