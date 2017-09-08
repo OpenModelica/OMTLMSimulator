@@ -1,0 +1,23 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!-- The root node is the composite-model -->
+<Model Name="FmuFmuHydraulic">
+  <!-- List of connected sub-models -->
+  <SubModels>
+    <SubModel StartCommand="StartTLMFmiWrapper" ModelFile="left.fmu" Position="0,0,0" Name="left" Angle321="0,0,0">
+      <Annotation Extent="{-10,-10,10,10}" Visible="true" Origin="{-110,88}" Rotation="0"/>
+      <InterfacePoint Domain="Hydraulic" Position="-2.91043e-317,0,0" Dimensions="1" Name="tlm" Angle321="0,0,0" Causality="Bidirectional"/>
+    </SubModel>
+    <SubModel StartCommand="StartTLMFmiWrapper" ModelFile="right.fmu" Position="0,0,0" Name="right" Angle321="0,0,0">
+      <Annotation Extent="{-10,-10,10,10}" Visible="true" Origin="{-8,82}" Rotation="0"/>
+      <InterfacePoint Domain="Hydraulic" Position="-1.67725e-317,0,0" Dimensions="1" Name="tlm" Angle321="0,0,0" Causality="Bidirectional"/>
+    </SubModel>
+  </SubModels>
+  <!-- List of TLM connections -->
+  <Connections>
+    <Connection From="right.tlm" Zf="100000000" Delay="1e-4" alpha="0.4" To="left.tlm">
+      <Annotation Points="{{4,90},{12,90},{12,98},{-98,98},{-98,96}}"/>
+    </Connection>
+  </Connections>
+  <!-- Parameters for the simulation -->
+  <SimulationParams StopTime="5" StartTime="0"/>
+</Model>
