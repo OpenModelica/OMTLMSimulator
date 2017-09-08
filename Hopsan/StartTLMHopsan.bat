@@ -10,7 +10,7 @@ REM 6 model-file (without mo)
 
 rem *********************SET PATHS****************************************************
 rem set path to Dymola installation folder
-set HopsanPath=c:\Program Files\Hopsan
+set HopsanPath=%HOPSANHOME%
 
 rem *********************SETUP SIMULATION*********************************************
 rem use dir /x to study these weird MS-DOS paths 
