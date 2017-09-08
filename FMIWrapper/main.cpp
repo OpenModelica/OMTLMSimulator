@@ -194,7 +194,9 @@ void forceFromTlmToFmu(double tcur)
           //Get interpolated force
           plugin->GetForce1D(fmiConfig.interfaceIds[j], tcur, speed,&force);
 
-          force = -force;
+          if(fmiConfig.domains[j] != "Hydraulic") {
+              force = -force;
+          }
 
           // Write force to FMU
           fmistatus = fmi2_import_set_real(fmu,fmiConfig.force_vr[j],1,&force);
@@ -410,7 +412,9 @@ int simulate_fmi2_cs()
             //Get interpolated force
             plugin->GetForce1D(fmiConfig.interfaceIds[j], tcur, speed,&force);
 
-            force = -force;
+            if(fmiConfig.domains[j] != "Hydraulic") {
+                force = -force;
+            }
 
             //Write force to FMU
             fmistatus = fmi2_import_set_real(fmu,fmiConfig.force_vr[j],1,&force);
