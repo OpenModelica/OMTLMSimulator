@@ -14,7 +14,7 @@ INSTDIR=$(BINDIR)/Hopsan
 LIBDIR=$(INSTDIR)/TLMPluginLib
 
 default:
-	cd TLMPluginLib; qmake TLMPluginLib.pro
+	cd TLMPluginLib; qmake TLMPluginLib.pro "CONFIG+=release"
 	cd TLMPluginLib; make
 
 install: default
