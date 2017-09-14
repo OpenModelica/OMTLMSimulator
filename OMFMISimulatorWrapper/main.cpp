@@ -50,7 +50,23 @@ int main(int argc, char *argv[])
 
 
   oms_setWorkingDirectory(arguments.workingDirectory.c_str());
+  oms_setTempDirectory(arguments.workingDirectory.c_str());
 
+  void* pModel = NULL;
+  pModel = oms_loadModel(arguments.fileName.c_str());
+
+  oms_setResultFile(pModel, "logdata.csv");
+  oms_setStartTime(pModel, arguments.startTime);
+  oms_setCommunicationInterval(pModel, arguments.stepSize);
+  oms_setStopTime(pModel, arguments.stopTime);
+
+  oms_initialize(pModel);
+  double time = arguments.startTime;
+  while(time < arguments.stopTime) {
+    oms_doSteps(pModel, 1);
+    oms_getCurrentTime(pModel, &time);
+  }
+  oms_terminate(pModel);
 }
 
 
