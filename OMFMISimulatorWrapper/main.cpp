@@ -155,10 +155,15 @@ int main(int argc, char *argv[])
 
   for(size_t i=0; i<options.interfaces.size(); ++i) {
     std::cout << "Registering interface...\n";
-    options.interfaces.at(i).id = plugin->RegisteTLMInterface(options.interfaces.at(i).name.c_str(),
+    if(options.interfaces.at(i).causality == "Parameter") {
+      options.interfaces.at(i).id = plugin->RegisterComponentParameter(options.interfaces.at(i).name.c_str(),"0");
+    }
+    else {
+      options.interfaces.at(i).id = plugin->RegisteTLMInterface(options.interfaces.at(i).name.c_str(),
                                                               1,
                                                               options.interfaces.at(i).causality.c_str(),
                                                               "Signal");
+    }
   }
 
   std::cout << "Initializing OMFMISimulator...\n";
@@ -167,6 +172,17 @@ int main(int argc, char *argv[])
   oms_setCommunicationInterval(pModel, options.stepSize);
   oms_setStopTime(pModel, options.stopTime);
   oms_initialize(pModel);
+
+  //Set parameters
+  for(size_t i=0; i<options.interfaces.size(); ++i) {
+    if(options.interfaces.at(i).causality == "Parameter") {
+      std::string name;
+      std::string value;
+      plugin->GetParameterValue(options.interfaces.at(i).id, name, value);
+      double value_real = atof(value.c_str());
+      oms_setReal(pModel, options.interfaces.at(i).variable.c_str(), value_real);
+    }
+  }
 
 
   /////////////////////

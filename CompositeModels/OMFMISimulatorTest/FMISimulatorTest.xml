@@ -11,10 +11,12 @@
       <InterfacePoint Position="1,0,0" Causality="Output" Angle321="0,0,0" Name="x" Domain="Signal" Dimensions="1"/>
       <InterfacePoint Position="0,0,0" Causality="Bidirectional" Angle321="0,0,0" Name="tlm" Domain="Mechanical" Dimensions="1"/>
     </SubModel>
-    <SubModel Position="0,0,0" ExactStep="0" ModelFile="controller.xml" Angle321="0,0,0" StartCommand="StartTLMOMFMISimulatorWrapper" Name="controller">
+    <SubModel Position="0,0,0" ModelFile="controller.xml" Angle321="0,0,0" StartCommand="StartTLMOMFMISimulatorWrapper" Name="controller">
       <Annotation Extent="{-10,-10,10,10}" Origin="{-54,10}" Rotation="0" Visible="true"/>
-      <InterfacePoint Position="0,0,0" Causality="Input" Angle321="0,0,0" Name="y" Domain="Signal" Dimensions="1"/>
+      <InterfacePoint Position="1,0,0" Causality="Input" Angle321="0,0,0" Name="y" Domain="Signal" Dimensions="1"/>
       <InterfacePoint Position="1,0,0" Causality="Output" Angle321="0,0,0" Name="u" Domain="Signal" Dimensions="1"/>
+      <Parameter Name="Kp" Value="0.005"/>
+      <Parameter Name="Ki" Value="1"/>
     </SubModel>
   </SubModels>
   <Connections>

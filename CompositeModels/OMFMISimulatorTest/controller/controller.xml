@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Model>
-  <Interface Name="y" Causality="Input" Variable="subtract.y2"/>
-  <Interface Name="u" Causality="Output" Variable="gain.u"/>
+  <Interface Name="y" Variable="subtract.y2"/>
+  <Interface Name="u" Variable="gain.u"/>
+  <Interface Name="Kp" Variable="gain.Kp"/>
+  <Interface Name="Ki" Variable="gain.Ki"/>
 	<SubModels>
 		<SubModel Name="reference" ModelFile="reference.fmu" />
 		<SubModel Name="subtract" ModelFile="subtract.fmu" />

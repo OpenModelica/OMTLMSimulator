@@ -28,6 +28,10 @@ static void *mem;               //Solver memory pointer
 static int flag;                //Solver return flag
 
 static double y,u;
+static double Kp = 0.01;
+static double Ki = 0.001;
+static double yprev = 0;
+static double tprev = 0;
 
 void setReal(int idx, double value) {
     switch(idx) {
@@ -36,6 +40,12 @@ void setReal(int idx, double value) {
         break;
     case 1:
         u = value;
+        break;
+    case 2:
+        Kp = value;
+        break;
+    case 3:
+        Ki = value;
         break;
     }
 }
@@ -47,6 +57,10 @@ double getReal(int idx) {
         return y;
     case 1:
         return u;
+    case 2:
+        return Kp;
+    case 3:
+        return Ki;
     default:
         return 0;
     }
@@ -54,7 +68,12 @@ double getReal(int idx) {
 
 
 int takeStep(double t1) {
-    u = y*0.01;
+    double yint = (y-yprev)*(t1-tcur)/2.0;
+
+    u = y*Kp + yint*Ki;
+
+    yprev = yint;
+    tprev = t1;
 
     tcur = t1;
 
