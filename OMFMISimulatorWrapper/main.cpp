@@ -6,6 +6,7 @@
 #include <sstream>
 
 #include "OMSimulator.h"
+#include "Types.h"
 
 // TLMPlugin includes
 #include "Plugin/TLMPlugin.h"
@@ -17,7 +18,7 @@ std::ofstream DebugOutFile;
 
 struct interface {
   std::string name;
-  std::string causality;
+  oms_causality_t causality;
   std::string variable;
   int id;
 };
@@ -155,13 +156,19 @@ int main(int argc, char *argv[])
 
   for(size_t i=0; i<options.interfaces.size(); ++i) {
     std::cout << "Registering interface...\n";
-    if(options.interfaces.at(i).causality == "Parameter") {
+    if(options.interfaces.at(i).causality == oms_causality_parameter) {
       options.interfaces.at(i).id = plugin->RegisterComponentParameter(options.interfaces.at(i).name.c_str(),"0");
     }
-    else {
+    else if(options.interfaces.at(i).causality == oms_causality_input) {
       options.interfaces.at(i).id = plugin->RegisteTLMInterface(options.interfaces.at(i).name.c_str(),
                                                               1,
-                                                              options.interfaces.at(i).causality.c_str(),
+                                                              "Input",
+                                                              "Signal");
+    }
+    else if(options.interfaces.at(i).causality == oms_causality_output) {
+      options.interfaces.at(i).id = plugin->RegisteTLMInterface(options.interfaces.at(i).name.c_str(),
+                                                              1,
+                                                              "Output",
                                                               "Signal");
     }
   }
@@ -175,7 +182,7 @@ int main(int argc, char *argv[])
 
   //Set parameters
   for(size_t i=0; i<options.interfaces.size(); ++i) {
-    if(options.interfaces.at(i).causality == "Parameter") {
+    if(options.interfaces.at(i).causality == oms_causality_parameter) {
       std::string name;
       std::string value;
       plugin->GetParameterValue(options.interfaces.at(i).id, name, value);
@@ -193,7 +200,7 @@ int main(int argc, char *argv[])
   double time = options.startTime;
   while(time < options.stopTime) {
     for(size_t i=0; i<options.interfaces.size(); ++i) {
-      if(options.interfaces.at(i).causality == "Input") {
+      if(options.interfaces.at(i).causality == oms_causality_input) {
         double value;
         plugin->GetValueSignal(options.interfaces.at(i).id, time, &value);
         plugin->SetValueSignal(options.interfaces.at(i).id,time, 0);
@@ -205,7 +212,7 @@ int main(int argc, char *argv[])
     oms_stepUntil(pModel, time);
 
     for(size_t i=0; i<options.interfaces.size(); ++i) {
-      if(options.interfaces.at(i).causality == "Output") {
+      if(options.interfaces.at(i).causality == oms_causality_output) {
         double value = oms_getReal(pModel, options.interfaces.at(i).variable.c_str());
         plugin->GetValueSignal(options.interfaces.at(i).id, time,new double(0));
         plugin->SetValueSignal(options.interfaces.at(i).id, time, value);
