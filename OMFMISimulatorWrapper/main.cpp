@@ -191,7 +191,6 @@ int main(int argc, char *argv[])
     }
   }
 
-
   /////////////////////
   // Simulation loop //
   /////////////////////
@@ -203,7 +202,6 @@ int main(int argc, char *argv[])
       if(options.interfaces.at(i).causality == oms_causality_input) {
         double value;
         plugin->GetValueSignal(options.interfaces.at(i).id, time, &value);
-        plugin->SetValueSignal(options.interfaces.at(i).id,time, 0);
         oms_setReal(pModel, options.interfaces.at(i).variable.c_str(), value);
       }
     }
@@ -214,7 +212,6 @@ int main(int argc, char *argv[])
     for(size_t i=0; i<options.interfaces.size(); ++i) {
       if(options.interfaces.at(i).causality == oms_causality_output) {
         double value = oms_getReal(pModel, options.interfaces.at(i).variable.c_str());
-        plugin->GetValueSignal(options.interfaces.at(i).id, time,new double(0));
         plugin->SetValueSignal(options.interfaces.at(i).id, time, value);
       }
     }
@@ -225,6 +222,8 @@ int main(int argc, char *argv[])
   //////////////
 
   oms_terminate(pModel);
+
+  plugin->AwaitClosePermission();
 
   std::cout << "Finished!\n";
 }

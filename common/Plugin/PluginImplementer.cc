@@ -7,6 +7,7 @@
 #include <iostream>
 #include <csignal>
 #include <sstream>
+#include <unistd.h>
 
 using std::string;
 using std::vector;
@@ -19,6 +20,17 @@ PluginImplementer* PluginImplementerInstance = 0;
 TLMPlugin* TLMPlugin::CreateInstance() {
     PluginImplementerInstance = new PluginImplementer;
     return PluginImplementerInstance;
+}
+
+void PluginImplementer::AwaitClosePermission()
+{
+  TLMErrorLog::Log("Awaiting close permission...");
+  Message.Header.MessageType = TLMMessageTypeConst::TLM_CLOSE_REQUEST;
+  TLMCommUtil::SendMessage(Message);
+  while(Message.Header.MessageType != TLMMessageTypeConst::TLM_CLOSE_PERMISSION) {
+    TLMCommUtil::ReceiveMessage(Message);
+  }
+  TLMErrorLog::Log("Close permission received.");
 }
 
 void PluginImplementer::SetInitialForce3D(int interfaceID, double f1, double f2, double f3, double t1, double t2, double t3)
@@ -303,7 +315,7 @@ void PluginImplementer::GetValueSignal(int interfaceID, double time, double *val
 
     // Use the ID to get to the right interface object
     int idx = GetInterfaceIndex(interfaceID);
-    TLMInterfaceSignal* ifc = dynamic_cast<TLMInterfaceSignal*>(Interfaces[idx]);
+    TLMInterfaceInput* ifc = dynamic_cast<TLMInterfaceInput*>(Interfaces[idx]);
 
     assert(!ifc || (ifc -> GetInterfaceID() == interfaceID));
 
@@ -442,7 +454,7 @@ void PluginImplementer::SetValueSignal(int valueID,
 
     // Find the interface object by its ID
     int idx = GetInterfaceIndex(valueID);
-    TLMInterfaceSignal* ifc = dynamic_cast<TLMInterfaceSignal*>(Interfaces[idx]);
+    TLMInterfaceOutput* ifc = dynamic_cast<TLMInterfaceOutput*>(Interfaces[idx]);
     assert(ifc -> GetInterfaceID() == valueID);
 
     if(!ifc->waitForShutdown()) {

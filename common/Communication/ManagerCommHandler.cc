@@ -6,6 +6,7 @@
 #include <pthread.h>
 #endif
 #include <cassert>
+#include <algorithm>
 
 #include <cstdlib>
 #include "timing.h"
@@ -499,7 +500,7 @@ void ManagerCommHandler::ReaderThreadRun() {
     runningMode = RunMode;
 
     int nClosedSock = 0;
-
+    std::vector<int> closedSockets;
     while(nClosedSock != TheModel.GetComponentsNum()) {
         Comm.SelectReadSocket(); // wait for a change
 
@@ -507,12 +508,18 @@ void ManagerCommHandler::ReaderThreadRun() {
             TLMComponentProxy& comp = TheModel.GetTLMComponentProxy(iSock);
             int hdl = comp.GetSocketHandle();
 
-            if((hdl != -1) && Comm.HasData(hdl)) { // there is data to be received on the socket
+            if((std::find(closedSockets.begin(), closedSockets.end(), iSock) == closedSockets.end())
+               && (hdl != 0) && Comm.HasData(hdl)) { // there is data to be received on the socket
 
                 TLMMessage* message = MessageQueue.GetReadSlot();
                 message->SocketHandle = hdl;
                 if(TLMCommUtil::ReceiveMessage(*message)) {
-                    if(CommMode == CoSimulationMode) {
+                    if(message->Header.MessageType == TLMMessageTypeConst::TLM_CLOSE_REQUEST) {
+                        TLMErrorLog::Log("Received close permission request from "+comp.GetName());
+                        closedSockets.push_back(iSock);
+                        nClosedSock++;
+                    }
+                    else if(CommMode == CoSimulationMode) {
                         MarshalMessage(*message);
 
                         // Forward message for monitoring.
@@ -524,18 +531,34 @@ void ManagerCommHandler::ReaderThreadRun() {
                     else {
                         // CommMode == InterfaceRequestMode
                         UnpackAndStoreTimeData(*message);
+                        nClosedSock++;
                     }
-                }
-                else {
-                    TLMErrorLog::Log(string("Connection to component ") + comp.GetName() + " is closed");
-                    Comm.DropActiveSocket(hdl);
-                    comp.SetSocketHandle(-1);
-                    nClosedSock ++;
                 }
             }
         }
     }
-    TLMErrorLog::Log("All sockets are closed - exiting");
+
+    TLMErrorLog::Log("Simulation complete.");
+
+    for(int i=0; i<closedSockets.size(); ++i) {
+      int iSock = closedSockets.at(i);
+      TLMMessage message;
+      TLMComponentProxy& comp = TheModel.GetTLMComponentProxy(iSock);
+      int hdl = comp.GetSocketHandle();
+      message.SocketHandle = hdl;
+
+      TLMErrorLog::Log("Sending close permission to "+comp.GetName());
+
+      message.Header.MessageType = TLMMessageTypeConst::TLM_CLOSE_PERMISSION;
+      TLMCommUtil::SendMessage(message);
+
+      Comm.DropActiveSocket(hdl);
+      comp.SetSocketHandle(-1);
+
+      TLMErrorLog::Log(string("Connection to component ") + comp.GetName() + " is closed");
+    }
+
+    TLMErrorLog::Log("All sockets are closed.");
     runningMode = ShutdownMode;
     MessageQueue.Terminate();
 
@@ -559,13 +582,17 @@ void ManagerCommHandler::WriterThreadRun() {
 
 void ManagerCommHandler::MarshalMessage(TLMMessage& message) {
 
-    if(message.Header.MessageType !=   TLMMessageTypeConst::TLM_TIME_DATA) {
+  TLMInterfaceProxy& src = TheModel.GetTLMInterfaceProxy(message.Header.TLMInterfaceID);
+
+  if(message.Header.MessageType !=   TLMMessageTypeConst::TLM_TIME_DATA) {
         TLMErrorLog::Log("Interface ID: "+TLMErrorLog::ToStdStr(message.Header.TLMInterfaceID));
-        TLMErrorLog::FatalError("Unexpected message received " + tlmMisc::ToStr(message.Header.MessageType));
+        TLMErrorLog::FatalError("Unexpected message received from "+
+                                TheModel.GetTLMComponentProxy(src.GetComponentID()).GetName()+
+                                "."+src.GetName()+
+                                +": " + tlmMisc::ToStr(message.Header.MessageType));
     }
 
     // forward the time data
-    TLMInterfaceProxy& src = TheModel.GetTLMInterfaceProxy(message.Header.TLMInterfaceID);
     int destID = src.GetLinkedID();
 
     if(destID < 0) {
@@ -731,7 +758,7 @@ void ManagerCommHandler::ForwardToMonitor(TLMMessage& message) {
     int TLMInterfaceID = ifc.GetLinkedID();
     
     if(monitorInterfaceMap.count(TLMInterfaceID) > 0) {
-        
+
         if(message.Header.MessageType != TLMMessageTypeConst::TLM_TIME_DATA) {
             TLMErrorLog::FatalError("Unexpected message received in forward to monitor");
         }

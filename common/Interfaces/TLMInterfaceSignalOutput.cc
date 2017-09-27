@@ -23,7 +23,24 @@ TLMInterfaceOutput::~TLMInterfaceOutput() {
 }
 
 
+// Set motion data and communicate if necessary.
+void TLMInterfaceOutput::SetTimeData(double time,
+                                     double value) {
+    // put the variables into TLMTimeData structure and the end of  DataToSend vector
+    int lastInd = DataToSend.size();
+    DataToSend.resize( lastInd + 1);
+    TLMTimeDataSignal& item = DataToSend[lastInd];
+    item.time = time;
+    item.Value = value;
 
+    TLMErrorLog::Log(std::string("Interface ") + GetName() +
+                     " SET for time= " + TLMErrorLog::ToStdStr(time));
+
+    // Send the data if we past the synchronization point or are in data request mode.
+    if(time >= LastSendTime + Params.Delay / 2 || Params.mode > 0.0 ) {
+        SendAllData();
+    }
+}
 
 
 

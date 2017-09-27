@@ -129,6 +129,7 @@ namespace hopsan {
 
         void finalize()
         {
+            mpPlugin->AwaitClosePermission();
             //delete mpPlugin;
         }
 

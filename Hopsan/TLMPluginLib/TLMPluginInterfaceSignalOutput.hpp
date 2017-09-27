@@ -79,9 +79,6 @@ namespace hopsan {
 
         void simulateOneTimestep()
         {
-            //Send dummy variable (since connection must be bi-directional)
-            mpPlugin->GetValueSignal(mInterfaceId,mTime,new double(0));
-
             // Set motion in TLM interface
             mpPlugin->SetValueSignal(mInterfaceId,mTime,*mpP1_x);
         }

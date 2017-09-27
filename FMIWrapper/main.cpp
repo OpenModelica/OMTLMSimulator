@@ -1344,6 +1344,8 @@ int main(int argc, char* argv[])
   fmi2_import_free(fmu);
   fmi_import_free_context(context);
 
+  plugin->AwaitClosePermission();
+
   TLMErrorLog::Log("FMIWrapper completed successfully!");
 
   return 0;
