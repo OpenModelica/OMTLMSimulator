@@ -43,13 +43,17 @@ struct TLMMessageTypeConst {
     //! Component registration message
     static const char TLM_REG_COMPONENT = 2;
     //! Interface registration message
-    static const char TLM_REG_INTERFACE = 4;
+    static const char TLM_REG_INTERFACE = 3;
     //! Component is done with registration, ready for simulation run.
-    static const char TLM_CHECK_MODEL = 8;
+    static const char TLM_CHECK_MODEL = 4;
     //! Error detected, abort simulation
-    static const char TLM_ABORT = 16;
+    static const char TLM_ABORT = 5;
     //! Parameter registration message
-    static const char TLM_REG_PARAMETER = 32;
+    static const char TLM_REG_PARAMETER = 6;
+    //! Close permission
+    static const char TLM_CLOSE_REQUEST = 7;
+    //! Close permission accepted
+    static const char TLM_CLOSE_PERMISSION = 8;
 };
 
 //! Message header used in all the messages sent between

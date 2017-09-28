@@ -15,6 +15,18 @@ TLMInterfaceInput::TLMInterfaceInput(TLMClientComm &theComm, std::string &aName,
 TLMInterfaceInput::~TLMInterfaceInput() {}
 
 
+void TLMInterfaceInput::GetValue( double time,
+                                   double* value) {
+    TLMTimeDataSignal request;
+    request.time = time - Params.Delay;
+    GetTimeData(request);
+
+    //Default value is the initial value
+    (*value)=InitialValue;
+
+    TLMPlugin::GetValueSignal(request, Params, value);
+}
+
 
 
 

@@ -105,6 +105,8 @@ void* initialize_TLM()
 void deinitialize_TLM(void* in_TLMPluginStructObj)
 {
   TLMPluginStruct* TLMPluginStructObj = (TLMPluginStruct*)in_TLMPluginStructObj;
+  TLMPluginStructObj->Plugin->AwaitClosePermission();
+
   if (TLMPluginStructObj->referenceCount == 1) {
       free(TLMPluginStructObj);
       TLMPluginStructObj = 0;

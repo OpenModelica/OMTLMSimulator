@@ -22,6 +22,7 @@ public:
   //! Destructor. Sends the rest of the data if necessary.
   ~TLMInterfaceInput();
 
+  void GetValue(double time, double *value);
 };
 
 #endif // TLMINTERFACESIGNALINPUT_H
