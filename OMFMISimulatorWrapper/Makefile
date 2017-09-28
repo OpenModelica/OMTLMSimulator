@@ -1,6 +1,6 @@
 #################################################################################
-#   Makefile for the FMIWrapper
-#   Date: 2016/09
+#   Makefile for the OMFMISimulatorWrapper
+#   Date: 2017/09
 #   Author: Robert Braun
 #
 
@@ -75,7 +75,7 @@ default: dirs $(ABIOBJS)
 
 install: default
 	cp $(ABI)/$(BNAME) $(BINDIR)
-	cp StartTLMFmiWrapper* $(BINDIR)
+	cp StartTLMOMFMISimulatorWrapper* $(BINDIR)
 
 .PHONY: dirs clean
 
@@ -99,9 +99,7 @@ clean:
 	rm -rf $(ABI)/Logging
 	rm -rf $(ABI)/Interfaces
 	rm -rf $(ABI)/Communication
-	rm -rf $(BINDIR)/FMIWrapper$(FEXT)
-	rm -rf $(BINDIR)/StartTLMFmiWrapper*
-	rm -rf FMILibrary-2.0.1/build
-	rm -rf FMILibrary-2.0.1/install
+	rm -rf $(BINDIR)/OMFMISimulatorWrapper$(FEXT)
+	rm -rf $(BINDIR)/StartTLMOMFMISimulatorWrapper*
 
 # DO NOT DELETE
