@@ -164,6 +164,9 @@ void TLMInterface3D::GetForce(double time,
     request.time = time - Params.Delay;
     GetTimeData(request);
 
+    //Default values are the initial values
+    memcpy(force, InitialForce, sizeof(double)*6);
+
     TLMPlugin::GetForce3D(position, orientation,
                           speed, ang_speed,
                           request, Params,
@@ -209,12 +212,8 @@ void TLMInterface3D::SetTimeData(double time,
         DampedTimeData.push_back(request);
     }
 
-    item.GenForce[0] = InitialForce[0];
-    item.GenForce[1] = InitialForce[1];
-    item.GenForce[2] = InitialForce[2];
-    item.GenForce[3] = InitialForce[3];
-    item.GenForce[4] = InitialForce[4];
-    item.GenForce[5] = InitialForce[5];
+    //Default values are the initial values
+    memcpy(item.GenForce, InitialForce, sizeof(double)*6);
 
     TLMPlugin::GetForce3D(position, orientation,
                           speed, ang_speed,
