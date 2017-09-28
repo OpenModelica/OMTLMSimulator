@@ -126,6 +126,9 @@ void TLMInterface1D::GetForce(double time,
     request.time = time - Params.Delay;
     GetTimeData(request);
 
+    //Default value is the initial value
+    (*force)=InitialForce;
+
     if(Domain == "Hydraulic") {
         TLMPlugin::GetForce1D(-speed, request, Params, force);
     }
