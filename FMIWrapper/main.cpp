@@ -932,12 +932,60 @@ void csvToIntArray(std::string csv, int length, fmi2_value_reference_t *array[])
 }
 
 
+//Generate fmi.config if it does not exist (using only inputs and outputs)
+void generateFmiConfigFile()
+{
+  TLMErrorLog::Log("Generating fmi.config...");
+
+  std::ofstream fmiConfigStream;
+  fmiConfigStream.open("fmi.config");
+  if(fmiConfigStream.is_open()) {
+    fmiConfigStream << "substeps,1\n";
+
+    fmi2_import_variable_list_t *list = fmi2_import_get_variable_list(fmu,0);
+    size_t nVar = fmi2_import_get_variable_list_size(list);
+    for(size_t i=0; i<nVar; ++i) {
+      fmi2_import_variable_t* var = fmi2_import_get_variable(list,i);
+      if(fmi2_import_get_variable_base_type(var) == fmi2_base_type_real) {
+        std::string name = fmi2_import_get_variable_name(var);
+        if(fmi2_import_get_causality(var) == fmi2_causality_enu_input) {
+          fmiConfigStream << "name," << name << "\n";
+          fmiConfigStream << "domain,Signal\n";
+          fmiConfigStream << "dimensions,1\n";
+          fmiConfigStream << "causality,Input\n";
+          fmiConfigStream << "value," << fmi2_import_get_variable_vr(var) << "\n";
+        }
+        else if(fmi2_import_get_causality(var) == fmi2_causality_enu_output) {
+          fmiConfigStream << "name," << name << "\n";
+          fmiConfigStream << "domain,Signal\n";
+          fmiConfigStream << "dimensions,1\n";
+          fmiConfigStream << "causality,Output\n";
+          fmiConfigStream << "value," << fmi2_import_get_variable_vr(var) << "\n";
+        }
+      }
+    }
+  }
+  else {
+    TLMErrorLog::FatalError("Unable to write to fmi.config");
+  }
+  fmiConfigStream.close();
+}
+
 
 // Reads interface data (Value references for FMI mapped to TLM connections) from FMI configuration file
 // Todo: Add error handling
 void readFmiConfigFile()
 {
   fmiConfig.nInterfaces=0;
+
+  struct stat buffer;
+  if(stat (FMI_CONFIG_FILE_NAME, &buffer) != 0) {
+    TLMErrorLog::Log("File fmi.config does not exist.");
+    generateFmiConfigFile();
+  }
+
+  TLMErrorLog::Log("Reading fmi.config...");
+
   std::ifstream infile(FMI_CONFIG_FILE_NAME);
   if(infile.is_open()) {
     for( std::string line; getline( infile, line ); ) {
@@ -1209,6 +1257,35 @@ int main(int argc, char* argv[])
   // Create and clear temporary directory
   createAndClearTempDirectory(tmpPath);
 
+
+  jm_callbacks callbacks;
+  fmi_import_context_t* context;
+  fmi_version_enu_t version;
+
+  callbacks.malloc = malloc;
+  callbacks.calloc = calloc;
+  callbacks.realloc = realloc;
+  callbacks.free = free;
+  callbacks.logger = fmiLogger;
+  callbacks.log_level = jm_log_level_warning;   //Log level
+  callbacks.context = 0;
+
+  context = fmi_import_allocate_context(&callbacks);
+
+  // Check version of FMU
+  version = fmi_import_get_fmi_version(context, FMUPath.c_str(), tmpPath.c_str());
+  if(version != fmi_version_2_0_enu) {
+    TLMErrorLog::FatalError("The code only supports version 2.0");
+  }
+
+  // Parse modelDescription.xml
+  fmu = fmi2_import_parse_xml(context, tmpPath.c_str(), 0);
+
+  if(!fmu) {
+    TLMErrorLog::FatalError("Error parsing XML, exiting");
+  }
+
+
   // Read TLM configuration
   readFmiConfigFile();
 
@@ -1243,32 +1320,7 @@ int main(int argc, char* argv[])
                                                             fmiConfig.domains[i]);
   }
 
-  jm_callbacks callbacks;
-  fmi_import_context_t* context;
-  fmi_version_enu_t version;
 
-  callbacks.malloc = malloc;
-  callbacks.calloc = calloc;
-  callbacks.realloc = realloc;
-  callbacks.free = free;
-  callbacks.logger = fmiLogger;
-  callbacks.log_level = jm_log_level_warning;   //Log level
-  callbacks.context = 0;
-
-  context = fmi_import_allocate_context(&callbacks);
-
-  // Check version of FMU
-  version = fmi_import_get_fmi_version(context, FMUPath.c_str(), tmpPath.c_str());
-  if(version != fmi_version_2_0_enu) {
-    TLMErrorLog::FatalError("The code only supports version 2.0");
-  }
-
-  // Parse modelDescription.xml
-  fmu = fmi2_import_parse_xml(context, tmpPath.c_str(), 0);
-
-  if(!fmu) {
-    TLMErrorLog::FatalError("Error parsing XML, exiting");
-  }
 
   // Check FMU kind (CS or ME)
   fmi2_fmu_kind_enu_t kind = fmi2_import_get_fmu_kind(fmu);
