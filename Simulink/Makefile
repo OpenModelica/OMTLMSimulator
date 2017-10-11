@@ -28,16 +28,16 @@ MEX_DEBUGFLG=
 CC += -fPIC
 
 $(ABI)/%.o: %.c
-	$(cc) $(DEFINES) $(CFLAGS) $(OPTFLAGS4) $(INCLUDES) -c $< -o $@
+	$(cc) $(DEFINES) $(CFLAGS) -DWIN32 $(OPTFLAGS4) $(INCLUDES) -c $< -o $@
 
 $(ABI)/%.o: %.cc
-	$(CC) $(DEFINES) $(CCFLAGS) $(OPTFLAGS4) $(INCLUDES) -c $< -o $@ 
+	$(CC) $(DEFINES) $(CCFLAGS) -DWIN32 $(OPTFLAGS4) $(INCLUDES) -c $< -o $@ 
 
 $(ABI)/%.o: ../common/%.cc
-	$(CC) $(DEFINES) $(CCFLAGS) $(OPTFLAGS4) $(INCLUDES) -c $< -o $@ 
+	$(CC) $(DEFINES) $(CCFLAGS) -DWIN32 $(OPTFLAGS4) $(INCLUDES) -c $< -o $@ 
 
 $(ABI)/%.o: $(MISCHOME)/src/%.cc
-	$(CC) $(DEFINES) $(CCFLAGS) $(OPTFLAGS4) $(INCLUDES) -c $< -o $@
+	$(CC) $(DEFINES) $(CCFLAGS) -DWIN32 $(OPTFLAGS4) $(INCLUDES) -c $< -o $@
 
 OBJS=   
 
@@ -47,6 +47,10 @@ EXT_OBJS = Plugin/PluginImplementer.o \
 	Interfaces/TLMInterface.o \
 	Interfaces/TLMInterface1D.o \
 	Interfaces/TLMInterface3D.o \
+	Interfaces/TLMInterfaceSignal.o \
+	Interfaces/TLMInterfaceSignalInput.o \
+	Interfaces/TLMInterfaceSignalOutput.o \
+	Parameters/ComponentParameter.o \
 	Logging/TLMErrorLog.o \
 	Plugin/TLMPlugin.o \
 	coordTrans.o \
@@ -73,6 +77,7 @@ dirs:
 	mkdir -p $(ABI)/Plugin
 	mkdir -p $(ABI)/Communication
 	mkdir -p $(ABI)/Interfaces
+	mkdir -p $(ABI)/Parameters
 	mkdir -p $(ABI)/Logging
 	-if [ ! -d $(INSTDIR) ] ; then \
 	mkdir -p $(INSTDIR) ; fi ;

@@ -1,0 +1,23 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!-- The root node is the composite-model -->
+<Model Name="CompositeModel1">
+  <!-- List of connected sub-models -->
+  <SubModels>
+    <SubModel ModelFile="left" Position="0,0,0" Name="left" Angle321="0,0,0" StartCommand="StartTLMSimulink">
+      <Annotation Visible="true" Extent="{-10,-10,10,10}" Origin="{-88,58}" Rotation="0"/>
+      <InterfacePoint Position="0,0,0" Causality="Bidirectional" Name="left/TLMForce" Angle321="0,0,0" Dimensions="6" Domain="Mechanical"/>
+    </SubModel>
+    <SubModel ModelFile="right" Position="0,0,0" Name="right" Angle321="0,0,0" StartCommand="StartTLMSimulink">
+      <Annotation Visible="true" Extent="{-10,-10,10,10}" Origin="{-38,10}" Rotation="0"/>
+      <InterfacePoint Position="0,0,0" Causality="Bidirectional" Name="right/TLMForce" Angle321="0,0,0" Dimensions="6" Domain="Mechanical"/>
+    </SubModel>
+  </SubModels>
+  <!-- List of TLM connections -->
+  <Connections>
+    <Connection Delay="1e-3" From="left.left/TLMForce" To="right.right/TLMForce" Zf="1" Zfr="0.001" alpha="0.3">
+      <Annotation Points="{{-76,66},{2,66},{2,18},{-26,18},{-26,18}}"/>
+    </Connection>
+  </Connections>
+  <!-- Parameters for the simulation -->
+  <SimulationParams StopTime="10" StartTime="0"/>
+</Model>
