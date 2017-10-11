@@ -1,34 +1,40 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <Model Name="OMFMISimulatorTest">
   <SubModels>
-    <SubModel Position="0,0,0" ModelFile="hydraulics.hmf" Angle321="0,0,0" StartCommand="StartTLMHopsan" Name="hydraulics">
-      <Annotation Extent="{-10,-10,10,10}" Origin="{-38,-30}" Rotation="0" Visible="true"/>
-      <InterfacePoint Position="1,0,0" Causality="Input" Angle321="0,0,0" Name="xv" Domain="Signal" Dimensions="1"/>
-      <InterfacePoint Position="0,0,0" Causality="Bidirectional" Angle321="0,0,0" Name="tlm" Domain="Mechanical" Dimensions="1"/>
+    <SubModel StartCommand="StartTLMHopsan" Position="0,0,0" ModelFile="hydraulics.hmf" Name="hydraulics" Angle321="0,0,0">
+      <Annotation Rotation="0" Visible="true" Extent="{-10,-10,10,10}" Origin="{-38,-28}"/>
+      <InterfacePoint Position="0,0,0" Dimensions="1" Causality="Input" Name="xv" Angle321="0,0,0" Domain="Signal"/>
+      <InterfacePoint Position="0,0,0" Dimensions="1" Causality="Bidirectional" Name="tlm" Angle321="0,0,0" Domain="Mechanical"/>
+      <Parameter Value="0.001" Name="A_1"/>
+      <Parameter Value="3e7" Name="p_s"/>
+      <Parameter Value="10" Name="M_rod"/>
+      <Parameter Value="0.001" Name="A_2"/>
     </SubModel>
-    <SubModel Position="0,0,0" ModelFile="mechanics.hmf" Angle321="0,0,0" StartCommand="StartTLMHopsan" Name="mechanics">
-      <Annotation Extent="{-10,-10,10,10}" Origin="{26,-28}" Rotation="0" Visible="true"/>
-      <InterfacePoint Position="1,0,0" Causality="Output" Angle321="0,0,0" Name="x" Domain="Signal" Dimensions="1"/>
-      <InterfacePoint Position="0,0,0" Causality="Bidirectional" Angle321="0,0,0" Name="tlm" Domain="Mechanical" Dimensions="1"/>
+    <SubModel StartCommand="StartTLMHopsan" Position="0,0,0" ModelFile="mechanics.hmf" Name="mechanics" Angle321="0,0,0">
+      <Annotation Rotation="0" Visible="true" Extent="{-10,-10,10,10}" Origin="{26,-28}"/>
+      <InterfacePoint Position="0,0,0" Dimensions="1" Causality="Output" Name="x" Angle321="0,0,0" Domain="Signal"/>
+      <InterfacePoint Position="0,0,0" Dimensions="1" Causality="Bidirectional" Name="tlm" Angle321="0,0,0" Domain="Mechanical"/>
+      <Parameter Value="50" Name="M_load"/>
+      <Parameter Value="1000" Name="B_load"/>
     </SubModel>
-    <SubModel Position="0,0,0" ModelFile="controller.xml" Angle321="0,0,0" StartCommand="StartTLMOMFMISimulatorWrapper" Name="controller">
-      <Annotation Extent="{-10,-10,10,10}" Origin="{-54,10}" Rotation="0" Visible="true"/>
-      <InterfacePoint Position="1,0,0" Causality="Input" Angle321="0,0,0" Name="y" Domain="Signal" Dimensions="1"/>
-      <InterfacePoint Position="1,0,0" Causality="Output" Angle321="0,0,0" Name="u" Domain="Signal" Dimensions="1"/>
-      <Parameter Name="Kp" Value="0.005"/>
-      <Parameter Name="Ki" Value="1"/>
+    <SubModel StartCommand="StartTLMOMFMISimulatorWrapper" Position="0,0,0" ModelFile="controller.xml" Name="controller" Angle321="0,0,0">
+      <Annotation Rotation="0" Visible="true" Extent="{-10,-10,10,10}" Origin="{-38,12}"/>
+      <InterfacePoint Position="1,0,0" Dimensions="1" Causality="Input" Name="y" Angle321="0,0,0" Domain="Signal"/>
+      <InterfacePoint Position="1,0,0" Dimensions="1" Causality="Output" Name="u" Angle321="0,0,0" Domain="Signal"/>
+      <Parameter Value="0.005" Name="Kp"/>
+      <Parameter Value="1" Name="Ki"/>
     </SubModel>
   </SubModels>
   <Connections>
-    <Connection Delay="1e-3" alpha="0.3" From="mechanics.tlm" To="hydraulics.tlm" Zf="10000">
-      <Annotation Points="{{37,-23.5},{4,-23.5},{4,-25.5},{-27,-25.5}}"/>
+    <Connection From="mechanics.tlm" Zf="10000" To="hydraulics.tlm" Delay="1e-3" alpha="0.3">
+      <Annotation Points="{{37,-23.5},{-27,-23.5}}"/>
     </Connection>
-    <Connection Delay="1e-3" From="controller.u" To="hydraulics.xv">
-      <Annotation Points="{{-42,14},{-12,14},{-12,-20},{-26,-20},{-26,-22}}"/>
+    <Connection From="controller.y" To="mechanics.x" Delay="1e-3">
+      <Annotation Points="{{-26,20},{46,20},{46,-20},{38,-20}}"/>
     </Connection>
-    <Connection Delay="1e-3" From="mechanics.x" To="controller.y">
-      <Annotation Points="{{-42,18},{42,18},{42,-18},{38,-18},{38,-20}}"/>
+    <Connection From="controller.u" To="hydraulics.xv" Delay="1e-3">
+      <Annotation Points="{{-26,16},{-16,16},{-16,-20},{-26,-20}}"/>
     </Connection>
   </Connections>
-  <SimulationParams StopTime="2" StartTime="0"/>
+  <SimulationParams StartTime="0" StopTime="2"/>
 </Model>
