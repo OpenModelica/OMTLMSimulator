@@ -9,7 +9,7 @@
 # 6 FMU file 
 
 # *********************SETUP SIMULATION*********************************************
-export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/home/robbr48/Documents/Mercurial/TLMPlugin/bin
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$OMTLMSimulatorPath/bin
 
 FMIWrapper_Cmd="FMIWrapper $PWD/$1 $6 solver=CVODE -d"
 
