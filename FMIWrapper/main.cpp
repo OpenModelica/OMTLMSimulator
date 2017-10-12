@@ -71,6 +71,7 @@ struct simConfig_t {
   solver_t solver;
   double reltol;
   std::vector<double> abstol;
+  int logLevel;
 };
 
 static const char* TEMP_DIR_NAME = "temp";
@@ -1210,8 +1211,11 @@ int main(int argc, char* argv[])
     cout << "Additional arguments:" << endl;
     cout << "  solver=[solver]    Set numerical solver (Euler, RungeKutta, CVODE or IDA)" << endl;
     cout << "  -d                 Enable additional debug output" << endl << endl;
+    cout << "  -l X               Logging level for FMU" << endl << endl;
+    cout << "                     (0 = nothing, 1 = fatal,   2 = error, 3 = warning," << endl << endl;
+    cout << "                      4 = info,    5 = verbose, 6 = debug, 7 = all)" << endl << endl;
     cout << "Example:" << endl;
-    cout << "  FMIWrapper c:\\path\\to\\fmu model.fmu solver=CVODE -d" << endl;
+    cout << "  FMIWrapper c:\\path\\to\\fmu model.fmu solver=CVODE -d -l 3" << endl;
     TLMErrorLog::FatalError("Too few arguments!");
     return -1;
   }
@@ -1238,6 +1242,15 @@ int main(int argc, char* argv[])
     else if(!strcmp(argv[i],"-d")) {
       TLMErrorLog::SetDebugOut(true);
       cout << "Activating debug output" << endl;
+    }
+    else if(!strcmp(argv[i],"-l") && argc > i+1) {
+      int logLevel = atoi(argv[i+1]);
+      if(logLevel >= 0 && logLevel <= 7)
+        simConfig.logLevel = atoi(argv[i+1]);
+      else {
+        cout << "Invalid logging level: " << logLevel << "\n";
+        TLMErrorLog::FatalError("Invalid logging level: "+TLMErrorLog::ToStdStr(logLevel));
+      }
     }
   }
 
@@ -1267,7 +1280,7 @@ int main(int argc, char* argv[])
   callbacks.realloc = realloc;
   callbacks.free = free;
   callbacks.logger = fmiLogger;
-  callbacks.log_level = jm_log_level_warning;   //Log level
+  callbacks.log_level = jm_log_level_enu_t(simConfig.logLevel);   //Log level
   callbacks.context = 0;
 
   context = fmi_import_allocate_context(&callbacks);
