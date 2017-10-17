@@ -159,6 +159,104 @@ void setParameters()
     }
 }
 
+
+//Read start values for interface variablesfrom
+//modelDescription.xml and apply them in OMTLMSimulator.
+void applyStartValues()
+{
+    fmi2_import_variable_list_t *list = fmi2_import_get_variable_list(fmu,0);
+    size_t nVar = fmi2_import_get_variable_list_size(list);
+    for(size_t i=0; i<nVar; ++i) {
+        fmi2_import_variable_t* var = fmi2_import_get_variable(list,i);
+        if(!fmi2_import_get_variable_has_start(var)) {
+          continue;
+        }
+        fmi2_base_type_enu_t baseType = fmi2_import_get_variable_base_type(var);
+        fmi2_value_reference_t vr = fmi2_import_get_variable_vr(var);
+        if(baseType == fmi2_base_type_real) {
+            fmi2_import_real_variable_t* realVar = fmi2_import_get_variable_as_real(var);
+            fmi2_real_t sv = fmi2_import_get_real_variable_start(realVar);
+            fmi2_import_set_real(fmu,&vr,1,&sv);
+        }
+        else if(baseType == fmi2_base_type_int) {
+            fmi2_import_integer_variable_t* intVar = fmi2_import_get_variable_as_integer(var);
+            fmi2_integer_t sv = fmi2_import_get_integer_variable_start(intVar);
+            fmi2_import_set_integer(fmu,&vr,1,&sv);
+        }
+        else if(baseType == fmi2_base_type_bool) {
+            fmi2_import_bool_variable_t* boolVar = fmi2_import_get_variable_as_boolean(var);
+            fmi2_boolean_t sv = fmi2_import_get_boolean_variable_start(boolVar);
+            fmi2_import_set_boolean(fmu,&vr,1,&sv);
+        }
+        else if(baseType == fmi2_base_type_str) {
+            fmi2_import_string_variable_t* strVar = fmi2_import_get_variable_as_string(var);
+            fmi2_string_t sv = fmi2_import_get_string_variable_start(strVar);
+            fmi2_import_set_string(fmu,&vr,1,&sv);
+        }
+    }
+
+    for(size_t j=0; j<fmiConfig.nInterfaces; ++j) {
+        if(fmiConfig.dimensions[j] == 6  &&
+           fmiConfig.causalities[j] == "Bidirectional") {
+
+            double force[6];
+            for(int k=0; k<6; ++k) {
+                fmi2_import_variable_t* var = fmi2_import_get_variable_by_vr(fmu,fmi2_base_type_real,fmiConfig.force_vr[j][k]);
+                if(fmi2_import_get_variable_has_start(var)) {
+                    fmi2_import_real_variable_t* realVar = fmi2_import_get_variable_as_real(var);
+                    force[k] = fmi2_import_get_real_variable_start(realVar);
+                }
+                else {
+                    force[k] = 0;
+                }
+            }
+
+            for(size_t k=0; k<6; ++k) {
+                force[k] = -force[k];
+            }
+
+            plugin->SetInitialForce3D(fmiConfig.interfaceIds[j],
+                                      force[0], force[1], force[2],
+                                      force[3], force[4], force[5]);
+        }
+        else if(fmiConfig.dimensions[j] == 1  &&
+                fmiConfig.causalities[j] == "Bidirectional") {
+            double force;
+
+            fmi2_import_variable_t* var = fmi2_import_get_variable_by_vr(fmu,fmi2_base_type_real,(*fmiConfig.force_vr[j]));
+            if(fmi2_import_get_variable_has_start(var)) {
+                fmi2_value_reference_t vr = fmi2_import_get_variable_vr(var);
+                fmi2_import_real_variable_t* realVar = fmi2_import_get_variable_as_real(var);
+                force = fmi2_import_get_real_variable_start(realVar);
+            }
+            else {
+                force = 0;
+            }
+
+            if(fmiConfig.domains[j] != "Hydraulic") {
+                force = -force;
+            }
+
+            plugin->SetInitialForce1D(fmiConfig.interfaceIds[j], force);
+        }
+        else if(fmiConfig.dimensions[j] == 1 &&
+                fmiConfig.causalities[j] == "Input" ) {
+            double value;
+
+            fmi2_import_variable_t* var = fmi2_import_get_variable_by_vr(fmu,fmi2_base_type_real,(*fmiConfig.value_vr[j]));
+            if(fmi2_import_get_variable_has_start(var)) {
+                fmi2_import_real_variable_t* realVar = fmi2_import_get_variable_as_real(var);
+                value = fmi2_import_get_real_variable_start(realVar);
+            }
+            else {
+                value = 0;
+            }
+
+            plugin->SetInitialValue(fmiConfig.interfaceIds[j], value);
+        }
+    }
+}
+
 //Read force from TLMPlugin and write it to FMU
 void forceFromTlmToFmu(double tcur)
 {
@@ -356,6 +454,7 @@ int simulate_fmi2_cs()
     TLMErrorLog::FatalError("fmi2_import_instantiate failed");
   }
 
+  applyStartValues();
   setParameters();
 
   fmistatus = fmi2_import_setup_experiment(fmu, fmi2_true,
@@ -615,6 +714,7 @@ int simulate_fmi2_me()
     TLMErrorLog::FatalError("fmi2_import_instantiate failed");
   }
 
+  applyStartValues();
   setParameters();
 
   fmi2_import_set_debug_logging(fmu, fmi2_false, 0, 0);
