@@ -103,12 +103,20 @@ EXT_OBJS = Plugin/PluginImplementer.o \
 ABIOBJS=$(OBJS:%.o= $(ABI)/%.o) $(EXT_OBJS:%.o= $(ABI)/%.o)
 
 
+copyfiles:
+	cp $(ABI)/$(BNAME) $(BINDIR)
+	cp StartTLMFmiWrapper* $(BINDIR)
+
 default: dirs fmil $(ABIOBJS)
 	$(LINK) $(ABIOBJS$) -o $(ABI)/$(BNAME) $(LIBS)
 
-install: default
-	cp $(ABI)/$(BNAME) $(BINDIR)
-	cp StartTLMFmiWrapper* $(BINDIR)
+install: default copyfiles
+
+wrapper: dirs $(ABIOBJS)
+	$(LINK) $(ABIOBJS$) -o $(ABI)/$(BNAME) $(LIBS)
+
+wrapper_install: wrapper copyfiles
+
 
 .PHONY: dirs clean
 
