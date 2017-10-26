@@ -58,8 +58,8 @@ extern "C" {
 void* initialize_TLM()
 {
     if (TLMPluginStructObj) {
-	TLMPluginStructObj->referenceCount += 1;
-	return (void*)TLMPluginStructObj;
+  TLMPluginStructObj->referenceCount += 1;
+  return (void*)TLMPluginStructObj;
     }
     set_debug_mode(debugFlg);
 
@@ -105,9 +105,9 @@ void* initialize_TLM()
 void deinitialize_TLM(void* in_TLMPluginStructObj)
 {
   TLMPluginStruct* TLMPluginStructObj = (TLMPluginStruct*)in_TLMPluginStructObj;
-  TLMPluginStructObj->Plugin->AwaitClosePermission();
 
   if (TLMPluginStructObj->referenceCount == 1) {
+      TLMPluginStructObj->Plugin->AwaitClosePermission();
       free(TLMPluginStructObj);
       TLMPluginStructObj = 0;
   } else {
