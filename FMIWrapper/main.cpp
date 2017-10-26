@@ -10,6 +10,7 @@
 #include <vector>
 #include <fstream>
 #include <map>
+#include <regex>
 
 #define Ith(v,i)    NV_Ith_S(v,i-1)       /* Ith numbers components 1..NEQ */
 #define IJth(A,i,j) DENSE_ELEM(A,i-1,j-1) /* IJth numbers rows,cols 1..NEQ */
@@ -72,6 +73,7 @@ struct simConfig_t {
   double reltol;
   std::vector<double> abstol;
   int logLevel;
+  std::string variableFilter = ".*";
 };
 
 static const char* TEMP_DIR_NAME = "temp";
@@ -94,52 +96,46 @@ static simConfig_t simConfig = simConfig_t();
 
 static std::map<fmi2_value_reference_t,std::string> parameterMap;
 
+static std::vector<fmi2_value_reference_t> logVariables;
 static std::ofstream logStream;
 bool logStreamOpen = false;
 
-void logAllVariables(double time) {
-  if(!logStreamOpen) {
-    logStream.open(LOG_FILE_NAME);
-    if(logStream.is_open()) {
-      logStreamOpen = true;
-      logStream << "time,";
-      fmi2_import_variable_list_t *list = fmi2_import_get_variable_list(fmu,0);
-      size_t nVar = fmi2_import_get_variable_list_size(list);
-      for(size_t i=0; i<nVar; ++i) {
-        fmi2_import_variable_t* var = fmi2_import_get_variable(list,i);
-        std::string name = fmi2_import_get_variable_name(var);
-        logStream << name;
-        if(i != nVar-1) {
-          logStream << ",";
-        }
-        else {
-          logStream << "\n";
-        }
+
+void initializeLogging() {
+  logStream.open(LOG_FILE_NAME);
+  if(logStream.is_open()) {
+    std::regex exp(simConfig.variableFilter);
+    logStreamOpen = true;
+    logStream << "\"time\"";
+    fmi2_import_variable_list_t *list = fmi2_import_get_variable_list(fmu,0);
+    size_t nVar = fmi2_import_get_variable_list_size(list);
+    for(size_t i=0; i<nVar; ++i) {
+      fmi2_import_variable_t* var = fmi2_import_get_variable(list,i);
+      std::string name = fmi2_import_get_variable_name(var);
+      if (std::regex_match(name, exp)) {
+        logVariables.push_back(fmi2_import_get_variable_vr(var));
       }
     }
   }
-  else {
-    if(logStream.is_open()) {
-      logStream << time << ",";
-      fmi2_import_variable_list_t *list = fmi2_import_get_variable_list(fmu,0);
-      size_t nVar = fmi2_import_get_variable_list_size(list);
-      for(size_t i=0; i<nVar; ++i) {
-        fmi2_import_variable_t* var = fmi2_import_get_variable(list,i);
-        //TODO: Also log non-real variables
-        if(fmi2_import_get_variable_base_type(var) == fmi2_base_type_real) {
-          double value;
-          fmi2_value_reference_t vr = fmi2_import_get_variable_vr(var);
-          fmi2_import_get_real(fmu,&vr,1,&value);
-          logStream << value;
-          if(i != nVar-1) {
-            logStream << ",";
-          }
-        }
-        if(i == nVar-1) {
-          logStream << "\n";
-        }
-      }
+
+  for(size_t i=0; i<logVariables.size(); ++i) {
+    fmi2_value_reference_t vr = logVariables[i];
+    fmi2_import_variable_t* var = fmi2_import_get_variable_by_vr(fmu,fmi2_base_type_real,vr);
+    logStream << ",\"" << fmi2_import_get_variable_name(var) << "\"";
+  }
+  logStream << "\n";
+}
+
+void logAllVariables(double time) {
+  if(logStream.is_open()) {
+    logStream << time;
+    for(size_t i=0; i<logVariables.size(); ++i) {
+      double value;
+      fmi2_value_reference_t vr = logVariables[i];
+      fmi2_import_get_real(fmu,&vr,1,&value);
+      logStream << "," << value;
     }
+    logStream << "\n";
   }
 }
 
@@ -1252,6 +1248,9 @@ int main(int argc, char* argv[])
         TLMErrorLog::FatalError("Invalid logging level: "+TLMErrorLog::ToStdStr(logLevel));
       }
     }
+    else if(!strcmp(argv[i],"-v") && argc > i+1) {
+      simConfig.variableFilter = argv[i+1];
+    }
   }
 
   cout << "Starting FMIWrapper. Debug output will be written to \"TLMlogfile.log\"." << endl;
@@ -1384,6 +1383,8 @@ int main(int argc, char* argv[])
         parameterMap.insert(std::pair<fmi2_value_reference_t,std::string>(vr,value));
       }
   }
+
+  initializeLogging();
 
   // Start simulation
   switch(kind) {
