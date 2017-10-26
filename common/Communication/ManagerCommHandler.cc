@@ -534,6 +534,10 @@ void ManagerCommHandler::ReaderThreadRun() {
                         nClosedSock++;
                     }
                 }
+                else {
+                    //Socket was closed without permission
+                    nClosedSock++;
+                }
             }
         }
     }
