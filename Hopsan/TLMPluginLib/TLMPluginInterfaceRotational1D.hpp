@@ -81,6 +81,8 @@ namespace hopsan {
 
             // Register TLM Interface
             mInterfaceId = mpPlugin->RegisteTLMInterface(this->getName().c_str(),1,"Bidirectional","Rotational");
+
+            mpPlugin->SetInitialForce1D(mInterfaceId, *mpP1_F);
         }
 
 
