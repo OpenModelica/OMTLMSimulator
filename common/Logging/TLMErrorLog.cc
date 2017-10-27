@@ -26,7 +26,7 @@ char tmpbuf[128];
 
 
 //#ifndef _MSC_VER
-#ifndef WIN32
+#if !(defined(WIN32) || defined(__MINGW32__))
 void _strtime(char* timestring) {
     (void)timestring;
     time_t rawtime;
