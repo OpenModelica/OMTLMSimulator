@@ -531,7 +531,6 @@ void ManagerCommHandler::ReaderThreadRun() {
                     else {
                         // CommMode == InterfaceRequestMode
                         UnpackAndStoreTimeData(*message);
-                        nClosedSock++;
                     }
                 }
                 else {
