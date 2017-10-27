@@ -15,7 +15,7 @@
 
 #include "Communication/TLMCalcData.h"
 
-#ifdef WIN32
+#if defined(WIN32) || defined(__MINGW32__)
 #include <winsock2.h>
 #include <windows.h>
 
