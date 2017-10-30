@@ -1,0 +1,993 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<visualization>
+  <shape>
+    <ident>x-axis</ident>
+    <type>cylinder</type>
+    <T>
+      <exp>1.0</exp>
+      <exp>0.0</exp>
+      <exp>0.0</exp>
+      <exp>0.0</exp>
+      <exp>1.0</exp>
+      <exp>0.0</exp>
+      <exp>0.0</exp>
+      <exp>0.0</exp>
+      <exp>1.0</exp>
+    </T>
+    <r>
+      <exp>0.0</exp>
+      <exp>0.0</exp>
+      <exp>0.0</exp>
+    </r>
+    <r_shape>
+      <exp>0.0</exp>
+      <exp>0.0</exp>
+      <exp>0.0</exp>
+    </r_shape>
+    <lengthDir>
+      <exp>1.0</exp>
+      <exp>0.0</exp>
+      <exp>0.0</exp>
+    </lengthDir>
+    <widthDir>
+      <exp>0.0</exp>
+      <exp>1.0</exp>
+      <exp>0.0</exp>
+    </widthDir>
+    <length><exp>1.0</exp></length>
+    <width><exp>0.0025</exp></width>
+    <height><exp>0.0025</exp></height>
+    <extra><exp>0.0</exp></extra>
+    <color>
+      <exp>255.0</exp>
+      <exp>0.0</exp>
+      <exp>0.0</exp>
+    </color>
+    <specCoeff><exp>0.7</exp></specCoeff>
+  </shape>
+  <shape>
+    <ident>y-axis</ident>
+    <type>cylinder</type>
+    <T>
+      <exp>1.0</exp>
+      <exp>0.0</exp>
+      <exp>0.0</exp>
+      <exp>0.0</exp>
+      <exp>1.0</exp>
+      <exp>0.0</exp>
+      <exp>0.0</exp>
+      <exp>0.0</exp>
+      <exp>1.0</exp>
+    </T>
+    <r>
+      <exp>0.0</exp>
+      <exp>0.0</exp>
+      <exp>0.0</exp>
+    </r>
+    <r_shape>
+      <exp>0.0</exp>
+      <exp>0.0</exp>
+      <exp>0.0</exp>
+    </r_shape>
+    <lengthDir>
+      <exp>0.0</exp>
+      <exp>1.0</exp>
+      <exp>0.0</exp>
+    </lengthDir>
+    <widthDir>
+      <exp>1.0</exp>
+      <exp>0.0</exp>
+      <exp>0.0</exp>
+    </widthDir>
+    <length><exp>1.0</exp></length>
+    <width><exp>0.0025</exp></width>
+    <height><exp>0.0025</exp></height>
+    <extra><exp>0.0</exp></extra>
+    <color>
+      <exp>0.0</exp>
+      <exp>255.0</exp>
+      <exp>0.0</exp>
+    </color>
+    <specCoeff><exp>0.7</exp></specCoeff>
+  </shape>
+  <shape>
+    <ident>z-axis</ident>
+    <type>cylinder</type>
+    <T>
+      <exp>1.0</exp>
+      <exp>0.0</exp>
+      <exp>0.0</exp>
+      <exp>0.0</exp>
+      <exp>1.0</exp>
+      <exp>0.0</exp>
+      <exp>0.0</exp>
+      <exp>0.0</exp>
+      <exp>1.0</exp>
+    </T>
+    <r>
+      <exp>0.0</exp>
+      <exp>0.0</exp>
+      <exp>0.0</exp>
+    </r>
+    <r_shape>
+      <exp>0.0</exp>
+      <exp>0.0</exp>
+      <exp>0.0</exp>
+    </r_shape>
+    <lengthDir>
+      <exp>0.0</exp>
+      <exp>0.0</exp>
+      <exp>1.0</exp>
+    </lengthDir>
+    <widthDir>
+      <exp>0.0</exp>
+      <exp>1.0</exp>
+      <exp>0.0</exp>
+    </widthDir>
+    <length><exp>1.0</exp></length>
+    <width><exp>0.0025</exp></width>
+    <height><exp>0.0025</exp></height>
+    <extra><exp>0.0</exp></extra>
+    <color>
+      <exp>0.0</exp>
+      <exp>0.0</exp>
+      <exp>255.0</exp>
+    </color>
+    <specCoeff><exp>0.7</exp></specCoeff>
+  </shape>
+  <shape>
+    <ident>boom.tlm1.x</ident>
+    <type>cylinder</type>
+    <T>
+      <cref>boom.tlm1.A(1,1) [-]</cref>
+      <cref>boom.tlm1.A(1,2) [-]</cref>
+      <cref>boom.tlm1.A(1,3) [-]</cref>
+      <cref>boom.tlm1.A(2,1) [-]</cref>
+      <cref>boom.tlm1.A(2,2) [-]</cref>
+      <cref>boom.tlm1.A(2,3) [-]</cref>
+      <cref>boom.tlm1.A(3,1) [-]</cref>
+      <cref>boom.tlm1.A(3,2) [-]</cref>
+      <cref>boom.tlm1.A(3,3) [-]</cref>
+    </T>
+    <r>
+      <cref>boom.tlm1.R[cG][cG](1) [m]</cref>
+      <cref>boom.tlm1.R[cG][cG](2) [m]</cref>
+      <cref>boom.tlm1.R[cG][cG](3) [m]</cref>
+    </r>
+    <r_shape>
+      <exp>0</exp>
+      <exp>0</exp>
+      <exp>0</exp>
+    </r_shape>
+    <lengthDir>
+      <exp>1</exp>
+      <exp>0</exp>
+      <exp>0</exp>
+    </lengthDir>
+    <widthDir>
+      <exp>0</exp>
+      <exp>1</exp>
+      <exp>0</exp>
+    </widthDir>
+    <length><exp>0.5</exp></length>
+    <width><exp>0.0025</exp></width>
+    <height><exp>0.0025</exp></height>
+    <extra><exp>0.0</exp></extra>
+    <color>
+      <exp>255</exp>
+      <exp>0</exp>
+      <exp>0</exp>
+    </color>
+    <specCoeff><exp>0.7</exp></specCoeff>
+  </shape>
+  <shape>
+    <ident>boom.tlm1.x</ident>
+    <type>cylinder</type>
+    <T>
+      <cref>boom.tlm1.A(1,1) [-]</cref>
+      <cref>boom.tlm1.A(1,2) [-]</cref>
+      <cref>boom.tlm1.A(1,3) [-]</cref>
+      <cref>boom.tlm1.A(2,1) [-]</cref>
+      <cref>boom.tlm1.A(2,2) [-]</cref>
+      <cref>boom.tlm1.A(2,3) [-]</cref>
+      <cref>boom.tlm1.A(3,1) [-]</cref>
+      <cref>boom.tlm1.A(3,2) [-]</cref>
+      <cref>boom.tlm1.A(3,3) [-]</cref>
+    </T>
+    <r>
+      <cref>boom.tlm1.R[cG][cG](1) [m]</cref>
+      <cref>boom.tlm1.R[cG][cG](2) [m]</cref>
+      <cref>boom.tlm1.R[cG][cG](3) [m]</cref>
+    </r>
+    <r_shape>
+      <exp>0</exp>
+      <exp>0</exp>
+      <exp>0</exp>
+    </r_shape>
+    <lengthDir>
+      <exp>0</exp>
+      <exp>1</exp>
+      <exp>0</exp>
+    </lengthDir>
+    <widthDir>
+      <exp>0</exp>
+      <exp>0</exp>
+      <exp>1</exp>
+    </widthDir>
+    <length><exp>0.5</exp></length>
+    <width><exp>0.0025</exp></width>
+    <height><exp>0.0025</exp></height>
+    <extra><exp>0.0</exp></extra>
+    <color>
+      <exp>0</exp>
+      <exp>255</exp>
+      <exp>0</exp>
+    </color>
+    <specCoeff><exp>0.7</exp></specCoeff>
+  </shape>
+  <shape>
+    <ident>boom.tlm1.x</ident>
+    <type>cylinder</type>
+    <T>
+      <cref>boom.tlm1.A(1,1) [-]</cref>
+      <cref>boom.tlm1.A(1,2) [-]</cref>
+      <cref>boom.tlm1.A(1,3) [-]</cref>
+      <cref>boom.tlm1.A(2,1) [-]</cref>
+      <cref>boom.tlm1.A(2,2) [-]</cref>
+      <cref>boom.tlm1.A(2,3) [-]</cref>
+      <cref>boom.tlm1.A(3,1) [-]</cref>
+      <cref>boom.tlm1.A(3,2) [-]</cref>
+      <cref>boom.tlm1.A(3,3) [-]</cref>
+    </T>
+    <r>
+      <cref>boom.tlm1.R[cG][cG](1) [m]</cref>
+      <cref>boom.tlm1.R[cG][cG](2) [m]</cref>
+      <cref>boom.tlm1.R[cG][cG](3) [m]</cref>
+    </r>
+    <r_shape>
+      <exp>0</exp>
+      <exp>0</exp>
+      <exp>0</exp>
+    </r_shape>
+    <lengthDir>
+      <exp>0</exp>
+      <exp>0</exp>
+      <exp>1</exp>
+    </lengthDir>
+    <widthDir>
+      <exp>1</exp>
+      <exp>0</exp>
+      <exp>0</exp>
+    </widthDir>
+    <length><exp>0.5</exp></length>
+    <width><exp>0.0025</exp></width>
+    <height><exp>0.0025</exp></height>
+    <extra><exp>0.0</exp></extra>
+    <color>
+      <exp>0</exp>
+      <exp>0</exp>
+      <exp>255</exp>
+    </color>
+    <specCoeff><exp>0.7</exp></specCoeff>
+  </shape>
+  <shape>
+    <ident>boom.tlm1</ident>
+    <type>file:///home/robbr48/Documents/Git/OMTLMSimulator/CompositeModels/RotatingCrane/boom/boom.stl</type>
+    <T>
+      <cref>boom.tlm1.A(1,1) [-]</cref>
+      <cref>boom.tlm1.A(1,2) [-]</cref>
+      <cref>boom.tlm1.A(1,3) [-]</cref>
+      <cref>boom.tlm1.A(2,1) [-]</cref>
+      <cref>boom.tlm1.A(2,2) [-]</cref>
+      <cref>boom.tlm1.A(2,3) [-]</cref>
+      <cref>boom.tlm1.A(3,1) [-]</cref>
+      <cref>boom.tlm1.A(3,2) [-]</cref>
+      <cref>boom.tlm1.A(3,3) [-]</cref>
+    </T>
+    <r>
+      <cref>boom.tlm1.R[cG][cG](1) [m]</cref>
+      <cref>boom.tlm1.R[cG][cG](2) [m]</cref>
+      <cref>boom.tlm1.R[cG][cG](3) [m]</cref>
+    </r>
+    <r_shape>
+      <exp>0</exp>
+      <exp>0</exp>
+      <exp>0</exp>
+    </r_shape>
+    <lengthDir>
+      <exp>1</exp>
+      <exp>0</exp>
+      <exp>0</exp>
+    </lengthDir>
+    <widthDir>
+      <exp>0</exp>
+      <exp>1</exp>
+      <exp>0</exp>
+    </widthDir>
+    <length><exp>0.0</exp></length>
+    <width><exp>0.0</exp></width>
+    <height><exp>0.0</exp></height>
+    <extra><exp>0.0</exp></extra>
+    <color>
+      <exp>200</exp>
+      <exp>0</exp>
+      <exp>0</exp>
+    </color>
+    <specCoeff><exp>0.7</exp></specCoeff>
+  </shape>
+<shape>
+    <ident>base.tlm1</ident>
+    <type>file:///home/robbr48/Documents/Git/OMTLMSimulator/CompositeModels/RotatingCrane/base/base.stl</type>
+    <T>
+      <cref>base.tlm1.A(1,1) [-]</cref>
+      <cref>base.tlm1.A(1,2) [-]</cref>
+      <cref>base.tlm1.A(1,3) [-]</cref>
+      <cref>base.tlm1.A(2,1) [-]</cref>
+      <cref>base.tlm1.A(2,2) [-]</cref>
+      <cref>base.tlm1.A(2,3) [-]</cref>
+      <cref>base.tlm1.A(3,1) [-]</cref>
+      <cref>base.tlm1.A(3,2) [-]</cref>
+      <cref>base.tlm1.A(3,3) [-]</cref>
+    </T>
+    <r>
+      <cref>base.tlm1.R[cG][cG](1) [m]</cref>
+      <cref>base.tlm1.R[cG][cG](2) [m]</cref>
+      <cref>base.tlm1.R[cG][cG](3) [m]</cref>
+    </r>
+    <r_shape>
+      <exp>0</exp>
+      <exp>0</exp>
+      <exp>0</exp>
+    </r_shape>
+    <lengthDir>
+      <exp>1</exp>
+      <exp>0</exp>
+      <exp>0</exp>
+    </lengthDir>
+    <widthDir>
+      <exp>0</exp>
+      <exp>1</exp>
+      <exp>0</exp>
+    </widthDir>
+    <length><exp>0.0</exp></length>
+    <width><exp>0.0</exp></width>
+    <height><exp>0.0</exp></height>
+    <extra><exp>0.0</exp></extra>
+    <color>
+      <exp>200</exp>
+      <exp>0</exp>
+      <exp>0</exp>
+    </color>
+    <specCoeff><exp>0.7</exp></specCoeff>
+  </shape>
+  <shape>
+    <ident>jib.tlm1.x</ident>
+    <type>cylinder</type>
+    <T>
+      <cref>jib.tlm1.A(1,1) [-]</cref>
+      <cref>jib.tlm1.A(1,2) [-]</cref>
+      <cref>jib.tlm1.A(1,3) [-]</cref>
+      <cref>jib.tlm1.A(2,1) [-]</cref>
+      <cref>jib.tlm1.A(2,2) [-]</cref>
+      <cref>jib.tlm1.A(2,3) [-]</cref>
+      <cref>jib.tlm1.A(3,1) [-]</cref>
+      <cref>jib.tlm1.A(3,2) [-]</cref>
+      <cref>jib.tlm1.A(3,3) [-]</cref>
+    </T>
+    <r>
+      <cref>jib.tlm1.R[cG][cG](1) [m]</cref>
+      <cref>jib.tlm1.R[cG][cG](2) [m]</cref>
+      <cref>jib.tlm1.R[cG][cG](3) [m]</cref>
+    </r>
+    <r_shape>
+      <exp>0</exp>
+      <exp>0</exp>
+      <exp>0</exp>
+    </r_shape>
+    <lengthDir>
+      <exp>1</exp>
+      <exp>0</exp>
+      <exp>0</exp>
+    </lengthDir>
+    <widthDir>
+      <exp>0</exp>
+      <exp>1</exp>
+      <exp>0</exp>
+    </widthDir>
+    <length><exp>0.5</exp></length>
+    <width><exp>0.0025</exp></width>
+    <height><exp>0.0025</exp></height>
+    <extra><exp>0.0</exp></extra>
+    <color>
+      <exp>255</exp>
+      <exp>0</exp>
+      <exp>0</exp>
+    </color>
+    <specCoeff><exp>0.7</exp></specCoeff>
+  </shape>
+  <shape>
+    <ident>jib.tlm1.x</ident>
+    <type>cylinder</type>
+    <T>
+      <cref>jib.tlm1.A(1,1) [-]</cref>
+      <cref>jib.tlm1.A(1,2) [-]</cref>
+      <cref>jib.tlm1.A(1,3) [-]</cref>
+      <cref>jib.tlm1.A(2,1) [-]</cref>
+      <cref>jib.tlm1.A(2,2) [-]</cref>
+      <cref>jib.tlm1.A(2,3) [-]</cref>
+      <cref>jib.tlm1.A(3,1) [-]</cref>
+      <cref>jib.tlm1.A(3,2) [-]</cref>
+      <cref>jib.tlm1.A(3,3) [-]</cref>
+    </T>
+    <r>
+      <cref>jib.tlm1.R[cG][cG](1) [m]</cref>
+      <cref>jib.tlm1.R[cG][cG](2) [m]</cref>
+      <cref>jib.tlm1.R[cG][cG](3) [m]</cref>
+    </r>
+    <r_shape>
+      <exp>0</exp>
+      <exp>0</exp>
+      <exp>0</exp>
+    </r_shape>
+    <lengthDir>
+      <exp>0</exp>
+      <exp>1</exp>
+      <exp>0</exp>
+    </lengthDir>
+    <widthDir>
+      <exp>0</exp>
+      <exp>0</exp>
+      <exp>1</exp>
+    </widthDir>
+    <length><exp>0.5</exp></length>
+    <width><exp>0.0025</exp></width>
+    <height><exp>0.0025</exp></height>
+    <extra><exp>0.0</exp></extra>
+    <color>
+      <exp>0</exp>
+      <exp>255</exp>
+      <exp>0</exp>
+    </color>
+    <specCoeff><exp>0.7</exp></specCoeff>
+  </shape>
+  <shape>
+    <ident>jib.tlm1.x</ident>
+    <type>cylinder</type>
+    <T>
+      <cref>jib.tlm1.A(1,1) [-]</cref>
+      <cref>jib.tlm1.A(1,2) [-]</cref>
+      <cref>jib.tlm1.A(1,3) [-]</cref>
+      <cref>jib.tlm1.A(2,1) [-]</cref>
+      <cref>jib.tlm1.A(2,2) [-]</cref>
+      <cref>jib.tlm1.A(2,3) [-]</cref>
+      <cref>jib.tlm1.A(3,1) [-]</cref>
+      <cref>jib.tlm1.A(3,2) [-]</cref>
+      <cref>jib.tlm1.A(3,3) [-]</cref>
+    </T>
+    <r>
+      <cref>jib.tlm1.R[cG][cG](1) [m]</cref>
+      <cref>jib.tlm1.R[cG][cG](2) [m]</cref>
+      <cref>jib.tlm1.R[cG][cG](3) [m]</cref>
+    </r>
+    <r_shape>
+      <exp>0</exp>
+      <exp>0</exp>
+      <exp>0</exp>
+    </r_shape>
+    <lengthDir>
+      <exp>0</exp>
+      <exp>0</exp>
+      <exp>1</exp>
+    </lengthDir>
+    <widthDir>
+      <exp>1</exp>
+      <exp>0</exp>
+      <exp>0</exp>
+    </widthDir>
+    <length><exp>0.5</exp></length>
+    <width><exp>0.0025</exp></width>
+    <height><exp>0.0025</exp></height>
+    <extra><exp>0.0</exp></extra>
+    <color>
+      <exp>0</exp>
+      <exp>0</exp>
+      <exp>255</exp>
+    </color>
+    <specCoeff><exp>0.7</exp></specCoeff>
+  </shape>
+  <shape>
+    <ident>jib.tlm1</ident>
+    <type>file:///home/robbr48/Documents/Git/OMTLMSimulator/CompositeModels/RotatingCrane/jib/jib.stl</type>
+    <T>
+      <cref>jib.tlm1.A(1,1) [-]</cref>
+      <cref>jib.tlm1.A(1,2) [-]</cref>
+      <cref>jib.tlm1.A(1,3) [-]</cref>
+      <cref>jib.tlm1.A(2,1) [-]</cref>
+      <cref>jib.tlm1.A(2,2) [-]</cref>
+      <cref>jib.tlm1.A(2,3) [-]</cref>
+      <cref>jib.tlm1.A(3,1) [-]</cref>
+      <cref>jib.tlm1.A(3,2) [-]</cref>
+      <cref>jib.tlm1.A(3,3) [-]</cref>
+    </T>
+    <r>
+      <cref>jib.tlm1.R[cG][cG](1) [m]</cref>
+      <cref>jib.tlm1.R[cG][cG](2) [m]</cref>
+      <cref>jib.tlm1.R[cG][cG](3) [m]</cref>
+    </r>
+    <r_shape>
+      <exp>0</exp>
+      <exp>0</exp>
+      <exp>0</exp>
+    </r_shape>
+    <lengthDir>
+      <exp>1</exp>
+      <exp>0</exp>
+      <exp>0</exp>
+    </lengthDir>
+    <widthDir>
+      <exp>0</exp>
+      <exp>1</exp>
+      <exp>0</exp>
+    </widthDir>
+    <length><exp>0.0</exp></length>
+    <width><exp>0.0</exp></width>
+    <height><exp>0.0</exp></height>
+    <extra><exp>0.0</exp></extra>
+    <color>
+      <exp>200</exp>
+      <exp>0</exp>
+      <exp>0</exp>
+    </color>
+    <specCoeff><exp>0.7</exp></specCoeff>
+  </shape>
+  <shape>
+    <ident>sling.tlm2.x</ident>
+    <type>cylinder</type>
+    <T>
+      <cref>sling.tlm2.A(1,1) [-]</cref>
+      <cref>sling.tlm2.A(1,2) [-]</cref>
+      <cref>sling.tlm2.A(1,3) [-]</cref>
+      <cref>sling.tlm2.A(2,1) [-]</cref>
+      <cref>sling.tlm2.A(2,2) [-]</cref>
+      <cref>sling.tlm2.A(2,3) [-]</cref>
+      <cref>sling.tlm2.A(3,1) [-]</cref>
+      <cref>sling.tlm2.A(3,2) [-]</cref>
+      <cref>sling.tlm2.A(3,3) [-]</cref>
+    </T>
+    <r>
+      <cref>sling.tlm2.R[cG][cG](1) [m]</cref>
+      <cref>sling.tlm2.R[cG][cG](2) [m]</cref>
+      <cref>sling.tlm2.R[cG][cG](3) [m]</cref>
+    </r>
+    <r_shape>
+      <exp>0</exp>
+      <exp>0</exp>
+      <exp>0</exp>
+    </r_shape>
+    <lengthDir>
+      <exp>1</exp>
+      <exp>0</exp>
+      <exp>0</exp>
+    </lengthDir>
+    <widthDir>
+      <exp>0</exp>
+      <exp>1</exp>
+      <exp>0</exp>
+    </widthDir>
+    <length><exp>0.5</exp></length>
+    <width><exp>0.0025</exp></width>
+    <height><exp>0.0025</exp></height>
+    <extra><exp>0.0</exp></extra>
+    <color>
+      <exp>255</exp>
+      <exp>0</exp>
+      <exp>0</exp>
+    </color>
+    <specCoeff><exp>0.7</exp></specCoeff>
+  </shape>
+  <shape>
+    <ident>sling.tlm2.x</ident>
+    <type>cylinder</type>
+    <T>
+      <cref>sling.tlm2.A(1,1) [-]</cref>
+      <cref>sling.tlm2.A(1,2) [-]</cref>
+      <cref>sling.tlm2.A(1,3) [-]</cref>
+      <cref>sling.tlm2.A(2,1) [-]</cref>
+      <cref>sling.tlm2.A(2,2) [-]</cref>
+      <cref>sling.tlm2.A(2,3) [-]</cref>
+      <cref>sling.tlm2.A(3,1) [-]</cref>
+      <cref>sling.tlm2.A(3,2) [-]</cref>
+      <cref>sling.tlm2.A(3,3) [-]</cref>
+    </T>
+    <r>
+      <cref>sling.tlm2.R[cG][cG](1) [m]</cref>
+      <cref>sling.tlm2.R[cG][cG](2) [m]</cref>
+      <cref>sling.tlm2.R[cG][cG](3) [m]</cref>
+    </r>
+    <r_shape>
+      <exp>0</exp>
+      <exp>0</exp>
+      <exp>0</exp>
+    </r_shape>
+    <lengthDir>
+      <exp>0</exp>
+      <exp>1</exp>
+      <exp>0</exp>
+    </lengthDir>
+    <widthDir>
+      <exp>0</exp>
+      <exp>0</exp>
+      <exp>1</exp>
+    </widthDir>
+    <length><exp>0.5</exp></length>
+    <width><exp>0.0025</exp></width>
+    <height><exp>0.0025</exp></height>
+    <extra><exp>0.0</exp></extra>
+    <color>
+      <exp>0</exp>
+      <exp>255</exp>
+      <exp>0</exp>
+    </color>
+    <specCoeff><exp>0.7</exp></specCoeff>
+  </shape>
+  <shape>
+    <ident>sling.tlm2.x</ident>
+    <type>cylinder</type>
+    <T>
+      <cref>sling.tlm2.A(1,1) [-]</cref>
+      <cref>sling.tlm2.A(1,2) [-]</cref>
+      <cref>sling.tlm2.A(1,3) [-]</cref>
+      <cref>sling.tlm2.A(2,1) [-]</cref>
+      <cref>sling.tlm2.A(2,2) [-]</cref>
+      <cref>sling.tlm2.A(2,3) [-]</cref>
+      <cref>sling.tlm2.A(3,1) [-]</cref>
+      <cref>sling.tlm2.A(3,2) [-]</cref>
+      <cref>sling.tlm2.A(3,3) [-]</cref>
+    </T>
+    <r>
+      <cref>sling.tlm2.R[cG][cG](1) [m]</cref>
+      <cref>sling.tlm2.R[cG][cG](2) [m]</cref>
+      <cref>sling.tlm2.R[cG][cG](3) [m]</cref>
+    </r>
+    <r_shape>
+      <exp>0</exp>
+      <exp>0</exp>
+      <exp>0</exp>
+    </r_shape>
+    <lengthDir>
+      <exp>0</exp>
+      <exp>0</exp>
+      <exp>1</exp>
+    </lengthDir>
+    <widthDir>
+      <exp>1</exp>
+      <exp>0</exp>
+      <exp>0</exp>
+    </widthDir>
+    <length><exp>0.5</exp></length>
+    <width><exp>0.0025</exp></width>
+    <height><exp>0.0025</exp></height>
+    <extra><exp>0.0</exp></extra>
+    <color>
+      <exp>255</exp>
+      <exp>200</exp>
+      <exp>0</exp>
+    </color>
+    <specCoeff><exp>0.7</exp></specCoeff>
+  </shape>
+  <shape>
+    <ident>sling.tlm2</ident>
+    <type>file:///home/robbr48/Documents/Git/OMTLMSimulator/CompositeModels/RotatingCrane/sling/sling.stl</type>
+    <T>
+      <cref>sling.tlm2.A(1,1) [-]</cref>
+      <cref>sling.tlm2.A(1,2) [-]</cref>
+      <cref>sling.tlm2.A(1,3) [-]</cref>
+      <cref>sling.tlm2.A(2,1) [-]</cref>
+      <cref>sling.tlm2.A(2,2) [-]</cref>
+      <cref>sling.tlm2.A(2,3) [-]</cref>
+      <cref>sling.tlm2.A(3,1) [-]</cref>
+      <cref>sling.tlm2.A(3,2) [-]</cref>
+      <cref>sling.tlm2.A(3,3) [-]</cref>
+    </T>
+    <r>
+      <cref>sling.tlm2.R[cG][cG](1) [m]</cref>
+      <cref>sling.tlm2.R[cG][cG](2) [m]</cref>
+      <cref>sling.tlm2.R[cG][cG](3) [m]</cref>
+    </r>
+    <r_shape>
+      <exp>-1.97626e-323</exp>
+      <exp>1</exp>
+      <exp>-1.08694e-322</exp>
+    </r_shape>
+    <lengthDir>
+      <exp>1</exp>
+      <exp>0</exp>
+      <exp>0</exp>
+    </lengthDir>
+    <widthDir>
+      <exp>0</exp>
+      <exp>1</exp>
+      <exp>0</exp>
+    </widthDir>
+    <length><exp>0.0</exp></length>
+    <width><exp>0.0</exp></width>
+    <height><exp>0.0</exp></height>
+    <extra><exp>0.0</exp></extra>
+    <color>
+      <exp>255</exp>
+      <exp>125</exp>
+      <exp>50</exp>
+    </color>
+    <specCoeff><exp>0.7</exp></specCoeff>
+  </shape>
+  <shape>
+    <ident>load.tlm1.x</ident>
+    <type>cylinder</type>
+    <T>
+      <cref>load.tlm1.A(1,1) [-]</cref>
+      <cref>load.tlm1.A(1,2) [-]</cref>
+      <cref>load.tlm1.A(1,3) [-]</cref>
+      <cref>load.tlm1.A(2,1) [-]</cref>
+      <cref>load.tlm1.A(2,2) [-]</cref>
+      <cref>load.tlm1.A(2,3) [-]</cref>
+      <cref>load.tlm1.A(3,1) [-]</cref>
+      <cref>load.tlm1.A(3,2) [-]</cref>
+      <cref>load.tlm1.A(3,3) [-]</cref>
+    </T>
+    <r>
+      <cref>load.tlm1.R[cG][cG](1) [m]</cref>
+      <cref>load.tlm1.R[cG][cG](2) [m]</cref>
+      <cref>load.tlm1.R[cG][cG](3) [m]</cref>
+    </r>
+    <r_shape>
+      <exp>0</exp>
+      <exp>0</exp>
+      <exp>0</exp>
+    </r_shape>
+    <lengthDir>
+      <exp>1</exp>
+      <exp>0</exp>
+      <exp>0</exp>
+    </lengthDir>
+    <widthDir>
+      <exp>0</exp>
+      <exp>1</exp>
+      <exp>0</exp>
+    </widthDir>
+    <length><exp>0.5</exp></length>
+    <width><exp>0.0025</exp></width>
+    <height><exp>0.0025</exp></height>
+    <extra><exp>0.0</exp></extra>
+    <color>
+      <exp>255</exp>
+      <exp>0</exp>
+      <exp>0</exp>
+    </color>
+    <specCoeff><exp>0.7</exp></specCoeff>
+  </shape>
+  <shape>
+    <ident>load.tlm1.x</ident>
+    <type>cylinder</type>
+    <T>
+      <cref>load.tlm1.A(1,1) [-]</cref>
+      <cref>load.tlm1.A(1,2) [-]</cref>
+      <cref>load.tlm1.A(1,3) [-]</cref>
+      <cref>load.tlm1.A(2,1) [-]</cref>
+      <cref>load.tlm1.A(2,2) [-]</cref>
+      <cref>load.tlm1.A(2,3) [-]</cref>
+      <cref>load.tlm1.A(3,1) [-]</cref>
+      <cref>load.tlm1.A(3,2) [-]</cref>
+      <cref>load.tlm1.A(3,3) [-]</cref>
+    </T>
+    <r>
+      <cref>load.tlm1.R[cG][cG](1) [m]</cref>
+      <cref>load.tlm1.R[cG][cG](2) [m]</cref>
+      <cref>load.tlm1.R[cG][cG](3) [m]</cref>
+    </r>
+    <r_shape>
+      <exp>0</exp>
+      <exp>0</exp>
+      <exp>0</exp>
+    </r_shape>
+    <lengthDir>
+      <exp>0</exp>
+      <exp>1</exp>
+      <exp>0</exp>
+    </lengthDir>
+    <widthDir>
+      <exp>0</exp>
+      <exp>0</exp>
+      <exp>1</exp>
+    </widthDir>
+    <length><exp>0.5</exp></length>
+    <width><exp>0.0025</exp></width>
+    <height><exp>0.0025</exp></height>
+    <extra><exp>0.0</exp></extra>
+    <color>
+      <exp>0</exp>
+      <exp>255</exp>
+      <exp>0</exp>
+    </color>
+    <specCoeff><exp>0.7</exp></specCoeff>
+  </shape>
+  <shape>
+    <ident>load.tlm1.x</ident>
+    <type>cylinder</type>
+    <T>
+      <cref>load.tlm1.A(1,1) [-]</cref>
+      <cref>load.tlm1.A(1,2) [-]</cref>
+      <cref>load.tlm1.A(1,3) [-]</cref>
+      <cref>load.tlm1.A(2,1) [-]</cref>
+      <cref>load.tlm1.A(2,2) [-]</cref>
+      <cref>load.tlm1.A(2,3) [-]</cref>
+      <cref>load.tlm1.A(3,1) [-]</cref>
+      <cref>load.tlm1.A(3,2) [-]</cref>
+      <cref>load.tlm1.A(3,3) [-]</cref>
+    </T>
+    <r>
+      <cref>load.tlm1.R[cG][cG](1) [m]</cref>
+      <cref>load.tlm1.R[cG][cG](2) [m]</cref>
+      <cref>load.tlm1.R[cG][cG](3) [m]</cref>
+    </r>
+    <r_shape>
+      <exp>0</exp>
+      <exp>0</exp>
+      <exp>0</exp>
+    </r_shape>
+    <lengthDir>
+      <exp>0</exp>
+      <exp>0</exp>
+      <exp>1</exp>
+    </lengthDir>
+    <widthDir>
+      <exp>1</exp>
+      <exp>0</exp>
+      <exp>0</exp>
+    </widthDir>
+    <length><exp>0.5</exp></length>
+    <width><exp>0.0025</exp></width>
+    <height><exp>0.0025</exp></height>
+    <extra><exp>0.0</exp></extra>
+    <color>
+      <exp>0</exp>
+      <exp>0</exp>
+      <exp>255</exp>
+    </color>
+    <specCoeff><exp>0.7</exp></specCoeff>
+  </shape>
+  <shape>
+    <ident>load.tlm1</ident>
+    <type>file:///home/robbr48/Documents/Git/OMTLMSimulator/CompositeModels/RotatingCrane/load/load.stl</type>
+    <T>
+      <cref>load.tlm1.A(1,1) [-]</cref>
+      <cref>load.tlm1.A(1,2) [-]</cref>
+      <cref>load.tlm1.A(1,3) [-]</cref>
+      <cref>load.tlm1.A(2,1) [-]</cref>
+      <cref>load.tlm1.A(2,2) [-]</cref>
+      <cref>load.tlm1.A(2,3) [-]</cref>
+      <cref>load.tlm1.A(3,1) [-]</cref>
+      <cref>load.tlm1.A(3,2) [-]</cref>
+      <cref>load.tlm1.A(3,3) [-]</cref>
+    </T>
+    <r>
+      <cref>load.tlm1.R[cG][cG](1) [m]</cref>
+      <cref>load.tlm1.R[cG][cG](2) [m]</cref>
+      <cref>load.tlm1.R[cG][cG](3) [m]</cref>
+    </r>
+    <r_shape>
+      <exp>0</exp>
+      <exp>0</exp>
+      <exp>0</exp>
+    </r_shape>
+    <lengthDir>
+      <exp>1</exp>
+      <exp>0</exp>
+      <exp>0</exp>
+    </lengthDir>
+    <widthDir>
+      <exp>0</exp>
+      <exp>1</exp>
+      <exp>0</exp>
+    </widthDir>
+    <length><exp>0.0</exp></length>
+    <width><exp>0.0</exp></width>
+    <height><exp>0.0</exp></height>
+    <extra><exp>0.0</exp></extra>
+    <color>
+      <exp>192</exp>
+      <exp>192</exp>
+      <exp>192</exp>
+    </color>
+    <specCoeff><exp>0.7</exp></specCoeff>
+  </shape>
+<shape>
+    <ident>piston1a.tlm1</ident>
+    <type>cylinder</type>
+    <T>
+      <cref>piston.tlm2.A(1,1) [-]</cref>
+      <cref>piston.tlm2.A(1,2) [-]</cref>
+      <cref>piston.tlm2.A(1,3) [-]</cref>
+      <cref>piston.tlm2.A(2,1) [-]</cref>
+      <cref>piston.tlm2.A(2,2) [-]</cref>
+      <cref>piston.tlm2.A(2,3) [-]</cref>
+      <cref>piston.tlm2.A(3,1) [-]</cref>
+      <cref>piston.tlm2.A(3,2) [-]</cref>
+      <cref>piston.tlm2.A(3,3) [-]</cref>
+    </T>
+    <r>
+      <cref>piston.tlm2.R[cG][cG](1) [m]</cref>
+      <cref>piston.tlm2.R[cG][cG](2) [m]</cref>
+      <cref>piston.tlm2.R[cG][cG](3) [m]</cref>
+    </r>
+    <r_shape>
+      <exp>0</exp>
+      <exp>-0</exp>
+      <exp>-0</exp>
+    </r_shape>
+    <lengthDir>
+      <exp>0</exp>
+      <exp>0</exp>
+      <exp>-1</exp>
+    </lengthDir>
+    <widthDir>
+      <exp>0</exp>
+      <exp>1</exp>
+      <exp>0</exp>
+    </widthDir>
+    <length><exp>2.0</exp></length>
+    <width><exp>0.11</exp></width>
+    <height><exp>0.0</exp></height>
+    <extra><exp>0.0</exp></extra>
+    <color>
+      <exp>200</exp>
+      <exp>200</exp>
+      <exp>200</exp>
+    </color>
+    <specCoeff><exp>0.7</exp></specCoeff>
+  </shape>
+  <shape>
+    <ident>piston1b.tlm1</ident>
+    <type>cylinder</type>
+    <T>
+      <cref>piston.tlm1.A(1,1) [-]</cref>
+      <cref>piston.tlm1.A(1,2) [-]</cref>
+      <cref>piston.tlm1.A(1,3) [-]</cref>
+      <cref>piston.tlm1.A(2,1) [-]</cref>
+      <cref>piston.tlm1.A(2,2) [-]</cref>
+      <cref>piston.tlm1.A(2,3) [-]</cref>
+      <cref>piston.tlm1.A(3,1) [-]</cref>
+      <cref>piston.tlm1.A(3,2) [-]</cref>
+      <cref>piston.tlm1.A(3,3) [-]</cref>
+    </T>
+    <r>
+      <cref>piston.tlm1.R[cG][cG](1) [m]</cref>
+      <cref>piston.tlm1.R[cG][cG](2) [m]</cref>
+      <cref>piston.tlm1.R[cG][cG](3) [m]</cref>
+    </r>
+    <r_shape>
+      <exp>0</exp>
+      <exp>-0</exp>
+      <exp>0.0</exp>
+    </r_shape>
+    <lengthDir>
+      <exp>0</exp>
+      <exp>0</exp>
+      <exp>1</exp>
+    </lengthDir>
+    <widthDir>
+      <exp>0</exp>
+      <exp>1</exp>
+      <exp>0</exp>
+    </widthDir>
+    <length><exp>1.5</exp></length>
+    <width><exp>0.15</exp></width>
+    <height><exp>0.0</exp></height>
+    <extra><exp>0.0</exp></extra>
+    <color>
+      <exp>128</exp>
+      <exp>128</exp>
+      <exp>128</exp>
+    </color>
+    <specCoeff><exp>0.7</exp></specCoeff>
+  </shape>
+</visualization>
