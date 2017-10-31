@@ -24,8 +24,6 @@
 #include <stdlib.h>
 #include <vector>
 
-using namespace tlmMisc;
-
 // The wrapper expect TLM parameters in this file.
 static const char* TLM_CONFIG_FILE_NAME = "tlm.config";
 

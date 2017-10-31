@@ -592,7 +592,7 @@ void ManagerCommHandler::MarshalMessage(TLMMessage& message) {
         TLMErrorLog::FatalError("Unexpected message received from "+
                                 TheModel.GetTLMComponentProxy(src.GetComponentID()).GetName()+
                                 "."+src.GetName()+
-                                +": " + tlmMisc::ToStr(message.Header.MessageType));
+                                +": " + ToStr(message.Header.MessageType));
     }
 
     // forward the time data
@@ -894,7 +894,7 @@ void ManagerCommHandler::MonitorThreadRun() {
 
                 if(IfcID >= 0) {
 
-                    TLMErrorLog::Log("Register monitor handle for interface " + tlmMisc::ToStr(IfcID));
+                    TLMErrorLog::Log("Register monitor handle for interface " + ToStr(IfcID));
 #if 0
                     //std::cout << "hdl=" << hdl << ", ifID=" << IfcID << std::endl;
                     localIntMap.insert(std::make_pair(hdl, IfcID));

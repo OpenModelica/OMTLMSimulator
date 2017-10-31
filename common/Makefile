@@ -11,7 +11,7 @@ else
 endif
 
 include $(MAKEFILEHEADHOME)/Makefile.head
-MISCHOME = ../extralibs/misc
+MISCHOME = ../3rdParty/misc
 
 CC += -std=c++11 
 
@@ -66,7 +66,7 @@ INCLUDES= -I. \
 
 LIBS = 	-L$(MISCHOME)/lib/$(ABI) \
 	-L$(TIMEHOME)/lib/$(ABI) \
-	-ltlmmisc -lrtime
+	-lmisc -lrtime
 
 INCXTR=
 LIBXTR=

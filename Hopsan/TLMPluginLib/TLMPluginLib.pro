@@ -12,7 +12,7 @@ DESTDIR = $${PWD}/../../bin/Hopsan/TLMPluginLib
 
 #TLMPLugin include paths
 INCLUDEPATH += ../../common
-INCLUDEPATH += ../../extralibs/misc/include
+INCLUDEPATH += ../../3rdParty/misc/include
 
 unix {
 LIBS += -ldl
@@ -40,6 +40,8 @@ include(hopsanDebugReleaseCompile.prf)
 
 DEFINES += INTERFACE_TYPES
 
+CONFIG += c++11
+
 # -------------------------------------------------
 # Project files
 # -------------------------------------------------
@@ -51,10 +53,17 @@ SOURCES += \
     ../../common/Logging/TLMErrorLog.cc \
     ../../common/Interfaces/TLMInterface.cc \
     ../../common/Plugin/TLMPlugin.cc \
-    ../../extralibs/misc/src/strConv.cc \
-    ../../extralibs/misc/src/coordTrans.cc \
-    ../../extralibs/misc/src/double3Vec.cc \
-    ../../extralibs/misc/src/double33Mat.cc \
+    ../../3rdParty/misc/src/Bstring.cc \
+    ../../3rdParty/misc/src/ErrorLog.cc \
+    ../../3rdParty/misc/src/strConv.cc \
+    ../../3rdParty/misc/src/coordTransform.cc \
+    ../../3rdParty/misc/src/double3.cc \
+    ../../3rdParty/misc/src/double33.cc \
+    ../../3rdParty/misc/src/double33s.cc \
+    ../../3rdParty/misc/src/dsyevq3.cc \
+    ../../3rdParty/misc/src/dsyevv3.cc \
+    ../../3rdParty/misc/src/dsytrd3.cc \
+    ../../3rdParty/misc/src/dsyevc3.cc \
     ../../common/Interfaces/TLMInterfaceSignal.cc \
     ../../common/Interfaces/TLMInterfaceSignalInput.cc \
     ../../common/Interfaces/TLMInterfaceSignalOutput.cc \
