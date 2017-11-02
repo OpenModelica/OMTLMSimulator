@@ -1,0 +1,64 @@
+# Makefile for rtime
+
+HOST_OFILES =
+
+@host_frag@
+
+srcdir = @srcdir@
+
+depfile = depend.mk
+
+INSTALL = ./install-sh
+
+INSTALLDIR = @prefix@
+LDLIBS = $(LIBS) -L. -lrtime
+
+CFILES = rtime.c timing.c
+OFILES = $(CFILES:.c=.o) $(HOST_OFILES)
+
+RM = rm -f
+MV = mv -f
+
+
+
+
+all: librtime.a
+
+test: test.o librtime.a
+	$(CC) -o $@ test.o $(LDLIBS)
+
+timing_test: timing_test.o librtime.a
+	$(CC) -o $@ timing_test.o $(LDLIBS)
+
+librtime.a: $(OFILES)
+	$(AR) $(ARFLAGS) $@ $?
+
+install: rtime.h librtime.a
+	$(INSTALL) -d $(INSTALLDIR)/include
+	$(INSTALL) -c -m 444 rtime.h $(INSTALLDIR)/include
+	$(INSTALL) -c -m 444 timing.h $(INSTALLDIR)/include
+	$(INSTALL) -d $(INSTALLDIR)/lib
+	$(INSTALL) -c -m 444 librtime.a $(INSTALLDIR)/lib
+	$(INSTALL) -d $(INSTALLDIR)/man/man3
+	$(INSTALL) -c -m 444 rtime.man $(INSTALLDIR)/man/man3/rtime.3x
+	$(INSTALL) -c -m 444 timing.man $(INSTALLDIR)/man/man3/timing.3x
+
+clean:
+	$(RM) *.o librtime.a *~ core a.out timing_test test
+
+distclean: clean
+	$(RM) Makefile *.man config.cache config.log config.status
+
+depend:
+	makedepend -f$(depfile) $(CPPFLAGS) $(CFILES) \
+	  test.c test2.c timing_test.c
+	./remdep-sh $(depfile)
+	rm $(depfile).bak
+
+tar: distclean
+	find . \( -name *~ -o -name core \) -exec rm -f '{}' \;
+	dir=`basename $$PWD`; \
+	tar cvFFf - -C .. $$dir | gzip > ../$$dir.tar.gz
+
+include $(depfile)
+

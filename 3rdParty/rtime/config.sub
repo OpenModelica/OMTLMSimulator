@@ -1,0 +1,14 @@
+#!/bin/sh
+
+case $1 in
+  parix*) 
+	host=powerpc-parsytec-parix;;
+  sun | sparc | solaris | sol*) 
+	host=sparc-sun-sol2;;
+  ibm | sp2 | aix) 
+	host=power-ibm-aix;;
+  alpha | osf3*) 
+	host=alpha-dec-osf;;
+esac
+
+echo $host
