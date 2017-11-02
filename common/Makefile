@@ -13,6 +13,8 @@ endif
 include $(MAKEFILEHEADHOME)/Makefile.head
 MISCHOME = ../extralibs/misc
 
+CC += -std=c++11 
+
 SRCCLT= Plugin/PluginImplementer.cc \
 	Plugin/MonitoringPluginImplementer.cc \
 	Communication/TLMClientComm.cc \
