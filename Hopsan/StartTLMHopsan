@@ -12,7 +12,7 @@
 HopsanPath=$HOPSANHOME
 Hopsan_exe="${HopsanPath}/bin/HopsanCLI"
 Hopsan_args="--resultsFullCSV hopsanlogdata.csv"
-Hopsan_cmd="${Hopsan_exe} ${Hopsan_args} -m ${PWD}/$1/$6 -e ${TLMPluginPath}/Hopsan/TLMPluginLib/libTLMPluginLib.so -s $2,$4,$3 -l 1000"
+Hopsan_cmd="${Hopsan_exe} ${Hopsan_args} -m ${PWD}/$1/$6 -e ${OMTLMSimulatorPath}/bin/Hopsan/TLMPluginLib/libTLMPluginLib.so -s $2,$4,$3 -l 1000"
   
 TLMCONFIGFILE="tlm.config"
 

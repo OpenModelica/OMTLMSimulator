@@ -92,6 +92,7 @@ EXT_OBJS = Plugin/PluginImplementer.o \
 	dsytrd3.o \
 	strConv.o \
 	Bstring.o \
+	tostr.o \
 	nvector_serial.o \
 	sundials_math.o \
 	sundials_nvector.o \
@@ -109,13 +110,12 @@ EXT_OBJS = Plugin/PluginImplementer.o \
 
 ABIOBJS=$(OBJS:%.o= $(ABI)/%.o) $(EXT_OBJS:%.o= $(ABI)/%.o)
 
+default: dirs fmil $(ABIOBJS)
+	$(LINK) $(ABIOBJS$) -o $(ABI)/$(BNAME) $(LIBS)
 
 copyfiles:
 	cp $(ABI)/$(BNAME) $(BINDIR)
 	cp StartTLMFmiWrapper* $(BINDIR)
-
-default: dirs fmil $(ABIOBJS)
-	$(LINK) $(ABIOBJS$) -o $(ABI)/$(BNAME) $(LIBS)
 
 install: default copyfiles
 

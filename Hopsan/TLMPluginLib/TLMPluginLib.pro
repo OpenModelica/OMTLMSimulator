@@ -64,6 +64,7 @@ SOURCES += \
     ../../3rdParty/misc/src/dsyevv3.cc \
     ../../3rdParty/misc/src/dsytrd3.cc \
     ../../3rdParty/misc/src/dsyevc3.cc \
+    ../../3rdParty/misc/src/tostr.cc \
     ../../common/Interfaces/TLMInterfaceSignal.cc \
     ../../common/Interfaces/TLMInterfaceSignalInput.cc \
     ../../common/Interfaces/TLMInterfaceSignalOutput.cc \
