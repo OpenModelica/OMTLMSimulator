@@ -156,6 +156,7 @@ int main(int argc, char* argv[]) {
     // Debug on?
     if(debugFlg || comMode == ManagerCommHandler::InterfaceRequestMode) {       //Always enable debug for interface request /robbr
         TLMErrorLog::SetDebugOut(true);
+        TLMErrorLog::SetWarningOut(true);
     }
     
     // Create the meta model object
