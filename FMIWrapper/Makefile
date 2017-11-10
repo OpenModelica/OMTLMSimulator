@@ -107,7 +107,9 @@ copyfiles:
 	cp $(ABI)/$(BNAME) $(BINDIR)
 	cp StartTLMFmiWrapper* $(BINDIR)
 
-default: dirs fmil $(ABIOBJS)
+default: dirs 
+	$(MAKE) fmil 
+	$(MAKE) $(ABIOBJS)
 	$(LINK) $(ABIOBJS$) -o $(ABI)/$(BNAME) $(LIBS)
 
 install: default copyfiles
