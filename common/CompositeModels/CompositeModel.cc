@@ -4,7 +4,9 @@
  * Implementation of methods for classes defined in CompositeModel.h
  */
 #include <string>
+#include <set>
 #include <sstream>
+#include <vector>
 #include "CompositeModels/CompositeModel.h"
 #include "Communication/TLMCommUtil.h"
 //#include "portability.h"
@@ -168,6 +170,74 @@ CompositeModel::~CompositeModel() {
             i != Connections.end(); ++i) {
             delete *i;
         }
+  }
+}
+
+bool CompositeModel::CheckTheModel()
+{
+    TLMErrorLog::Log("Checking model...");
+
+    bool abort=false;
+
+    std::multiset<int> connectedInterfaceIDs;
+    int numConnectedInterfaces = 0;
+
+    int vecSize = Connections.size();
+
+    for(int i=0; i<vecSize; ++i) {
+        int from = Connections.at(i)->GetFromID();
+        int to = Connections.at(i)->GetToID();
+
+        TLMInterfaceProxy fromProxy = GetTLMInterfaceProxy(from);
+        std::string fromInterfaceName = fromProxy.GetName();
+        int fromComponent = fromProxy.GetComponentID();
+        std::string fromComponentName = GetTLMComponentProxy(fromComponent).GetName();
+        std::string fromName = fromComponentName+"."+fromInterfaceName;
+
+        TLMInterfaceProxy toProxy = GetTLMInterfaceProxy(to);
+        std::string toInterfaceName = toProxy.GetName();
+        int toComponent = fromProxy.GetComponentID();
+        std::string toComponentName = GetTLMComponentProxy(toComponent).GetName();
+        std::string toName = toComponentName+"."+toInterfaceName;
+
+        if(fromProxy.GetDomain() != toProxy.GetDomain()) {
+           TLMErrorLog::Warning(fromName+" and "+toName+
+                                " are connected but have different domains!");
+        }
+
+        connectedInterfaceIDs.insert(from);
+        connectedInterfaceIDs.insert(to);
+
+        numConnectedInterfaces += 2;
+
+        if((fromProxy.GetCausality() == "Bidirectional" && toProxy.GetCausality() != "Bidirectional") ||
+          (fromProxy.GetCausality() != "Bidirectional" && toProxy.GetCausality() == "Bidirectional") ||
+          (fromProxy.GetCausality() == "Input" && toProxy.GetCausality() != "Output") ||
+          (fromProxy.GetCausality() == "Output" && toProxy.GetCausality() != "Input")) {
+          TLMErrorLog::Warning(fromName+" is connected to "+toName+
+                               " with wrong causalities!");
+          abort=true;
+        }
+    }
+
+    for(int i=0; i<Interfaces.size(); ++i) {
+        int id = Interfaces[i]->GetID();
+
+        if(connectedInterfaceIDs.count(id) == 0) {
+            int compId = Interfaces[i]->GetComponentID();
+            std::string compName = GetTLMComponentProxy(compId).GetName();
+            TLMErrorLog::Warning("Interface "+compName+"."+Interfaces[i]->GetName()+" is not connected!");
+        }
+        else if(connectedInterfaceIDs.count(id) > 1) {
+            int compId = Interfaces[i]->GetComponentID();
+            std::string compName = GetTLMComponentProxy(compId).GetName();
+            TLMErrorLog::Warning("Interface "+compName+"."+Interfaces[i]->GetName()+" has multiple connections!");
+            abort=true;
+        }
+    }
+
+    if(abort) {
+      TLMErrorLog::FatalError("Model contains errors and cannot be simulated.");
     }
 }
 
