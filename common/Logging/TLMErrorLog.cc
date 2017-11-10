@@ -65,6 +65,7 @@ void TLMErrorLog::SetDebugOut(bool Enable) {
 // then terminates the program abnormally.
 void TLMErrorLog::FatalError(const std::string& mess) {
     Open();
+    std::cout << TimeStr() << " Fatal error: " << mess << std::endl;
     *outStream << TimeStr() << " Fatal error: " << mess << std::endl;
     if(NormalErrorLogOn) {
         _strtime(tmpbuf);
@@ -91,6 +92,7 @@ void  TLMErrorLog::Warning(const std::string& mess) {
 
     if(WarningOn) {
         Open();
+        std::cout << TimeStr() << " Warning: " << mess << std::endl;
         *outStream << TimeStr() << " Warning: " << mess << std::endl;
 
         if(NormalErrorLogOn) {
