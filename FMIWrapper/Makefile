@@ -90,7 +90,6 @@ EXT_OBJS = Plugin/PluginImplementer.o \
 	dsyevv3.o \
 	dsyevc3.o \
 	dsytrd3.o \
-	strConv.o \
 	Bstring.o \
 	tostr.o \
 	nvector_serial.o \

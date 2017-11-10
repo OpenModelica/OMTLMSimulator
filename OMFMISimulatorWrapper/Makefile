@@ -65,7 +65,6 @@ EXT_OBJS = Plugin/PluginImplementer.o \
 	coordTransform.o \
 	double3.o \
 	double33.o \
-	strConv.o \
 	tostr.o \
 	ErrorLog.o \
 	double33s.o \

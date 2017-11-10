@@ -56,7 +56,7 @@ EXT_OBJS = Plugin/PluginImplementer.o \
 	coordTransform.o \
 	double3.o \
 	double33.o \
-	strConv.o
+        tostr.o
 
 ABIOBJS=$(OBJS:%.o= $(ABI)/%.o) $(EXT_OBJS:%.o= $(ABI)/%.o)
 

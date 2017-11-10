@@ -55,7 +55,6 @@ SOURCES += \
     ../../common/Plugin/TLMPlugin.cc \
     ../../3rdParty/misc/src/Bstring.cc \
     ../../3rdParty/misc/src/ErrorLog.cc \
-    ../../3rdParty/misc/src/strConv.cc \
     ../../3rdParty/misc/src/coordTransform.cc \
     ../../3rdParty/misc/src/double3.cc \
     ../../3rdParty/misc/src/double33.cc \

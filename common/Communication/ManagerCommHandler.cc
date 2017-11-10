@@ -1,5 +1,5 @@
 #include "Communication/ManagerCommHandler.h"
-#include "strConv.h"
+#include "tostr.h"
 #include <iostream>
 #include <sstream>
 #ifdef USE_THREADS
