@@ -509,6 +509,8 @@ public:
     //! Destructor
     ~CompositeModel();
 
+    bool CheckTheModel();
+
     //! Add ComponentProxy to the model and return its ID.
     int RegisterTLMComponentProxy(const std::string& Name,
                                   const std::string& StartCommand,

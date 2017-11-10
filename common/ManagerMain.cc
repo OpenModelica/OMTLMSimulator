@@ -171,6 +171,8 @@ int main(int argc, char* argv[]) {
         // Note: Skip loading connections in interface request mode in case an interface no longer exists
         modelReader.ReadModel(inFile,comMode == ManagerCommHandler::InterfaceRequestMode, singleModel);
     }
+
+    theModel.CheckTheModel();
     
     // Set preferred network port
     if(serverPort > 0) {
