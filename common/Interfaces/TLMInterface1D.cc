@@ -70,7 +70,7 @@ void TLMInterface1D::GetTimeData(TLMTimeData1D& Instance, std::deque<TLMTimeData
     if(CurrentIntervalIndex >= size) {
         CurrentIntervalIndex =  size - 1;
     }
-    if((time >= Data[0].time) && (time < Data[size-1].time)) {
+    if((time >= Data[0].time) && (time <= Data[size-1].time)) {
         // the desired time is in the Data boundaries
         // find interpolation spot in data
         while(Data[CurrentIntervalIndex].time < time)
@@ -99,12 +99,15 @@ void TLMInterface1D::GetTimeData(TLMTimeData1D& Instance, std::deque<TLMTimeData
             Instance = Data[0];
         }
         else {
-            if(time == Data[size-1].time) {
+            //Tolerance for fuzzy equal
+            double tol = 1e-10;
+            if(time <= Data[size-1].time+tol) {
                 Instance = Data[size-1];
             }
             else {
+                double terror = fabs(time-Data[size-1].time);
                 TLMErrorLog::Warning(std::string("Interface ") + GetName() + " needs to extrapolate forward time= " +
-                                     TLMErrorLog::ToStdStr(time));
+                                     TLMErrorLog::ToStdStr(time)+", time error = "+TLMErrorLog::ToStdStr(terror));
                 if(size > 1) {
                     // linear extrapolation
                     InterpolateLinear(Instance, Data[size-2], Data[size-1], OnlyForce);
