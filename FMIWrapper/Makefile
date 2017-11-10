@@ -109,7 +109,9 @@ EXT_OBJS = Plugin/PluginImplementer.o \
 
 ABIOBJS=$(OBJS:%.o= $(ABI)/%.o) $(EXT_OBJS:%.o= $(ABI)/%.o)
 
-default: dirs fmil $(ABIOBJS)
+default: dirs 
+	$(MAKE) fmil 
+	$(MAKE) $(ABIOBJS)
 	$(LINK) $(ABIOBJS$) -o $(ABI)/$(BNAME) $(LIBS)
 
 copyfiles:
