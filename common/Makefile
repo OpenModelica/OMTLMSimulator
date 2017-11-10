@@ -12,6 +12,7 @@ endif
 
 include $(MAKEFILEHEADHOME)/Makefile.head
 MISCHOME = ../3rdParty/misc
+TIMEHOME = ../3rdParty/rtime
 
 CC += -std=c++11 
 
