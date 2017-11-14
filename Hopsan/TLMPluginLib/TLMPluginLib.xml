@@ -13,10 +13,10 @@
     <source>../../common/TLMInterface1D.cc</source>
     <source>../../common/TLMInterface3D.cc</source>
     <source>../../common/TLMPlugin.cc</source>
-    <source>../../extralibs/misc/src/strConv.cc</source>
-    <source>../../extralibs/misc/src/coordTrans.cc</source>
-    <source>../../extralibs/misc/src/double3Vec.cc</source>
-    <source>../../extralibs/misc/src/double33Mat.cc</source>
+    <source>../../3rdParty/misc/src/tostr.cc</source>
+    <source>../../3rdParty/misc/src/coordTransform.cc</source>
+    <source>../../3rdParty/misc/src/double3.cc</source>
+    <source>../../3rdParty/misc/src/double33.cc</source>
     <component>TLMPluginHandler.hpp</component>
     <component>TLMPluginInterfaceSignalInput.hpp</component>
     <component>TLMPluginInterfaceSignalOutput.hpp</component>

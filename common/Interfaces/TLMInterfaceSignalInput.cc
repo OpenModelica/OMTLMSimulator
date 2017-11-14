@@ -3,7 +3,7 @@
 #include "Plugin/TLMPlugin.h"
 #include <deque>
 #include <string>
-#include "double33Mat.h"
+#include "double33.h"
 
 
 //TODO: This is used both by 1D and 3D, should probably be defined in one place. /robbr

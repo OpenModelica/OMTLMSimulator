@@ -21,7 +21,7 @@ include $(MAKEFILEHEADHOME)/Makefile.head
 #CC=mycl cl -DWIN32 -D_WIN32 -DXMSTATIC -DYY_NEVER_INTERACTIVE  /EHsc
 #cc=mycl cl -DWIN32 -D_WIN32 -DXMSTATIC -DYY_NEVER_INTERACTIVE  /EHsc
 
-CC += -DYY_NEVER_INTERACTIVE -fPIC -DINTERFACE_TYPES
+CC += -std=c++11 -DYY_NEVER_INTERACTIVE -fPIC -DINTERFACE_TYPES
 cc += -DYY_NEVER_INTERACTIVE -fPIC -DINTERFACE_TYPES
 
 #################################################################################
@@ -35,7 +35,7 @@ cc += -DYY_NEVER_INTERACTIVE -fPIC -DINTERFACE_TYPES
 BNAME=libtlmopenmodelica.a
 INSTDIR=$(BINDIR)/OpenModelica
 RESOURCESDIR=$(INSTDIR)/Resources
-MISCHOME=../extralibs/misc
+MISCHOME=../3rdParty/misc
 
 INCLUDES=  -I. \
 	-I../common \
@@ -67,10 +67,17 @@ EXT_OBJS = Plugin/PluginImplementer.o \
 	Parameters/ComponentParameter.o \
 	Logging/TLMErrorLog.o \
 	Plugin/TLMPlugin.o \
-	coordTrans.o \
-	double3Vec.o \
-	double33Mat.o \
-	strConv.o
+	coordTransform.o \
+	double3.o \
+	double33.o \
+	ErrorLog.o \
+	double33s.o \
+	dsyevq3.o \
+	dsyevv3.o \
+	dsyevc3.o \
+	dsytrd3.o \
+	Bstring.o \
+	tostr.o \
 
 ABIOBJS=$(OBJS:%.o= $(ABI)/%.o) $(EXT_OBJS:%.o= $(ABI)/%.o)
 

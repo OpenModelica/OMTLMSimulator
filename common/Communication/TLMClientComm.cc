@@ -7,7 +7,7 @@
 #include "Communication/TLMClientComm.h"
 #include "Logging/TLMErrorLog.h"
 #include "Interfaces/TLMInterface.h"
-#include "strConv.h"
+#include "tostr.h"
 #include <vector>
 #include <deque>
 #include <string>
@@ -284,9 +284,9 @@ void TLMClientComm::UnpackRegInterfaceMessage(TLMMessage& mess, TLMConnectionPar
     if(mess.Header.DataSize == 0) return; // non connected interface
     if(mess.Header.DataSize != sizeof(TLMConnectionParams)) {
         TLMErrorLog::FatalError("Wrong size of message in interface registration : DataSize "+
-            tlmMisc::Int2Str(mess.Header.DataSize)+
+            Int2Str(mess.Header.DataSize)+
             " sizeof(TLMConnectionParams)="+
-            tlmMisc::Int2Str(sizeof(TLMConnectionParams)));
+            Int2Str(sizeof(TLMConnectionParams)));
     }
 
     // check if we have byte order missmatch in the message and perform
@@ -307,9 +307,9 @@ void TLMClientComm::UnpackRegParameterMessage(TLMMessage &mess, std::string &Val
     char ValueBuf[100];
     if(mess.Header.DataSize != sizeof(ValueBuf)) {
         TLMErrorLog::FatalError("Wrong size of message in parameter registration : DataSize "+
-            tlmMisc::Int2Str(mess.Header.DataSize)+
+            Int2Str(mess.Header.DataSize)+
             " sizeof(ValueBuf)="+
-            tlmMisc::Int2Str(sizeof(ValueBuf)));
+            Int2Str(sizeof(ValueBuf)));
     }
 
     // check if we have byte order missmatch in the message and perform

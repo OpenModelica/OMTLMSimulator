@@ -13,7 +13,7 @@
 
 #include "TLMPlugin.h"
 #include "TLMErrorLog.h"
-#include "strConv.h"
+#include "tostr.h"
 
 #include <iostream>
 #include <fstream>
@@ -23,8 +23,6 @@
 #include <cmath>
 #include <stdlib.h>
 #include <vector>
-
-using namespace tlmMisc;
 
 // The wrapper expect TLM parameters in this file.
 static const char* TLM_CONFIG_FILE_NAME = "tlm.config";

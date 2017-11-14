@@ -25,12 +25,12 @@ CC += -pipe -O2 -frtti -Wall -Wextra -fexceptions -DUNICODE -DINTERFACE_TYPES -s
 cc += -pipe -O2 -frtti -Wall -Wextra -fexceptions -DUNICODE -DINTERFACE_TYPES -std=c++11
 
 BNAME=FMIWrapper$(FEXT)
-MISCHOME=../extralibs/misc
+MISCHOME=../3rdParty/misc
 
 INCLUDES=  -I. \
 	-I"../FMIWrapper" \
 	-I"../FMIWrapper/FMILibrary-2.0.1/install/include" \
-	-I"../common" -I"../extralibs/misc/include" \
+	-I"../common" -I"../3rdParty/misc/include" \
 	-I"cvode-2.9.0/include" \
 	-I"ida-2.9.0/include"
     
@@ -81,10 +81,17 @@ EXT_OBJS = Plugin/PluginImplementer.o \
 	Parameters/ComponentParameter.o \
 	Logging/TLMErrorLog.o \
 	Plugin/TLMPlugin.o \
-	coordTrans.o \
-	double3Vec.o \
-	double33Mat.o \
-	strConv.o \
+	coordTransform.o \
+	double3.o \
+	double33.o \
+	ErrorLog.o \
+	double33s.o \
+	dsyevq3.o \
+	dsyevv3.o \
+	dsyevc3.o \
+	dsytrd3.o \
+	Bstring.o \
+	tostr.o \
 	nvector_serial.o \
 	sundials_math.o \
 	sundials_nvector.o \
@@ -102,13 +109,12 @@ EXT_OBJS = Plugin/PluginImplementer.o \
 
 ABIOBJS=$(OBJS:%.o= $(ABI)/%.o) $(EXT_OBJS:%.o= $(ABI)/%.o)
 
+default: dirs fmil $(ABIOBJS)
+	$(LINK) $(ABIOBJS$) -o $(ABI)/$(BNAME) $(LIBS)
 
 copyfiles:
 	cp $(ABI)/$(BNAME) $(BINDIR)
 	cp StartTLMFmiWrapper* $(BINDIR)
-
-default: dirs fmil $(ABIOBJS)
-	$(LINK) $(ABIOBJS$) -o $(ABI)/$(BNAME) $(LIBS)
 
 install: default copyfiles
 

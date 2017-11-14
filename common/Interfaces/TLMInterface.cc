@@ -9,7 +9,7 @@
 #include "Plugin/TLMPlugin.h"
 #include <deque>
 #include <string>
-#include "double33Mat.h"
+#include "double33.h"
 
 using std::deque;
 using std::vector;
@@ -19,7 +19,6 @@ using std::cout;
 
 #include <fstream>
 using std::ofstream;
-using namespace tlmMisc;
 
 
 // TLMInterface constructor

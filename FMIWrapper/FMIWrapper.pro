@@ -39,7 +39,7 @@ SOURCES += main.cpp \
     ../common/TLMErrorLog.cc \
     ../common/TLMInterface.cc \
     ../common/TLMPlugin.cc \
-    ../extralibs/misc/src/strConv.cc \
+    ../extralibs/misc/src/tostr.cc \
     ../extralibs/misc/src/coordTrans.cc \
     ../extralibs/misc/src/double3Vec.cc \
     ../extralibs/misc/src/double33Mat.cc \
@@ -69,4 +69,7 @@ HEADERS += \
     FMILibrary-2.0.1/install/include/FMI1/fmi1_import.h \
     FMILibrary-2.0.1/install/include/FMI2/fmi2_import.h \
     FMILibrary-2.0.1/install/include/fmilib_config.h
+
+DISTFILES += \
+    Makefile
 

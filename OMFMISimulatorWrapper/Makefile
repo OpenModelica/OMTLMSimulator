@@ -25,12 +25,12 @@ CC += -pipe -O2 -frtti -Wall -Wextra -fexceptions -DUNICODE -DINTERFACE_TYPES -s
 cc += -pipe -O2 -frtti -Wall -Wextra -fexceptions -DUNICODE -DINTERFACE_TYPES -std=c++11
 
 BNAME=OMFMISimulatorWrapper$(FEXT)
-MISCHOME=../extralibs/misc
+MISCHOME=../3rdParty/misc
 
 INCLUDES=  -I. \
 	-I"${OMFMISimulatorPath}/install/include" \
 	-I"${OMFMISimulatorPath}/src/OMSimulatorLib" \
-	-I"../common" -I"../extralibs/misc/include"
+	-I"../common" -I"../3rdParty/misc/include"
     
 LIBS = 	-L${OMFMISimulatorPath}/install/lib \
 	-lOMSimulatorLib \
@@ -62,10 +62,17 @@ EXT_OBJS = Plugin/PluginImplementer.o \
 	Parameters/ComponentParameter.o \
 	Logging/TLMErrorLog.o \
 	Plugin/TLMPlugin.o \
-	coordTrans.o \
-	double3Vec.o \
-	double33Mat.o \
-	strConv.o   
+	coordTransform.o \
+	double3.o \
+	double33.o \
+	tostr.o \
+	ErrorLog.o \
+	double33s.o \
+	dsyevq3.o \
+	dsyevv3.o \
+	Bstring.o \
+	dsytrd3.o \
+	dsyevc3.o
 
 ABIOBJS=$(OBJS:%.o= $(ABI)/%.o) $(EXT_OBJS:%.o= $(ABI)/%.o)
 

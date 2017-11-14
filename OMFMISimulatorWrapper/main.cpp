@@ -16,7 +16,7 @@
 std::ofstream DebugOutFile;
 #define TLM_DEBUG_FILE_NAME "TLMlogfile.log"
 
-struct interface {
+struct interfaceType {
   std::string name;
   oms_causality_t causality;
   std::string variable;
@@ -29,7 +29,7 @@ struct optionsType {
   double startTime = -1;
   double stepSize = -1;
   double stopTime = -1;
-  std::vector<interface> interfaces;
+  std::vector<interfaceType> interfaces;
   std::string modelName;
   std::string tlmServer;
 
@@ -111,7 +111,7 @@ int main(int argc, char *argv[])
   std::cout << "Fetching variable interfaces...\n";
   int nInterfaces = oms_getNumberOfInterfaces(pModel);
   for(int i=0; i<nInterfaces; ++i) {
-    options.interfaces.push_back(interface());
+    options.interfaces.push_back(interfaceType());
     options.interfaces.back().name = oms_getInterfaceName(pModel, i);
     options.interfaces.back().causality = oms_getInterfaceCausality(pModel, i);
     options.interfaces.back().variable = oms_getInterfaceVariable(pModel, i);

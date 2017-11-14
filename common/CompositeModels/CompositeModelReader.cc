@@ -7,12 +7,11 @@
 #include "CompositeModels/CompositeModelReader.h"
 #include "Logging/TLMErrorLog.h"
 #include "Interfaces/TLMInterface.h"
-#include "double3Vec.h"
-#include "double33Mat.h"
+#include "double3.h"
+#include "double33.h"
 #include <string>
 #include <sstream>
 using std::string;
-using namespace tlmMisc;
 
 // ReadComponents method reads in Components (SubModels) definition from
 // the XML file starting from the given xml node that should be "SubModels".
@@ -223,7 +222,7 @@ void CompositeModelReader::ReadPositionAndOrientation(xmlNode* node, double R[3]
     ReadVectorAttribute(node, "Position", R);
     ReadVectorAttribute(node, "Angle321", phi);
 
-    double33Mat A33 = A321(double3Vec(phi[0],phi[1],phi[2]));
+    double33 A33 = A321(double3(phi[0],phi[1],phi[2]));
 
     for(int i=0; i<9; i++) {
         A[i] = A33(i/3+1, i%3+1);

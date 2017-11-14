@@ -23,9 +23,9 @@ INCLUDES=  -I. \
 	-I../common \
 	-I$(MISCHOME)/include
 
-MISCHOME=../extralibs/misc
+MISCHOME=../3rdParty/misc
 MEX_DEBUGFLG=
-CC += -fPIC
+CC += -fPIC -std=c++11
 
 $(ABI)/%.o: %.c
 	$(cc) $(DEFINES) $(CFLAGS) -DWIN32 $(OPTFLAGS4) $(INCLUDES) -c $< -o $@
@@ -53,10 +53,10 @@ EXT_OBJS = Plugin/PluginImplementer.o \
 	Parameters/ComponentParameter.o \
 	Logging/TLMErrorLog.o \
 	Plugin/TLMPlugin.o \
-	coordTrans.o \
-	double3Vec.o \
-	double33Mat.o \
-	strConv.o
+	coordTransform.o \
+	double3.o \
+	double33.o \
+        tostr.o
 
 ABIOBJS=$(OBJS:%.o= $(ABI)/%.o) $(EXT_OBJS:%.o= $(ABI)/%.o)
 

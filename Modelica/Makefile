@@ -21,8 +21,8 @@ include $(MAKEFILEHEADHOME)/Makefile.head
 #CC=mycl cl -DWIN32 -D_WIN32 -DXMSTATIC -DYY_NEVER_INTERACTIVE  /EHsc
 #cc=mycl cl -DWIN32 -D_WIN32 -DXMSTATIC -DYY_NEVER_INTERACTIVE  /EHsc
 
-CC += -DYY_NEVER_INTERACTIVE -fPIC
-cc += -DYY_NEVER_INTERACTIVE -fPIC
+CC += -std=c++11 -DYY_NEVER_INTERACTIVE -fPIC
+cc += -std=c++11 -DYY_NEVER_INTERACTIVE -fPIC
 
 #################################################################################
 #
@@ -35,7 +35,7 @@ cc += -DYY_NEVER_INTERACTIVE -fPIC
 BNAME=libtlmmodelica.a
 INSTDIR=$(BINDIR)/Modelica
 RESOURCESDIR=$(INSTDIR)/Resources
-MISCHOME=../extralibs/misc
+MISCHOME=../3rdParty/misc
 
 INCLUDES=  -I. \
 	-I../common \
@@ -69,10 +69,10 @@ EXT_OBJS = Plugin/PluginImplementer.o \
 	Interfaces/TLMInterface3D.o \
 	Logging/TLMErrorLog.o \
 	Plugin/TLMPlugin.o \
-	coordTrans.o \
-	double3Vec.o \
-	double33Mat.o \
-	strConv.o
+	coordTransform.o \
+	double3.o \
+	double33.o \
+        tostr.o
 
 ABIOBJS=$(OBJS:%.o= $(ABI)/%.o) $(EXT_OBJS:%.o= $(ABI)/%.o)
 
