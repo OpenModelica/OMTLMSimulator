@@ -45,7 +45,8 @@ install: default
     
 clean:
 	rm -rf $(INSTDIR)
-	rm $(BINDIR)/StartTLMHopsan.bat
-	cd TLMPlugin; make clean
+	- rm $(BINDIR)/StartTLMHopsan.bat
+	- rm $(BINDIR)/StartTLMHopsan
+	cd TLMPluginLib; make clean
 
 # DO NOT DELETE
