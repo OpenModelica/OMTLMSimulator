@@ -11,10 +11,11 @@ else
 endif
 
 include $(MAKEFILEHEADHOME)/Makefile.head
+
 MISCHOME = ../3rdParty/misc
 TIMEHOME = ../3rdParty/rtime
 
-CC += -std=c++11 
+CC += -std=c++11 -fPIC
 
 SRCCLT= Plugin/PluginImplementer.cc \
 	Plugin/MonitoringPluginImplementer.cc \
@@ -52,6 +53,16 @@ SRCMONITOR= $(SRCCLT) \
 	CompositeModels/CompositeModelReader.cc \
 	MonitorMain.cc
 
+SRCMSTLIB=  $(SRCCLT) \
+	CompositeModels/CompositeModel.cc \
+	CompositeModels/CompositeModelReader.cc \
+	Communication/ManagerCommHandler.cc \
+	Communication/TLMManagerComm.cc \
+	Communication/TLMMessageQueue.cc \
+	OMTLMSimulatorLib/OMTLMSimulatorLib.cc
+
+SRCMSTMAIN= OMTLMSimulatorMain.cc
+
 CP=cp
 
 SRC= $($(SRCTYPE))
@@ -67,6 +78,7 @@ INCLUDES= -I. \
 
 LIBS = 	-L$(MISCHOME)/lib/$(ABI) \
 	-L$(TIMEHOME)/lib/$(ABI) \
+	-L$(ABI) \
 	-lmisc -lrtime
 
 INCXTR=
@@ -100,6 +112,11 @@ monitor:
 	$(MAKE) dir
 	$(MAKE) SRCTYPE=SRCMONITOR $(ABI)/tlmmonitor$(FEXT)
 
+mstlib:
+	$(MAKE) dir
+	$(MAKE) SRCTYPE=SRCMSTLIB $(ABI)/libomtlmsimulator$(SHREXT)
+	$(MAKE) SRCTYPE=SRCMSTMAIN $(ABI)/omtlmsimulator$(FEXT)
+
 test:
 	$(MAKE) dir
 	$(MAKE) $(ABI)/testapp$(FEXT)
@@ -130,6 +147,17 @@ $(ABI)/tlmmonitor$(FEXT): $(OBJS)
 		(cd $(ABI) ; mt.exe -manifest tlmmonitor.exe.manifest -outputresource:tlmmonitor.exe\;1); fi
 	$(CP) $(ABI)/tlmmonitor$(FEXT) $(BINDIR)/tlmmonitor$(FEXT)
 
+$(ABI)/omtlmsimulator$(FEXT): $(OBJS)
+	$(MAKE) dir
+	$(LINK) -o $(ABI)/omtlmsimulator$(FEXT) $(OBJS) $(LIBPTHREAD) -L$(ABI) -lomtlmsimulator
+	if [ -f $(ABI)/omtlmsimulator.exe.manifest ] ; then \
+		(cd $(ABI) ; mt.exe -manifest omtlmsimulator.exe.manifest -outputresource:omtlmsimulator.exe\;1); fi
+	$(CP) $(ABI)/omtlmsimulator$(FEXT) $(BINDIR)/omtlmsimulator$(FEXT)
+
+$(ABI)/libomtlmsimulator$(SHREXT): $(OBJS)
+	$(LINK) -shared -fPIC -o $(ABI)/libomtlmsimulator$(SHREXT) $(OBJS) $(LIBS) $(XTRLIBS) $(LIBXML) $(LIBPTHREAD)
+	$(CP) $(ABI)/libomtlmsimulator$(SHREXT) $(BINDIR)/libomtlmsimulator$(SHREXT)
+
 $(ABI)/testapp$(FEXT): $(ABI)/TLMTestApp.o
 	$(LINK) $(ABI)/TLMTestApp.o -o $(ABI)/testapp$(FEXT) -L$(ABI) -lTLM $(LIBS) $(XTRLIBS) $(LIBPTHREAD)
 
@@ -140,7 +168,7 @@ $(ABI)/%.o: %.cc
 
 clean:
 	rm -rf $(ABI)
-	rm -rf $(BINDIR)/tlmmanager$(FEXT) $(BINDIR)/tlmmonitor$(FEXT)
+	rm -rf $(BINDIR)/tlmmanager$(FEXT) $(BINDIR)/tlmmonitor$(FEXT) $(BINDIR)/libomtlmsimulator$(SHREXT) $(BINDIR)/omtlmsimulator$(FEXT)
 
 # Change 080701: $ABI is used for *.o files and .tail files
 
@@ -157,6 +185,7 @@ $(ABI):
 	mkdir -p $@/Communication
 	mkdir -p $@/Parameters
 	mkdir -p $@/Logging
+	mkdir -p $@/OMTLMSimulatorLib
 depend: 
 	@echo > $(ABI)/makedepend.tail
 	makedepend -Y -p"\$$(ABI)/" -f $(ABI)/makedepend.tail \
