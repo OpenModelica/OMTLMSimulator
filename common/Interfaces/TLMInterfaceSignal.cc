@@ -108,7 +108,9 @@ void TLMInterfaceSignal::GetTimeData(TLMTimeDataSignal& Instance, std::deque<TLM
             Instance = Data[0];
         }
         else{
-            if (time == Data[size-1].time) {
+            //Tolerance for fuzzy equal
+            double tol = 1e-10;
+            if(time <= Data[size-1].time+tol) {
                 Instance = Data[size-1];
             }
             else {
