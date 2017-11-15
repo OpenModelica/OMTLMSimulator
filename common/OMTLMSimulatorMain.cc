@@ -4,6 +4,9 @@
 #include <vector>
 #include <fstream>
 #include <sstream>
+#ifdef _WIN32
+#include <windows.h>
+#endif
 
 #include "OMTLMSimulatorLib/OMTLMSimulatorLib.h"
 
@@ -65,7 +68,8 @@ struct optionsType {
 #ifdef _WIN32
           //Note: Not yet tested on Windows!
           char real_path[4096] = "";
-          DWORD GetFullPathName(value.c_str(), 4096, real_path, NULL);
+          DWORD ret_val = 0;
+          ret_val = GetFullPathName(value.c_str(), 4096, real_path, NULL);
           model = std::string(real_path);
 #else
           char *real_path = realpath(value.c_str(), NULL);
@@ -185,6 +189,8 @@ int main(int argc, char *argv[])
   OMTLMSimulator::setMonitorPort( pModel, options.monitor);
   OMTLMSimulator::setNumLogStep(  pModel, options.numLogSteps);
   OMTLMSimulator::setLogStepSize( pModel, options.logStepSize);
+
+  std::cout << "Starting simulation.\n";
 
   OMTLMSimulator::simulate(pModel);
 

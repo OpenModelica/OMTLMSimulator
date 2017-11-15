@@ -15,7 +15,18 @@ include $(MAKEFILEHEADHOME)/Makefile.head
 MISCHOME = ../3rdParty/misc
 TIMEHOME = ../3rdParty/rtime
 
-CC += -std=c++11 -fPIC
+TARGET_TRIPLE	:= $(subst -, ,$(shell $(CC) -dumpmachine))
+TARGET_ARCH		:= $(word 1,$(TARGET_TRIPLE))
+TARGET_OS		:= $(word 3,$(TARGET_TRIPLE))
+
+EXTRAFLAGS =
+ifeq ($TARGET_OS,mingw32)
+else ifeq ($TARGET_OS,cygwin)
+else
+EXTRAFLAGS = -fPIC
+endif
+
+CC += -std=c++11 $(EXRAFLAGS)
 
 SRCCLT= Plugin/PluginImplementer.cc \
 	Plugin/MonitoringPluginImplementer.cc \
@@ -94,7 +105,7 @@ help:
 	@echo all, defaulf: build everything.
 
 
-all: lib manager monitor test
+all: lib manager monitor mstlib test
 
 lib: lib_s
 	$(MAKE) dir
@@ -121,7 +132,7 @@ test:
 	$(MAKE) dir
 	$(MAKE) $(ABI)/testapp$(FEXT)
 
-install: manager monitor
+install: manager monitor mstlib
 	cp $(ABI)/tlmmonitor$(FEXT) $(ABI)/tlmmanager$(FEXT) ../bin
 
 $(ABI)/libTLM.a: $(OBJS)

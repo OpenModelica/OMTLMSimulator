@@ -26,7 +26,7 @@
 #include "Plugin/MonitoringPluginImplementer.h"
 #include "OMTLMSimulatorLib.h"
 
-#ifndef WIN32
+#ifndef _WIN32
 #include <sys/socket.h>
 #include <netdb.h>
 #include <netinet/in.h>
@@ -152,8 +152,8 @@ void checkPortAvailability(int &port) {
           return;
       }
 
-      int val = 1;
-      setsockopt(theSckt, SOL_SOCKET, SO_REUSEADDR, &val, sizeof(int));
+      bool val = true;
+      setsockopt(theSckt, SOL_SOCKET, SO_REUSEADDR, (char*)&val, sizeof(int));
 
       int bindCount = 0;
       int maxIterations = 1000; // BUG: should be calculated from a max. port range!
@@ -1274,7 +1274,7 @@ void OMTLMSimulator::setStartTime(void *pModel, double startTime)
 
   double writeTimeStep = (stopTime-startTime)/1000.0;
   pCompositeModel->GetSimParams().SetWriteTimeStep(writeTimeStep);
-  std::cout << "Setting startT: " << startTime << ", stopT: " << stopTime;
+  std::cout << "Setting startT: " << startTime << ", stopT: " << stopTime << "\n";
 }
 
 void OMTLMSimulator::setStopTime(void *pModel, double stopTime)
@@ -1288,7 +1288,7 @@ void OMTLMSimulator::setStopTime(void *pModel, double stopTime)
 
   double writeTimeStep = (stopTime-startTime)/1000.0;
   pCompositeModel->GetSimParams().SetWriteTimeStep(writeTimeStep);
-  std::cout << "Setting startT: " << startTime << ", stopT: " << stopTime;
+  std::cout << "Setting startT: " << startTime << ", stopT: " << stopTime << "\n";
 }
 
 void OMTLMSimulator::setLogLevel(void *pModel, int logLevel) {
