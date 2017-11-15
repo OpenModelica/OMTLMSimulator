@@ -152,8 +152,10 @@ bool TLMCommUtil::ReceiveMessage(TLMMessage& mess) {
     }
     if(mess.Header.DataSize > 0) {
 
-        mess.Data.clear(); // just to be on the safe side.
-        mess.Data.resize(mess.Header.DataSize);
+        //mess.Data.clear(); // just to be on the safe side.
+        if(mess.Data.size() < mess.Header.DataSize) {
+            mess.Data.resize(mess.Header.DataSize);
+        }
         bcount = recv(mess.SocketHandle,(char*)&(mess.Data[0]), mess.Header.DataSize,  MSG_WAITALL);
         while((bcount >= 0) && (bcount <  mess.Header.DataSize)) {
             // this should never happen, but it does...

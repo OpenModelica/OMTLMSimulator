@@ -51,7 +51,9 @@ void MonitoringPluginImplementer::ReceiveTimeData(TLMInterface* reqIfc, double t
 
         if(ifc == NULL) break; // receive error - breaking
 
-        TLMErrorLog::Info(string("Got data until time=") + TLMErrorLog::ToStdStr(ifc->GetNextRecvTime()));
+        if(TLMErrorLog::GetLogLevel() >= TLMLogLevel::Info) {
+            TLMErrorLog::Info(string("Got data until time=") + TLMErrorLog::ToStdStr(ifc->GetNextRecvTime()));
+        }
     }
 }
 

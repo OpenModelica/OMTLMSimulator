@@ -536,7 +536,7 @@ void ManagerCommHandler::ReaderThreadRun() {
                 else {
                     //Socket was closed without permission
                     nClosedSock++;
-                    TLMErrorLog::Info("nCLosedSock = " +std::to_string(nClosedSock));
+                    MessageQueue.ReleaseSlot(message);
                 }
             }
         }
@@ -787,7 +787,9 @@ void ManagerCommHandler::ForwardToMonitor(TLMMessage& message) {
             newMessage->Header.TLMInterfaceID = TLMInterfaceID;
 
             newMessage->Header.DataSize = message.Header.DataSize;
-            newMessage->Data.resize(newMessage->Header.DataSize);
+            if(newMessage->Data.size() < newMessage->Header.DataSize) {
+                newMessage->Data.resize(newMessage->Header.DataSize);
+            }
             
             memcpy(&newMessage->Data[0], &message.Data[0], newMessage->Header.DataSize);
 

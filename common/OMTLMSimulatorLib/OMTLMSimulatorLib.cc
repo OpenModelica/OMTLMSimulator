@@ -24,6 +24,22 @@
 #include "CompositeModels/CompositeModelReader.h"
 #include "Communication/ManagerCommHandler.h"
 #include "Plugin/MonitoringPluginImplementer.h"
+#include "OMTLMSimulatorLib.h"
+
+#ifndef WIN32
+#include <sys/socket.h>
+#include <netdb.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
+#include <unistd.h>
+#define BCloseSocket close
+#else
+#include <winsock2.h>
+#include <windows.h>
+#include <cassert>
+#include <io.h>
+#define BCloseSocket closesocket
+#endif
 
 #include "double3.h"
 #include "double33.h"
@@ -41,6 +57,9 @@
 
 using std::string;
 
+static std::map<std::string,int> subModelMap;
+static std::map<std::string,int> interfaceMap;
+
 
 struct Color {
   double r;
@@ -53,12 +72,117 @@ struct Color {
   }
 };
 
+
+class CompositeModelProxy {
+public:
+  CompositeModel *mpCompositeModel = 0;
+  double startTime = 0;
+  double stopTime = 1;
+  int logLevel = 0;
+  std::string serverAddress = "127.0.1.1";
+  int managerPort = 11111;
+  int monitorPort = 12111;
+  double logStepSize = 1e-4;
+  int numLogSteps = 1000;
+
+};
+
+
+
+void checkPortAvailability(int &port) {
+      struct sockaddr_in sa;  // My socket addr.
+
+  #define MAXHOSTNAME 1024
+
+      char myname[MAXHOSTNAME+1];
+      struct hostent *hp;
+
+  #ifdef WIN32
+      WSADATA ws;
+      int d;
+      d=WSAStartup(0x0101,&ws);
+      assert(d==0);
+  #endif
+
+      memset(&sa,0, sizeof(struct sockaddr_in));
+      gethostname(myname,MAXHOSTNAME);
+      hp = gethostbyname((const char*) myname);
+
+      if(hp==NULL) {
+          TLMErrorLog::FatalError("Create server socket - failed to get my hostname, check that name resolves, e.g. /etc/hosts has "+std::string(myname));
+          // See BZ2161.
+
+          // Adding this line to /etc/hosts resolves (for me) the problem with
+          //  "Create server socket - failed to get my hostname"
+
+          // 127.0.0.3       homer.mathcore.local
+
+
+          port = -1;
+          return;
+      }
+      sa.sin_family = hp->h_addrtype;
+
+  #ifdef WIN32
+      char* localIP;
+      localIP = inet_ntoa (*(struct in_addr *)*hp->h_addr_list);
+      sa.sin_addr.s_addr = inet_addr(localIP);
+  #endif
+
+      if(AF_INET != sa.sin_family) {
+          TLMErrorLog::FatalError("Unsupported address family returned by gethostbyname");
+          port = -1;
+          return;
+      }
+      sa.sin_port = htons(port);
+
+      int theSckt;
+
+      if((theSckt =
+       #ifdef WIN32
+           socket(AF_INET, SOCK_STREAM,IPPROTO_TCP)
+       #else
+           socket(AF_INET, SOCK_STREAM,0)
+
+       #endif
+          ) < 0) {
+          TLMErrorLog::FatalError("Create server socket - failed to get a socket handle");
+
+          port = -1;
+          return;
+      }
+
+      int val = 1;
+      setsockopt(theSckt, SOL_SOCKET, SO_REUSEADDR, &val, sizeof(int));
+
+      int bindCount = 0;
+      int maxIterations = 1000; // BUG: should be calculated from a max. port range!
+      // Bind the socket, first try the predefined port, then increase port number.
+      while(bind(theSckt,(struct sockaddr *) &sa, sizeof(struct sockaddr_in)) < 0 && bindCount < maxIterations) {
+          port++;
+          std::cout << "Increasing port number to " << port << "\n";
+          bindCount++;
+          sa.sin_port = htons(port);
+      }
+      std::cout << "Finished testing port number.\n";
+
+      if(bindCount == maxIterations) {
+          BCloseSocket(theSckt);
+          TLMErrorLog::FatalError("Create server socket - failed to bind. Check that the port is free.");
+          port = -1;
+          return;
+      }
+
+      close(theSckt);
+}
+
+
 TLMPlugin* InitializeTLMConnection(CompositeModel& model, std::string& serverName) {
   TLMPlugin* TLMlink = MonitoringPluginImplementer::CreateInstance();
 
   std::cout << "Trying to register TLM monitor on host " << serverName << "\n";
 
-  TLMErrorLog::Log("Trying to register TLM monitor on host " + serverName);
+  TLMErrorLog::Info("Trying to register TLM monitor on host " + serverName);
 
   if(! TLMlink->Init("monitor",
                      model.GetSimParams().GetStartTime(),
@@ -78,18 +202,18 @@ TLMPlugin* InitializeTLMConnection(CompositeModel& model, std::string& serverNam
     TLMInterfaceProxy& interfaceProxy = model.GetTLMInterfaceProxy(i);
     TLMComponentProxy& component = model.GetTLMComponentProxy(interfaceProxy.GetComponentID());
 
-    TLMErrorLog::Log("Trying to register monitoring interface " + interfaceProxy.GetName());
+    TLMErrorLog::Info("Trying to register monitoring interface " + interfaceProxy.GetName());
     std::cout << "Trying to register monitoring interface " << interfaceProxy.GetName() << "\n";
     int TLMInterfaceID = TLMlink->RegisteTLMInterface(component.GetName() + "." + interfaceProxy.GetName(),
                                                       interfaceProxy.GetDimensions(), interfaceProxy.GetCausality(),
                                                       interfaceProxy.GetDomain());
 
     if(TLMInterfaceID >= 0) {
-      TLMErrorLog::Log("Registration was successful");
+      TLMErrorLog::Info("Registration was successful");
       std::cout << "Registration was successful\n";
     }
     else {
-      TLMErrorLog::Log("Interface not connected in Meta-Model: " + component.GetName() + "." + interfaceProxy.GetName());
+      TLMErrorLog::Info("Interface not connected in Meta-Model: " + component.GetName() + "." + interfaceProxy.GetName());
       std::cout << "Interface not connected in Meta-Model: " << component.GetName() << "." << interfaceProxy.GetName() << "\n";
     }
   }
@@ -115,7 +239,9 @@ void MonitorTimeStep(TLMPlugin* TLMlink,
       int dimensions = interfaceProxy.GetDimensions();
       string causality = interfaceProxy.GetCausality();
 
-      TLMErrorLog::Log("Data request for " + interfaceProxy.GetName() + " for time " + ToStr(SimTime) + ", id: " + ToStr(interfaceID));
+      if(TLMErrorLog::GetLogLevel() >= TLMLogLevel::Info) {
+          TLMErrorLog::Info("Data request for " + interfaceProxy.GetName() + " for time " + ToStr(SimTime) + ", id: " + ToStr(interfaceID));
+      }
 
       if(connectionID >= 0) {
 #define LOGGEDFORCEFIX
@@ -511,9 +637,11 @@ void PrintData(CompositeModel& model,
     TLMInterfaceProxy& interfaceProxy = model.GetTLMInterfaceProxy(i);
     if(interfaceProxy.GetConnectionID() >= 0) {
       if(interfaceProxy.GetDimensions() == 6) {
-        std::stringstream ss;
-        ss << "Printing data for 3D interface " << interfaceProxy.GetID();
-        TLMErrorLog::Log(ss.str());
+        if(TLMErrorLog::GetLogLevel() >= TLMLogLevel::Info) {
+          std::stringstream ss;
+          ss << "Printing data for 3D interface " << interfaceProxy.GetID();
+          TLMErrorLog::Info(ss.str());
+        }
 
         TLMTimeData3D& timeData = dataStorage3D.at(interfaceProxy.GetID());
 
@@ -570,9 +698,11 @@ void PrintData(CompositeModel& model,
       }
       else if(interfaceProxy.GetDimensions() == 1 &&
               interfaceProxy.GetCausality() == "Bidirectional") {
-        std::stringstream ss;
-        ss << "Printing data for 1D interface " << interfaceProxy.GetID();
-        TLMErrorLog::Log(ss.str());
+        if(TLMErrorLog::GetLogLevel() >= TLMLogLevel::Info) {
+          std::stringstream ss;
+          ss << "Printing data for 1D interface " << interfaceProxy.GetID();
+          TLMErrorLog::Info(ss.str());
+        }
 
         TLMTimeData1D& timeData = dataStorage1D.at(interfaceProxy.GetID());
 
@@ -625,9 +755,11 @@ void PrintData(CompositeModel& model,
       else if(interfaceProxy.GetDimensions() == 1 &&
               interfaceProxy.GetCausality() == "Output") {
 
-        std::stringstream ss;
-        ss << "Printing data for output interface " << interfaceProxy.GetID();
-        TLMErrorLog::Log(ss.str());
+        if(TLMErrorLog::GetLogLevel() >= TLMLogLevel::Info) {
+          std::stringstream ss;
+          ss << "Printing data for output interface " << interfaceProxy.GetID();
+          TLMErrorLog::Info(ss.str());
+        }
 
         TLMTimeDataSignal& timeData = dataStorageSignal.at(interfaceProxy.GetID());
 
@@ -686,14 +818,13 @@ void PrintRunStatus(CompositeModel& model, std::ofstream& runFile, tTM_Info& tIn
 
 
 //Start it threaded!
-int startMonitor(bool debug,
-                 double timeStep,
+int startMonitor(double timeStep,
                  double nSteps,
                  std::string server,
                  std::string modelName,
                  CompositeModel &model) {
 
-  TLMErrorLog::Log("Starting monitoring...");
+  TLMErrorLog::Info("Starting monitoring...");
   std::cout << "Monitoring server = " << server << "\n";
 
 #ifndef USE_THREADS
@@ -705,15 +836,15 @@ int startMonitor(bool debug,
 
 
 
-//  // Enable debug?
-//  std::ofstream logfile;
-//  logfile.open("monitor2.log");
-//  TLMErrorLog::SetOutStream(logfile);
-//  if(debug) {
-//    TLMErrorLog::SetDebugOut(true);
-//    TLMErrorLog::SetNormalErrorLogOn(true);
-//    TLMErrorLog::SetWarningOut(true);
-//  }
+  //  // Enable debug?
+  //  std::ofstream logfile;
+  //  logfile.open("monitor2.log");
+  //  TLMErrorLog::SetOutStream(logfile);
+  //  if(debug) {
+  //    TLMErrorLog::SetDebugOut(true);
+  //    TLMErrorLog::SetNormalErrorLogOn(true);
+  //    TLMErrorLog::SetWarningOut(true);
+  //  }
 
 
 
@@ -733,6 +864,7 @@ int startMonitor(bool debug,
 
   // Initialize TLM
   std::cout << "Number of components (monitor): " << model.GetComponentsNum() << "\n";
+  model.CheckTheModel();
   std::cout << "Initializing monitor plugin...\n";
   TLMPlugin* thePlugin = InitializeTLMConnection(model, server);
   if(!thePlugin) {
@@ -877,6 +1009,8 @@ int startManager(int serverPort,
 
   std::cout << "Number of components (manager): " << model.GetComponentsNum() << "\n";
 
+  TLMErrorLog::Info("Printing from manager thread.");
+
   // Set preferred network port
   if(serverPort > 0) {
     model.GetSimParams().SetPort(serverPort);
@@ -906,15 +1040,10 @@ int startManager(int serverPort,
 
 }
 
-namespace OMTLMSimulator {
-bool simulate(void *pModel, bool debug,
-              std::string serverAddress,
-              int serverPort,
-              int monitorPort,
-              bool interfaceRequest,
-              std::string singleModel,
-              double timeStep,
-              int nLogSteps) {
+
+void simulateInternal(void *pModel,
+                      bool interfaceRequest,
+                      std::string singleModel) {
 
 
 #ifndef USE_THREADS
@@ -923,6 +1052,11 @@ bool simulate(void *pModel, bool debug,
   exit(1);
 #endif
 
+  CompositeModelProxy *pModelProxy = (CompositeModelProxy*)pModel;
+
+  checkPortAvailability(pModelProxy->managerPort);
+  checkPortAvailability(pModelProxy->monitorPort);
+
   ManagerCommHandler::CommunicationMode comMode=ManagerCommHandler::CoSimulationMode;
   if(interfaceRequest) {
     comMode = ManagerCommHandler::InterfaceRequestMode;
@@ -930,22 +1064,26 @@ bool simulate(void *pModel, bool debug,
 
   std::cout << "singleModel = " << singleModel << "\n";
 
-  // Debug on?
-  if(debug || comMode == ManagerCommHandler::InterfaceRequestMode) {       //Always enable debug for interface request /robbr
-    TLMErrorLog::SetDebugOut(true);
+  //Set log level
+  TLMErrorLog::SetLogLevel(TLMLogLevel(pModelProxy->logLevel));
+  if(comMode == ManagerCommHandler::InterfaceRequestMode) {       //Always enable debug for interface request /robbr
+    TLMErrorLog::SetLogLevel(TLMLogLevel::Info);
   }
 
 
-  CompositeModel *pCompositeModel = (CompositeModel*)pModel;
+  CompositeModel *pCompositeModel = pModelProxy->mpCompositeModel;
+
+  pCompositeModel->CheckTheModel();
 
   std::string modelName = pCompositeModel->GetModelName();
 
-  std::string server = std::string(serverAddress)+":"+std::to_string(monitorPort);
+  std::string server = std::string(pModelProxy->serverAddress)+
+                       ":"+std::to_string(pModelProxy->monitorPort);
 
   // Start manager thread
   std::thread managerThread = std::thread(startManager,
-                                          serverPort,
-                                          monitorPort,
+                                          pModelProxy->managerPort,
+                                          pModelProxy->monitorPort,
                                           comMode,
                                           std::ref(*pCompositeModel));
 
@@ -954,9 +1092,8 @@ bool simulate(void *pModel, bool debug,
   std::thread monitorThread;
   if(comMode != ManagerCommHandler::InterfaceRequestMode) {
     monitorThread = std::thread(startMonitor,
-                                debug,
-                                timeStep,
-                                nLogSteps,
+                                pModelProxy->logStepSize,
+                                pModelProxy->numLogSteps,
                                 server,
                                 modelName,
                                 std::ref(*pCompositeModel));
@@ -973,12 +1110,15 @@ bool simulate(void *pModel, bool debug,
 
   std::cout << "Exiting.\n";
 
-  return 0;
+  return;
 }
 
 
-void *loadModel(const char *fileName, bool interfaceRequest, const char *singleModel)
-{
+//This internal function is needed in order to
+//hide the two last arguments from the API.
+void *loadModelInternal(const char *fileName,
+                        bool interfaceRequest,
+                        const char *singleModel) {
   // Load composite model for manager
   // Note: Skip loading connections in interface request mode in case an interface no longer exists
   CompositeModel *pCompositeModel = new CompositeModel();
@@ -993,4 +1133,195 @@ void *loadModel(const char *fileName, bool interfaceRequest, const char *singleM
   return (void*)pCompositeModel;
 }
 
+
+void *OMTLMSimulator::loadModel(const char *filename) {
+  CompositeModelProxy *pModelProxy = new CompositeModelProxy();
+  pModelProxy->mpCompositeModel = (CompositeModel*)loadModelInternal(filename, false, "");
+  return pModelProxy;
 }
+
+
+void *OMTLMSimulator::newModel(const char *name) {
+  CompositeModelProxy *pModelProxy = new CompositeModelProxy();
+  pModelProxy->mpCompositeModel = new CompositeModel();
+  pModelProxy->mpCompositeModel->SetModelName(name);
+  return pModelProxy;
+}
+
+
+
+//! @returns Sub-Model ID
+void OMTLMSimulator::addSubModel(void *pModel,
+                                 const char* name,
+                                 const char* file,
+                                 const char* startCommand) {
+  CompositeModelProxy *pModelProxy = (CompositeModelProxy*)pModel;
+  CompositeModel *pCompositeModel = pModelProxy->mpCompositeModel;
+  int id = pCompositeModel->RegisterTLMComponentProxy(name,
+                                                      startCommand,
+                                                      file,
+                                                      false,
+                                                      "");
+
+  subModelMap.insert(std::pair<std::string,int>(std::string(name),id));
+}
+
+
+
+//! @returns Interface ID
+void OMTLMSimulator::addInterface(void *pModel,
+                                  const char* subModelName,
+                                  const char* name,
+                                  int dimensions,
+                                  const char* causality,
+                                  const char* domain) {
+  CompositeModelProxy *pModelProxy = (CompositeModelProxy*)pModel;
+  CompositeModel *pCompositeModel = pModelProxy->mpCompositeModel;
+  std::string nameStr(name);
+  int subModelId= subModelMap.find(std::string(subModelName))->second;
+  int id = pCompositeModel->RegisterTLMInterfaceProxy(subModelId,
+                                                      nameStr,
+                                                      dimensions,
+                                                      causality,
+                                                      domain);
+
+  std::string fullName = std::string(subModelName)+"."+nameStr;
+  interfaceMap.insert(std::pair<std::string,int>(fullName,id));
+}
+
+
+
+void OMTLMSimulator::addConnection(void *pModel,
+                                   const char *interfaceName1,
+                                   const char *interfaceName2,
+                                   double delay,
+                                   double Zf,
+                                   double Zfr,
+                                   double alpha) {
+  // Todo: Error checking
+
+  int interfaceId1 = interfaceMap.find(std::string(interfaceName1))->second;
+  int interfaceId2 = interfaceMap.find(std::string(interfaceName2))->second;
+
+  CompositeModelProxy *pModelProxy = (CompositeModelProxy*)pModel;
+  CompositeModel *pCompositeModel = pModelProxy->mpCompositeModel;
+  TLMConnectionParams params;
+  params.Delay = delay;
+  params.Zf = Zf;
+  params.Zfr = Zfr;
+  params.alpha = alpha;
+
+  int connId = pCompositeModel->RegisterTLMConnection(interfaceId1,
+                                                      interfaceId2,
+                                                      params);
+
+  TLMConnection connection = pCompositeModel->GetTLMConnection(connId);
+
+  pCompositeModel->GetTLMInterfaceProxy(interfaceId1).SetConnected();
+  pCompositeModel->GetTLMInterfaceProxy(interfaceId1).SetConnection(connection);
+
+  pCompositeModel->GetTLMInterfaceProxy(interfaceId2).SetConnected();
+  pCompositeModel->GetTLMInterfaceProxy(interfaceId2).SetConnection(connection);
+}
+
+
+
+
+void OMTLMSimulator::addParameter(void *pModel,
+                                  const char *subModelName,
+                                  const char *name,
+                                  const char *defaultValue) {
+  CompositeModelProxy *pModelProxy = (CompositeModelProxy*)pModel;
+  CompositeModel *pCompositeModel = pModelProxy->mpCompositeModel;
+  std::string nameStr(name);
+  std::string defaultStr(defaultValue);
+  int subModelId = subModelMap.find(std::string(subModelName))->second;
+  pCompositeModel->RegisterComponentParameterProxy(subModelId,
+                                                   nameStr,
+                                                   defaultStr);
+}
+
+
+
+void OMTLMSimulator::unloadModel(void *pModel)
+{
+  if (!pModel)
+  {
+    //todo: Error message
+    return;
+  }
+
+  CompositeModelProxy *pModelProxy = (CompositeModelProxy*)pModel;
+  CompositeModel *pCompositeModel = pModelProxy->mpCompositeModel;
+  delete pCompositeModel;
+  delete pModelProxy;
+}
+
+void OMTLMSimulator::simulate(void *model) {
+  simulateInternal(model,
+                   false,
+                   "");
+}
+
+void OMTLMSimulator::setStartTime(void *pModel, double startTime)
+{
+  CompositeModelProxy *pModelProxy = (CompositeModelProxy*)pModel;
+  pModelProxy->startTime = startTime;
+
+  double stopTime = pModelProxy->stopTime;
+  CompositeModel *pCompositeModel = pModelProxy->mpCompositeModel;
+  pCompositeModel->GetSimParams().Set(11111,startTime,stopTime);
+
+  double writeTimeStep = (stopTime-startTime)/1000.0;
+  pCompositeModel->GetSimParams().SetWriteTimeStep(writeTimeStep);
+  std::cout << "Setting startT: " << startTime << ", stopT: " << stopTime;
+}
+
+void OMTLMSimulator::setStopTime(void *pModel, double stopTime)
+{
+  CompositeModelProxy *pModelProxy = (CompositeModelProxy*)pModel;
+  pModelProxy->stopTime = stopTime;
+
+  double startTime = pModelProxy->startTime;
+  CompositeModel *pCompositeModel = pModelProxy->mpCompositeModel;
+  pCompositeModel->GetSimParams().Set(11111,startTime,stopTime);
+
+  double writeTimeStep = (stopTime-startTime)/1000.0;
+  pCompositeModel->GetSimParams().SetWriteTimeStep(writeTimeStep);
+  std::cout << "Setting startT: " << startTime << ", stopT: " << stopTime;
+}
+
+void OMTLMSimulator::setLogLevel(void *pModel, int logLevel) {
+  CompositeModelProxy *pModelProxy = (CompositeModelProxy*)pModel;
+  pModelProxy->logLevel = logLevel;
+}
+
+void OMTLMSimulator::setAddress(void *pModel, std::string address) {
+  CompositeModelProxy *pModelProxy = (CompositeModelProxy*)pModel;
+  pModelProxy->serverAddress = address;
+}
+
+void OMTLMSimulator::setManagerPort(void *pModel, int port) {
+  CompositeModelProxy *pModelProxy = (CompositeModelProxy*)pModel;
+  pModelProxy->managerPort = port;
+}
+
+void OMTLMSimulator::setMonitorPort(void *pModel, int port) {
+  CompositeModelProxy *pModelProxy = (CompositeModelProxy*)pModel;
+  pModelProxy->monitorPort = port;
+}
+
+void OMTLMSimulator::setLogStepSize(void *pModel, double stepSize) {
+  CompositeModelProxy *pModelProxy = (CompositeModelProxy*)pModel;
+  pModelProxy->logStepSize = stepSize;
+}
+
+void OMTLMSimulator::setNumLogStep(void *pModel, int steps) {
+  CompositeModelProxy *pModelProxy = (CompositeModelProxy*)pModel;
+  pModelProxy->numLogSteps = steps;
+}
+
+
+
+
+

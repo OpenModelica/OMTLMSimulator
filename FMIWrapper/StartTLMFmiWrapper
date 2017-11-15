@@ -11,12 +11,12 @@
 # *********************SETUP SIMULATION*********************************************
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$OMTLMSimulatorPath/bin
 
-FMIWrapper_Cmd="FMIWrapper $PWD/$1 $6 solver=CVODE -d"
+FMIWrapper_Cmd="FMIWrapper $PWD/$1 $6 solver=CVODE -d -v $^"
 
 TLMCONFIGFILE=tlm.config
 
 if [ ! -f "$1/$6" ] ; then 
-    if [ ! -f "$1/$6.mo" ] ; then 
+    if [ ! -f "$6" ] ; then 
 	echo Usage: 
 	echo $0 XModelName start-time end-time max-time-step server-name:port model-file 
 	echo $6
@@ -25,6 +25,7 @@ if [ ! -f "$1/$6" ] ; then
     fi
 fi
 
+mkdir $1
 echo execution directory is $1
 cd $1
 

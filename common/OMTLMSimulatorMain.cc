@@ -13,15 +13,15 @@ std::ofstream DebugOutFile;
 
 
 struct optionsType {
-  bool debug;
-  std::string address;
-  int manager;
-  int monitor;
+  int logLevel = 0;
+  std::string address = "127.0.1.1";
+  int manager = 11111;
+  int monitor = 12111;
   bool interfaceRequest;
   std::string singleModel;
-  std::string model;
-  double timeStep = 0;
-  int logSteps = 1000;
+  std::string model = "";
+  double logStepSize = 0;
+  int numLogSteps = 1000;
 
   bool addressSet = false;
   bool managerSet = false;
@@ -39,12 +39,12 @@ struct optionsType {
 
   void parseArguments(int argc, char *argv[])
   {
-//    if(argc != 9) {
-//      std::cout << "Wrong number of arguments.\n";
-//      std::cout << "Usage:\n";
-//      //std::cout << "  OMFMISimulatorWrapper <workingDirectory> <modelFile> <startTime> <stepSize> <stopTime>\n";
-//      exit(-1);
-//    }
+    //    if(argc != 9) {
+    //      std::cout << "Wrong number of arguments.\n";
+    //      std::cout << "Usage:\n";
+    //      //std::cout << "  OMFMISimulatorWrapper <workingDirectory> <modelFile> <startTime> <stepSize> <stopTime>\n";
+    //      exit(-1);
+    //    }
 
     for(int i=1; i<argc; ++i) {
       std::string name, value;
@@ -62,54 +62,74 @@ struct optionsType {
           monitorSet = true;
         }
         else if(name == "model") {
-          model = value;
+#ifdef _WIN32
+          //Note: Not yet tested on Windows!
+          char real_path[4096] = "";
+          DWORD GetFullPathName(value.c_str(), 4096, real_path, NULL);
+          model = std::string(real_path);
+#else
+          char *real_path = realpath(value.c_str(), NULL);
+          if(real_path) {
+            model = std::string(real_path);
+          }
+#endif
           modelSet = true;
         }
         else if(name == "logsteps") {
-          logSteps = stoi(value);
+          numLogSteps = stoi(value);
         }
         else if(name == "singlemodel") {
           singleModel = value;
         }
+        else if(name == "loglevel") {
+          logLevel = stoi(value);
+        }
       }
-      else if(argv[i] == "-d") {
-        debug = true;
-      }
-      else if(argv[i] == "-r") {
+      else if(std::string(argv[i]) == "-r") {
         interfaceRequest = true;
+      }
+      else {
+        std::cout << "Unknown argument: " << argv[i] << "\n";
       }
     }
 
     if(!addressSet) {
-      std::cout << "Error: Address not specified.\n";
-      exit(-1);
+      std::cout << "Warning: Address not specified. Using 127.0.1.1 (default).\n";
+      //exit(-1);
     }
     if(!managerSet) {
-      std::cout << "Error: Manager port not specified.\n";
-      exit(-1);
+      std::cout << "Warning: Manager port not specified. Using 11111 (default).\n";
+      //exit(-1);
     }
     if(!monitorSet) {
-      std::cout << "Error: Monitor port not specified.\n";
-      exit(-1);
+      std::cout << "Warning: Monitor port not specified. Using 12111 (default).\n";
+      //exit(-1);
     }
     if(!modelSet) {
       std::cout << "Error: Model file not specified.\n";
       exit(-1);
     }
+
+    FILE *modelFile = fopen(model.c_str(), "r");
+    if (!modelFile) {
+      std::cout << "Error: Model file does not exist or is not accessible.\n";
+      exit(-1);
+    }
+    fclose(modelFile);
   }
 
 
   void print() {
     std::cout << "\nOptions: \n";
-    std::cout << "   debug            = " << debug << "\n";
+    std::cout << "   logLevel         = " << logLevel << "\n";
     std::cout << "   serverAddress    = " << address << "\n";
     std::cout << "   serverPort       = " << manager << "\n";
     std::cout << "   monitorPort      = " << monitor << "\n";
     std::cout << "   interfaceRequest = " << interfaceRequest << "\n";
     std::cout << "   singleModel      = " << singleModel << "\n";
     std::cout << "   modelFile        = " << model << "\n";
-    std::cout << "   timeStep         = " << timeStep << "\n";
-    std::cout << "   nLogSteps        = " << logSteps << "\n";
+    std::cout << "   timeStep         = " << logStepSize << "\n";
+    std::cout << "   nLogSteps        = " << numLogSteps << "\n";
 
   }
 } options;
@@ -130,19 +150,45 @@ int main(int argc, char *argv[])
   // Start simulation //
   //////////////////////
 
-  void* pModel = OMTLMSimulator::loadModel(options.model.c_str());
+  //void* pModel = OMTLMSimulator::loadModel(options.model.c_str());
 
-  OMTLMSimulator::simulate(pModel,
-                           options.debug,
-                           options.address,
-                           options.manager,
-                           options.monitor,
-                           options.interfaceRequest,
-                           options.singleModel,
-                           options.timeStep,
-                           options.logSteps);
+  void *pModel = OMTLMSimulator::newModel("FmiTest");
+  OMTLMSimulator::addSubModel(pModel, "adder","/home/robbr48/Documents/Git/OMTLMSimulator/CompositeModels/FmiTestLinux/cs_adder1fmu1/cs_adder1.fmu", "StartTLMFmiWrapper");
+  OMTLMSimulator::addSubModel(pModel, "source1","/home/robbr48/Documents/Git/OMTLMSimulator/CompositeModels/FmiTestLinux/cs_source1fmu1/cs_source1.fmu", "StartTLMFmiWrapper");
+  OMTLMSimulator::addSubModel(pModel, "source2","/home/robbr48/Documents/Git/OMTLMSimulator/CompositeModels/FmiTestLinux/cs_source1fmu1/cs_source1.fmu", "StartTLMFmiWrapper");
+  OMTLMSimulator::addSubModel(pModel, "gain","/home/robbr48/Documents/Git/OMTLMSimulator/CompositeModels/FmiTestLinux/gainfmu1/gain.fmu", "StartTLMFmiWrapper");
 
-      std::cout << "Finished!\n";
+  OMTLMSimulator::addInterface(pModel,"adder","x1",1,"Input","Signal");
+  OMTLMSimulator::addInterface(pModel,"adder","x2",1,"Input","Signal");
+  OMTLMSimulator::addInterface(pModel,"adder","y",1,"Output","Signal");
+  OMTLMSimulator::addInterface(pModel,"source1","y",1,"Output","Signal");
+  OMTLMSimulator::addInterface(pModel,"source2","y",1,"Output","Signal");
+  OMTLMSimulator::addInterface(pModel,"gain","y",1,"Input","Signal");
+  OMTLMSimulator::addInterface(pModel,"gain","u",1,"Output","Signal");
+
+  OMTLMSimulator::addConnection(pModel, "adder.x1", "source2.y",0);
+  OMTLMSimulator::addConnection(pModel, "adder.x2", "source1.y",0);
+  OMTLMSimulator::addConnection(pModel, "gain.y", "adder.y",0);
+
+  OMTLMSimulator::addParameter(pModel,"source1","A","2");
+  OMTLMSimulator::addParameter(pModel,"source1","omega","3");
+  OMTLMSimulator::addParameter(pModel,"source2","A","1");
+  OMTLMSimulator::addParameter(pModel,"source2","omega","10");
+  OMTLMSimulator::addParameter(pModel,"gain","Kp","0.01");
+  OMTLMSimulator::addParameter(pModel,"gain","Ki","0.001");
+
+  OMTLMSimulator::setStartTime(   pModel, 0);
+  OMTLMSimulator::setStopTime(    pModel, 1);
+  OMTLMSimulator::setLogLevel(    pModel, options.logLevel);
+  OMTLMSimulator::setAddress(     pModel, options.address);
+  OMTLMSimulator::setManagerPort( pModel, options.manager);
+  OMTLMSimulator::setMonitorPort( pModel, options.monitor);
+  OMTLMSimulator::setNumLogStep(  pModel, options.numLogSteps);
+  OMTLMSimulator::setLogStepSize( pModel, options.logStepSize);
+
+  OMTLMSimulator::simulate(pModel);
+
+  std::cout << "Finished!\n";
 }
 
 
