@@ -138,9 +138,9 @@ void TLMManagerComm::SelectReadSocket() {
 
     // sock is an intialized socket handle
 
-    tv.tv_sec = 10;
+    tv.tv_sec = 0;
 
-    tv.tv_usec = 0;
+    tv.tv_usec = 500000;
 
     /* wait 10 seconds for any data to be read from any single socket */
 
