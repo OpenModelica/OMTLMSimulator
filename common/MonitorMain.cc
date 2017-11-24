@@ -101,7 +101,9 @@ void MonitorTimeStep(TLMPlugin* TLMlink,
             int dimensions = interfaceProxy.GetDimensions();
             string causality = interfaceProxy.GetCausality();
 
-            TLMErrorLog::Log("Data request for " + interfaceProxy.GetName() + " for time " + ToStr(SimTime) + ", id: " + ToStr(interfaceID));
+            if(TLMErrorLog::IsNormalErrorLogOn()) {
+                TLMErrorLog::Log("Data request for " + interfaceProxy.GetName() + " for time " + ToStr(SimTime) + ", id: " + ToStr(interfaceID));
+            }
 
             if(connectionID >= 0) {
 #define LOGGEDFORCEFIX

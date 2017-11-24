@@ -469,7 +469,7 @@ void TLMComponentProxy::StartComponent(SimulationParams& SimParams, double MaxSt
     if(StartCommand != "none") {
         string startTime = SimParams.GetStartTimeStr();
         string endTime = SimParams.GetEndTimeStr();
-        string strMaxStep = TLMErrorLog::ToStdStr(MaxStep);
+        string strMaxStep = std::to_string(MaxStep);
         string serverName = SimParams.GetServerName();
 
 #if defined(WIN32)

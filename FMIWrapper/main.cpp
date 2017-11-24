@@ -105,8 +105,6 @@ void initializeLogging() {
   logStream.open(LOG_FILE_NAME);
   if(logStream.is_open()) {
     std::regex exp(simConfig.variableFilter);
-    logStreamOpen = true;
-    logStream << "\"time\"";
     fmi2_import_variable_list_t *list = fmi2_import_get_variable_list(fmu,0);
     size_t nVar = fmi2_import_get_variable_list_size(list);
     for(size_t i=0; i<nVar; ++i) {
@@ -116,7 +114,15 @@ void initializeLogging() {
         logVariables.push_back(fmi2_import_get_variable_vr(var));
       }
     }
+    if(logVariables.empty()) {
+      logStreamOpen = false;
+      logStream.close();
+      return;
+    }
   }
+
+  logStreamOpen = true;
+  logStream << "\"time\"";
 
   for(size_t i=0; i<logVariables.size(); ++i) {
     fmi2_value_reference_t vr = logVariables[i];
@@ -1297,8 +1303,8 @@ void createAndClearTempDirectory(std::string path)
 
 int main(int argc, char* argv[])
 {
-  TLMErrorLog::SetNormalErrorLogOn(true);
-  TLMErrorLog::SetWarningOut(true);
+  TLMErrorLog::SetNormalErrorLogOn(false);
+  TLMErrorLog::SetWarningOut(false);
 
   if(argc < 2) {
     cout << "Too few arguments." << endl << endl;
@@ -1337,6 +1343,8 @@ int main(int argc, char* argv[])
       simConfig.solver = IDA;
     else if(!strcmp(argv[i],"-d")) {
       TLMErrorLog::SetDebugOut(true);
+      TLMErrorLog::SetNormalErrorLogOn(true);
+      TLMErrorLog::SetWarningOut(true);
       cout << "Activating debug output" << endl;
     }
     else if(!strcmp(argv[i],"-l") && argc > i+1) {

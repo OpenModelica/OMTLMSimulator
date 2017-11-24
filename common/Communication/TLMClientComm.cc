@@ -110,7 +110,9 @@ void TLMClientComm::UnpackTimeDataMessageSignal(TLMMessage &mess, std::deque<TLM
         TLMCommUtil::ByteSwap(Next, sizeof(double),  mess.Header.DataSize/sizeof(double));
 
     for(unsigned i = 0; i < mess.Header.DataSize/sizeof(TLMTimeDataSignal); i++, Next++) {
-        TLMErrorLog::Log(" RECV for time= " + TLMErrorLog::ToStdStr(Next->time));
+        if(TLMErrorLog::IsNormalErrorLogOn()) {
+           TLMErrorLog::Log(" RECV for time= " + TLMErrorLog::ToStdStr(Next->time));
+        }
         Data.push_back(*Next);
     }
 }

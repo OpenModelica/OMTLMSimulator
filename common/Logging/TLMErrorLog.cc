@@ -122,6 +122,9 @@ void  TLMErrorLog::Log(const std::string& mess) {
 
 // A utility function often used to log numerical information
 std::string  TLMErrorLog::ToStdStr(double val) {
+    if(!NormalErrorLogOn) {
+        return "";
+    }
     char buf[30];
 
     sprintf(buf, "%.10f", val);
@@ -131,6 +134,9 @@ std::string  TLMErrorLog::ToStdStr(double val) {
 
 // A utility function often used to log numerical information
 std::string  TLMErrorLog::ToStdStr(int val) {
+    if(!NormalErrorLogOn) {
+        return "";
+    }
     char buf[30];
 
     sprintf(buf, "%d", val);
