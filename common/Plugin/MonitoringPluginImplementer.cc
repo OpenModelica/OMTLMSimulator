@@ -39,8 +39,10 @@ void MonitoringPluginImplementer::ReceiveTimeData(TLMInterface* reqIfc, double t
             ifc->UnpackTimeData(Message);
 
             // Received data
-            TLMErrorLog::Log(string("Interface ") + ifc->GetName() + " got data until time= "
-                             + TLMErrorLog::ToStdStr(ifc->GetNextRecvTime()));
+            if(TLMErrorLog::IsNormalErrorLogOn()) {
+              TLMErrorLog::Log(string("Interface ") + ifc->GetName() + " got data until time= "
+                               + TLMErrorLog::ToStdStr(ifc->GetNextRecvTime()));
+            }
 
         } while(ifc != reqIfc); // loop until a message for this interface arrives
 

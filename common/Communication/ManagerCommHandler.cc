@@ -772,8 +772,10 @@ void ManagerCommHandler::ForwardToMonitor(TLMMessage& message) {
              pos != monitorInterfaceMap.upper_bound(TLMInterfaceID);
              pos++) {
             
-            TLMErrorLog::Log("Forwarding to monitor, interface " + TLMErrorLog::ToStdStr(TLMInterfaceID)
-                              + " on socket " + TLMErrorLog::ToStdStr(pos->second));
+            if(TLMErrorLog::IsNormalErrorLogOn()) {
+                TLMErrorLog::Log("Forwarding to monitor, interface " + TLMErrorLog::ToStdStr(TLMInterfaceID)
+                                  + " on socket " + TLMErrorLog::ToStdStr(pos->second));
+            }
             
             int hdl = pos->second;
             
@@ -792,7 +794,9 @@ void ManagerCommHandler::ForwardToMonitor(TLMMessage& message) {
         }
     }
     else {
-        TLMErrorLog::Log("Nothing to forward for monitor interface " + TLMErrorLog::ToStdStr(TLMInterfaceID));
+        if(TLMErrorLog::IsNormalErrorLogOn()) {
+            TLMErrorLog::Log("Nothing to forward for monitor interface " + TLMErrorLog::ToStdStr(TLMInterfaceID));
+        }
     }
     monitorMapLock.unlock();
 }

@@ -50,6 +50,8 @@ public:
     //! Input: if Enable is true - output is on, othewise - off.
     static void SetNormalErrorLogOn(bool Enable) { NormalErrorLogOn = Enable; }
 
+    static bool IsNormalErrorLogOn() { return NormalErrorLogOn; }
+
     //! This function enables/disables warning messages
     //! Input: if Enable is true - output is on, othewise - off.
     static void SetWarningOut(bool Enable) { WarningOn = Enable; }
