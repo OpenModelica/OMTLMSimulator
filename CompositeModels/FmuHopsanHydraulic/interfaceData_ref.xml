@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ModelData>
+<Interfaces>
+	<Interface model="prv" Name="tlm" Dimensions="1" Causality="Bidirectional" Domain="Hydraulic"
+		Position="0,0,0"
+		Angle321="0,0,0"/>
+	<Interface model="psource" Name="tlm" Dimensions="1" Causality="Bidirectional" Domain="Hydraulic"
+		Position="0,0,0"
+		Angle321="0,0,0"/>
+</Interfaces>
+<Parameters>
+	<Parameter model="psource" Name="K" DefaultValue="1e-10"/>
+	<Parameter model="psource" Name="f" DefaultValue="0.3"/>
+	<Parameter model="psource" Name="p_0" DefaultValue="1.5e+07"/>
+	<Parameter model="psource" Name="p_Y" DefaultValue="1e+07"/>
+</Parameters>
+</ModelData>
