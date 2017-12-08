@@ -15,6 +15,8 @@
 #include <fstream>
 #include <iostream>
 
+enum TLMLogLevel { Fatal, Warning, Info, Debug };
+
 //! Error handling is implemented in the most simple way
 //! with the functions that write messages to standard error output (cerr).
 //! In addition FatalError calls abort() to terminate the application.
@@ -30,31 +32,28 @@ public:
     //! Warning function prints a warning message to standard error output
     static void Warning(const std::string& mess);
 
-    //! Log function logs a message to standard error output
-    static void Log(const std::string& mess);
+    //! Info function logs an info message to standard error output
+    static void Info(const std::string& mess);
+
+    //! Debug function logs a debug message to standard error output
+    static void Debug(const std::string& mess);
 
     //! Utility functions often used to log numerical information
     static std::string ToStdStr(double val);
     static std::string ToStdStr(int val);
 
-    //! LogEnabled returnes the value of LoggingOn flag. Used for checking
-    //! if logging is enabled.
-    static bool LogEnabled() { return LoggingOn; }
-
     //! SetDebugOut function enables/disables debug information
     //! output from TLM plugin.
     //! Input: if Enable is true - output is on, othewise - off.
-    static void SetDebugOut(bool Enable);
+    static void SetLogLevel(TLMLogLevel logLevel) { LogLevel = logLevel; }
+
+    static TLMLogLevel GetLogLevel() { return LogLevel; }
 
     //! This function enables so that logs are duplicated to the normal *.log file as well.
     //! Input: if Enable is true - output is on, othewise - off.
     static void SetNormalErrorLogOn(bool Enable) { NormalErrorLogOn = Enable; }
 
     static bool IsNormalErrorLogOn() { return NormalErrorLogOn; }
-
-    //! This function enables/disables warning messages
-    //! Input: if Enable is true - output is on, othewise - off.
-    static void SetWarningOut(bool Enable) { WarningOn = Enable; }
 
     //! Sets the output stream for output of all log, warning, and error messages.
     //! Default output stream id std::cout
@@ -72,11 +71,8 @@ public:
     static std::string TimeStr();
 private:
 
-    //! LoggingOn flags tells if logging is enabled.
-    static bool LoggingOn;
-
-    //! Warning messages on if enabled.
-    static bool WarningOn;
+    //! LogLevel specifies level of logging to be used
+    static TLMLogLevel LogLevel;
 
     //! Exception mode on in enabled.
     //! See also SetErrorException(...).

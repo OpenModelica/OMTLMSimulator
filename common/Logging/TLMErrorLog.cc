@@ -40,8 +40,8 @@ void _strtime(char* timestring) {
 #endif
 
 
-bool  TLMErrorLog::LoggingOn = false;
-bool  TLMErrorLog::WarningOn = false;
+
+TLMLogLevel TLMErrorLog::LogLevel = TLMLogLevel::Fatal;
 bool  TLMErrorLog::ExceptionOn = false;
 bool  TLMErrorLog::NormalErrorLogOn = false;
 bool  TLMErrorLog::LogTimeOn = false;
@@ -55,11 +55,6 @@ void TLMErrorLog::Open() {
     }
 }
 
-void TLMErrorLog::SetDebugOut(bool Enable) {
-
-    LoggingOn =  Enable;
-    if(Enable) Log("Logging is enabled in TLMErrorLog::SetDebugOut");
-}
 
 // FatalError function writes a message to log file
 // then terminates the program abnormally.
@@ -89,59 +84,56 @@ void TLMErrorLog::FatalError(const std::string& mess) {
 // Warning function prints a warning message to log file
 //
 void  TLMErrorLog::Warning(const std::string& mess) {
+    if(LogLevel < TLMLogLevel::Warning) return;
+    Open();
+    std::cout << TimeStr() << " Warning: " << mess << std::endl;
+    *outStream << TimeStr() << " Warning: " << mess << std::endl;
 
-    if(WarningOn) {
-        Open();
-        std::cout << TimeStr() << " Warning: " << mess << std::endl;
-        *outStream << TimeStr() << " Warning: " << mess << std::endl;
-
-        if(NormalErrorLogOn) {
-            _strtime(tmpbuf);
+    if(NormalErrorLogOn) {
+        _strtime(tmpbuf);
 #ifdef USE_ERRORLOG
-            ::Warning("TMLLog:"+Bstring(tmpbuf)+" "+mess);
+        ::Warning("TMLLog:"+Bstring(tmpbuf)+" "+mess);
 #endif
-        }
-
     }
 }
 
 // Log function logs a message to log file
-void  TLMErrorLog::Log(const std::string& mess) {
-
-    if(!LoggingOn) return;
+void  TLMErrorLog::Info(const std::string& mess) {
+    if(LogLevel < TLMLogLevel::Info) return;
     Open();
-    *outStream << TimeStr() << " Log: " << mess << std::endl;
+    *outStream << TimeStr() << " Info: " << mess << std::endl;
     if(NormalErrorLogOn) {
         _strtime(tmpbuf);
 #ifdef USE_ERRORLOG
         Log1("TMLLog:"+Bstring(tmpbuf)+" "+mess);
 #endif
     }
-
 }
+
+
+// Log function logs a message to log file
+void  TLMErrorLog::Debug(const std::string& mess) {
+    if(LogLevel < TLMLogLevel::Debug) return;
+    Open();
+    *outStream << TimeStr() << " Debug: " << mess << std::endl;
+    if(NormalErrorLogOn) {
+        _strtime(tmpbuf);
+#ifdef USE_ERRORLOG
+        Log1("TMLLog:"+Bstring(tmpbuf)+" "+mess);
+#endif
+    }
+}
+
 
 // A utility function often used to log numerical information
 std::string  TLMErrorLog::ToStdStr(double val) {
-    if(!NormalErrorLogOn) {
-        return "";
-    }
-    char buf[30];
-
-    sprintf(buf, "%.10f", val);
-
-    return std::string(buf);
+    TLMErrorLog::Debug("Debug 1.");
+    return std::to_string(val);
 }
 
 // A utility function often used to log numerical information
 std::string  TLMErrorLog::ToStdStr(int val) {
-    if(!NormalErrorLogOn) {
-        return "";
-    }
-    char buf[30];
-
-    sprintf(buf, "%d", val);
-
-    return std::string(buf);
+    return std::to_string(val);
 }
 
 std::string  TLMErrorLog::TimeStr() {

@@ -110,8 +110,8 @@ void TLMClientComm::UnpackTimeDataMessageSignal(TLMMessage &mess, std::deque<TLM
         TLMCommUtil::ByteSwap(Next, sizeof(double),  mess.Header.DataSize/sizeof(double));
 
     for(unsigned i = 0; i < mess.Header.DataSize/sizeof(TLMTimeDataSignal); i++, Next++) {
-        if(TLMErrorLog::IsNormalErrorLogOn()) {
-           TLMErrorLog::Log(" RECV for time= " + TLMErrorLog::ToStdStr(Next->time));
+        if(TLMErrorLog::GetLogLevel() >= TLMLogLevel::Info) {
+           TLMErrorLog::Info(" RECV for time= " + TLMErrorLog::ToStdStr(Next->time));
         }
         Data.push_back(*Next);
     }
@@ -131,7 +131,9 @@ void TLMClientComm::UnpackTimeDataMessage3D(TLMMessage& mess, deque<TLMTimeData3
         TLMCommUtil::ByteSwap(Next, sizeof(double),  mess.Header.DataSize/sizeof(double));
 
     for(unsigned i = 0; i < mess.Header.DataSize/sizeof(TLMTimeData3D); i++, Next++) {
-        TLMErrorLog::Log(" RECV for time= " + TLMErrorLog::ToStdStr(Next->time));
+        if(TLMErrorLog::GetLogLevel() >= TLMLogLevel::Info) {
+            TLMErrorLog::Info(" RECV for time= " + TLMErrorLog::ToStdStr(Next->time));
+        }
         Data.push_back(*Next);
     }
 }
@@ -150,7 +152,9 @@ void TLMClientComm::UnpackTimeDataMessage1D(TLMMessage& mess, deque<TLMTimeData1
         TLMCommUtil::ByteSwap(Next, sizeof(double),  mess.Header.DataSize/sizeof(double));
 
     for(unsigned i = 0; i < mess.Header.DataSize/sizeof(TLMTimeData1D); i++, Next++) {
-        TLMErrorLog::Log(" RECV for time= " + TLMErrorLog::ToStdStr(Next->time));
+        if(TLMErrorLog::GetLogLevel() >= TLMLogLevel::Info) {
+            TLMErrorLog::Info(" RECV for time= " + TLMErrorLog::ToStdStr(Next->time));
+        }
         Data.push_back(*Next);
     }
 }
@@ -167,7 +171,7 @@ int TLMClientComm::ConnectManager(string& callname, int portnr) {
     WSADATA ws; 
     e=WSAStartup(0x0101,&ws);
     assert(e==0);
-    TLMErrorLog::Log("WinSocket started\n");
+    TLMErrorLog::Info("WinSocket started\n");
 
     sa.sin_family=AF_INET;
 
@@ -192,7 +196,7 @@ int TLMClientComm::ConnectManager(string& callname, int portnr) {
 #else
     struct hostent *hp;
 
-    TLMErrorLog::Log("Trying to find TLM manager host " + callname);
+    TLMErrorLog::Info("Trying to find TLM manager host " + callname);
 
     hp = gethostbyname(callname.c_str());
     if(hp == NULL) {
@@ -200,7 +204,7 @@ int TLMClientComm::ConnectManager(string& callname, int portnr) {
         return(-1);
     }
 
-    TLMErrorLog::Log(string("TLM: connect to :") + callname + ":" + TLMErrorLog::ToStdStr(portnr));
+    TLMErrorLog::Info(string("TLM: connect to :") + callname + ":" + TLMErrorLog::ToStdStr(portnr));
 
     memset(&sa, 0 , sizeof(sa));
     memcpy((char *)&sa.sin_addr, hp->h_addr, hp->h_length);
@@ -214,14 +218,14 @@ int TLMClientComm::ConnectManager(string& callname, int portnr) {
         TLMErrorLog::FatalError("TLM: Can not contact TLM manager");
     }
     else {
-        TLMErrorLog::Log("TLM manager host found, trying to connect...");
+        TLMErrorLog::Info("TLM manager host found, trying to connect...");
     }
 
     count = 0;
 
     while(connect(s, (struct sockaddr *) &sa, sizeof(sa)) < 0) {
         count++;
-        TLMErrorLog::Log(string("Connection attempt ") +  TLMErrorLog::ToStdStr(count) + " failed");
+        TLMErrorLog::Info(string("Connection attempt ") +  TLMErrorLog::ToStdStr(count) + " failed");
         if(count>=10) {
 #ifndef WIN32
             close(s);
@@ -232,13 +236,13 @@ int TLMClientComm::ConnectManager(string& callname, int portnr) {
             TLMErrorLog::FatalError("TLM: Can not connect to manager");
         }
 
-        TLMErrorLog::Log("Pausing...");
+        TLMErrorLog::Info("Pausing...");
 #ifndef WIN32
         usleep(count * count * 1000000); // micro seconds
 #else
         Sleep(count * count * 1000); // milli seconds
 #endif        
-        TLMErrorLog::Log("Trying again...");
+        TLMErrorLog::Info("Trying again...");
     }
 
 
@@ -261,10 +265,10 @@ void TLMClientComm::CreateInterfaceRegMessage(std::string& Name, int dimensions,
     std::stringstream ss;
     ss << Name << ":" << dimensions << ":" << causality << ":" << domain;
     std::string specification = ss.str();
-    TLMErrorLog::Log("Client sends nameAndType: "+specification);
+    TLMErrorLog::Info("Client sends nameAndType: "+specification);
 #else
     std::string specification = Name;
-    TLMErrorLog::Log("Client sends name: "+specification);
+    TLMErrorLog::Info("Client sends name: "+specification);
 #endif
 
     mess.Header.DataSize = specification.length();
@@ -276,7 +280,7 @@ void TLMClientComm::CreateParameterRegMessage(std::string &Name, std::string &Va
     mess.Header.MessageType = TLMMessageTypeConst::TLM_REG_PARAMETER;
 
     std::string nameAndValue = Name+":"+Value;
-    TLMErrorLog::Log("Client sends nameAndValue: "+nameAndValue);
+    TLMErrorLog::Info("Client sends nameAndValue: "+nameAndValue);
     mess.Header.DataSize = nameAndValue.length();
     mess.Data.resize(nameAndValue.length());
     memcpy(&mess.Data[0], nameAndValue.c_str(), nameAndValue.length());
@@ -303,9 +307,9 @@ void TLMClientComm::UnpackRegInterfaceMessage(TLMMessage& mess, TLMConnectionPar
 }
 
 void TLMClientComm::UnpackRegParameterMessage(TLMMessage &mess, std::string &Value) {
-    TLMErrorLog::Log("Entering UnpackRegParameterMessage()");
+    TLMErrorLog::Info("Entering UnpackRegParameterMessage()");
     if(mess.Header.DataSize == 0) return; // non connected interface
-    TLMErrorLog::Log("DataSize is ok!");
+    TLMErrorLog::Info("DataSize is ok!");
     char ValueBuf[100];
     if(mess.Header.DataSize != sizeof(ValueBuf)) {
         TLMErrorLog::FatalError("Wrong size of message in parameter registration : DataSize "+
@@ -325,5 +329,5 @@ void TLMClientComm::UnpackRegParameterMessage(TLMMessage &mess, std::string &Val
     memcpy(&ValueBuf, & mess.Data[0], mess.Header.DataSize);
     Value = std::string(ValueBuf);
 
-    TLMErrorLog::Log("Parameter received value: "+Value);
+    TLMErrorLog::Info("Parameter received value: "+Value);
 }

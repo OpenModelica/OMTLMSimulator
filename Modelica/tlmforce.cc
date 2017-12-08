@@ -73,7 +73,7 @@ void initialize_TLM()
             TLMErrorLog::SetOutStream(debugOutFile);
         }
 
-        TLMErrorLog::SetDebugOut(true);
+        TLMErrorLog::SetLogLevel(TLMLogLevel::Debug);
     }
 
     if(!tlmConfigFile.good()) {
@@ -127,7 +127,12 @@ void set_debug_mode(int debugFlgIn)
         cerr << "Debug off" << endl;
     }
 
-    TLMErrorLog::SetDebugOut(debugFlg);
+    if(debugFlg) {
+        TLMErrorLog::SetLogLevel(TLMLogLevel::Debug);
+    }
+    else {
+        TLMErrorLog::SetLogLevel(TLMLogLevel::Warning);
+    }
 }
 
 double get_tlm_delay()

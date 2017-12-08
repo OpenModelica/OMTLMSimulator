@@ -81,7 +81,7 @@ TLM_InterfaceReg::TLM_InterfaceReg(bool debugFlg):
         maxStep = 1.0e-10;
     }
 
-    TLMErrorLog::Log( "Try to initialize Simulink plugin." );
+    TLMErrorLog::Info( "Try to initialize Simulink plugin." );
 
     if(! Plugin->Init( model,
 		       timeStart,
@@ -92,14 +92,14 @@ TLM_InterfaceReg::TLM_InterfaceReg(bool debugFlg):
 	exit(1);
     }
 
-    TLMErrorLog::Log( "TLM Simulink plugin was initialized" );   
+    TLMErrorLog::Info( "TLM Simulink plugin was initialized" );   
 }
 
 TLM_InterfaceReg::~TLM_InterfaceReg() {
 }
 
 void TLM_InterfaceReg::SetDebugOut(){
-    Plugin->SetDebugOut(true);
+    TLMErrorLog::SetLogLevel(TLMLogLevel::Debug);
 }
 
 TLM_InterfaceReg* TLM_InterfaceReg::GetInstance(bool debugFlg)
@@ -113,7 +113,7 @@ TLM_InterfaceReg* TLM_InterfaceReg::GetInstance(bool debugFlg)
 
 void TLM_InterfaceReg::RegisterInterface(std::string ifID, int dimensions, std::string causality, std::string domain) {
     // No way to get the real marker name from the solver - using "M<ID>"
-    TLMErrorLog::Log( "Trying to register interface " + ifID );
+    TLMErrorLog::Info( "Trying to register interface " + ifID );
 
     if( InterfaceIDmap.count(ifID) > 0 ){
 	TLMErrorLog::FatalError( "Try to register same interface twice " + ifID );
@@ -268,7 +268,7 @@ static void mdlInitializeSampleTimes(SimStruct *S)
     TLM_InterfaceReg::GetInstance(false)->GetSimParameters(sTime, eTime, timeStep);
     // true or false in GetInstance(...) enables/disables debug output
 
-    TLMErrorLog::Log("Set sample time to " + ToStr(timeStep));
+    TLMErrorLog::Info("Set sample time to " + ToStr(timeStep));
 
     /* Set TLM delay here! */
     ssSetSampleTime(S, 0, CONTINUOUS_SAMPLE_TIME);
@@ -361,10 +361,10 @@ static void mdlOutputs(SimStruct *S, int_T tid)
                                                                force);
         
         
-        TLMErrorLog::Log("Got force for: " + std::string(name) );
-        TLMErrorLog::Log("time: " + ToStr(time) );
-        TLMErrorLog::Log("F: " + ToStr(force[0]) + " " +  ToStr(force[1]) + " " + ToStr(force[2]) );
-        TLMErrorLog::Log("M: " + ToStr(force[3]) + " " +  ToStr(force[4]) + " " + ToStr(force[5]) );
+        TLMErrorLog::Info("Got force for: " + std::string(name) );
+        TLMErrorLog::Info("time: " + ToStr(time) );
+        TLMErrorLog::Info("F: " + ToStr(force[0]) + " " +  ToStr(force[1]) + " " + ToStr(force[2]) );
+        TLMErrorLog::Info("M: " + ToStr(force[3]) + " " +  ToStr(force[4]) + " " + ToStr(force[5]) );
         
 #ifdef DEBUGFLG
         if( isnan(force[0]) || isnan(force[1]) || isnan(force[2]) ){
@@ -376,8 +376,8 @@ static void mdlOutputs(SimStruct *S, int_T tid)
         /* Get Position and Orientation */
         TLM_InterfaceReg::GetInstance()->GetPlugin()->GetTimeData3D(ifID, time, CurTimeData);        
 
-        TLMErrorLog::Log("Got position for: " + std::string(name) );
-        TLMErrorLog::Log("R: " + ToStr(CurTimeData.Position[0]) + " " +  ToStr(CurTimeData.Position[1]) + " " + ToStr(CurTimeData.Position[2]) );
+        TLMErrorLog::Info("Got position for: " + std::string(name) );
+        TLMErrorLog::Info("R: " + ToStr(CurTimeData.Position[0]) + " " +  ToStr(CurTimeData.Position[1]) + " " + ToStr(CurTimeData.Position[2]) );
         
     }
     else {
@@ -446,14 +446,14 @@ static void mdlOutputs(SimStruct *S, int_T tid)
           int ifID = TLM_InterfaceReg::GetInstance()->GetInterfaceID(name);
           
           if( ifID >= 0 ){          
-              TLMErrorLog::Log("Call SetMotion for: " + std::string(name) );
-              TLMErrorLog::Log("time: " + ToStr(time) );
-              TLMErrorLog::Log("R: " + ToStr(R[0]) + " " +  ToStr(R[1]) + " " + ToStr(R[2]) );
-              //TLMErrorLog::Log("A0: " + ToStr(A[0]) + " " +  ToStr(A[1]) + " " + ToStr(A[2]) );
-              //TLMErrorLog::Log("A1: " + ToStr(A[3]) + " " +  ToStr(A[4]) + " " + ToStr(A[5]) );
-              //TLMErrorLog::Log("A2: " + ToStr(A[6]) + " " +  ToStr(A[7]) + " " + ToStr(A[8]) );
-              TLMErrorLog::Log("vR: " + ToStr(vR[0]) + " " +  ToStr(vR[1]) + " " + ToStr(vR[2]) );
-              //TLMErrorLog::Log("Omega: " + ToStr(Omega[0]) + " " +  ToStr(Omega[1]) + " " + ToStr(Omega[2]) );
+              TLMErrorLog::Info("Call SetMotion for: " + std::string(name) );
+              TLMErrorLog::Info("time: " + ToStr(time) );
+              TLMErrorLog::Info("R: " + ToStr(R[0]) + " " +  ToStr(R[1]) + " " + ToStr(R[2]) );
+              //TLMErrorLog::Info("A0: " + ToStr(A[0]) + " " +  ToStr(A[1]) + " " + ToStr(A[2]) );
+              //TLMErrorLog::Info("A1: " + ToStr(A[3]) + " " +  ToStr(A[4]) + " " + ToStr(A[5]) );
+              //TLMErrorLog::Info("A2: " + ToStr(A[6]) + " " +  ToStr(A[7]) + " " + ToStr(A[8]) );
+              TLMErrorLog::Info("vR: " + ToStr(vR[0]) + " " +  ToStr(vR[1]) + " " + ToStr(vR[2]) );
+              //TLMErrorLog::Info("Omega: " + ToStr(Omega[0]) + " " +  ToStr(Omega[1]) + " " + ToStr(Omega[2]) );
               
               TLM_InterfaceReg::GetInstance()->GetPlugin()->SetMotion3D(ifID,          // Send data to the Plugin
                                                                       time,

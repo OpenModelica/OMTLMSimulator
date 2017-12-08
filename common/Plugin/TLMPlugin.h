@@ -37,16 +37,6 @@ public:
     //! Destructor. Close TCP/IP connection and release memory.
     virtual ~TLMPlugin() {}
 
-    //! SetDebugOut function enables/disables debug information
-    //! output from TLM plugin.
-    //! Input: if Enable is true - output is on, othewise - off.
-    virtual void SetDebugOut(bool Enable) = 0;
-
-    //! SetDebugOut function enables/disables warning information
-    //! output from TLM plugin.
-    //! Input: if Enable is true - output is on, othewise - off.
-    virtual void SetWarningOut(bool Enable) = 0;
-
     //! Init method. Should be called after the default constructor. It will
     //! initialize the object and connect to TLMManager. Will return true
     //! on success, false otherwize. \note that the method can be called

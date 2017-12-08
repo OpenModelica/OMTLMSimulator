@@ -99,7 +99,7 @@ public:
 #else
                 Sleep(10); // milli seconds
 #endif
-                TLMErrorLog::Log("Waiting for monitor to connect");
+                TLMErrorLog::Info("Waiting for monitor to connect");
             }
         }
 
@@ -150,7 +150,7 @@ public:
 #else
                 Sleep(10); // milli seconds
 #endif
-                TLMErrorLog::Log("Waiting for monitor to connect");
+                TLMErrorLog::Info("Waiting for monitor to connect");
             }
         }
 

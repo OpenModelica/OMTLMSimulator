@@ -16,9 +16,12 @@ void MonitoringPluginImplementer::ReceiveTimeData(TLMInterface* reqIfc, double t
     while(time > reqIfc->GetNextRecvTime()) { // while data is needed
 
         // Receive data untill there is info for this interface
-        string mess("Interface ");
-        TLMErrorLog::Log(mess + reqIfc->GetName() +
-                         " needs data for time= " + TLMErrorLog::ToStdStr(time));
+        if(TLMErrorLog::GetLogLevel() >= TLMLogLevel::Info) {
+            TLMErrorLog::Info("Interface " +
+                              reqIfc->GetName() +
+                              " needs data for time= " +
+                              TLMErrorLog::ToStdStr(time));
+        }
 
         TLMInterface* ifc = NULL;
 
@@ -39,8 +42,8 @@ void MonitoringPluginImplementer::ReceiveTimeData(TLMInterface* reqIfc, double t
             ifc->UnpackTimeData(Message);
 
             // Received data
-            if(TLMErrorLog::IsNormalErrorLogOn()) {
-              TLMErrorLog::Log(string("Interface ") + ifc->GetName() + " got data until time= "
+            if(TLMErrorLog::GetLogLevel() >= TLMLogLevel::Info) {
+              TLMErrorLog::Info(string("Interface ") + ifc->GetName() + " got data until time= "
                                + TLMErrorLog::ToStdStr(ifc->GetNextRecvTime()));
             }
 
@@ -48,7 +51,7 @@ void MonitoringPluginImplementer::ReceiveTimeData(TLMInterface* reqIfc, double t
 
         if(ifc == NULL) break; // receive error - breaking
 
-        TLMErrorLog::Log(string("Got data until time=") + TLMErrorLog::ToStdStr(ifc->GetNextRecvTime()));
+        TLMErrorLog::Info(string("Got data until time=") + TLMErrorLog::ToStdStr(ifc->GetNextRecvTime()));
     }
 }
 

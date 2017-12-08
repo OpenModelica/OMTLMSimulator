@@ -84,7 +84,10 @@ namespace hopsan {
                     TLMErrorLog::SetOutStream(mDebugOutFile);
                 }
 
-                TLMErrorLog::SetDebugOut(true);
+                TLMErrorLog::SetLogLevel(TLMLogLevel::Debug);
+            }
+            else {
+                TLMErrorLog::SetLogLevel(TLMLogLevel::Warning);
             }
 
             //Register parameters
@@ -95,11 +98,11 @@ namespace hopsan {
             {
                 HString parValue;
                 mpSystemParent->getParameterValue(parNames[i],parValue);
-                TLMErrorLog::Log("Registers parameter: "+h2s(parNames[i]));
+                TLMErrorLog::Info("Registers parameter: "+h2s(parNames[i]));
                 mParIds.push_back(mpPlugin->RegisterComponentParameter(h2s(parNames[i]),h2s(parValue)));
                 std::stringstream ss;
                 ss << "Hopsan got parameter ID: " << mParIds[mParIds.size()-1];
-                TLMErrorLog::Log(ss.str());
+                TLMErrorLog::Info(ss.str());
             }
 
             //Receive parameter values
@@ -108,11 +111,11 @@ namespace hopsan {
                 std::string name, value;
                 std::stringstream ss;
                 ss << "Requesting value for parameter " << mParIds[i];
-                TLMErrorLog::Log(ss.str());
+                TLMErrorLog::Info(ss.str());
                 mpPlugin->GetParameterValue(mParIds[i], name, value);
                 std::stringstream ss2;
                 ss2 << "Got name \"" << name << "\" and value \"" << value << "\"";
-                TLMErrorLog::Log(ss2.str());
+                TLMErrorLog::Info(ss2.str());
                 mpSystemParent->setParameterValue(HString(name.c_str()),HString(value.c_str()));
             }
 

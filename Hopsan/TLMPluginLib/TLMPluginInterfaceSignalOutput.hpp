@@ -55,6 +55,7 @@ namespace hopsan {
         void initialize()
         {
             bool foundHandler = false;
+
             for(size_t i=0; i<mpSystemParent->getSubComponents().size(); ++i)
             {
                 if(mpSystemParent->getSubComponents()[i]->getTypeName() == "TLMPluginHandler")

@@ -175,7 +175,7 @@ CompositeModel::~CompositeModel() {
 
 bool CompositeModel::CheckTheModel()
 {
-    TLMErrorLog::Log("Checking model...");
+    TLMErrorLog::Info("Checking model...");
 
     bool abort=false;
 
@@ -283,7 +283,7 @@ int CompositeModel::RegisterTLMInterfaceProxy(const int ComponentID, string& Nam
     TLMInterfaceProxy* ifc =
             new TLMInterfaceProxy(ComponentID, Interfaces.size(), Name, Dimensions, Causality, Domain);
 
-    TLMErrorLog::Log("Registering interface proxy."
+    TLMErrorLog::Info("Registering interface proxy."
                      " Id = "+TLMErrorLog::ToStdStr(int(Interfaces.size()))+
                      ", ComponentId = "+TLMErrorLog::ToStdStr(ComponentID)+
                      ", Name = " + Name+
@@ -298,7 +298,7 @@ int CompositeModel::RegisterTLMInterfaceProxy(const int ComponentID, string& Nam
 int CompositeModel::RegisterComponentParameterProxy(const int ComponentID, string& Name, string& DefaultValue) {
     ComponentParameterProxy* par = new ComponentParameterProxy(ComponentID, ComponentParameters.size(), Name, DefaultValue);
 
-    TLMErrorLog::Log("Registering parameter proxy."
+    TLMErrorLog::Info("Registering parameter proxy."
                      " Id = " + TLMErrorLog::ToStdStr(int(ComponentParameters.size()))+
                      ", ComponentId = "+TLMErrorLog::ToStdStr(ComponentID)+
                      ", Name = " + Name+
@@ -347,23 +347,23 @@ int CompositeModel::RegisterTLMConnection(int ifc1, int ifc2, TLMConnectionParam
 // Start components
 void CompositeModel::StartComponents() {
     for(unsigned i = 0; i < Components.size(); i++) {
-        TLMErrorLog::Log(string("-----  Starting External Tool  ----- "));
-        TLMErrorLog::Log("Name: "+Components[i]->GetName());
+        TLMErrorLog::Info(string("-----  Starting External Tool  ----- "));
+        TLMErrorLog::Info("Name: "+Components[i]->GetName());
         double maxStep = 1e150;
         for(unsigned j = 0; j < Interfaces.size(); j++) {
             // check that the interface belongs to this component
             if((unsigned)Interfaces[j]->GetComponentID() != i) {
-                TLMErrorLog::Log("Wrong component ID.");
+                TLMErrorLog::Info("Wrong component ID.");
                 continue;
             }
             // check that interface is connected
             int conID = Interfaces[j]->GetConnectionID();
             if(conID < 0) {
-                TLMErrorLog::Log("Interface not connected.");
+                TLMErrorLog::Info("Interface not connected.");
                 continue;
             }
 
-            TLMErrorLog::Log("Found interface: "+Interfaces[j]->GetName());
+            TLMErrorLog::Info("Found interface: "+Interfaces[j]->GetName());
 
             TLMConnection& conn = GetTLMConnection(conID);
 
@@ -371,7 +371,7 @@ void CompositeModel::StartComponents() {
                 maxStep = conn.GetParams().Delay;
             }
 
-            TLMErrorLog::Log("Connection delay = "+TLMErrorLog::ToStdStr(conn.GetParams().Delay));
+            TLMErrorLog::Info("Connection delay = "+TLMErrorLog::ToStdStr(conn.GetParams().Delay));
         }
         if(1e150 == maxStep) maxStep = 0;
         if(maxStep <= 0) {
@@ -383,7 +383,7 @@ void CompositeModel::StartComponents() {
         if(!Components[i]->GetSolverMode()) maxStep /= 2;
 
 
-        TLMErrorLog::Log(string("Choosing the max time step for ")+
+        TLMErrorLog::Info(string("Choosing the max time step for ")+
                          Components[i]->GetName() + " " +
                          TLMErrorLog::ToStdStr(maxStep));
 
@@ -394,20 +394,20 @@ void CompositeModel::StartComponents() {
 bool CompositeModel::CheckProxyComm() {
     for(ComponentsVector::iterator it = Components.begin(); it!=Components.end(); ++it) {
         if(((*it)->GetSocketHandle() < 0) || !(*it)->GetReadyToSim()) {
-            TLMErrorLog::Log(string("Component ") + (*it)->GetName() + " is not ready for simulation");
+            TLMErrorLog::Info(string("Component ") + (*it)->GetName() + " is not ready for simulation");
             return false;
         }
     }
     for(TLMInterfacesVector::iterator it = Interfaces.begin();
         it != Interfaces.end(); it++) {
         if(!(*it)->GetConnected()) {
-            TLMErrorLog::Log("TLM interface " + GetTLMComponentProxy((*it)->GetComponentID()).GetName() + '.'
+            TLMErrorLog::Info("TLM interface " + GetTLMComponentProxy((*it)->GetComponentID()).GetName() + '.'
                              + (*it)->GetName() + " is not registered by the component.");
             return false;
         }
     }
     
-    TLMErrorLog::Log("Meta model checking completed successfully");
+    TLMErrorLog::Info("Meta model checking completed successfully");
 
     return true;
 }
@@ -462,7 +462,7 @@ std::string GetLastErrorStdStr() {
 #endif
 // Start the component executable
 void TLMComponentProxy::StartComponent(SimulationParams& SimParams, double MaxStep) {
-    TLMErrorLog::Log(string("Starting ") + StartCommand);
+    TLMErrorLog::Info(string("Starting ") + StartCommand);
 
     // In the special case where start-command is explicitely set to "none"
     // we skip startup. This is useful for integrated simulation/tlm-manager.
@@ -494,13 +494,13 @@ void TLMComponentProxy::StartComponent(SimulationParams& SimParams, double MaxSt
         command << " " << strMaxStep.c_str();
         command << " " << serverName.c_str();
         command << " " << ModelName.c_str();
-        TLMErrorLog::Log(string("Starting ") + command.str());
+        TLMErrorLog::Info(string("Starting ") + command.str());
         if(!CreateProcessA(NULL, (char *)command.str().c_str(), NULL, NULL, FALSE, 0, NULL, NULL, &si, &pi)) {
             TLMErrorLog::FatalError("StartComponent: Failed to start the component " + Name + " with command " + StartCommand + "."
                                                                                                                                 "Error is " + GetLastErrorStdStr());
             exit(-1);
         } else {
-            TLMErrorLog::Log(string("CreateProcessA Success"));
+            TLMErrorLog::Info(string("CreateProcessA Success"));
         }
 
         // Close process and thread handles.
@@ -559,7 +559,7 @@ void TLMComponentProxy::StartComponent(SimulationParams& SimParams, double MaxSt
 #endif    
     }
     else {
-        TLMErrorLog::Log("Start command \"none\" nothing started!");
+        TLMErrorLog::Info("Start command \"none\" nothing started!");
     }
 }
 

@@ -31,7 +31,7 @@ void TLMCommUtil::SendMessage(TLMMessage& mess) {
     int DataSize = mess.Header.DataSize;
 
     if(doDetailedLogging) {
-        TLMErrorLog::Log("SendMessage: wants to send "+
+        TLMErrorLog::Info("SendMessage: wants to send "+
                          Int2Str(sizeof(TLMMessageHeader))+"+"+
                          Int2Str(DataSize)+ " bytes ");
     }
@@ -61,7 +61,7 @@ void TLMCommUtil::SendMessage(TLMMessage& mess) {
 #endif
 
     if(doDetailedLogging) {
-        TLMErrorLog::Log("SendMessage:send() sent "+Int2Str(sendBytes)+ " bytes ");
+        TLMErrorLog::Info("SendMessage:send() sent "+Int2Str(sendBytes)+ " bytes ");
     }
 
     if(DataSize > 0) {
@@ -78,7 +78,7 @@ void TLMCommUtil::SendMessage(TLMMessage& mess) {
 #endif
 
         if(doDetailedLogging) {
-            TLMErrorLog::Log("SendMessage:send()(part 2) sent "+Int2Str(sendBytes)+ " bytes ");
+            TLMErrorLog::Info("SendMessage:send()(part 2) sent "+Int2Str(sendBytes)+ " bytes ");
         }
 
     }
@@ -118,14 +118,14 @@ bool TLMCommUtil::ReceiveMessage(TLMMessage& mess) {
         int errcode=WSAGetLastError();
         if(errcode==WSAECONNRESET)
             // This is called by normal termination of BEAST
-            TLMErrorLog::Log("SOCKET_ERROR received, error code ="+Int2Str(errcode));
+            TLMErrorLog::Info("SOCKET_ERROR received, error code ="+Int2Str(errcode));
         else
             TLMErrorLog::Warning("SOCKET_ERROR received, error code ="+Int2Str(errcode));
 #endif
         return false;
     }
     if(doDetailedLogging) {
-        TLMErrorLog::Log("ReceiveMessage:recv() returned "+Int2Str(bcount)+ " bytes ");
+        TLMErrorLog::Info("ReceiveMessage:recv() returned "+Int2Str(bcount)+ " bytes ");
     }
 
     if(strncmp(mess.Header.Signature, TLMMessageHeader::TLMSignature, TLMMessageHeader::TLM_SIGNATURE_LENGTH) != 0) {
@@ -173,7 +173,7 @@ bool TLMCommUtil::ReceiveMessage(TLMMessage& mess) {
             return false;
         }
         if(doDetailedLogging) {
-            TLMErrorLog::Log("ReceiveMessage:recv()(part 2) returned "+Int2Str(bcount)+ " bytes ");
+            TLMErrorLog::Info("ReceiveMessage:recv()(part 2) returned "+Int2Str(bcount)+ " bytes ");
         }
         if(bcount != mess.Header.DataSize) {
             TLMErrorLog::FatalError("Error receiving message data");
