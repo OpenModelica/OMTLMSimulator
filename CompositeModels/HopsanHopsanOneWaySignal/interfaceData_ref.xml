@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ModelData>
+<Interfaces>
+	<Interface model="right" Name="in" Dimensions="1" Causality="Input" Domain="Signal"
+		Position="0,0,0"
+		Angle321="0,0,0"/>
+	<Interface model="right" Name="tlm" Dimensions="1" Causality="Bidirectional" Domain="Mechanical"
+		Position="0,0,0"
+		Angle321="0,0,0"/>
+</Interfaces>
+<Parameters>
+</Parameters>
+</ModelData>

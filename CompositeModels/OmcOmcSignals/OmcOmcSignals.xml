@@ -18,16 +18,16 @@
   </SubModels>
   <!-- List of TLM connections -->
   <Connections>
-    <Connection Delay="1e-3" To="InputOutput.tlm1" From="OutputInput.tlm1">
+    <Connection Delay="1e-2" To="InputOutput.tlm1" From="OutputInput.tlm1">
       <Annotation Points="{{-46,14},{32,14},{32,-14},{16,-14},{16,-14}}"/>
     </Connection>
-    <Connection Delay="1e-3" To="OutputInput.tlm2" From="InputOutput.tlm2">
+    <Connection Delay="1e-2" To="OutputInput.tlm2" From="InputOutput.tlm2">
       <Annotation Points="{{16,-10},{28,-10},{28,10},{-46,10}}"/>
     </Connection>
-    <Connection Delay="2e-3" To="InputOutput.tlm3" From="OutputInput.tlm3">
+    <Connection Delay="2e-2" To="InputOutput.tlm3" From="OutputInput.tlm3">
       <Annotation Points="{{-46,6},{24,6},{24,-18},{16,-18}}"/>
     </Connection>
   </Connections>
   <!-- Parameters for the simulation -->
-  <SimulationParams StopTime="10" StartTime="0"/>
+  <SimulationParams StopTime="2" StartTime="0"/>
 </Model>

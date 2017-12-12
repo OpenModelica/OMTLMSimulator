@@ -1,0 +1,27 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!-- The root node is the composite-model -->
+<Model Name="FmuHopsanHydraulic">
+  <!-- List of connected sub-models -->
+  <SubModels>
+    <SubModel Position="0,0,0" Name="psource" ModelFile="psource.fmu" StartCommand="StartTLMFmiWrapper" Angle321="0,0,0">
+      <Annotation Extent="{-10,-10,10,10}" Visible="true" Origin="{-46,-8}" Rotation="0"/>
+      <InterfacePoint Position="0,0,0" Name="tlm" Domain="Hydraulic" Causality="Bidirectional" Dimensions="1" Angle321="0,0,0"/>
+      <Parameter Name="K" Value="1e-10"/>
+      <Parameter Name="f" Value="1.5"/>
+      <Parameter Name="p_0" Value="1.5e+07"/>
+      <Parameter Name="p_Y" Value="1e+07"/>
+    </SubModel>
+    <SubModel Position="0,0,0" Name="prv" ModelFile="prv.hmf" StartCommand="StartTLMHopsan" Angle321="0,0,0">
+      <Annotation Extent="{-10,-10,10,10}" Visible="true" Origin="{10,-18}" Rotation="0"/>
+      <InterfacePoint Position="0,0,0" Name="tlm" Domain="Hydraulic" Causality="Bidirectional" Dimensions="1" Angle321="0,0,0"/>
+    </SubModel>
+  </SubModels>
+  <!-- List of TLM connections -->
+  <Connections>
+    <Connection From="psource.tlm" To="prv.tlm" Delay="1e-4" alpha="0.2" Zf="100000000">
+      <Annotation Points="{{-34,0},{32,0},{32,-10},{22,-10},{22,-10}}"/>
+    </Connection>
+  </Connections>
+  <!-- Parameters for the simulation -->
+  <SimulationParams StartTime="0" StopTime="1"/>
+</Model>
