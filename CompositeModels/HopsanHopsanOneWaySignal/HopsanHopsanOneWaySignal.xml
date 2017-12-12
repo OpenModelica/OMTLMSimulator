@@ -1,0 +1,19 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<Model Name="HopsanHopsanOneWaySignal">
+  <SubModels>
+    <SubModel ModelFile="left.hmf" StartCommand="StartTLMHopsan" Name="left" ExactStep="0" Position="0,0,0" Angle321="0,0,0">
+      <Annotation Rotation="0" Visible="true" Origin="{8,14}" Extent="{-10,-10,10,10}"/>
+      <InterfacePoint Name="out" Causality="Output" Domain="Signal" Dimensions="1" Position="1,0,0" Angle321="0,0,0"/>
+    </SubModel>
+    <SubModel ModelFile="right.hmf" StartCommand="StartTLMHopsan" Name="right" ExactStep="0" Position="0,0,0" Angle321="0,0,0">
+      <Annotation Rotation="0" Visible="true" Origin="{8,-16}" Extent="{-10,-10,10,10}"/>
+      <InterfacePoint Name="in" Causality="Input" Domain="Signal" Dimensions="1" Position="0,0,0" Angle321="0,0,0"/>
+    </SubModel>
+  </SubModels>
+  <Connections>
+    <Connection Delay="0.001" To="right.in" From="left.out">
+      <Annotation Points="{{19,22},{19,23},{37,23},{37,-7.5},{19,-7.5}}"/>
+    </Connection>
+  </Connections>
+  <SimulationParams StopTime="1" StartTime="0"/>
+</Model>

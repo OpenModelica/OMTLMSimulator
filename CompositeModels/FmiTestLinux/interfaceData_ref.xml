@@ -1,0 +1,19 @@
+	<Interface Angle321="0,0,0" Causality="Input" Dimensions="1" Domain="Signal" Name="x1" Position="0,0,0" model="cs_adder1fmu1"></Interface>
+	<Interface Angle321="0,0,0" Causality="Input" Dimensions="1" Domain="Signal" Name="x2" Position="0,0,0" model="cs_adder1fmu1"></Interface>
+	<Interface Angle321="0,0,0" Causality="Input" Dimensions="1" Domain="Signal" Name="y" Position="0,0,0" model="gainfmu1"></Interface>
+	<Interface Angle321="0,0,0" Causality="Output" Dimensions="1" Domain="Signal" Name="u" Position="1,0,0" model="gainfmu1"></Interface>
+	<Interface Angle321="0,0,0" Causality="Output" Dimensions="1" Domain="Signal" Name="y" Position="0,0,0" model="cs_source1fmu1"></Interface>
+	<Interface Angle321="0,0,0" Causality="Output" Dimensions="1" Domain="Signal" Name="y" Position="0,0,0" model="cs_source1fmu2"></Interface>
+	<Interface Angle321="0,0,0" Causality="Output" Dimensions="1" Domain="Signal" Name="y" Position="1,0,0" model="cs_adder1fmu1"></Interface>
+</Interfaces>
+<Interfaces>
+</ModelData>
+<ModelData>
+	<Parameter DefaultValue="0.001" Name="Ki" model="gainfmu1"></Parameter>
+	<Parameter DefaultValue="0.01" Name="Kp" model="gainfmu1"></Parameter>
+	<Parameter DefaultValue="1" Name="A" model="cs_source1fmu1"></Parameter>
+	<Parameter DefaultValue="1" Name="A" model="cs_source1fmu2"></Parameter>
+	<Parameter DefaultValue="1" Name="omega" model="cs_source1fmu1"></Parameter>
+	<Parameter DefaultValue="1" Name="omega" model="cs_source1fmu2"></Parameter>
+</Parameters>
+<Parameters>

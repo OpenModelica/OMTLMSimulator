@@ -1,0 +1,18 @@
+	<Interface Angle321="0,0,0" Causality="Input" Dimensions="1" Domain="Signal" Name="in1" Position="0,0,0" model="MultiplyAndAdd"></Interface>
+	<Interface Angle321="0,0,0" Causality="Input" Dimensions="1" Domain="Signal" Name="in1" Position="0,0,0" model="Sink"></Interface>
+	<Interface Angle321="0,0,0" Causality="Input" Dimensions="1" Domain="Signal" Name="in2" Position="0,0,0" model="MultiplyAndAdd"></Interface>
+	<Interface Angle321="0,0,0" Causality="Input" Dimensions="1" Domain="Signal" Name="in2" Position="0,0,0" model="Sink"></Interface>
+	<Interface Angle321="0,0,0" Causality="Input" Dimensions="1" Domain="Signal" Name="in3" Position="0,0,0" model="MultiplyAndAdd"></Interface>
+	<Interface Angle321="0,0,0" Causality="Input" Dimensions="1" Domain="Signal" Name="in" Position="0,0,0" model="Gain"></Interface>
+	<Interface Angle321="0,0,0" Causality="Output" Dimensions="1" Domain="Signal" Name="out1" Position="1,0,0" model="MultiplyAndAdd"></Interface>
+	<Interface Angle321="0,0,0" Causality="Output" Dimensions="1" Domain="Signal" Name="out1" Position="1,0,0" model="SineAndStep"></Interface>
+	<Interface Angle321="0,0,0" Causality="Output" Dimensions="1" Domain="Signal" Name="out2" Position="1,0,0" model="MultiplyAndAdd"></Interface>
+	<Interface Angle321="0,0,0" Causality="Output" Dimensions="1" Domain="Signal" Name="out2" Position="1,0,0" model="SineAndStep"></Interface>
+	<Interface Angle321="0,0,0" Causality="Output" Dimensions="1" Domain="Signal" Name="out" Position="1,0,0" model="Gain"></Interface>
+	<Interface Angle321="0,0,0" Causality="Output" Dimensions="1" Domain="Signal" Name="out" Position="1,0,0" model="Ramp"></Interface>
+</Interfaces>
+<Interfaces>
+</ModelData>
+<ModelData>
+</Parameters>
+<Parameters>
