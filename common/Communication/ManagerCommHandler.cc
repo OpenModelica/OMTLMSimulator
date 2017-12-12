@@ -501,7 +501,7 @@ void ManagerCommHandler::ReaderThreadRun() {
 
     int nClosedSock = 0;
     std::vector<int> closedSockets;
-    while(nClosedSock != TheModel.GetComponentsNum()) {
+    while(nClosedSock < TheModel.GetComponentsNum()) {
         Comm.SelectReadSocket(); // wait for a change
 
         for(int iSock =  TheModel.GetComponentsNum() - 1; iSock >= 0; --iSock) {
