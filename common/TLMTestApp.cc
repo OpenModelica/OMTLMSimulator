@@ -46,7 +46,6 @@ int main(int argn, char* argv[]) {
     ServerName = argv[7];
 
     TLMPlugin* TlmForce  = TLMPlugin::CreateInstance();
-    TlmForce->SetDebugOut(true);
 
     if(!TlmForce->Init(Model, Time, TimeEnd, MaxStep, ServerName)) {
         cerr << "Failed to init TLM plugin" << endl;

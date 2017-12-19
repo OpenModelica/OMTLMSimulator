@@ -83,7 +83,7 @@ TLM_InterfaceReg::TLM_InterfaceReg(bool debugFlg):
         maxStep = 1.0e-10;
     }
 
-    TLMErrorLog::Log( "Try to initialize Simulink plugin." );
+    TLMErrorLog::Info( "Try to initialize Simulink plugin." );
 
     if(! Plugin->Init( model,
 		       timeStart,
@@ -94,14 +94,14 @@ TLM_InterfaceReg::TLM_InterfaceReg(bool debugFlg):
 	exit(1);
     }
 
-    TLMErrorLog::Log( "TLM Simulink plugin was initialized" );   
+    TLMErrorLog::Info( "TLM Simulink plugin was initialized" );   
 }
 
 TLM_InterfaceReg::~TLM_InterfaceReg() {
 }
 
 void TLM_InterfaceReg::SetDebugOut(){
-    Plugin->SetDebugOut(true);
+    TLMErrorLog::SetLogLevel(TLMLogLevel::Debug);
 }
 
 TLM_InterfaceReg* TLM_InterfaceReg::GetInstance(bool debugFlg)
@@ -115,7 +115,7 @@ TLM_InterfaceReg* TLM_InterfaceReg::GetInstance(bool debugFlg)
 
 void TLM_InterfaceReg::RegisterInterface(std::string ifID, std::string type) {
     // No way to get the real marker name from the solver - using "M<ID>"
-    TLMErrorLog::Log( "Trying to register interface " + ifID );
+    TLMErrorLog::Info( "Trying to register interface " + ifID );
 
     if( InterfaceIDmap.count(ifID) > 0 ){
 	TLMErrorLog::FatalError( "Try to register same interface twice " + ifID );
@@ -256,7 +256,7 @@ static void mdlInitializeSampleTimes(SimStruct *S)
     TLM_InterfaceReg::GetInstance(true)->GetSimParameters(sTime, eTime, timeStep);
     // true or false in GetInstance(...) enables/disables debug output
 
-    TLMErrorLog::Log("Set sample time to " + ToStr(timeStep));
+    TLMErrorLog::Info("Set sample time to " + ToStr(timeStep));
 
     /* Set TLM delay here! */
     ssSetSampleTime(S, 0, CONTINUOUS_SAMPLE_TIME);
@@ -330,9 +330,9 @@ static void mdlOutputs(SimStruct *S, int_T tid)
                                                                      time,
                                                                      *u);
 
-        TLMErrorLog::Log("Set value for: " + std::string(name) );
-        TLMErrorLog::Log("time: " + ToStr(time) );
-        TLMErrorLog::Log("u: " + ToStr(*u));
+        TLMErrorLog::Info("Set value for: " + std::string(name) );
+        TLMErrorLog::Info("time: " + ToStr(time) );
+        TLMErrorLog::Info("u: " + ToStr(*u));
 
 
 #ifdef DEBUGFLG
@@ -373,9 +373,9 @@ static void mdlOutputs(SimStruct *S, int_T tid)
           int ifID = TLM_InterfaceReg::GetInstance()->GetInterfaceID(name);
           
           if( ifID >= 0 ){          
-              TLMErrorLog::Log("Call SetValueSignal for: " + std::string(name) );
-              TLMErrorLog::Log("time: " + ToStr(time) );
-              TLMErrorLog::Log("u: " + ToStr(*u) );
+              TLMErrorLog::Info("Call SetValueSignal for: " + std::string(name) );
+              TLMErrorLog::Info("time: " + ToStr(time) );
+              TLMErrorLog::Info("u: " + ToStr(*u) );
 
               TLM_InterfaceReg::GetInstance()->GetPlugin()->SetValueSignal(ifID,          // Send data to the Plugin
                                                                       time,

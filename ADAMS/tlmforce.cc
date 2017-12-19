@@ -128,7 +128,7 @@ TLM_force::~TLM_force() {
 }
 
 void TLM_force::SetDebugOut(){
-    Plugin->SetDebugOut(true);
+    TLMErrorLog::SetLogLevel(TLMLogLevel::Debug);
 }
 
 TLM_force* TLM_force::GetInstance(bool debugFlg)

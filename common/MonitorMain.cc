@@ -30,8 +30,8 @@ using std::string;
 
 void usage() {
     string usageStr = "Usage: tlmmonitor [-d] [-n num-seps | -t time-step-size] <server:port> <compositemodel>, where compositemodel is an XML file.";
-    TLMErrorLog::SetDebugOut(true);
-    TLMErrorLog::Log(usageStr);
+    TLMErrorLog::SetLogLevel(TLMLogLevel::Debug);
+    TLMErrorLog::Info(usageStr);
     std::cout << usageStr << std::endl;
     exit(1);
 }
@@ -50,7 +50,7 @@ struct Color {
 TLMPlugin* InitializeTLMConnection(CompositeModel& model, std::string& serverName) {
     TLMPlugin* TLMlink = MonitoringPluginImplementer::CreateInstance();
 
-    TLMErrorLog::Log("Trying to register TLM monitor on host " + serverName);
+    TLMErrorLog::Info("Trying to register TLM monitor on host " + serverName);
 
     if(! TLMlink->Init("monitor",
                        model.GetSimParams().GetStartTime(),
@@ -67,16 +67,16 @@ TLMPlugin* InitializeTLMConnection(CompositeModel& model, std::string& serverNam
         TLMInterfaceProxy& interfaceProxy = model.GetTLMInterfaceProxy(i);
         TLMComponentProxy& component = model.GetTLMComponentProxy(interfaceProxy.GetComponentID());
 
-        TLMErrorLog::Log("Trying to register monitoring interface " + interfaceProxy.GetName());
+        TLMErrorLog::Info("Trying to register monitoring interface " + interfaceProxy.GetName());
         int TLMInterfaceID = TLMlink->RegisteTLMInterface(component.GetName() + "." + interfaceProxy.GetName(),
                                                            interfaceProxy.GetDimensions(), interfaceProxy.GetCausality(),
                                                            interfaceProxy.GetDomain());
 
         if(TLMInterfaceID >= 0) {
-            TLMErrorLog::Log("Registration was successful");
+            TLMErrorLog::Info("Registration was successful");
         }
         else {
-            TLMErrorLog::Log("Interface not connected in Meta-Model: " + component.GetName() + "." + interfaceProxy.GetName());
+            TLMErrorLog::Info("Interface not connected in Meta-Model: " + component.GetName() + "." + interfaceProxy.GetName());
         }
     }
 
@@ -101,8 +101,8 @@ void MonitorTimeStep(TLMPlugin* TLMlink,
             int dimensions = interfaceProxy.GetDimensions();
             string causality = interfaceProxy.GetCausality();
 
-            if(TLMErrorLog::IsNormalErrorLogOn()) {
-                TLMErrorLog::Log("Data request for " + interfaceProxy.GetName() + " for time " + ToStr(SimTime) + ", id: " + ToStr(interfaceID));
+            if(TLMErrorLog::GetLogLevel() >= TLMLogLevel::Info) {
+                TLMErrorLog::Info("Data request for " + interfaceProxy.GetName() + " for time " + ToStr(SimTime) + ", id: " + ToStr(interfaceID));
             }
 
             if(connectionID >= 0) {
@@ -501,7 +501,7 @@ void PrintData(CompositeModel& model,
             if(interfaceProxy.GetDimensions() == 6) {
                 std::stringstream ss;
                 ss << "Printing data for 3D interface " << interfaceProxy.GetID();
-                TLMErrorLog::Log(ss.str());
+                TLMErrorLog::Info(ss.str());
 
                 TLMTimeData3D& timeData = dataStorage3D.at(interfaceProxy.GetID());
 
@@ -560,7 +560,7 @@ void PrintData(CompositeModel& model,
                     interfaceProxy.GetCausality() == "Bidirectional") {
                 std::stringstream ss;
                 ss << "Printing data for 1D interface " << interfaceProxy.GetID();
-                TLMErrorLog::Log(ss.str());
+                TLMErrorLog::Info(ss.str());
 
                 TLMTimeData1D& timeData = dataStorage1D.at(interfaceProxy.GetID());
 
@@ -615,7 +615,7 @@ void PrintData(CompositeModel& model,
 
                 std::stringstream ss;
                 ss << "Printing data for output interface " << interfaceProxy.GetID();
-                TLMErrorLog::Log(ss.str());
+                TLMErrorLog::Info(ss.str());
 
                 TLMTimeDataSignal& timeData = dataStorageSignal.at(interfaceProxy.GetID());
 
@@ -674,7 +674,7 @@ void PrintRunStatus(CompositeModel& model, std::ofstream& runFile, tTM_Info& tIn
 
 int main(int argc, char* argv[]) {
 
-    TLMErrorLog::Log("Starting monitor...");
+    TLMErrorLog::Info("Starting monitor...");
 
 #ifndef USE_THREADS
 #warning TLM manager requires pthreads to be compiled in. Use -DUSE_THREADS in the Makefile.head if neeeded.    
@@ -714,9 +714,8 @@ int main(int argc, char* argv[]) {
     logfile.open("monitor.log");
     TLMErrorLog::SetOutStream(logfile);
     if(debugFlg) {
-        TLMErrorLog::SetDebugOut(true);
+        TLMErrorLog::SetLogLevel(TLMLogLevel::Debug);
         TLMErrorLog::SetNormalErrorLogOn(true);
-        TLMErrorLog::SetWarningOut(true);
     }
 
     // Get input strings, server name and meta-model XML file.

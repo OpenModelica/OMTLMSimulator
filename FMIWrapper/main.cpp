@@ -156,7 +156,7 @@ void setParameters()
         double value_real = atof(value.c_str());
         std::stringstream ss;
         ss << "Setting parameter: " << vr << " to " << value_real;
-        TLMErrorLog::Log(ss.str());
+        TLMErrorLog::Info(ss.str());
         fmi2_import_set_real(fmu,&vr,1,&value_real);
     }
 }
@@ -409,7 +409,7 @@ void fmiLogger(jm_callbacks* c, jm_string module, jm_log_level_enu_t log_level, 
       TLMErrorLog::Warning(ss.str());
       break;
     default:
-      TLMErrorLog::Log(ss.str());
+      TLMErrorLog::Info(ss.str());
       break;
   }
 }
@@ -444,11 +444,11 @@ int simulate_fmi2_cs()
     TLMErrorLog::FatalError("Could not create the DLL loading mechanism(C-API). Error: "+string(fmi2_import_get_last_error(fmu)));
   }
 
-  TLMErrorLog::Log("Version returned from FMU: "+string(fmi2_import_get_version(fmu)));
-  TLMErrorLog::Log("Platform type returned: "+string(fmi2_import_get_types_platform(fmu)));
+  TLMErrorLog::Info("Version returned from FMU: "+string(fmi2_import_get_version(fmu)));
+  TLMErrorLog::Info("Platform type returned: "+string(fmi2_import_get_types_platform(fmu)));
 
   fmuGUID = fmi2_import_get_GUID(fmu);
-  TLMErrorLog::Log("GUID: "+string(fmuGUID));
+  TLMErrorLog::Info("GUID: "+string(fmuGUID));
 
 
   jmstatus = fmi2_import_instantiate(fmu, instanceName, fmi2_cosimulation, fmuLocation, visible);
@@ -533,7 +533,7 @@ int simulate_fmi2_cs()
       }
 
       //Take one sub step
-      TLMErrorLog::Log("Taking step!");
+      TLMErrorLog::Info("Taking step!");
       fmistatus = fmi2_import_do_step(fmu,tcur,hsub,fmi2_true);
 
       //Increment time
@@ -584,7 +584,7 @@ int simulate_fmi2_cs()
     }
   }
 
-  TLMErrorLog::Log("Simulation finished.");
+  TLMErrorLog::Info("Simulation finished.");
 
   fmistatus = fmi2_import_terminate(fmu);
 
@@ -648,19 +648,19 @@ void motionFromFmuToTlm(double tcur)
 // Simulate function for model exchange
 int simulate_fmi2_me()
 {
-  TLMErrorLog::Log("Starting simulation using FMI for Model Exchange.");
+  TLMErrorLog::Info("Starting simulation using FMI for Model Exchange.");
   switch (simConfig.solver) {
     case CVODE:
-      TLMErrorLog::Log("Using CVODE solver.");
+      TLMErrorLog::Info("Using CVODE solver.");
       break;
     case IDA:
-      TLMErrorLog::Log("Using IDA solver.");
+      TLMErrorLog::Info("Using IDA solver.");
       break;
     case ExplicitEuler:
-      TLMErrorLog::Log("Using explicit Euler solver.");
+      TLMErrorLog::Info("Using explicit Euler solver.");
       break;
     case RungeKutta:
-      TLMErrorLog::Log("Using 4th order explicit Runge-Kutta solver.");
+      TLMErrorLog::Info("Using 4th order explicit Runge-Kutta solver.");
   }
 
   jm_status_enu_t jmstatus;
@@ -695,11 +695,11 @@ int simulate_fmi2_me()
     TLMErrorLog::FatalError("Could not create the DLL loading mechanism(C-API). Error: "+string(fmi2_import_get_last_error(fmu)));
   }
 
-  TLMErrorLog::Log("Version returned from FMU: "+string(fmi2_import_get_version(fmu)));
-  TLMErrorLog::Log("Platform type returned: "+string(fmi2_import_get_types_platform(fmu)));
+  TLMErrorLog::Info("Version returned from FMU: "+string(fmi2_import_get_version(fmu)));
+  TLMErrorLog::Info("Platform type returned: "+string(fmi2_import_get_types_platform(fmu)));
 
   fmuGUID = fmi2_import_get_GUID(fmu);
-  TLMErrorLog::Log("GUID: "+string(fmuGUID));
+  TLMErrorLog::Info("GUID: "+string(fmuGUID));
 
   n_states = fmi2_import_get_number_of_continuous_states(fmu);
   n_event_indicators = fmi2_import_get_number_of_event_indicators(fmu);
@@ -720,7 +720,7 @@ int simulate_fmi2_me()
   setParameters();
 
   fmi2_import_set_debug_logging(fmu, fmi2_false, 0, 0);
-  TLMErrorLog::Log("fmi2_import_set_debug_logging: " + string(fmi2_status_to_string(fmistatus)));
+  TLMErrorLog::Info("fmi2_import_set_debug_logging: " + string(fmi2_status_to_string(fmistatus)));
   fmi2_import_set_debug_logging(fmu, fmi2_true, 0, 0);
 
   relativeTolerance = fmi2_import_get_default_experiment_tolerance(fmu);
@@ -791,14 +791,14 @@ int simulate_fmi2_me()
   }
 
   /* Set the vector absolute tolerance */
-  TLMErrorLog::Log("n_states = "+TLMErrorLog::ToStdStr(int(n_states)));
+  TLMErrorLog::Info("n_states = "+TLMErrorLog::ToStdStr(int(n_states)));
   for(size_t i=0; i<n_states; ++i) {
     Ith(abstol,i+1) = states_abstol[i];
-    TLMErrorLog::Log("abstol["+TLMErrorLog::ToStdStr(int(i))+"] = "+TLMErrorLog::ToStdStr(Ith(abstol,i+1)));
+    TLMErrorLog::Info("abstol["+TLMErrorLog::ToStdStr(int(i))+"] = "+TLMErrorLog::ToStdStr(Ith(abstol,i+1)));
   }
 
   if(simConfig.solver == CVODE) {
-    TLMErrorLog::Log("Initializing CVODE solver.");
+    TLMErrorLog::Info("Initializing CVODE solver.");
 
     if(n_states == 0) {
       TLMErrorLog::FatalError("At least one state variable is required for model exchange (n_states == 0)");
@@ -806,30 +806,30 @@ int simulate_fmi2_me()
 
     /* Call CVodeCreate to create the solver memory and specify the
    * Backward Differentiation Formula and the use of a Newton iteration */
-    TLMErrorLog::Log("Creating solver.");
+    TLMErrorLog::Info("Creating solver.");
     mem = CVodeCreate(CV_BDF, CV_NEWTON);
     if (check_flag((void *)mem, "CVodeCreate", 0)) return(1);
 
     /* Call CVodeInit to initialize the integrator memory and specify the
    * user's right hand side function in y'=f(t,y), the inital time T0, and
    * the initial dependent variable vector y. */
-    TLMErrorLog::Log("Initializing solver memory.");
+    TLMErrorLog::Info("Initializing solver memory.");
     flag = CVodeInit(mem, rhs, tstart, y);
     if (check_flag(&flag, "CVodeInit", 1)) return(1);
 
     /* Call CVodeSVtolerances to specify the scalar relative tolerance
    * and vector absolute tolerances */
-    TLMErrorLog::Log("Specifying tolerances.");
-    //TLMErrorLog::Log("abstol = "+TLMErrorLog::ToStdStr(abstol));
+    TLMErrorLog::Info("Specifying tolerances.");
+    //TLMErrorLog::Info("abstol = "+TLMErrorLog::ToStdStr(abstol));
     flag = CVodeSVtolerances(mem, reltol, abstol);
     if (check_flag(&flag, "CVodeSVtolerances", 1)) return(1);
 
     /* Call CVDense to specify the CVDENSE dense linear solver */
-    TLMErrorLog::Log("Specifying linear solver (dense).");
+    TLMErrorLog::Info("Specifying linear solver (dense).");
     flag = CVDense(mem, n_states);
     if (check_flag(&flag, "CVDense", 1)) return(1);
 
-    TLMErrorLog::Log("Specifying maximum step size.");
+    TLMErrorLog::Info("Specifying maximum step size.");
     flag = CVodeSetMaxStep(mem, tlmConfig.hmax);
     if (check_flag(&flag, "CVodeSetMaxStep", 1)) return(1);
 
@@ -838,7 +838,7 @@ int simulate_fmi2_me()
     //if (check_flag(&flag, "CVDlsSetDenseJacFn", 1)) return(1);
   }
   else if(simConfig.solver == IDA) {
-    TLMErrorLog::Log("Initializing IDA solver.");
+    TLMErrorLog::Info("Initializing IDA solver.");
 
     if(n_states == 0) {
       TLMErrorLog::FatalError("At least one state variable is required for model exchange (n_states == 0)");
@@ -846,27 +846,27 @@ int simulate_fmi2_me()
 
       /* Call IDACreate to create the solver memory and specify the
      * Backward Differentiation Formula and the use of a Newton iteration */
-    TLMErrorLog::Log("Creating solver.");
+    TLMErrorLog::Info("Creating solver.");
     mem = IDACreate();
     if (check_flag((void *)mem, "IDACreate", 0)) return(1);
 
     /* Call IDAInit and IDAInit to initialize IDA memory */
-    TLMErrorLog::Log("Initializing solver memory.");
+    TLMErrorLog::Info("Initializing solver memory.");
     flag = IDAInit(mem, rhs_ida, tstart, y, yp);
     if (check_flag(&flag, "IDAInit", 1)) return(1);
 
     /* Call IDASVtolerances to specify the scalar relative tolerance
    * and vector absolute tolerances */
-    TLMErrorLog::Log("Spcifying tolerances.");
+    TLMErrorLog::Info("Spcifying tolerances.");
     flag = IDASVtolerances(mem, reltol, abstol);
     if (check_flag(&flag, "IDASVtolerances", 1)) return(1);
 
     /* Call IDADense to specify the CVDENSE dense linear solver */
-    TLMErrorLog::Log("Specifying linear solver (dense).");
+    TLMErrorLog::Info("Specifying linear solver (dense).");
     flag = IDADense(mem, n_states);
     if (check_flag(&flag, "IDADense", 1)) return(1);
 
-    TLMErrorLog::Log("Specifying maximum step size.");
+    TLMErrorLog::Info("Specifying maximum step size.");
     flag = IDASetMaxStep(mem, tlmConfig.hmax);
     if (check_flag(&flag, "IDASetMaxStep", 1)) return(1);
 
@@ -876,7 +876,7 @@ int simulate_fmi2_me()
   }
 
   double tc=tstart; //Cvode time
-  TLMErrorLog::Log("Starting simulation loop.");
+  TLMErrorLog::Info("Starting simulation loop.");
   while ((tcur < tend) && (!(eventInfo.terminateSimulation || terminateSimulation))) {
     logAllVariables(tcur);
     size_t k;
@@ -1003,7 +1003,7 @@ int simulate_fmi2_me()
     fmistatus = fmi2_import_completed_integrator_step(fmu, fmi2_true, &callEventUpdate,
                                                       &terminateSimulation);
   }
-  TLMErrorLog::Log("Simulation ended.");
+  TLMErrorLog::Info("Simulation ended.");
 
   fmistatus = fmi2_import_terminate(fmu);
 
@@ -1038,7 +1038,7 @@ void csvToIntArray(std::string csv, int length, fmi2_value_reference_t *array[])
 //Generate fmi.config if it does not exist (using only inputs and outputs)
 void generateFmiConfigFile()
 {
-  TLMErrorLog::Log("Generating fmi.config...");
+  TLMErrorLog::Info("Generating fmi.config...");
 
   std::ofstream fmiConfigStream;
   fmiConfigStream.open("fmi.config");
@@ -1083,11 +1083,11 @@ void readFmiConfigFile()
 
   struct stat buffer;
   if(stat (FMI_CONFIG_FILE_NAME, &buffer) != 0) {
-    TLMErrorLog::Log("File fmi.config does not exist.");
+    TLMErrorLog::Info("File fmi.config does not exist.");
     generateFmiConfigFile();
   }
 
-  TLMErrorLog::Log("Reading fmi.config...");
+  TLMErrorLog::Info("Reading fmi.config...");
 
   std::ifstream infile(FMI_CONFIG_FILE_NAME);
   if(infile.is_open()) {
@@ -1138,7 +1138,7 @@ void readFmiConfigFile()
         csvToIntArray(ss.str(),1,&(fmiConfig.position_vr.back()));
         std::stringstream ss2;
         ss2 << "position_vr = " << fmiConfig.position_vr.back();
-        TLMErrorLog::Log(ss2.str());
+        TLMErrorLog::Info(ss2.str());
       }
       else if(word == "orientation") {
         csvToIntArray(ss.str(),9,&(fmiConfig.orientation_vr.back()));
@@ -1154,7 +1154,7 @@ void readFmiConfigFile()
         csvToIntArray(ss.str(),1,&(fmiConfig.speed_vr.back()));
         std::stringstream ss2;
         ss2 << "speed_vr = " << fmiConfig.speed_vr.back();
-        TLMErrorLog::Log(ss2.str());
+        TLMErrorLog::Info(ss2.str());
       }
       else if(word == "ang_speed") {
         csvToIntArray(ss.str(),3,&(fmiConfig.ang_speed_vr.back()));
@@ -1165,7 +1165,7 @@ void readFmiConfigFile()
         csvToIntArray(ss.str(),6,&(fmiConfig.force_vr.back()));
         std::stringstream ss2;
         ss2 << "force_vr = " << fmiConfig.force_vr.back();
-        TLMErrorLog::Log(ss2.str());
+        TLMErrorLog::Info(ss2.str());
       }
       else if(word == "force" &&
               fmiConfig.dimensions[fmiConfig.dimensions.size()-1] == 1 &&
@@ -1185,13 +1185,13 @@ void readFmiConfigFile()
     }
 
     // Print log output
-    TLMErrorLog::Log("---"+string(FMI_CONFIG_FILE_NAME)+"---");
-    TLMErrorLog::Log("Number of interfaces: "+TLMErrorLog::ToStdStr(int(fmiConfig.nInterfaces)));
+    TLMErrorLog::Info("---"+string(FMI_CONFIG_FILE_NAME)+"---");
+    TLMErrorLog::Info("Number of interfaces: "+TLMErrorLog::ToStdStr(int(fmiConfig.nInterfaces)));
     for(size_t i=0; i<fmiConfig.nInterfaces; ++i) {
-      TLMErrorLog::Log("Name: "+fmiConfig.interfaceNames[i]);
-      TLMErrorLog::Log("Causality: "+fmiConfig.causalities[i]);
-      TLMErrorLog::Log("Dimensions: "+TLMErrorLog::ToStdStr(fmiConfig.dimensions[i]));
-      TLMErrorLog::Log("Domain: "+fmiConfig.domains[i]);
+      TLMErrorLog::Info("Name: "+fmiConfig.interfaceNames[i]);
+      TLMErrorLog::Info("Causality: "+fmiConfig.causalities[i]);
+      TLMErrorLog::Info("Dimensions: "+TLMErrorLog::ToStdStr(fmiConfig.dimensions[i]));
+      TLMErrorLog::Info("Domain: "+fmiConfig.domains[i]);
       int nP,nO,nS,nA,nF,nV;
       if(fmiConfig.dimensions[i] == 6 &&
          fmiConfig.causalities[i] == "Bidirectional") {
@@ -1216,37 +1216,37 @@ void readFmiConfigFile()
       for(int j=0; j<nP; ++j) {
         output << " " << fmiConfig.position_vr[i][j];
       }
-      TLMErrorLog::Log(output.str());
+      TLMErrorLog::Info(output.str());
       output.str("");
       output << "Orientation:";
       for(int j=0; j<nO; ++j) {
         output << " " << fmiConfig.orientation_vr[i][j];
       }
-      TLMErrorLog::Log(output.str());
+      TLMErrorLog::Info(output.str());
       output.str("");
       output << "Speed:";
       for(int j=0; j<nS; ++j) {
         output << " " << fmiConfig.speed_vr[i][j];
       }
-      TLMErrorLog::Log(output.str());
+      TLMErrorLog::Info(output.str());
       output.str("");
       output << "Angular speed:";
       for(int j=0; j<nA; ++j) {
         output << " " << fmiConfig.ang_speed_vr[i][j];
       }
-      TLMErrorLog::Log(output.str());
+      TLMErrorLog::Info(output.str());
       output.str("");
       output << "Force:";
       for(int j=0; j<nF; ++j) {
         output << " " << fmiConfig.force_vr[i][j];
       }
-      TLMErrorLog::Log(output.str());
+      TLMErrorLog::Info(output.str());
       output.str("");
       output << "Value:";
       for(int j=0; j<nV; ++j) {
         output << " " << fmiConfig.value_vr[i][j];
       }
-      TLMErrorLog::Log(output.str());
+      TLMErrorLog::Info(output.str());
 
     }
   }
@@ -1273,12 +1273,12 @@ void readTlmConfigFile()
   }
 
   //Print results to log file
-  TLMErrorLog::Log("---"+string(TLM_CONFIG_FILE_NAME)+"---");
-  TLMErrorLog::Log("model: "+tlmConfig.model);
-  TLMErrorLog::Log("server: "+tlmConfig.server);
-  TLMErrorLog::Log("tstart: "+TLMErrorLog::ToStdStr(tlmConfig.tstart));
-  TLMErrorLog::Log("tend: "+TLMErrorLog::ToStdStr(tlmConfig.tend));
-  TLMErrorLog::Log("hmax: "+TLMErrorLog::ToStdStr(tlmConfig.hmax));
+  TLMErrorLog::Info("---"+string(TLM_CONFIG_FILE_NAME)+"---");
+  TLMErrorLog::Info("model: "+tlmConfig.model);
+  TLMErrorLog::Info("server: "+tlmConfig.server);
+  TLMErrorLog::Info("tstart: "+TLMErrorLog::ToStdStr(tlmConfig.tstart));
+  TLMErrorLog::Info("tend: "+TLMErrorLog::ToStdStr(tlmConfig.tend));
+  TLMErrorLog::Info("hmax: "+TLMErrorLog::ToStdStr(tlmConfig.hmax));
 }
 
 
@@ -1303,9 +1303,6 @@ void createAndClearTempDirectory(std::string path)
 
 int main(int argc, char* argv[])
 {
-  TLMErrorLog::SetNormalErrorLogOn(false);
-  TLMErrorLog::SetWarningOut(false);
-
   if(argc < 2) {
     cout << "Too few arguments." << endl << endl;
     cout << "Usage:" << endl;
@@ -1342,9 +1339,7 @@ int main(int argc, char* argv[])
     else if(!strcmp(argv[i],"solver=IDA"))
       simConfig.solver = IDA;
     else if(!strcmp(argv[i],"-d")) {
-      TLMErrorLog::SetDebugOut(true);
-      TLMErrorLog::SetNormalErrorLogOn(true);
-      TLMErrorLog::SetWarningOut(true);
+      TLMErrorLog::SetLogLevel(TLMLogLevel::Debug);
       cout << "Activating debug output" << endl;
     }
     else if(!strcmp(argv[i],"-l") && argc > i+1) {
@@ -1364,15 +1359,15 @@ int main(int argc, char* argv[])
   cout << "Starting FMIWrapper. Debug output will be written to \"TLMlogfile.log\"." << endl;
 
 //  for(int i=0; i<argc; ++i) {
-//    TLMErrorLog::Log("Hello!");
-//    TLMErrorLog::Log(argv[i]);
+//    TLMErrorLog::Info("Hello!");
+//    TLMErrorLog::Info(argv[i]);
 //  }
 
-  TLMErrorLog::Log("---Arguments---");
-  TLMErrorLog::Log("FMU file: "+FMUPath+"");
-  TLMErrorLog::Log("Temp path: "+tmpPath+"");
-  TLMErrorLog::Log("Interfaces file: "+fmiConfigPath+"");
-  TLMErrorLog::Log("TLM config file: "+tlmConfigPath+"");
+  TLMErrorLog::Info("---Arguments---");
+  TLMErrorLog::Info("FMU file: "+FMUPath+"");
+  TLMErrorLog::Info("Temp path: "+tmpPath+"");
+  TLMErrorLog::Info("Interfaces file: "+fmiConfigPath+"");
+  TLMErrorLog::Info("TLM config file: "+tlmConfigPath+"");
 
   // Create and clear temporary directory
   createAndClearTempDirectory(tmpPath);
@@ -1433,7 +1428,7 @@ int main(int argc, char* argv[])
           fmiConfig.interfaceNames[i] <<
           " of type " <<
           fmiConfig.dimensions[i];
-    TLMErrorLog::Log(ss.str());
+    TLMErrorLog::Info(ss.str());
     fmiConfig.interfaceIds[i] = plugin->RegisteTLMInterface(fmiConfig.interfaceNames[i],
                                                             fmiConfig.dimensions[i],
                                                             fmiConfig.causalities[i],
@@ -1486,7 +1481,7 @@ int main(int argc, char* argv[])
         int parId = plugin->RegisterComponentParameter(name,value);
 
         plugin->GetParameterValue(parId, name, value);
-        TLMErrorLog::Log("Received value: "+value+" for parameter "+name);
+        TLMErrorLog::Info("Received value: "+value+" for parameter "+name);
         fmi2_value_reference_t vr = fmi2_import_get_variable_vr(var);
         parameterMap.insert(std::pair<fmi2_value_reference_t,std::string>(vr,value));
       }
@@ -1497,15 +1492,15 @@ int main(int argc, char* argv[])
   // Start simulation
   switch(kind) {
     case fmi2_fmu_kind_cs:
-      TLMErrorLog::Log("FMU kind is co-simulation.");
+      TLMErrorLog::Info("FMU kind is co-simulation.");
       simulate_fmi2_cs();
       break;
     case fmi2_fmu_kind_me:
-      TLMErrorLog::Log("FMU kind is model exchange.");
+      TLMErrorLog::Info("FMU kind is model exchange.");
       simulate_fmi2_me();
       break;
     case fmi2_fmu_kind_me_and_cs:         //Not sure how to handle FMUs that can be both kinds, guess ME better than CS
-      TLMErrorLog::Log("FMU kind is either co-simulation or model exchange.");
+      TLMErrorLog::Info("FMU kind is either co-simulation or model exchange.");
       simulate_fmi2_me();
       break;
     case fmi2_fmu_kind_unknown:
@@ -1520,7 +1515,7 @@ int main(int argc, char* argv[])
 
   plugin->AwaitClosePermission();
 
-  TLMErrorLog::Log("FMIWrapper completed successfully!");
+  TLMErrorLog::Info("FMIWrapper completed successfully!");
 
   return 0;
 }

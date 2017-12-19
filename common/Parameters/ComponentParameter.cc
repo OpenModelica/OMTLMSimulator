@@ -33,7 +33,7 @@ ComponentParameter::ComponentParameter(TLMClientComm& theComm, std::string& aNam
 
     Comm.UnpackRegParameterMessage(Message, Value);
 
-    TLMErrorLog::Log(std::string("Parameter ") + GetName() + " got ID " + TLMErrorLog::ToStdStr(ParameterID));
+    TLMErrorLog::Info(std::string("Parameter ") + GetName() + " got ID " + TLMErrorLog::ToStdStr(ParameterID));
 }
 
 

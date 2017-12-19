@@ -32,8 +32,8 @@ void CompositeModelReader::ReadComponents(xmlNode *node, bool skipInterfaces=fal
                 continue; //Don't load other models than the single model
             }
 
-            TLMErrorLog::Log(string("-----  Processing SubModel  ----- "));
-            TLMErrorLog::Log("Name: "+Name);
+            TLMErrorLog::Info(string("-----  Processing SubModel  ----- "));
+            TLMErrorLog::Info("Name: "+Name);
 
             curAttrVal = FindAttributeByName(curNode, "StartCommand");
             string StartCommand((const char*)curAttrVal->content);
@@ -233,7 +233,7 @@ void CompositeModelReader::ReadPositionAndOrientation(xmlNode* node, double R[3]
 // from XML-element node for a TLMConnection
 void CompositeModelReader::ReadSimParams(xmlNode* node) {
 
-    TLMErrorLog::Log(string("-----  Reading simulation parameters  ----- "));
+    TLMErrorLog::Info(string("-----  Reading simulation parameters  ----- "));
     xmlNode* curAttrVal = FindAttributeByName(node, "ManagerPort", false);
 
     int Port = 11111; // Some default port.
@@ -265,9 +265,9 @@ void CompositeModelReader::ReadSimParams(xmlNode* node) {
     TheModel.GetSimParams().Set(Port, StartTime, StopTime);
     TheModel.GetSimParams().SetWriteTimeStep(WriteTimeStep);
 
-    TLMErrorLog::Log("StartTime     = "+TLMErrorLog::ToStdStr(StartTime)+" s");
-    TLMErrorLog::Log("StopTime      = "+TLMErrorLog::ToStdStr(StopTime)+" s");
-    TLMErrorLog::Log("WriteTimeStep = "+TLMErrorLog::ToStdStr(WriteTimeStep)+" s");
+    TLMErrorLog::Info("StartTime     = "+TLMErrorLog::ToStdStr(StartTime)+" s");
+    TLMErrorLog::Info("StopTime      = "+TLMErrorLog::ToStdStr(StopTime)+" s");
+    TLMErrorLog::Info("WriteTimeStep = "+TLMErrorLog::ToStdStr(WriteTimeStep)+" s");
 }
 
 
@@ -313,18 +313,18 @@ xmlNode* CompositeModelReader::FindAttributeByName(xmlNode* node, const char* na
 // result of the method.
 void CompositeModelReader::ReadTLMConnectionNode(xmlNode* node) {
 
-    TLMErrorLog::Log(string("Reading definition for Connections "));
+    TLMErrorLog::Info(string("Reading definition for Connections "));
     if(node != 0) {
         for(xmlNode* curNode = node->children; curNode; curNode = curNode->next) {
             if(   (XML_ELEMENT_NODE == curNode->type)
                    && (strcmp("Connection", (const char*)curNode->name)  == 0) ) {
 
-                TLMErrorLog::Log(string("-----  Processing Connection  ----- "));
+                TLMErrorLog::Info(string("-----  Processing Connection  ----- "));
 
                 // Read connection attributes:
                 xmlNode* curAttr = FindAttributeByName(curNode, "From");
                 string AttrData((const char*)curAttr->content);
-                TLMErrorLog::Log(string("From:") + AttrData);
+                TLMErrorLog::Info(string("From:") + AttrData);
 
                 int fromID, toID;
                 TLMConnectionParams conParam;
@@ -338,7 +338,7 @@ void CompositeModelReader::ReadTLMConnectionNode(xmlNode* node) {
                 curAttr = FindAttributeByName(curNode, "To");
 
                 AttrData = (const char*)curAttr->content;
-                TLMErrorLog::Log(string("To:") + AttrData);
+                TLMErrorLog::Info(string("To:") + AttrData);
                 toID = TheModel.GetTLMInterfaceID(AttrData);
                 if(toID < 0) {
                     TLMErrorLog::FatalError(string("Could not find definition for interface ")
@@ -351,12 +351,12 @@ void CompositeModelReader::ReadTLMConnectionNode(xmlNode* node) {
                 curAttr = FindAttributeByName(curNode, "Delay");
                 conParam.Delay = atof((const char*)curAttr->content);
 
-                TLMErrorLog::Log("Delay = "+TLMErrorLog::ToStdStr(conParam.Delay)+" s");
+                TLMErrorLog::Info("Delay = "+TLMErrorLog::ToStdStr(conParam.Delay)+" s");
 
                 if(fromIfc.GetCausality() == "Bidirectional") {
                     curAttr = FindAttributeByName(curNode, "Zf");
                     conParam.Zf = atof((const char*)curAttr->content);
-                    TLMErrorLog::Log("Zf    = "+TLMErrorLog::ToStdStr(conParam.Zf));
+                    TLMErrorLog::Info("Zf    = "+TLMErrorLog::ToStdStr(conParam.Zf));
                 }
 
                 if(fromIfc.GetCausality() == "Bidirectional" && fromIfc.GetDimensions() > 1) {
@@ -368,7 +368,7 @@ void CompositeModelReader::ReadTLMConnectionNode(xmlNode* node) {
                         TLMErrorLog::Warning(string("No impedance for rotation (Zfr) is defined, Zf will be used"));
                         conParam.Zfr = conParam.Zf;
                     }
-                    TLMErrorLog::Log("Zf    = "+TLMErrorLog::ToStdStr(conParam.Zfr));
+                    TLMErrorLog::Info("Zf    = "+TLMErrorLog::ToStdStr(conParam.Zfr));
                 }
 
                 if(fromIfc.GetCausality() == "Bidirectional") {
@@ -380,7 +380,7 @@ void CompositeModelReader::ReadTLMConnectionNode(xmlNode* node) {
                         TLMErrorLog::Warning(string("No damping coefficient (alpha) is defined, assume no damping"));
                         conParam.alpha = 0.0;
                     }
-                    TLMErrorLog::Log("alpha = "+TLMErrorLog::ToStdStr(conParam.alpha));
+                    TLMErrorLog::Info("alpha = "+TLMErrorLog::ToStdStr(conParam.alpha));
                 }
 
                 int conID = TheModel.RegisterTLMConnection(fromID, toID, conParam);
@@ -392,7 +392,7 @@ void CompositeModelReader::ReadTLMConnectionNode(xmlNode* node) {
         }
     }
     else {
-        TLMErrorLog::Log(string("No connections found, continue anyway."));
+        TLMErrorLog::Info(string("No connections found, continue anyway."));
     }
 
 } // ReadTLMConnectionNode(xmlNode* node)
@@ -403,7 +403,7 @@ void CompositeModelReader::ReadTLMConnectionNode(xmlNode* node) {
 // Input/Output: TheModel - model structure to be build.
 void CompositeModelReader::ReadModel(std::string &InputFile, bool InterfaceRequestMode, std::string singleModel) {
 
-    TLMErrorLog::Log("----------------------  Reading composite model  ---------------------- ");
+    TLMErrorLog::Info("----------------------  Reading composite model  ---------------------- ");
     xmlDoc* doc = xmlParseFile(InputFile.c_str()); // open XML & parse it
 
     if(doc == NULL) {
@@ -412,7 +412,7 @@ void CompositeModelReader::ReadModel(std::string &InputFile, bool InterfaceReque
 
     xmlNode *model_element = xmlDocGetRootElement(doc); // get root element
 
-    TLMErrorLog::Log("XML file is parsed OK. Creating model.");
+    TLMErrorLog::Info("XML file is parsed OK. Creating model.");
 
     xmlNode *components = FindChildByName(model_element, "SubModels");  //Don't load interfaces in interface request mode
 
@@ -429,7 +429,7 @@ void CompositeModelReader::ReadModel(std::string &InputFile, bool InterfaceReque
 
     ReadSimParams(sim_params);
 
-    TLMErrorLog::Log("----------------------  Composite model is read  ---------------------- ");
+    TLMErrorLog::Info("----------------------  Composite model is read  ---------------------- ");
 
     // free the document and the global vars
     xmlFreeDoc(doc);

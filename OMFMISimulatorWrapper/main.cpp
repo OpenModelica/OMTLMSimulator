@@ -149,9 +149,7 @@ int main(int argc, char *argv[])
       TLMErrorLog::SetOutStream(DebugOutFile);
     }
 
-    TLMErrorLog::SetDebugOut(true);
-    TLMErrorLog::SetNormalErrorLogOn(true);
-    TLMErrorLog::SetWarningOut(true);
+    TLMErrorLog::SetLogLevel(TLMLogLevel::Debug);
   }
 
   for(size_t i=0; i<options.interfaces.size(); ++i) {

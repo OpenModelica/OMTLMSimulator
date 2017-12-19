@@ -30,8 +30,8 @@ void usage() {
             "-m <monitor-port>  : set the port for monitoring connections\n"
             "-p <server-port>   : set the server network port for communication with the simulation tools\n"
             "-r                 : run manager in interface request mode, get information about interface locations";
-    TLMErrorLog::SetDebugOut(true);
-    TLMErrorLog::Log(usageStr);
+    TLMErrorLog::SetLogLevel(TLMLogLevel::Debug);
+    TLMErrorLog::Info(usageStr);
     std::cout << usageStr << std::endl;
     exit(1);
 }
@@ -154,8 +154,7 @@ int main(int argc, char* argv[]) {
 
     // Debug on?
     if(debugFlg || comMode == ManagerCommHandler::InterfaceRequestMode) {       //Always enable debug for interface request /robbr
-        TLMErrorLog::SetDebugOut(true);
-        TLMErrorLog::SetWarningOut(true);
+        TLMErrorLog::SetLogLevel(TLMLogLevel::Debug);
     }
     
     // Create the meta model object

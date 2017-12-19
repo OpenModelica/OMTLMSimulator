@@ -14,7 +14,7 @@ TLMInterface1D::TLMInterface1D(TLMClientComm &theComm, std::string &aName, doubl
 
 TLMInterface1D::~TLMInterface1D() {
     if(DataToSend.size() != 0) {
-        TLMErrorLog::Log(std::string("Interface ") + GetName() + " sends rest of data for time= " +
+        TLMErrorLog::Info(std::string("Interface ") + GetName() + " sends rest of data for time= " +
                          TLMErrorLog::ToStdStr(DataToSend.back().time));
 
         Comm.PackTimeDataMessage1D(InterfaceID, DataToSend, Message);
@@ -94,8 +94,10 @@ void TLMInterface1D::GetTimeData(TLMTimeData1D& Instance, std::deque<TLMTimeData
     }
     else {
         if(time <= Data[0].time) {
-            TLMErrorLog::Warning(std::string("Interface ") + GetName() + " needs to extrapolate back time= " +
-                                 TLMErrorLog::ToStdStr(time));
+            if(TLMErrorLog::GetLogLevel() >= TLMLogLevel::Warning) {
+                TLMErrorLog::Warning(std::string("Interface ") + GetName() + " needs to extrapolate back time= " +
+                                     TLMErrorLog::ToStdStr(time));
+            }
             Instance = Data[0];
         }
         else {
@@ -106,8 +108,10 @@ void TLMInterface1D::GetTimeData(TLMTimeData1D& Instance, std::deque<TLMTimeData
             }
             else {
                 double terror = fabs(time-Data[size-1].time);
-                TLMErrorLog::Warning(std::string("Interface ") + GetName() + " needs to extrapolate forward time= " +
-                                     TLMErrorLog::ToStdStr(time)+", time error = "+TLMErrorLog::ToStdStr(terror));
+                if(TLMErrorLog::GetLogLevel() >= TLMLogLevel::Warning) {
+                    TLMErrorLog::Warning(std::string("Interface ") + GetName() + " needs to extrapolate forward time= " +
+                                         TLMErrorLog::ToStdStr(time)+", time error = "+TLMErrorLog::ToStdStr(terror));
+                }
                 if(size > 1) {
                     // linear extrapolation
                     InterpolateLinear(Instance, Data[size-2], Data[size-1], OnlyForce);
@@ -139,7 +143,11 @@ void TLMInterface1D::GetForce(double time,
         TLMPlugin::GetForce1D(speed, request, Params, force);
     }
 
-
+    if(TLMErrorLog::GetLogLevel() >= TLMLogLevel::Warning) {
+        TLMErrorLog::Warning("Time = "+std::to_string(time)+
+                             ", GetForce(speed="+std::to_string(speed)+
+                             ") returns force="+std::to_string(*force));
+    }
 }
 
 
@@ -176,16 +184,17 @@ void TLMInterface1D::SetTimeData(double time,
     }
 
     // The wave to send is: (- Force + Impedance * Velocity)
-    if(Domain=="Hydraulic") {
+    if(Domain == "Hydraulic") {
         item.GenForce   = item.GenForce   +  Params.Zf * speed;
     }
     else {
         item.GenForce   = -item.GenForce   +  Params.Zf * speed;
     }
 
-
-    TLMErrorLog::Log(std::string("Interface ") + GetName() +
-                     " SET for time= " + TLMErrorLog::ToStdStr(time));
+    if(TLMErrorLog::GetLogLevel() >= TLMLogLevel::Info) {
+        TLMErrorLog::Info(std::string("Interface ") + GetName() +
+                          " SET for time= " + TLMErrorLog::ToStdStr(time));
+    }
 
     // Send the data if we past the synchronization point or are in data request mode.
     if(time >= LastSendTime + Params.Delay / 2 || Params.mode > 0.0) {
@@ -202,8 +211,10 @@ void TLMInterface1D::SetTimeData(double time,
 void TLMInterface1D::SendAllData() {
     LastSendTime = DataToSend.back().time;
 
-    TLMErrorLog::Log(std::string("Interface ") + GetName() + " sends data for time= " +
-                     TLMErrorLog::ToStdStr(LastSendTime));
+    if(TLMErrorLog::GetLogLevel() >= TLMLogLevel::Info) {
+        TLMErrorLog::Info(std::string("Interface ") + GetName() + " sends data for time= " +
+                          TLMErrorLog::ToStdStr(LastSendTime));
+    }
 
     Comm.PackTimeDataMessage1D(InterfaceID, DataToSend, Message);
     TLMCommUtil::SendMessage(Message);

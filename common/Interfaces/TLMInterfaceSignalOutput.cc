@@ -14,8 +14,10 @@ TLMInterfaceOutput::TLMInterfaceOutput(TLMClientComm &theComm, std::string &aNam
 
 TLMInterfaceOutput::~TLMInterfaceOutput() {
     if(DataToSend.size() != 0) {
-        TLMErrorLog::Log(std::string("Interface ") + GetName() + " sends rest of data for time= " +
-                         TLMErrorLog::ToStdStr(DataToSend.back().time));
+        if(TLMErrorLog::GetLogLevel() >= TLMLogLevel::Info) {
+            TLMErrorLog::Info(std::string("Interface ") + GetName() + " sends rest of data for time= " +
+                              TLMErrorLog::ToStdStr(DataToSend.back().time));
+        }
 
         Comm.PackTimeDataMessageSignal(InterfaceID, DataToSend, Message);
         TLMCommUtil::SendMessage(Message);
@@ -33,8 +35,10 @@ void TLMInterfaceOutput::SetTimeData(double time,
     item.time = time;
     item.Value = value;
 
-    TLMErrorLog::Log(std::string("Interface ") + GetName() +
-                     " SET for time= " + TLMErrorLog::ToStdStr(time));
+    if(TLMErrorLog::GetLogLevel() >= TLMLogLevel::Info) {
+        TLMErrorLog::Info(std::string("Interface ") + GetName() +
+                          " SET for time= " + TLMErrorLog::ToStdStr(time));
+    }
 
     // Send the data if we past the synchronization point or are in data request mode.
     if(time >= LastSendTime + Params.Delay / 2 || Params.mode > 0.0 ) {

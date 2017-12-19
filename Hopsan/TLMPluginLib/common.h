@@ -33,18 +33,18 @@ inline tlmConfig_t readTlmConfigFile(std::string path)
     }
 
     //Print results to log file
-    TLMErrorLog::Log("---"+std::string(TLM_CONFIG_FILE_NAME)+"---");
-    TLMErrorLog::Log("model: "+tlmConfig.model);
-    TLMErrorLog::Log("server: "+tlmConfig.server);
+    TLMErrorLog::Info("---"+std::string(TLM_CONFIG_FILE_NAME)+"---");
+    TLMErrorLog::Info("model: "+tlmConfig.model);
+    TLMErrorLog::Info("server: "+tlmConfig.server);
     std::stringstream ss1;
     ss1 << "tstart: " << tlmConfig.tstart;
-    TLMErrorLog::Log(ss1.str());
+    TLMErrorLog::Info(ss1.str());
     std::stringstream ss2;
     ss2 << "tend: " << tlmConfig.tend;
-    TLMErrorLog::Log(ss2.str());
+    TLMErrorLog::Info(ss2.str());
     std::stringstream ss3;
     ss3 << "hmax: " << tlmConfig.hmax;
-    TLMErrorLog::Log(ss3.str());
+    TLMErrorLog::Info(ss3.str());
 
     return tlmConfig;
 }

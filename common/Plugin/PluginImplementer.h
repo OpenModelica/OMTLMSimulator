@@ -36,17 +36,6 @@ public:
     void SetInitialForce1D(int interfaceID, double force);
     void SetInitialValue(int interfaceID, double value);
 protected:
-
-    //! SetDebugOut function enables/disables debug information
-    //! output from TLM plugin.
-    //! Input: if Enable is true - output is on, othewise - off.
-    virtual void SetDebugOut(bool Enable) { TLMErrorLog::SetDebugOut(Enable); }
-
-    //! SetWarningOut function enables/disables warning information
-    //! output from TLM plugin.
-    //! Input: if Enable is true - output is on, othewise - off.
-    virtual void SetWarningOut(bool Enable) { TLMErrorLog::SetWarningOut(Enable); }
-
     //! Connected flag tells if the connection to TLM manager is established.
     bool Connected;
 

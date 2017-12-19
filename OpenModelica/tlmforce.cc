@@ -119,14 +119,16 @@ void set_debug_mode(int debugFlgIn)
 {
     debugFlg = debugFlgIn;
 
-    TLMErrorLog::SetDebugOut(debugFlg);
+    if(debugFlgIn) {
+        TLMErrorLog::SetLogLevel(TLMLogLevel::Debug);
+    }
 
     if( debugFlg ){
         if( !debugOutFile.is_open() ){
 	    debugOutFile.open(TLM_DEBUG_FILE_NAME);
 	    if( !debugOutFile.good() ){
 	      TLMErrorLog::SetOutStream(debugOutFile);
-	      TLMErrorLog::Log("Debug on");
+        TLMErrorLog::Info("Debug on");
 	    }
 	    else{
 	      TLMErrorLog::Warning(std::string("Unable to open debug log ") + TLM_DEBUG_FILE_NAME );
@@ -137,7 +139,7 @@ void set_debug_mode(int debugFlgIn)
 	}
     }
     else {
-        TLMErrorLog::Log("Debug off");
+        TLMErrorLog::Info("Debug off");
         debugOutFile.close();
     }
 }
@@ -176,7 +178,7 @@ double get_tlm_delay()
     double res = maxStep;
     tlmConfigFile.close();
 
-    TLMErrorLog::Log(model + ": get_tlm_delay (" + TLMErrorLog::ToStdStr(res) + ")");
+    TLMErrorLog::Info(model + ": get_tlm_delay (" + TLMErrorLog::ToStdStr(res) + ")");
 
     return res;
 }
@@ -425,7 +427,7 @@ void get_tlm_input_value(void* in_TLMPluginStructObj,
                     double simTime,    // Current simulation time
                     double value[])   // Output value
 {
-    TLMErrorLog::Log("CALLING: get_tlm_input_value(time = "+TLMErrorLog::ToStdStr(simTime)+")");
+    TLMErrorLog::Info("CALLING: get_tlm_input_value(time = "+TLMErrorLog::ToStdStr(simTime)+")");
     TLMPluginStruct* TLMPluginStructObj = (TLMPluginStruct*)in_TLMPluginStructObj;
 
     bool allRegistered = (TLMPluginStructObj->referenceCount == TLMPluginStructObj->registerCount);
@@ -459,7 +461,7 @@ void set_tlm_output_value(void* in_TLMPluginStructObj,
                           double simTime,    // Current simulation time
                           double value)   // Output force
 {
-    TLMErrorLog::Log("CALLING: set_tlm_output_value(time = "+TLMErrorLog::ToStdStr(simTime)+")");
+    TLMErrorLog::Info("CALLING: set_tlm_output_value(time = "+TLMErrorLog::ToStdStr(simTime)+")");
     TLMPluginStruct* TLMPluginStructObj = (TLMPluginStruct*)in_TLMPluginStructObj;
 
     // Check if interface is registered. If it's not, register it

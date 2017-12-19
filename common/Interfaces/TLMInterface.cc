@@ -47,7 +47,7 @@ TLMInterface::TLMInterface(TLMClientComm& theComm, std::string& aName, double St
     }
     InterfaceID =  Message.Header.TLMInterfaceID;
 
-    TLMErrorLog::Log(std::string("Interface ") + GetName() + " got ID " + TLMErrorLog::ToStdStr(InterfaceID));
+    TLMErrorLog::Info(std::string("Interface ") + GetName() + " got ID " + TLMErrorLog::ToStdStr(InterfaceID));
 
     Comm.UnpackRegInterfaceMessage(Message, Params);
 
