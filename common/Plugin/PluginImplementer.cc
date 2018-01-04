@@ -22,6 +22,17 @@ TLMPlugin* TLMPlugin::CreateInstance() {
     return PluginImplementerInstance;
 }
 
+void PluginImplementer::InterfaceReadyForTakedown(std::string IfcName) {
+    ++nIfcWaitingForTakedown;
+
+    TLMErrorLog::Debug("Interface "+IfcName+" is ready for takedown.");
+
+    if(nIfcWaitingForTakedown >= Interfaces.size()) {
+        AwaitClosePermission();
+        exit(0);
+    }
+}
+
 void PluginImplementer::AwaitClosePermission()
 {
   TLMErrorLog::Info("Awaiting close permission...");
@@ -337,6 +348,10 @@ void PluginImplementer::GetValueSignal(int interfaceID, double time, double *val
 
     // evaluate the reaction force from the TLM connection
     ifc->GetValue(time, value);
+
+    if(ifc->waitForShutdown()) {
+        InterfaceReadyForTakedown(ifc->GetName());
+    }
 }
 
 //This function is for backwards compatibility, remove when position variables has been removed from all wrappers
@@ -439,12 +454,7 @@ void PluginImplementer::SetMotion3D(int forceID,
         // needed anything ?
 #endif
 
-        TLMErrorLog::Info(string("Takedown due to finished interface data request."));
-
-        // If we got here, we have a shutdown request from all interfaces
-        //abort(); // Some systems don't handle exit() very well, let's try abort();
-        // abort creates core dump!
-        exit(0);
+        InterfaceReadyForTakedown(ifc->GetName());
     }
 }
 
@@ -479,12 +489,7 @@ void PluginImplementer::SetValueSignal(int valueID,
         // needed anything ?
 #endif
 
-        TLMErrorLog::Info(string("Takedown due to finished interface data request."));
-
-        // If we got here, we have a shutdown request from all interfaces
-        //abort(); // Some systems don't handle exit() very well, let's try abort();
-        // abort creates core dump!
-        exit(0);
+        InterfaceReadyForTakedown(ifc->GetName());
     }
 }
 
@@ -520,12 +525,7 @@ void PluginImplementer::SetMotion1D(int forceID,
         // needed anything ?
 #endif     
 
-        TLMErrorLog::Info(string("Takedown due to finished interface data request."));
-
-        // If we got here, we have a shutdown request from all interfaces
-        //abort(); // Some systems don't handle exit() very well, let's try abort();
-        // abort creates core dump!
-        exit(0);
+        InterfaceReadyForTakedown(ifc->GetName());
     }
 }
 

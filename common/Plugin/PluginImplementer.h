@@ -83,6 +83,8 @@ protected:
                        double maxStep,
                        std::string ServerName);
 
+    void InterfaceReadyForTakedown(std::string IfcName);
+
     void AwaitClosePermission();
 
     //! Register TLM interface sends a registration request to TLMManager
@@ -180,6 +182,8 @@ protected:
 
     //! Maximum solver time step
     double MaxStep;
+
+    size_t nIfcWaitingForTakedown = 0;
 
 };
 
