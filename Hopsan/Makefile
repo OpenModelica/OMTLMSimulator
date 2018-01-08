@@ -15,7 +15,7 @@ LIBDIR=$(INSTDIR)/TLMPluginLib
 
 default:
 	cd TLMPluginLib; qmake TLMPluginLib.pro "CONFIG+=release"
-	cd TLMPluginLib; make
+	cd TLMPluginLib; $(MAKE)
 
 install: default
 	-mkdir -p $(INSTDIR)
@@ -47,6 +47,6 @@ clean:
 	rm -rf $(INSTDIR)
 	- rm $(BINDIR)/StartTLMHopsan.bat
 	- rm $(BINDIR)/StartTLMHopsan
-	cd TLMPluginLib; make clean
+	cd TLMPluginLib; $(MAKE) clean
 
 # DO NOT DELETE

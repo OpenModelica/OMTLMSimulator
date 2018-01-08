@@ -139,8 +139,8 @@ dirs:
 fmil:
 	mkdir -p FMILibrary-2.0.1/build
 	(cd FMILibrary-2.0.1/build && $(CMAKE) -D CMAKE_AR:String="$(AR)" $(FMIL_FLAGS) -D FMILIB_BUILD_TESTS:Bool=OFF -D FMILIB_GENERATE_DOXYGEN_DOC:Bool=OFF -DFMILIB_INSTALL_PREFIX:String=../install .. -G $(CMAKE_TARGET))
-	make -C FMILibrary-2.0.1/build
-	make -C FMILibrary-2.0.1/build install
+	$(MAKE) -C FMILibrary-2.0.1/build
+	$(MAKE) -C FMILibrary-2.0.1/build install
 	cp -p FMILibrary-2.0.1/install/lib/libfmilib_shared$(SHREXT) $(BINDIR)
 
 # Problem that MingW contains no shell to perform the "if" command.	
