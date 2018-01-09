@@ -74,6 +74,8 @@ void TLMInterfaceSignal::GetTimeData(TLMTimeDataSignal& Instance, std::deque<TLM
         // We always assume no waves initially.
         Instance.Value = 0.0;
         Instance.time = TLMPlugin::TIME_WITHOUT_DATA;
+
+        if( Params.mode > 0.0 ) waitForShutdownFlg = true;
         return;
     }
 
@@ -128,6 +130,7 @@ void TLMInterfaceSignal::GetTimeData(TLMTimeDataSignal& Instance, std::deque<TLM
             }
         }
     }
+    if( Params.mode > 0.0 ) waitForShutdownFlg = true;
 }
 
 
