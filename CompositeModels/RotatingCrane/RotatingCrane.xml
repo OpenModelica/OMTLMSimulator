@@ -1,0 +1,109 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!-- The root node is the meta-model -->
+<Model Name="RotatingCrane">
+  <!-- List of connected sub-models -->
+  <SubModels>
+    <SubModel ModelFile="boom.mo" ExactStep="0" GeometryFile="boom.stl" Angle321="-8e-05,0,0" Name="boom" Position="0,-7.99904e-05,0.000255358" StartCommand="StartTLMOpenModelica">
+      <Annotation Visible="true" Rotation="0" Origin="{-78,-38}" Extent="{-10,-10,10,10}"/>
+      <InterfacePoint Causality="Bidirectional" Dimensions="6" Angle321="0,0,0" Name="tlm1" Domain="Mechanical" Position="0,-3.56779e-13,0"/>
+      <InterfacePoint Causality="Bidirectional" Dimensions="6" Angle321="-1.32582,0,0" Name="tlm2" Domain="Mechanical" Position="0,1,0.5"/>
+      <InterfacePoint Causality="Bidirectional" Dimensions="6" Angle321="0,0,0" Name="tlm3" Domain="Mechanical" Position="0,3,0"/>
+    </SubModel>
+    <SubModel ModelFile="jib.mo" ExactStep="0" GeometryFile="jib.stl" Angle321="-8e-05,0,0" Name="jib" Position="0,2.99992,1.5358e-05" StartCommand="StartTLMOpenModelica">
+      <Annotation Visible="true" Rotation="0" Origin="{-80,18}" Extent="{-10,-10,10,10}"/>
+      <InterfacePoint Causality="Bidirectional" Dimensions="6" Angle321="-1.32586,0,0" Name="tlm3" Domain="Mechanical" Position="0,-3.0581e-13,1"/>
+      <InterfacePoint Causality="Bidirectional" Dimensions="6" Angle321="0,0,0" Name="tlm1" Domain="Mechanical" Position="0,-3.0581e-13,0"/>
+      <InterfacePoint Causality="Bidirectional" Dimensions="6" Angle321="0,0,0" Name="tlm2" Domain="Mechanical" Position="0,-3.0581e-13,4"/>
+    </SubModel>
+    <SubModel ModelFile="piston.mo" ExactStep="0" Angle321="-1.32594,0,0" Name="piston" Position="0,3,1.00002" StartCommand="StartTLMOpenModelica">
+      <Annotation Visible="true" Rotation="0" Origin="{-28,-8}" Extent="{-10,-10,10,10}"/>
+      <InterfacePoint Causality="Bidirectional" Dimensions="6" Angle321="0,0,0" Name="tlm1" Domain="Mechanical" Position="0,0,-2.06155"/>
+      <InterfacePoint Causality="Bidirectional" Dimensions="6" Angle321="0,0,0" Name="tlm2" Domain="Mechanical" Position="0,0,0"/>
+      <InterfacePoint Causality="Bidirectional" Dimensions="1" Angle321="0,0,0" Name="tlm1D" Domain="Mechanical" Position="2.06155,0,0"/>
+    </SubModel>
+    <SubModel ModelFile="controller.hmf" Angle321="0,0,0" Name="controller" Position="0,0,0" StartCommand="StartTLMHopsan">
+      <Annotation Visible="true" Rotation="0" Origin="{-80,-88}" Extent="{-10,-10,10,10}"/>
+      <InterfacePoint Causality="Input" Dimensions="1" Angle321="0,0,0" Name="x" Domain="Signal" Position="1,0,0"/>
+      <InterfacePoint Causality="Input" Dimensions="1" Angle321="0,0,0" Name="phi" Domain="Signal" Position="1,0,0"/>
+      <InterfacePoint Causality="Output" Dimensions="1" Angle321="0,0,0" Name="xv" Domain="Signal" Position="1,0,0"/>
+      <InterfacePoint Causality="Output" Dimensions="1" Angle321="0,0,0" Name="u" Domain="Signal" Position="1,0,0"/>
+      <Parameter Name="Kp_x" Value="0.005"/>
+      <Parameter Name="Kp_phi" Value="-0.005"/>
+    </SubModel>
+    <SubModel ModelFile="hydraulics.hmf" Angle321="-1.3259,0,0" Name="hydraulics" Position="2.06155,3,1.00001" StartCommand="StartTLMHopsan">
+      <Annotation Visible="true" Rotation="0" Origin="{-34,-88}" Extent="{-10,-10,10,10}"/>
+      <InterfacePoint Causality="Input" Dimensions="1" Angle321="0,0,0" Name="xv" Domain="Signal" Position="0,0,0"/>
+      <InterfacePoint Causality="Bidirectional" Dimensions="1" Angle321="0,0,0" Name="tlm1" Domain="Mechanical" Position="2.06155,0,0"/>
+      <InterfacePoint Causality="Bidirectional" Dimensions="1" Angle321="0,0,0" Name="tlm2" Domain="Rotational" Position="0,0,0"/>
+      <InterfacePoint Causality="Output" Dimensions="1" Angle321="0,0,0" Name="x" Domain="Signal" Position="1,0,0"/>
+      <InterfacePoint Causality="Output" Dimensions="1" Angle321="0,0,0" Name="phi" Domain="Signal" Position="1,0,0"/>
+      <InterfacePoint Causality="Input" Dimensions="1" Angle321="0,0,0" Name="xv2" Domain="Signal" Position="0,0,0"/>
+      <Parameter Name="A_p" Value="0.01"/>
+      <Parameter Name="p_s" Value="3e7"/>
+      <Parameter Name="D_m" Value="5e-3"/>
+    </SubModel>
+    <SubModel ModelFile="sling.mo" ExactStep="0" GeometryFile="sling.stl" Angle321="-8e-05,0,0" Name="sling" Position="-1.97626e-323,3.00024,4.00002" StartCommand="StartTLMOpenModelica">
+      <Annotation Visible="true" Rotation="0" Origin="{-80,46}" Extent="{-10,-10,10,10}"/>
+      <InterfacePoint Causality="Bidirectional" Dimensions="6" Angle321="0,0,0" Name="tlm2" Domain="Mechanical" Position="0,-1,0"/>
+      <InterfacePoint Causality="Bidirectional" Dimensions="6" Angle321="0,0,0" Name="tlm1" Domain="Mechanical" Position="0,-3.0581e-13,0"/>
+    </SubModel>
+    <SubModel ModelFile="load.mo" ExactStep="0" GeometryFile="load.stl" Angle321="0,0,0" Name="load" Position="0,2,4" StartCommand="StartTLMOpenModelica">
+      <Annotation Visible="true" Rotation="0" Origin="{-80,74}" Extent="{-10,-10,10,10}"/>
+      <InterfacePoint Causality="Bidirectional" Dimensions="6" Angle321="0,0,0" Name="tlm1" Domain="Mechanical" Position="0,0,0"/>
+    </SubModel>
+    <SubModel ModelFile="bearing2.mo" Angle321="-8e-05,0,0" Name="bearing2" Position="0,2.99992,1.5358e-05" StartCommand="StartTLMOpenModelica">
+      <Annotation Visible="true" Rotation="0" Origin="{-80,-10}" Extent="{-10,-10,10,10}"/>
+      <InterfacePoint Causality="Bidirectional" Dimensions="6" Angle321="0,0,0" Name="tlm2" Domain="Mechanical" Position="0,-3.56779e-13,0"/>
+      <InterfacePoint Causality="Bidirectional" Dimensions="6" Angle321="0,0,0" Name="tlm1" Domain="Mechanical" Position="0,-3.56779e-13,0"/>
+    </SubModel>
+    <SubModel ModelFile="base.mo" GeometryFile="base.stl" Angle321="-8e-05,0,0" Name="base" Position="0,-7.99904e-05,0.000255358" StartCommand="StartTLMOpenModelica">
+      <Annotation Visible="true" Rotation="0" Origin="{-78,-64}" Extent="{-10,-10,10,10}"/>
+      <InterfacePoint Causality="Bidirectional" Dimensions="1" Angle321="0,0,0" Name="tlm3" Domain="Rotational" Position="0,0,0"/>
+      <InterfacePoint Causality="Bidirectional" Dimensions="6" Angle321="0,0,0" Name="tlm1" Domain="Mechanical" Position="0,0,0"/>
+    </SubModel>
+  </SubModels>
+  <!-- List of TLM connections -->
+  <Connections>
+    <Connection Zf="100000" Zfr="0" To="sling.tlm2" From="load.tlm1" Delay="2e-4" alpha="0.9">
+      <Annotation Points="{{-69,82.5},{-60,82.5},{-60,54.5},{-69,54.5}}"/>
+    </Connection>
+    <Connection Zf="100000" To="piston.tlm1D" From="hydraulics.tlm1" Delay="2e-4" alpha="0.9">
+      <Annotation Points="{{-23,-82.5},{0,-82.5},{0,-7.5},{-17,-7.5}}"/>
+    </Connection>
+    <Connection To="hydraulics.xv" From="controller.xv" Delay="2e-4">
+      <Annotation Points="{{-69,-87.5},{-46,-87.5},{-46,-72},{-8,-72},{-8,-79},{-23,-79}}"/>
+    </Connection>
+    <Connection Zf="100000" Zfr="0" To="sling.tlm1" From="jib.tlm2" Delay="2e-4" alpha="0.9">
+      <Annotation Points="{{-69,18.5},{-54,18.5},{-54,50.5},{-69,50.5}}"/>
+    </Connection>
+    <Connection Zf="100000" Zfr="0" To="piston.tlm2" From="jib.tlm3" Delay="2e-4" alpha="0.9">
+      <Annotation Points="{{-69,26.5},{-6,26.5},{-6,-4},{-17,-4},{-17,-3.5}}"/>
+    </Connection>
+    <Connection Zf="100000" Zfr="10000" To="bearing2.tlm2" From="jib.tlm1" Delay="2e-4" alpha="0.9">
+      <Annotation Points="{{-68,22},{-58,22},{-58,-2},{-68,-2},{-68,-2}}"/>
+    </Connection>
+    <Connection To="hydraulics.xv2" From="controller.u" Delay="2e-4">
+      <Annotation Points="{{-68,-92},{-46,-92},{-46,-100},{-16,-100},{-16,-96},{-23,-96}}"/>
+    </Connection>
+    <Connection To="hydraulics.x" From="controller.x" Delay="2e-4">
+      <Annotation Points="{{-68,-80},{-58,-80},{-58,-66},{6,-66},{6,-89},{-23,-89}}"/>
+    </Connection>
+    <Connection To="hydraulics.phi" From="controller.phi" Delay="2e-4">
+      <Annotation Points="{{-68,-84},{-52,-84},{-52,-68},{2,-68},{2,-92},{-23,-92}}"/>
+    </Connection>
+    <Connection Zf="100000" To="bearing2.tlm1" From="boom.tlm3" Delay="2e-4" alpha="0.9">
+      <Annotation Points="{{-66,-38},{-58,-38},{-58,-6},{-68,-6},{-68,-6}}"/>
+    </Connection>
+    <Connection Zf="100000" Zfr="0" To="piston.tlm1" From="boom.tlm2" Delay="2e-4" alpha="0.9">
+      <Annotation Points="{{-66,-34},{-4,-34},{-4,0},{-16,0},{-16,0}}"/>
+    </Connection>
+    <Connection Zf="10000" To="hydraulics.tlm2" From="base.tlm3" Delay="2e-4" alpha="0.95">
+      <Annotation Points="{{-66,-56},{-14,-56},{-14,-86},{-24,-86},{-24,-86}}"/>
+    </Connection>
+    <Connection Zf="100000" Zfr="10000" To="boom.tlm1" From="base.tlm1" Delay="2e-4" alpha="0.9">
+      <Annotation Points="{{-66,-60},{-54,-60},{-54,-30},{-66,-30},{-66,-30}}"/>
+    </Connection>
+  </Connections>
+  <!-- Parameters for the simulation -->
+  <SimulationParams StartTime="0" StopTime="20"/>
+</Model>

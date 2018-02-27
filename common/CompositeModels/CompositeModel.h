@@ -486,6 +486,9 @@ public:
 //! meta-model.
 class CompositeModel {
 
+    //! MOdel name
+    std::string ModelName;
+
     //! Array of ComponentProxies keeping track of the TLMComponents in the model
     ComponentsVector Components;
 
@@ -517,6 +520,16 @@ public:
                                   const std::string& ModelName,
                                   int SolverMode,
                                   const std::string& GeometryFile);
+
+    //! Return model name
+    std::string GetModelName() {
+        return ModelName;
+    }
+
+    //! Set model name
+    void SetModelName(std::string name) {
+      ModelName = name;
+    }
 
     //! Return ComponentProxy for the specified ID.
     TLMComponentProxy& GetTLMComponentProxy(const int ID) {

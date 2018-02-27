@@ -403,7 +403,10 @@ void CompositeModelReader::ReadTLMConnectionNode(xmlNode* node) {
 // Input/Output: TheModel - model structure to be build.
 void CompositeModelReader::ReadModel(std::string &InputFile, bool InterfaceRequestMode, std::string singleModel) {
 
+    TheModel.SetModelName(InputFile.substr(0, InputFile.rfind('.')));
+
     TLMErrorLog::Info("----------------------  Reading composite model  ---------------------- ");
+
     xmlDoc* doc = xmlParseFile(InputFile.c_str()); // open XML & parse it
 
     if(doc == NULL) {

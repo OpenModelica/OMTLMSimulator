@@ -48,7 +48,7 @@ $(ABI)/timing_test: $(ABI)/timing_test.o $(LIBNAME)
 	$(LINK) -o $@ $(ABI)/timing_test.o $(LDLIBS)
 
 $(ABI)/%.o: %.c
-	$(CC)  -c $< $(INCLUDES) -o $@ 
+	$(CC) -fPIC -c $< $(INCLUDES) -o $@ 
 
 install: rtime.h $(LIBNAME)
 	$(INSTALL) -d $(INSTALLDIR)/include
