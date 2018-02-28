@@ -154,45 +154,45 @@ int main(int argc, char *argv[])
   // Start simulation //
   //////////////////////
 
-  //void* pModel = OMTLMSimulator::loadModel(options.model.c_str());
+  //void* pModel = omtlm_loadModel(options.model.c_str());
 
-  void *pModel = OMTLMSimulator::newModel("FmiTest");
-  OMTLMSimulator::addSubModel(pModel, "adder","/home/robbr48/Documents/Git/OMTLMSimulator/CompositeModels/FmiTestLinux/cs_adder1fmu1/cs_adder1.fmu", "StartTLMFmiWrapper");
-  OMTLMSimulator::addSubModel(pModel, "source1","/home/robbr48/Documents/Git/OMTLMSimulator/CompositeModels/FmiTestLinux/cs_source1fmu1/cs_source1.fmu", "StartTLMFmiWrapper");
-  OMTLMSimulator::addSubModel(pModel, "source2","/home/robbr48/Documents/Git/OMTLMSimulator/CompositeModels/FmiTestLinux/cs_source1fmu1/cs_source1.fmu", "StartTLMFmiWrapper");
-  OMTLMSimulator::addSubModel(pModel, "gain","/home/robbr48/Documents/Git/OMTLMSimulator/CompositeModels/FmiTestLinux/gainfmu1/gain.fmu", "StartTLMFmiWrapper");
+  void *pModel = omtlm_newModel("FmiTest");
+  omtlm_addSubModel(pModel, "adder","/home/robbr48/Documents/Git/OMTLMSimulator/CompositeModels/FmiTestLinux/cs_adder1fmu1/cs_adder1.fmu", "StartTLMFmiWrapper");
+  omtlm_addSubModel(pModel, "source1","/home/robbr48/Documents/Git/OMTLMSimulator/CompositeModels/FmiTestLinux/cs_source1fmu1/cs_source1.fmu", "StartTLMFmiWrapper");
+  omtlm_addSubModel(pModel, "source2","/home/robbr48/Documents/Git/OMTLMSimulator/CompositeModels/FmiTestLinux/cs_source1fmu1/cs_source1.fmu", "StartTLMFmiWrapper");
+  omtlm_addSubModel(pModel, "gain","/home/robbr48/Documents/Git/OMTLMSimulator/CompositeModels/FmiTestLinux/gainfmu1/gain.fmu", "StartTLMFmiWrapper");
 
-  OMTLMSimulator::addInterface(pModel,"adder","x1",1,"Input","Signal");
-  OMTLMSimulator::addInterface(pModel,"adder","x2",1,"Input","Signal");
-  OMTLMSimulator::addInterface(pModel,"adder","y",1,"Output","Signal");
-  OMTLMSimulator::addInterface(pModel,"source1","y",1,"Output","Signal");
-  OMTLMSimulator::addInterface(pModel,"source2","y",1,"Output","Signal");
-  OMTLMSimulator::addInterface(pModel,"gain","y",1,"Input","Signal");
-  OMTLMSimulator::addInterface(pModel,"gain","u",1,"Output","Signal");
+  omtlm_addInterface(pModel,"adder","x1",1,"Input","Signal");
+  omtlm_addInterface(pModel,"adder","x2",1,"Input","Signal");
+  omtlm_addInterface(pModel,"adder","y",1,"Output","Signal");
+  omtlm_addInterface(pModel,"source1","y",1,"Output","Signal");
+  omtlm_addInterface(pModel,"source2","y",1,"Output","Signal");
+  omtlm_addInterface(pModel,"gain","y",1,"Input","Signal");
+  omtlm_addInterface(pModel,"gain","u",1,"Output","Signal");
 
-  OMTLMSimulator::addConnection(pModel, "adder.x1", "source2.y",0);
-  OMTLMSimulator::addConnection(pModel, "adder.x2", "source1.y",0);
-  OMTLMSimulator::addConnection(pModel, "gain.y", "adder.y",0);
+  omtlm_addConnection(pModel, "adder.x1", "source2.y",0);
+  omtlm_addConnection(pModel, "adder.x2", "source1.y",0);
+  omtlm_addConnection(pModel, "gain.y", "adder.y",0);
 
-  OMTLMSimulator::addParameter(pModel,"source1","A","2");
-  OMTLMSimulator::addParameter(pModel,"source1","omega","3");
-  OMTLMSimulator::addParameter(pModel,"source2","A","1");
-  OMTLMSimulator::addParameter(pModel,"source2","omega","10");
-  OMTLMSimulator::addParameter(pModel,"gain","Kp","0.01");
-  OMTLMSimulator::addParameter(pModel,"gain","Ki","0.001");
+  omtlm_addParameter(pModel,"source1","A","2");
+  omtlm_addParameter(pModel,"source1","omega","3");
+  omtlm_addParameter(pModel,"source2","A","1");
+  omtlm_addParameter(pModel,"source2","omega","10");
+  omtlm_addParameter(pModel,"gain","Kp","0.01");
+  omtlm_addParameter(pModel,"gain","Ki","0.001");
 
-  OMTLMSimulator::setStartTime(   pModel, 0);
-  OMTLMSimulator::setStopTime(    pModel, 1);
-  OMTLMSimulator::setLogLevel(    pModel, options.logLevel);
-  OMTLMSimulator::setAddress(     pModel, options.address);
-  OMTLMSimulator::setManagerPort( pModel, options.manager);
-  OMTLMSimulator::setMonitorPort( pModel, options.monitor);
-  OMTLMSimulator::setNumLogStep(  pModel, options.numLogSteps);
-  OMTLMSimulator::setLogStepSize( pModel, options.logStepSize);
+  omtlm_setStartTime(   pModel, 0);
+  omtlm_setStopTime(    pModel, 1);
+  omtlm_setLogLevel(    pModel, options.logLevel);
+  omtlm_setAddress(     pModel, options.address);
+  omtlm_setManagerPort( pModel, options.manager);
+  omtlm_setMonitorPort( pModel, options.monitor);
+  omtlm_setNumLogStep(  pModel, options.numLogSteps);
+  omtlm_setLogStepSize( pModel, options.logStepSize);
 
   std::cout << "Starting simulation.\n";
 
-  OMTLMSimulator::simulate(pModel);
+  omtlm_simulate(pModel);
 
   std::cout << "Finished!\n";
 }

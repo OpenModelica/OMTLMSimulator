@@ -1134,14 +1134,14 @@ void *loadModelInternal(const char *fileName,
 }
 
 
-void *OMTLMSimulator::loadModel(const char *filename) {
+void *omtlm_loadModel(const char *filename) {
   CompositeModelProxy *pModelProxy = new CompositeModelProxy();
   pModelProxy->mpCompositeModel = (CompositeModel*)loadModelInternal(filename, false, "");
   return pModelProxy;
 }
 
 
-void *OMTLMSimulator::newModel(const char *name) {
+void *omtlm_newModel(const char *name) {
   CompositeModelProxy *pModelProxy = new CompositeModelProxy();
   pModelProxy->mpCompositeModel = new CompositeModel();
   pModelProxy->mpCompositeModel->SetModelName(name);
@@ -1151,7 +1151,7 @@ void *OMTLMSimulator::newModel(const char *name) {
 
 
 //! @returns Sub-Model ID
-void OMTLMSimulator::addSubModel(void *pModel,
+void omtlm_addSubModel(void *pModel,
                                  const char* name,
                                  const char* file,
                                  const char* startCommand) {
@@ -1169,7 +1169,7 @@ void OMTLMSimulator::addSubModel(void *pModel,
 
 
 //! @returns Interface ID
-void OMTLMSimulator::addInterface(void *pModel,
+void omtlm_addInterface(void *pModel,
                                   const char* subModelName,
                                   const char* name,
                                   int dimensions,
@@ -1191,7 +1191,7 @@ void OMTLMSimulator::addInterface(void *pModel,
 
 
 
-void OMTLMSimulator::addConnection(void *pModel,
+void omtlm_addConnection(void *pModel,
                                    const char *interfaceName1,
                                    const char *interfaceName2,
                                    double delay,
@@ -1227,7 +1227,7 @@ void OMTLMSimulator::addConnection(void *pModel,
 
 
 
-void OMTLMSimulator::addParameter(void *pModel,
+void omtlm_addParameter(void *pModel,
                                   const char *subModelName,
                                   const char *name,
                                   const char *defaultValue) {
@@ -1243,7 +1243,7 @@ void OMTLMSimulator::addParameter(void *pModel,
 
 
 
-void OMTLMSimulator::unloadModel(void *pModel)
+void omtlm_unloadModel(void *pModel)
 {
   if (!pModel)
   {
@@ -1257,13 +1257,13 @@ void OMTLMSimulator::unloadModel(void *pModel)
   delete pModelProxy;
 }
 
-void OMTLMSimulator::simulate(void *model) {
+void omtlm_simulate(void *model) {
   simulateInternal(model,
                    false,
                    "");
 }
 
-void OMTLMSimulator::setStartTime(void *pModel, double startTime)
+void omtlm_setStartTime(void *pModel, double startTime)
 {
   CompositeModelProxy *pModelProxy = (CompositeModelProxy*)pModel;
   pModelProxy->startTime = startTime;
@@ -1277,7 +1277,7 @@ void OMTLMSimulator::setStartTime(void *pModel, double startTime)
   std::cout << "Setting startT: " << startTime << ", stopT: " << stopTime << "\n";
 }
 
-void OMTLMSimulator::setStopTime(void *pModel, double stopTime)
+void omtlm_setStopTime(void *pModel, double stopTime)
 {
   CompositeModelProxy *pModelProxy = (CompositeModelProxy*)pModel;
   pModelProxy->stopTime = stopTime;
@@ -1291,32 +1291,32 @@ void OMTLMSimulator::setStopTime(void *pModel, double stopTime)
   std::cout << "Setting startT: " << startTime << ", stopT: " << stopTime << "\n";
 }
 
-void OMTLMSimulator::setLogLevel(void *pModel, int logLevel) {
+void omtlm_setLogLevel(void *pModel, int logLevel) {
   CompositeModelProxy *pModelProxy = (CompositeModelProxy*)pModel;
   pModelProxy->logLevel = logLevel;
 }
 
-void OMTLMSimulator::setAddress(void *pModel, std::string address) {
+void omtlm_setAddress(void *pModel, std::string address) {
   CompositeModelProxy *pModelProxy = (CompositeModelProxy*)pModel;
   pModelProxy->serverAddress = address;
 }
 
-void OMTLMSimulator::setManagerPort(void *pModel, int port) {
+void omtlm_setManagerPort(void *pModel, int port) {
   CompositeModelProxy *pModelProxy = (CompositeModelProxy*)pModel;
   pModelProxy->managerPort = port;
 }
 
-void OMTLMSimulator::setMonitorPort(void *pModel, int port) {
+void omtlm_setMonitorPort(void *pModel, int port) {
   CompositeModelProxy *pModelProxy = (CompositeModelProxy*)pModel;
   pModelProxy->monitorPort = port;
 }
 
-void OMTLMSimulator::setLogStepSize(void *pModel, double stepSize) {
+void omtlm_setLogStepSize(void *pModel, double stepSize) {
   CompositeModelProxy *pModelProxy = (CompositeModelProxy*)pModel;
   pModelProxy->logStepSize = stepSize;
 }
 
-void OMTLMSimulator::setNumLogStep(void *pModel, int steps) {
+void omtlm_setNumLogStep(void *pModel, int steps) {
   CompositeModelProxy *pModelProxy = (CompositeModelProxy*)pModel;
   pModelProxy->numLogSteps = steps;
 }
