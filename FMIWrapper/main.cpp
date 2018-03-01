@@ -110,8 +110,10 @@ void initializeLogging() {
     for(size_t i=0; i<nVar; ++i) {
       fmi2_import_variable_t* var = fmi2_import_get_variable(list,i);
       std::string name = fmi2_import_get_variable_name(var);
-      if (std::regex_match(name, exp)) {
+      if (fmi2_import_get_variable_base_type(var) == fmi2_base_type_real &&
+          std::regex_match(name, exp)) {
         logVariables.push_back(fmi2_import_get_variable_vr(var));
+        TLMErrorLog::Debug("Logging variable with value reference = "+to_string(logVariables[logVariables.size()-1]));
       }
     }
     if(logVariables.empty()) {
@@ -1440,6 +1442,7 @@ int main(int argc, char* argv[])
   // Check FMU kind (CS or ME)
   fmi2_fmu_kind_enu_t kind = fmi2_import_get_fmu_kind(fmu);
 
+  TLMErrorLog::Info("Registering component parameters...");
   fmi2_import_variable_list_t *list = fmi2_import_get_variable_list(fmu,0);
   size_t nVar = fmi2_import_get_variable_list_size(list);
   for(size_t i=0; i<nVar; ++i) {
@@ -1486,8 +1489,11 @@ int main(int argc, char* argv[])
         parameterMap.insert(std::pair<fmi2_value_reference_t,std::string>(vr,value));
       }
   }
+  TLMErrorLog::Info("Component parameters registered.");
 
+  TLMErrorLog::Info("Initializing logging...");
   initializeLogging();
+  TLMErrorLog::Info("Logging initialized.");
 
   // Start simulation
   switch(kind) {
