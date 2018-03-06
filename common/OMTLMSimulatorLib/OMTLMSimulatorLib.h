@@ -12,7 +12,11 @@
 
 #include <map>
 
-
+#ifdef _WIN32
+#define DLLEXPORT __declspec(dllexport)
+#else
+#define DLLEXPORT
+#endif
 
 /**
  * \brief Creates an empty composite model.
@@ -24,7 +28,7 @@
 extern "C"
 {
 #endif
-__declspec(dllexport) void* omtlm_newModel(const char *name);
+DLLEXPORT void* omtlm_newModel(const char *name);
 
 /**
  * \brief Loads a composite model from xml representation.
@@ -32,7 +36,7 @@ __declspec(dllexport) void* omtlm_newModel(const char *name);
  * @param filename Full path to the composite model xml representation.
  * @return model instance as opaque pointer.
  */
-__declspec(dllexport) void* omtlm_loadModel(const char* filename);
+DLLEXPORT void* omtlm_loadModel(const char* filename);
 
 
 /**
@@ -40,7 +44,7 @@ __declspec(dllexport) void* omtlm_loadModel(const char* filename);
  *
  * @param pModel Model as opaque pointer.
  */
-__declspec(dllexport) void omtlm_unloadModel(void* pModel);
+DLLEXPORT void omtlm_unloadModel(void* pModel);
 
 
 /**
@@ -50,7 +54,7 @@ __declspec(dllexport) void omtlm_unloadModel(void* pModel);
  * @param interfaceName1 Name of first interface ("submodel.interface").
  * @param interfaceName2 Name of second interface ("submodel.interface").
  */
-__declspec(dllexport) void omtlm_addSubModel(void *pModel,
+DLLEXPORT void omtlm_addSubModel(void *pModel,
                  const char* name,
                  const char* file,
                  const char* startCommand);
@@ -63,7 +67,7 @@ __declspec(dllexport) void omtlm_addSubModel(void *pModel,
  * @param subModelName Name of sub-model.
  * @param name Name of second interface ("submodel.interface").
  */
-__declspec(dllexport) void omtlm_addInterface(void* pModel,
+DLLEXPORT void omtlm_addInterface(void* pModel,
                   const char *subModelName,
                   const char *name,
                   int dimensions,
@@ -77,7 +81,7 @@ __declspec(dllexport) void omtlm_addInterface(void* pModel,
  * @param interfaceName1 Name of first interface ("submodel.interface").
  * @param interfaceName2 Name of second interface ("submodel.interface").
  */
-__declspec(dllexport) void omtlm_addConnection(void *pModel,
+DLLEXPORT void omtlm_addConnection(void *pModel,
                    const char *interfaceName1,
                    const char* interfaceName2,
                    double delay,
@@ -93,7 +97,7 @@ __declspec(dllexport) void omtlm_addConnection(void *pModel,
  * @param name Name of parameter.
  * @param defaultValue Value of parameter.
  */
-__declspec(dllexport) void omtlm_addParameter(void *pModel,
+DLLEXPORT void omtlm_addParameter(void *pModel,
                   const char *subModelName,
                   const char* parameterName,
                   const char* defaultValue);
@@ -104,7 +108,7 @@ __declspec(dllexport) void omtlm_addParameter(void *pModel,
  * @param pModel Model as opaque pointer.
  * @param startTime Start time of simulation.
  */
-__declspec(dllexport) void omtlm_setStartTime(void *pModel, double startTime);
+DLLEXPORT void omtlm_setStartTime(void *pModel, double startTime);
 
 /**
  * \brief Sets stop time of simulation.
@@ -112,7 +116,7 @@ __declspec(dllexport) void omtlm_setStartTime(void *pModel, double startTime);
  * @param pModel Model as opaque pointer.
  * @param startTime Stop time of simulation.
  */
-__declspec(dllexport) void omtlm_setStopTime(void *pModel, double stopTime);
+DLLEXPORT void omtlm_setStopTime(void *pModel, double stopTime);
 
 /**
  * \brief Enables or disables debug logging.
@@ -121,7 +125,7 @@ __declspec(dllexport) void omtlm_setStopTime(void *pModel, double stopTime);
  * @param debug Tells whether or not to use debug logging.
  */
 
-__declspec(dllexport) void omtlm_setLogLevel(void *pModel, int logLevel);
+DLLEXPORT void omtlm_setLogLevel(void *pModel, int logLevel);
 
 /**
  * \brief Sets the address for the TLM Manager server
@@ -129,7 +133,7 @@ __declspec(dllexport) void omtlm_setLogLevel(void *pModel, int logLevel);
  * @param pModel Model as opaque pointer.
  * @param address IP address to where manger process is running.
  */
-__declspec(dllexport) void omtlm_setAddress(void *pModel, std::string address);
+DLLEXPORT void omtlm_setAddress(void *pModel, std::string address);
 
 /**
  * \brief Sets manager port.
@@ -137,7 +141,7 @@ __declspec(dllexport) void omtlm_setAddress(void *pModel, std::string address);
  * @param pModel Model as opaque pointer.
  * @param port Manager port.
  */
-__declspec(dllexport) void omtlm_setManagerPort(void *pModel, int port);
+DLLEXPORT void omtlm_setManagerPort(void *pModel, int port);
 
 /**
  * \brief Sets monitorport.
@@ -145,7 +149,7 @@ __declspec(dllexport) void omtlm_setManagerPort(void *pModel, int port);
  * @param pModel Model as opaque pointer.
  * @param port Monitor port.
  */
-__declspec(dllexport) void omtlm_setMonitorPort(void *pModel, int port);
+DLLEXPORT void omtlm_setMonitorPort(void *pModel, int port);
 
 /**
  * \brief Sets step size for logging.
@@ -153,7 +157,7 @@ __declspec(dllexport) void omtlm_setMonitorPort(void *pModel, int port);
  * @param pModel Model as opaque pointer.
  * @param port Logging step size.
  */
-__declspec(dllexport) void omtlm_setLogStepSize(void *pModel, double stepSize);
+DLLEXPORT void omtlm_setLogStepSize(void *pModel, double stepSize);
 
 /**
  * \brief Sets number of log samples.
@@ -161,14 +165,15 @@ __declspec(dllexport) void omtlm_setLogStepSize(void *pModel, double stepSize);
  * @param pModel Model as opaque pointer.
  * @param port Number of log samples.
  */
-__declspec(dllexport) void omtlm_setNumLogStep(void *pModel, int steps);
+DLLEXPORT void omtlm_setNumLogStep(void *pModel, int steps);
 
 /**
  * \brief Simulates the model.
  *
  * @param pModel Model as opaque pointer.
  */
-__declspec(dllexport) void omtlm_simulate(void* model);
+DLLEXPORT void omtlm_simulate(void* model);
+
 
 #ifdef __cplusplus
 }
