@@ -174,6 +174,12 @@ DLLEXPORT void omtlm_setNumLogStep(void *pModel, int steps);
  */
 DLLEXPORT void omtlm_simulate(void* model);
 
+/**
+ * \brief Prints model structure to cout
+ *
+ * @param pModel Model as opaque pointer.
+ */
+DLLEXPORT void omtlm_printModelStructure(void* pModel);
 
 #ifdef __cplusplus
 }
