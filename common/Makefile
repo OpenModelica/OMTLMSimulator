@@ -105,7 +105,7 @@ help:
 	@echo all, defaulf: build everything.
 
 
-all: lib manager monitor mstlib test
+all: lib manager monitor omtlmlib test
 
 lib: lib_s
 	$(MAKE) dir
@@ -132,7 +132,7 @@ test:
 	$(MAKE) dir
 	$(MAKE) $(ABI)/testapp$(FEXT)
 
-install: manager monitor mstlib
+install: manager monitor omtlmlib
 	cp $(ABI)/tlmmonitor$(FEXT) $(ABI)/tlmmanager$(FEXT) ../bin
 
 $(ABI)/libTLM.a: $(OBJS)

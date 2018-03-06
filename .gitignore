@@ -1,0 +1,8 @@
+/3rdParty/misc/lib/
+/3rdParty/misc/src/WINDOWS32
+/3rdParty/misc/src/WINDOWS64
+/3rdParty/rtime/lib/
+/3rdParty/rtime/WINDOWS32/
+/3rdParty/rtime/WINDOWS64/
+/common/WINDOWS32/
+/common/WINDOWS64/

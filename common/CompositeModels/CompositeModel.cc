@@ -123,7 +123,7 @@ void TLMComponentProxy::GetInertialTranformation(double pos[3], double orientati
 
 #ifdef WIN32
 // Constructor
-CompositeModel::CompositeModel() {}
+omtlm_CompositeModel::omtlm_CompositeModel() {}
 #else
 void child_signal_handler(int s) {
     int pid, status;
