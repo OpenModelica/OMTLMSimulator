@@ -75,7 +75,7 @@ struct Color {
 
 class CompositeModelProxy {
 public:
-  CompositeModel *mpCompositeModel = 0;
+  omtlm_CompositeModel *mpCompositeModel = 0;
   double startTime = 0;
   double stopTime = 1;
   int logLevel = 0;
@@ -177,7 +177,7 @@ void checkPortAvailability(int &port) {
 }
 
 
-TLMPlugin* InitializeTLMConnection(CompositeModel& model, std::string& serverName) {
+TLMPlugin* InitializeTLMConnection(omtlm_CompositeModel& model, std::string& serverName) {
   TLMPlugin* TLMlink = MonitoringPluginImplementer::CreateInstance();
 
   std::cout << "Trying to register TLM monitor on host " << serverName << "\n";
@@ -223,7 +223,7 @@ TLMPlugin* InitializeTLMConnection(CompositeModel& model, std::string& serverNam
 
 //! Evaluate the data needed for the current time step.
 void MonitorTimeStep(TLMPlugin* TLMlink,
-                     CompositeModel& model,
+                     omtlm_CompositeModel& model,
                      double SimTime,
                      std::map<int, TLMTimeDataSignal>& dataStorageSignal,
                      std::map<int, TLMTimeData1D>& dataStorage1D,
@@ -291,7 +291,7 @@ void MonitorTimeStep(TLMPlugin* TLMlink,
   }
 }
 
-void WriteVisualXMLFile(CompositeModel& model, std::string &baseFileName, std::string &path) {
+void WriteVisualXMLFile(omtlm_CompositeModel& model, std::string &baseFileName, std::string &path) {
   // Get data from TLM-Manager here!
   bool canWriteVisualXMLFile = false;
   int nTLMComponents = model.GetComponentsNum();
@@ -545,7 +545,7 @@ void WriteVisualXMLFile(CompositeModel& model, std::string &baseFileName, std::s
   }
 }
 
-void PrintHeader(CompositeModel& model, std::ofstream& dataFile) {
+void PrintHeader(omtlm_CompositeModel& model, std::ofstream& dataFile) {
   // Get data from TLM-Manager here!
   int nTLMInterfaces = model.GetInterfacesNum();
 
@@ -620,7 +620,7 @@ void PrintHeader(CompositeModel& model, std::ofstream& dataFile) {
   dataFile << std::endl;
 }
 
-void PrintData(CompositeModel& model,
+void PrintData(omtlm_CompositeModel& model,
                std::ofstream& dataFile,
                std::map<int, TLMTimeDataSignal> &dataStorageSignal,
                std::map<int, TLMTimeData1D>& dataStorage1D,
@@ -784,7 +784,7 @@ void PrintData(CompositeModel& model,
   dataFile << std::endl;
 }
 
-void PrintRunStatus(CompositeModel& model, std::ofstream& runFile, tTM_Info& tInfo, double SimTime)  {
+void PrintRunStatus(omtlm_CompositeModel& model, std::ofstream& runFile, tTM_Info& tInfo, double SimTime)  {
   double startTime = model.GetSimParams().GetStartTime();
   double endTime = model.GetSimParams().GetEndTime();
   double timeStep = model.GetSimParams().GetWriteTimeStep();
@@ -822,7 +822,7 @@ int startMonitor(double timeStep,
                  double nSteps,
                  std::string server,
                  std::string modelName,
-                 CompositeModel &model) {
+                 omtlm_CompositeModel &model) {
 
   TLMErrorLog::Info("Starting monitoring...");
   std::cout << "Monitoring server = " << server << "\n";
@@ -929,7 +929,7 @@ int startMonitor(double timeStep,
 
 
 // Print all interfaces position and orientation
-void PrintInterfaceInformation(CompositeModel& theModel) {
+void PrintInterfaceInformation(omtlm_CompositeModel& theModel) {
   std::ofstream interfacefile ("interfaceData.xml");
   if(interfacefile.is_open()) {
     interfacefile << "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n";
@@ -1005,7 +1005,7 @@ void PrintInterfaceInformation(CompositeModel& theModel) {
 int startManager(int serverPort,
                  int monitorPort,
                  ManagerCommHandler::CommunicationMode comMode,
-                 CompositeModel &model) {
+                 omtlm_CompositeModel &model) {
 
   std::cout << "Number of components (manager): " << model.GetComponentsNum() << "\n";
 
@@ -1071,7 +1071,7 @@ void simulateInternal(void *pModel,
   }
 
 
-  CompositeModel *pCompositeModel = pModelProxy->mpCompositeModel;
+  omtlm_CompositeModel *pCompositeModel = pModelProxy->mpCompositeModel;
 
   pCompositeModel->CheckTheModel();
 
@@ -1121,7 +1121,7 @@ void *loadModelInternal(const char *fileName,
                         const char *singleModel) {
   // Load composite model for manager
   // Note: Skip loading connections in interface request mode in case an interface no longer exists
-  CompositeModel *pCompositeModel = new CompositeModel();
+  omtlm_CompositeModel *pCompositeModel = new omtlm_CompositeModel();
   {
     CompositeModelReader managerModelReader(*pCompositeModel);
     std::string fileNameStr(fileName);
@@ -1136,14 +1136,14 @@ void *loadModelInternal(const char *fileName,
 
 void *omtlm_loadModel(const char *filename) {
   CompositeModelProxy *pModelProxy = new CompositeModelProxy();
-  pModelProxy->mpCompositeModel = (CompositeModel*)loadModelInternal(filename, false, "");
+  pModelProxy->mpCompositeModel = (omtlm_CompositeModel*)loadModelInternal(filename, false, "");
   return pModelProxy;
 }
 
 
 void *omtlm_newModel(const char *name) {
   CompositeModelProxy *pModelProxy = new CompositeModelProxy();
-  pModelProxy->mpCompositeModel = new CompositeModel();
+  pModelProxy->mpCompositeModel = new omtlm_CompositeModel();
   pModelProxy->mpCompositeModel->SetModelName(name);
   return pModelProxy;
 }
@@ -1156,13 +1156,12 @@ void omtlm_addSubModel(void *pModel,
                                  const char* file,
                                  const char* startCommand) {
   CompositeModelProxy *pModelProxy = (CompositeModelProxy*)pModel;
-  CompositeModel *pCompositeModel = pModelProxy->mpCompositeModel;
+  omtlm_CompositeModel *pCompositeModel = pModelProxy->mpCompositeModel;
   int id = pCompositeModel->RegisterTLMComponentProxy(name,
                                                       startCommand,
                                                       file,
                                                       false,
                                                       "");
-
   subModelMap.insert(std::pair<std::string,int>(std::string(name),id));
 }
 
@@ -1176,7 +1175,7 @@ void omtlm_addInterface(void *pModel,
                                   const char* causality,
                                   const char* domain) {
   CompositeModelProxy *pModelProxy = (CompositeModelProxy*)pModel;
-  CompositeModel *pCompositeModel = pModelProxy->mpCompositeModel;
+  omtlm_CompositeModel *pCompositeModel = pModelProxy->mpCompositeModel;
   std::string nameStr(name);
   int subModelId= subModelMap.find(std::string(subModelName))->second;
   int id = pCompositeModel->RegisterTLMInterfaceProxy(subModelId,
@@ -1192,19 +1191,19 @@ void omtlm_addInterface(void *pModel,
 
 
 void omtlm_addConnection(void *pModel,
-                                   const char *interfaceName1,
-                                   const char *interfaceName2,
-                                   double delay,
-                                   double Zf,
-                                   double Zfr,
-                                   double alpha) {
+                         const char *interfaceName1,
+                         const char *interfaceName2,
+                         double delay,
+                         double Zf,
+                         double Zfr,
+                         double alpha) {
   // Todo: Error checking
 
   int interfaceId1 = interfaceMap.find(std::string(interfaceName1))->second;
   int interfaceId2 = interfaceMap.find(std::string(interfaceName2))->second;
 
   CompositeModelProxy *pModelProxy = (CompositeModelProxy*)pModel;
-  CompositeModel *pCompositeModel = pModelProxy->mpCompositeModel;
+  omtlm_CompositeModel *pCompositeModel = pModelProxy->mpCompositeModel;
   TLMConnectionParams params;
   params.Delay = delay;
   params.Zf = Zf;
@@ -1232,7 +1231,7 @@ void omtlm_addParameter(void *pModel,
                                   const char *name,
                                   const char *defaultValue) {
   CompositeModelProxy *pModelProxy = (CompositeModelProxy*)pModel;
-  CompositeModel *pCompositeModel = pModelProxy->mpCompositeModel;
+  omtlm_CompositeModel *pCompositeModel = pModelProxy->mpCompositeModel;
   std::string nameStr(name);
   std::string defaultStr(defaultValue);
   int subModelId = subModelMap.find(std::string(subModelName))->second;
@@ -1252,7 +1251,7 @@ void omtlm_unloadModel(void *pModel)
   }
 
   CompositeModelProxy *pModelProxy = (CompositeModelProxy*)pModel;
-  CompositeModel *pCompositeModel = pModelProxy->mpCompositeModel;
+  omtlm_CompositeModel *pCompositeModel = pModelProxy->mpCompositeModel;
   delete pCompositeModel;
   delete pModelProxy;
 }
@@ -1269,7 +1268,7 @@ void omtlm_setStartTime(void *pModel, double startTime)
   pModelProxy->startTime = startTime;
 
   double stopTime = pModelProxy->stopTime;
-  CompositeModel *pCompositeModel = pModelProxy->mpCompositeModel;
+  omtlm_CompositeModel *pCompositeModel = pModelProxy->mpCompositeModel;
   pCompositeModel->GetSimParams().Set(11111,startTime,stopTime);
 
   double writeTimeStep = (stopTime-startTime)/1000.0;
@@ -1283,7 +1282,7 @@ void omtlm_setStopTime(void *pModel, double stopTime)
   pModelProxy->stopTime = stopTime;
 
   double startTime = pModelProxy->startTime;
-  CompositeModel *pCompositeModel = pModelProxy->mpCompositeModel;
+  omtlm_CompositeModel *pCompositeModel = pModelProxy->mpCompositeModel;
   pCompositeModel->GetSimParams().Set(11111,startTime,stopTime);
 
   double writeTimeStep = (stopTime-startTime)/1000.0;

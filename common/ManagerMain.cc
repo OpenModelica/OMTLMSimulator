@@ -37,7 +37,7 @@ void usage() {
 }
 
 // Print all interfaces position and orientation
-void PrintInterfaceInformation(CompositeModel& theModel) {
+void PrintInterfaceInformation(omtlm_CompositeModel& theModel) {
     std::ofstream interfacefile ("interfaceData.xml");
     if(interfacefile.is_open()) {
         interfacefile << "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n";
@@ -120,8 +120,6 @@ int main(int argc, char* argv[]) {
     ManagerCommHandler::CommunicationMode comMode=ManagerCommHandler::CoSimulationMode;
     std::string singleModel;
 
-    std::cout << "Debug 1\n";
-
     char c;
     while((c = getopt (argc, argv, "dp:m:rs:")) != -1) {
         switch(c) {
@@ -158,7 +156,7 @@ int main(int argc, char* argv[]) {
     }
     
     // Create the meta model object
-    CompositeModel theModel;
+    omtlm_CompositeModel theModel;
 
     {
         // Create model reader for the model
