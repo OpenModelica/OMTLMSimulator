@@ -1320,7 +1320,8 @@ void omtlm_setNumLogStep(void *pModel, int steps) {
   pModelProxy->numLogSteps = steps;
 }
 
-
-
-
-
+void omtlm_printModelStructure(void *pModel)
+{
+  CompositeModelProxy *pModelProxy = (CompositeModelProxy*)pModel;
+  pModelProxy->mpCompositeModel->Print(std::cout);
+}
