@@ -29,6 +29,8 @@ install: lib
 		( cd $$i ; $(MAKE) install ) \
 	done
 
+omtlmlib:
+	cd common; $(MAKE) omtlmlib
 
 depend:
 	cd common; $(MAKE) depend
