@@ -35,7 +35,7 @@ private:
     TLMManagerComm Comm;
 
     //! Meta-model
-    CompositeModel& TheModel;
+    omtlm_CompositeModel& TheModel;
 
     bool MonitorConnected;
 
@@ -69,7 +69,7 @@ private:
 
 public:
     //! Constructor.
-    ManagerCommHandler(CompositeModel& Model):
+    ManagerCommHandler(omtlm_CompositeModel& Model):
         MessageQueue(),
         Comm(Model.GetComponentsNum(), Model.GetSimParams().GetPort()),
         TheModel(Model),

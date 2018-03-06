@@ -47,7 +47,7 @@ struct Color {
     }
 };
 
-TLMPlugin* InitializeTLMConnection(CompositeModel& model, std::string& serverName) {
+TLMPlugin* InitializeTLMConnection(omtlm_CompositeModel& model, std::string& serverName) {
     TLMPlugin* TLMlink = MonitoringPluginImplementer::CreateInstance();
 
     TLMErrorLog::Info("Trying to register TLM monitor on host " + serverName);
@@ -85,7 +85,7 @@ TLMPlugin* InitializeTLMConnection(CompositeModel& model, std::string& serverNam
 
 //! Evaluate the data needed for the current time step.
 void MonitorTimeStep(TLMPlugin* TLMlink,
-                     CompositeModel& model,
+                     omtlm_CompositeModel& model,
                      double SimTime,
                      std::map<int, TLMTimeDataSignal>& dataStorageSignal,
                      std::map<int, TLMTimeData1D>& dataStorage1D,
@@ -153,7 +153,7 @@ void MonitorTimeStep(TLMPlugin* TLMlink,
     }
 }
 
-void WriteVisualXMLFile(CompositeModel& model, std::string &baseFileName, std::string &path) {
+void WriteVisualXMLFile(omtlm_CompositeModel& model, std::string &baseFileName, std::string &path) {
     // Get data from TLM-Manager here!
     bool canWriteVisualXMLFile = false;
     int nTLMComponents = model.GetComponentsNum();
@@ -407,7 +407,7 @@ void WriteVisualXMLFile(CompositeModel& model, std::string &baseFileName, std::s
     }
 }
 
-void PrintHeader(CompositeModel& model, std::ofstream& dataFile) {
+void PrintHeader(omtlm_CompositeModel& model, std::ofstream& dataFile) {
     // Get data from TLM-Manager here!
     int nTLMInterfaces = model.GetInterfacesNum();
 
@@ -482,7 +482,7 @@ void PrintHeader(CompositeModel& model, std::ofstream& dataFile) {
     dataFile << std::endl;
 }
 
-void PrintData(CompositeModel& model,
+void PrintData(omtlm_CompositeModel& model,
                std::ofstream& dataFile,
                std::map<int, TLMTimeDataSignal> &dataStorageSignal,
                std::map<int, TLMTimeData1D>& dataStorage1D,
@@ -640,7 +640,7 @@ void PrintData(CompositeModel& model,
     dataFile << std::endl;
 }
 
-void PrintRunStatus(CompositeModel& model, std::ofstream& runFile, tTM_Info& tInfo, double SimTime)  {
+void PrintRunStatus(omtlm_CompositeModel& model, std::ofstream& runFile, tTM_Info& tInfo, double SimTime)  {
     double startTime = model.GetSimParams().GetStartTime();
     double endTime = model.GetSimParams().GetEndTime();
     double timeStep = model.GetSimParams().GetWriteTimeStep();
@@ -724,7 +724,7 @@ int main(int argc, char* argv[]) {
     std::string baseFileName = inFile.substr(0, inFile.rfind('.'));
 
     // Create the meta model object
-    CompositeModel theModel;
+    omtlm_CompositeModel theModel;
 
     {
         // Create model reader for the model

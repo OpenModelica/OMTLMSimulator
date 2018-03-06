@@ -22,7 +22,7 @@
 class CompositeModelReader {
 
     //! The model object to be filled in during reading
-    CompositeModel& TheModel;
+    omtlm_CompositeModel& TheModel;
 
     //! ReadComponents method reads in Components (SubModels) definition from
     //! the XML file starting from the given xml node that should be "SubModels".
@@ -85,7 +85,7 @@ class CompositeModelReader {
 public:
 
     //! Constructor
-    CompositeModelReader(CompositeModel& model) : TheModel(model) {}
+    CompositeModelReader(omtlm_CompositeModel& model) : TheModel(model) {}
 
 
     //! ReadModel method processes input XML file and creates CompositeModel definition.

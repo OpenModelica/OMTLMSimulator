@@ -484,7 +484,7 @@ public:
 
 //! The class is responsible for the dynamic storage and access to the
 //! meta-model.
-class CompositeModel {
+class omtlm_CompositeModel {
 
     //! MOdel name
     std::string ModelName;
@@ -507,10 +507,10 @@ class CompositeModel {
 public:
     
     //! Constructor
-    CompositeModel();
+    omtlm_CompositeModel();
 
     //! Destructor
-    ~CompositeModel();
+    ~omtlm_CompositeModel();
 
     bool CheckTheModel();
 

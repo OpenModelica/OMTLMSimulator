@@ -127,7 +127,6 @@ void  TLMErrorLog::Debug(const std::string& mess) {
 
 // A utility function often used to log numerical information
 std::string  TLMErrorLog::ToStdStr(double val) {
-    TLMErrorLog::Debug("Debug 1.");
     return std::to_string(val);
 }
 
