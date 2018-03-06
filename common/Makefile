@@ -26,7 +26,7 @@ else
 EXTRAFLAGS = -fPIC
 endif
 
-CC += -std=c++11 $(EXRAFLAGS)
+CC += -std=c++11 $(EXTRAFLAGS)
 
 SRCCLT= Plugin/PluginImplementer.cc \
 	Plugin/MonitoringPluginImplementer.cc \
