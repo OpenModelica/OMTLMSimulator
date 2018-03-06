@@ -123,7 +123,7 @@ monitor:
 	$(MAKE) dir
 	$(MAKE) SRCTYPE=SRCMONITOR $(ABI)/tlmmonitor$(FEXT)
 
-mstlib:
+omtlmlib:
 	$(MAKE) dir
 	$(MAKE) SRCTYPE=SRCMSTLIB $(ABI)/libomtlmsimulator$(SHREXT)
 	$(MAKE) SRCTYPE=SRCMSTMAIN $(ABI)/omtlmsimulator$(FEXT)
