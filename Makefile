@@ -11,34 +11,33 @@ else
   BINDIR=$(UP)/../bin/$(ABI)
 endif
 
-
 allplugins=ADAMS Simulink Modelica OpenModelica FMIWrapper
 plugins=Modelica OpenModelica FMIWrapper
 
 all default: lib
-	cd common; $(MAKE) all
+	$(MAKE) -C common all
 
 lib:
 # Note: lib will not make the manager!
-	cd 3rdParty; $(MAKE) 
-	cd common; $(MAKE) lib
+	cd 3rdParty; $(MAKE)
+	$(MAKE) -C common lib
 
 install: lib
-	cd common ; $(MAKE) install
+	$(MAKE) -C common install
 	for i in ${plugins} ; do \
-		( cd $$i ; $(MAKE) install ) \
+		$(MAKE) -C $$i install \
 	done
 
 omtlmlib:
-	cd common; $(MAKE) omtlmlib
+	$(MAKE) -C common omtlmlib
 
 depend:
-	cd common; $(MAKE) depend
+	$(MAKE) -C common depend
 
 clean:
-	rm -rf $(BINDIR)/*.dll 
-	cd common; $(MAKE) clean
+	rm -rf $(BINDIR)/*.dll
+	$(MAKE) -C common clean
 	cd 3rdParty; $(MAKE) clean
 	for i in ${allplugins} ; do \
-		( cd $$i ; $(MAKE) clean ) \
+		$(MAKE) -C $$i clean \
 	done
