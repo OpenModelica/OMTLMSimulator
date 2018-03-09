@@ -28,7 +28,7 @@ install: lib
 		$(MAKE) -C $$i install \
 	done
 
-omtlmlib:
+omtlmlib: lib
 	$(MAKE) -C common omtlmlib
 
 depend:
