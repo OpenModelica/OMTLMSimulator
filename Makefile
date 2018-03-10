@@ -24,8 +24,8 @@ lib:
 
 install: lib
 	$(MAKE) -C common install
-	for i in ${plugins} ; do \
-		$(MAKE) -C $$i install \
+	for i in ${plugins}; do \
+		$(MAKE) -C $$i install; \
 	done
 
 omtlmlib: lib
@@ -38,6 +38,6 @@ clean:
 	rm -rf $(BINDIR)/*.dll
 	$(MAKE) -C common clean
 	cd 3rdParty; $(MAKE) clean
-	for i in ${allplugins} ; do \
-		$(MAKE) -C $$i clean \
+	for i in ${allplugins}; do \
+		$(MAKE) -C $$i clean; \
 	done
