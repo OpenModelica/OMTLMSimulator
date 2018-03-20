@@ -1,8 +1,14 @@
 /3rdParty/misc/lib/
 /3rdParty/misc/src/WINDOWS32
 /3rdParty/misc/src/WINDOWS64
+/3rdParty/misc/src/LINUX32
+/3rdParty/misc/src/LINUX64
 /3rdParty/rtime/lib/
 /3rdParty/rtime/WINDOWS32/
 /3rdParty/rtime/WINDOWS64/
+/3rdParty/rtime/LINUX32/
+/3rdParty/rtime/LINUX64/
 /common/WINDOWS32/
 /common/WINDOWS64/
+/common/LINUX32/
+/common/LINUX64/
