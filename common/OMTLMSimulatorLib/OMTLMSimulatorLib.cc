@@ -828,7 +828,11 @@ int startMonitor(double timeStep,
   std::cout << "Monitoring server = " << server << "\n";
 
 #ifndef USE_THREADS
+#ifdef _WIN32
+#pragma message ( "TLM manager requires pthreads to be compiled in. Use -DUSE_THREADS in the Makefile.head if neeeded." )
+#else
 #warning TLM manager requires pthreads to be compiled in. Use -DUSE_THREADS in the Makefile.head if neeeded.
+#endif
   std::cout << "Exiting (no threads)\n";
   TLMErrorLog::Error("tlmmanger was compiled without threads and is not usable.");
   exit(1);
@@ -1047,7 +1051,11 @@ void simulateInternal(void *pModel,
 
 
 #ifndef USE_THREADS
+#ifdef _WIN32
+#pragma message ( "TLM manager requires pthreads to be compiled in. Use -DUSE_THREADS in the Makefile.head if neeeded." )
+#else
 #warning TLM manager requires pthreads to be compiled in. Use -DUSE_THREADS in the Makefile.head if neeeded.
+#endif
   TLMErrorLog::Error("OMTLMSimulatorLib was compiled without threads and is not usable.");
   exit(1);
 #endif
