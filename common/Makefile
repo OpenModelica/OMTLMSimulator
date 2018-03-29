@@ -26,6 +26,14 @@ else
 EXTRAFLAGS = -fPIC
 endif
 
+detected_OS := $(shell uname -s)
+ifeq ($(detected_OS),Darwin)
+EXTRAFLAGS += -DNO_RTIME
+RTIMELIB =
+else
+RTIMELIB = -lrtime
+endif
+
 CC += -std=c++11 $(EXTRAFLAGS)
 
 SRCCLT= Plugin/PluginImplementer.cc \
@@ -40,7 +48,8 @@ SRCCLT= Plugin/PluginImplementer.cc \
 	Interfaces/TLMInterface3D.cc \
 	Parameters/ComponentParameter.cc \
 	Logging/TLMErrorLog.cc \
-	Plugin/TLMPlugin.cc 
+	Plugin/TLMPlugin.cc  \
+	SurrogateTimer.cc
 
 
 SRCMGR= Communication/ManagerCommHandler.cc \
@@ -50,14 +59,16 @@ SRCMGR= Communication/ManagerCommHandler.cc \
 	Communication/TLMCommUtil.cc \
 	Communication/TLMManagerComm.cc \
 	Communication/TLMMessageQueue.cc \
-	Logging/TLMErrorLog.cc
+	Logging/TLMErrorLog.cc \
+	SurrogateTimer.cc
 
 SRCSRVLIB= Communication/ManagerCommHandler.cc \
 	CompositeModels/CompositeModel.cc \
 	Communication/TLMCommUtil.cc \
 	Communication/TLMManagerComm.cc \
 	Communication/TLMMessageQueue.cc \
-	Logging/TLMErrorLog.cc
+	Logging/TLMErrorLog.cc \
+	SurrogateTimer.cc
 
 SRCMONITOR= $(SRCCLT) \
 	CompositeModels/CompositeModel.cc \
@@ -90,7 +101,7 @@ INCLUDES= -I. \
 LIBS = 	-L$(MISCHOME)/lib/$(ABI) \
 	-L$(TIMEHOME)/lib/$(ABI) \
 	-L$(ABI) \
-	-lmisc -lrtime
+	-lmisc $(RTIMELIB)
 
 INCXTR=
 LIBXTR=

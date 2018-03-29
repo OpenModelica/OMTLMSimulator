@@ -42,7 +42,7 @@ void TLMCommUtil::SendMessage(TLMMessage& mess) {
         TLMCommUtil::ByteSwap(&mess.Header.TLMInterfaceID, sizeof(mess.Header.TLMInterfaceID));
     }
 
-#ifdef  WIN32
+#if defined( WIN32) || defined(__APPLE__)
     const int MSG_MORE = 0;
 #endif
 
