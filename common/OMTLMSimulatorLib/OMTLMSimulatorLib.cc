@@ -43,7 +43,11 @@
 
 #include "double3.h"
 #include "double33.h"
+#ifndef NO_RTIME
 #include "timing.h"
+#else
+#include "SurrogateTimer.h"
+#endif //NO_RTIME
 #include "coordTransform.h"
 #include "double3.h"
 #include "double33.h"

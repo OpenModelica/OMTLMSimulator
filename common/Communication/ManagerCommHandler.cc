@@ -9,7 +9,11 @@
 #include <algorithm>
 
 #include <cstdlib>
+#ifndef NO_RTIME
 #include "timing.h"
+#else
+#include "SurrogateTimer.h"
+#endif //NO_RTIME
 
 #ifndef _MSC_VER
 #include <unistd.h> 
