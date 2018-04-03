@@ -48,6 +48,16 @@ else ifeq ($(ABI),WINDOWS32)
   else
     $(error No compiler found to build for WINDOWS32)
   endif
+else ifeq ($(ABI),MAC64)
+    CC=g++
+    cc=gcc
+    LINK=g++
+    AR=ar
+    CP=cp
+    SHREXT=.dylib
+    CMAKE=cmake
+    CMAKE_TARGET="Unix Makefiles"
+    FMIL_FLAGS=
 else
     CC=g++
     cc=gcc
@@ -94,6 +104,12 @@ LIBXML-LINUX64=-lxml2
 CP-LIBXML-LINUX64=
 XTRLIBS-LINUX64=-lrt
 LIBPTHREAD-LINUX64=-L$(UP)/extralibs/pthread/$(ABI)/lib -lpthread
+
+INCLXML-MAC64=-I/usr/include/libxml2
+LIBXML-MAC64=-lxml2
+CP-LIBXML-MAC64=
+XTRLIBS-MAC64=
+LIBPTHREAD-MAC64=-L$(UP)/extralibs/pthread/$(ABI)/lib -lpthread
 
 INCLXML=$(INCLXML-$(ABI))
 LIBXML=$(LIBXML-$(ABI))

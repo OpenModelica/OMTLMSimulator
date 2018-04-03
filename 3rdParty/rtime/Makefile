@@ -13,30 +13,31 @@ srcdir = .
 INSTALL = ./install-sh
 
 INSTALLDIR = ./lib/$(ABI)
-LIBNAME = lib/$(ABI)/librtime.a 
+LIBNAME = $(INSTALLDIR)/librtime.a 
 LDLIBS = $(LIBS) $(LIBNAME)
 
 # Pthread include is needed for WINDOWS 
 INCLUDES=-I../pthread/$(ABI)/include -I../include
 
-OFILES  = rtime.o timing.o $(HOST_OFILES)
-CFILES  = $(OFILES:%.o=%.c) 
-ABIOBJS = $(OFILES:%.o= $(ABI)/%.o)
+OFILES=rtime.o timing.o $(HOST_OFILES)
+CFILES=$(OFILES:%.o=%.c)
+ABIOBJS=$(OFILES:%.o=$(ABI)/%.o)
 
 RM = rm -f
 MV = mv -f
 
 
 
-lib: dir $(LIBNAME) 
+lib: dir 
+	$(MAKE) $(LIBNAME) 
 
 dir:
-	@ ( if [ ! -d $(ABI) ] ; then  mkdir $(ABI) ; fi )
 	@ ( if [ ! -d lib ] ; then  mkdir lib ; fi )
+	@ ( if [ ! -d $(ABI) ] ; then  mkdir $(ABI) ; fi )
 	@ ( if [ ! -d lib/$(ABI) ] ; then  mkdir lib/$(ABI) ; fi )
 
 $(LIBNAME): $(ABIOBJS)
-	$(AR) ruv $(LIBNAME) $(ABIOBJS)	
+	($(AR) ruv $(LIBNAME) $(ABIOBJS); )
 
 all: lib $(ABI)/test $(ABI)/timing_test
 

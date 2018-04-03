@@ -1,0 +1,35 @@
+CC=cl -EHsc /MP
+cc=cl
+
+INCLUDES= /Iinclude /I../../../3rdParty/pthread/install/win/include
+LIBS=
+# LIBS=..\..\..\3rdParty\pthread\install\win\lib\pthreadVC2.lib
+
+SRC= \
+	rtime.c \
+	timing.c
+ 
+OBJS = \
+	..\build\win\rtime.obj \
+	..\build\win\timing.obj 
+
+default: dirs link
+
+$(OBJS): $(SRC)
+ $(CC) $(SRC) $(INCLUDES) /c 
+ xcopy *.obj ..\build\win
+ del *.obj
+
+link: $(OBJS)
+ link /LIB /OUT:rtime.lib $(OBJS) $(LIBS)
+ -move rtime.lib ..\install\win\lib\
+ 
+clean:
+ -del ..\build\win\rtime.obj
+ -del ..\build\win\timing.obj
+ -del ..\install\win\lib\rtime.lib
+
+dirs:
+ -mkdir ..\install\win\lib
+ -mkdir ..\build\win
+

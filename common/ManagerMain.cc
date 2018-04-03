@@ -110,7 +110,11 @@ void PrintInterfaceInformation(omtlm_CompositeModel& theModel) {
 
 int main(int argc, char* argv[]) {
 #ifndef USE_THREADS
+#ifdef _WIN32
+#pragma message ( "TLM manager requires pthreads to be compiled in. Use -DUSE_THREADS in the Makefile.head if neeeded." )
+#else
 #warning TLM manager requires pthreads to be compiled in. Use -DUSE_THREADS in the Makefile.head if neeeded.    
+#endif
     TLMErrorLog::Error("tlmmanger was compiled without threads and is not usable.");
     exit(1);
 #endif

@@ -1,0 +1,85 @@
+CC=cl -EHsc /MP
+cc=cl
+
+INCLUDES= /Iinclude
+
+SRCDIR = src
+BUILDDIR = ..\build\win
+
+CCSRC= \
+	src\double3.cc \
+	src\realN.cc \
+	src\float2.cc \
+	src\double2.cc \
+	src\float3.cc \
+	src\double33.cc \
+	src\coordTransform.cc \
+	src\doubleN.cc \
+	src\doubleN3.cc \
+	src\doubleN33.cc \
+	src\intN.cc \
+	src\tostr.cc \
+	src\ErrorLog.cc \
+	src\portability.cc \
+	src\Bstring.cc \
+	src\Btokenizer.cc \
+	src\double33s.cc \
+	src\doubleN33s.cc \
+	src\float33s.cc \
+	src\dsyevv3.cc \
+	src\dsyevq3.cc \
+	src\dsyevc3.cc \
+	src\dsytrd3.cc
+
+CSRC=src\g2c_w32.c  
+
+CCOBJS = \
+	..\build\win\double3.obj \
+	..\build\win\realN.obj \
+	..\build\win\float2.obj \
+	..\build\win\double2.obj \
+	..\build\win\float3.obj \
+	..\build\win\double33.obj \
+	..\build\win\coordTransform.obj \
+	..\build\win\doubleN.obj \
+	..\build\win\doubleN3.obj \
+	..\build\win\doubleN33.obj \
+	..\build\win\intN.obj \
+	..\build\win\tostr.obj \
+	..\build\win\ErrorLog.obj \
+	..\build\win\portability.obj \
+	..\build\win\Bstring.obj \
+	..\build\win\Btokenizer.obj \
+	..\build\win\double33s.obj \
+	..\build\win\doubleN33s.obj \
+	..\build\win\float33s.obj \
+	..\build\win\dsyevv3.obj \
+	..\build\win\dsyevq3.obj \
+	..\build\win\dsyevc3.obj \
+	..\build\win\dsytrd3.obj
+    
+COBJS = ..\build\win\g2c_w32.obj
+
+default: dirs link
+
+$(CCOBJS): $(CCSRC)
+ $(CC) $(CCSRC) $(INCLUDES) /c 
+ xcopy *.obj ..\build\win
+ del *.obj
+    
+$(COBJS): $(CSRC)
+ $(cc) $(CSRC) $(INCLUDES) /c 
+
+link: $(COBJS) $(CCOBJS)
+ link /LIB /OUT:misc.lib $(CCOBJS) $(COBJS) 
+ -move misc.lib ..\install\win\lib\
+ 
+clean:
+ -del ..\build\win\*.obj
+ -del ..\install\win\lib\misc.lib
+ -del ..\install\win\lib\misc.dll
+
+dirs:
+ -mkdir ..\install\win\lib
+ -mkdir ..\build\win
+

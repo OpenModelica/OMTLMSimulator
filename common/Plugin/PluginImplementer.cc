@@ -7,7 +7,9 @@
 #include <iostream>
 #include <csignal>
 #include <sstream>
+#ifndef _WIN32
 #include <unistd.h>
+#endif
 
 using std::string;
 using std::vector;

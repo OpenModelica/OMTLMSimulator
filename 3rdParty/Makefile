@@ -1,8 +1,15 @@
+detected_OS := $(shell uname -s)
+
 # This is for BEAST compatibility
 ifeq ($(MAKEFILEHEADHOME),)
   UP=$(PWD)/..
   MAKEFILEHEADHOME=$(UP)
+ifeq ($(detected_OS),Darwin)
+  #Dont build rtime on Mac
+  buildlibs=misc/src
+else
   buildlibs=misc/src rtime
+endif
 else
   # This is for BEAST
   UP=$(MAKEFILEHEADHOME)/src

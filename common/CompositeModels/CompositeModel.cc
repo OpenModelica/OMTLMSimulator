@@ -239,6 +239,8 @@ bool omtlm_CompositeModel::CheckTheModel()
     if(abort) {
       TLMErrorLog::FatalError("Model contains errors and cannot be simulated.");
     }
+
+    return true;  //Why do we need a return value? It stops the program at failure anyway.
 }
 
 
