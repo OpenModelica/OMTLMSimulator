@@ -11,7 +11,15 @@
 # *********************SETUP SIMULATION*********************************************
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$OMTLMSimulatorPath/bin
 
-FMIWrapper_Cmd="FMIWrapper $PWD/$1 $6 solver=CVODE -d -v $^"
+DIR=$1
+
+case $1 in
+  /*) DIR=$1 ;;
+  *) DIR=$PWD/$1 ;;
+esac
+
+
+FMIWrapper_Cmd="FMIWrapper $DIR $6 solver=CVODE -d -v $^"
 
 TLMCONFIGFILE=tlm.config
 
