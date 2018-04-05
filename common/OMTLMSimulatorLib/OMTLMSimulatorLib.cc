@@ -13,6 +13,7 @@
 #include <fstream>
 #include <map>
 #include <stdlib.h>
+#include <math.h>
 
 #include "Logging/TLMErrorLog.h"
 #include "CompositeModels/CompositeModel.h"
@@ -1146,6 +1147,29 @@ void *loadModelInternal(const char *fileName,
 }
 
 
+void splitPathAndFilename(const string& fullPath,
+                          string& path,
+                          string& fileName) {
+
+    size_t i1 = fullPath.rfind('/', fullPath.length());
+    size_t i2 = fullPath.rfind('\\', fullPath.length());
+    size_t i=std::max(i1,i2);
+    if(i1 == string::npos && i2 == string::npos) {
+        return;
+    }
+    else if(i1 == string::npos) {
+        i = i2;
+    }
+    else if(i2 == string::npos) {
+        i = i1;
+    }
+
+    path = fullPath.substr(0, i);
+    fileName = fullPath.substr(i+1, fullPath.length() - i);
+}
+
+
+
 void *omtlm_loadModel(const char *filename) {
   CompositeModelProxy *pModelProxy = new CompositeModelProxy();
   pModelProxy->mpCompositeModel = (omtlm_CompositeModel*)loadModelInternal(filename, false, "");
@@ -1164,14 +1188,18 @@ void *omtlm_newModel(const char *name) {
 
 //! @returns Sub-Model ID
 void omtlm_addSubModel(void *pModel,
-                                 const char* name,
-                                 const char* file,
-                                 const char* startCommand) {
+                       const char* name,
+                       const char* file,
+                       const char* startCommand) {
+
   CompositeModelProxy *pModelProxy = (CompositeModelProxy*)pModel;
   omtlm_CompositeModel *pCompositeModel = pModelProxy->mpCompositeModel;
-  int id = pCompositeModel->RegisterTLMComponentProxy(name,
+  std::string path, fileName;
+  splitPathAndFilename(std::string(file), path, fileName);
+
+  int id = pCompositeModel->RegisterTLMComponentProxy(path,
                                                       startCommand,
-                                                      file,
+                                                      fileName,
                                                       false,
                                                       "");
   subModelMap.insert(std::pair<std::string,int>(std::string(name),id));

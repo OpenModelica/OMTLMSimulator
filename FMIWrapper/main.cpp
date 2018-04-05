@@ -1321,6 +1321,9 @@ int main(int argc, char* argv[])
     return -1;
   }
 
+  cout << "argv1 = " << argv[1] << "\n";
+  cout << "argv1 = " << argv[2] << "\n";
+
   std::string path = argv[1];
   std::string FMUPath = /*path+"/"+*/argv[2];
   std::string tmpPath = path+"/"+TEMP_DIR_NAME;
