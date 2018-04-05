@@ -419,18 +419,32 @@ bool omtlm_CompositeModel::CheckProxyComm() {
 void omtlm_CompositeModel::Print(std::ostream &os) {
     os << "Components:" << std::endl;
     for(ComponentsVector::iterator it = Components.begin(); it!=Components.end(); ++it) {
-        os << (*it)->GetName() << std::endl;
+        os << "  " << (*it)->GetName() << std::endl;
     }
 
     os << "Interfaces:" << std::endl;
     for(TLMInterfacesVector::iterator it = Interfaces.begin(); it != Interfaces.end(); it++) {
-        os << (*it)->GetName() << " : " << (*it)->GetID() << std::endl;
+      std::string compName = GetTLMComponentProxy((*it)->GetComponentID()).GetName();
+        os << "  " << (*it)->GetID() << ": " << compName << "." << (*it)->GetName() << std::endl;
     }
 
     os << "Connections:" << std::endl;
     for(ConnectionsVector::iterator it = Connections.begin(); it != Connections.end(); it++) {
-        os << (*it)->GetID() << " : " << "from=" << (*it)->GetFromID() << "to=" << (*it)->GetToID() << std::endl;
+      std::string fromComp = GetTLMComponentProxy(GetTLMInterfaceProxy((*it)->GetFromID()).GetComponentID()).GetName();
+      std::string fromIfc = GetTLMInterfaceProxy((*it)->GetFromID()).GetName();
+      std::string toComp = GetTLMComponentProxy(GetTLMInterfaceProxy((*it)->GetToID()).GetComponentID()).GetName();
+      std::string toIfc = GetTLMInterfaceProxy((*it)->GetToID()).GetName();
+        os << "  " << (*it)->GetID() << ": " <<
+              fromComp << "." << fromIfc << " -> " <<
+              toComp << "." << toIfc << std::endl;
     }
+
+    os << "Simulation parameters:" << std::endl;
+    os << "  " << "Start time: " << SimParams.GetStartTimeStr() << std::endl;
+    os << "  " << "Stop time: " << SimParams.GetEndTimeStr() << std::endl;
+    os << "  " << "Server name: " << SimParams.GetServerName() << std::endl;
+    os << "  " << "Manager port: " << std::to_string(SimParams.GetPort()) << std::endl;
+    os << "  " << "Monitor port: " << std::to_string(SimParams.GetMonitorPort()) << std::endl;
 }
 
 #if defined(WIN32)
