@@ -118,12 +118,12 @@ copyfiles:
 	cp $(ABI)/$(BNAME) $(BINDIR)
 	cp StartTLMFmiWrapper* $(BINDIR)
 
-install: default copyfiles
+install: | default copyfiles
 
 wrapper: dirs $(ABIOBJS)
 	$(LINK) $(ABIOBJS$) -o $(ABI)/$(BNAME) $(LIBS)
 
-wrapper_install: wrapper copyfiles
+wrapper_install: | wrapper copyfiles
 
 
 .PHONY: dirs clean
