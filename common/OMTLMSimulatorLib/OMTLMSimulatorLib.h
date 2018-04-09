@@ -51,13 +51,14 @@ DLLEXPORT void omtlm_unloadModel(void* pModel);
  * \brief Adds a sub-model to a composite model.
  *
  * @param pModel Model as opaque pointer.
- * @param interfaceName1 Name of first interface ("submodel.interface").
- * @param interfaceName2 Name of second interface ("submodel.interface").
+ * @param name Name of sub-model
+ * @param file Path to submodel file (absolute or relative)
+ * @param Start script for external tool (must be available in system path)
  */
 DLLEXPORT void omtlm_addSubModel(void *pModel,
-                 const char* name,
-                 const char* file,
-                 const char* startCommand);
+                                 const char* name,
+                                 const char* file,
+                                 const char* startCommand);
 
 
 /**
