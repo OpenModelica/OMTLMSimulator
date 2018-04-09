@@ -101,6 +101,27 @@ static std::ofstream logStream;
 bool logStreamOpen = false;
 
 
+void splitPathAndFilename(const string& fullPath,
+                          string& path,
+                          string& fileName) {
+
+    size_t i1 = fullPath.rfind('/', fullPath.length());
+    size_t i2 = fullPath.rfind('\\', fullPath.length());
+    size_t i=std::max(i1,i2);
+    if(i1 == string::npos && i2 == string::npos) {
+        return;
+    }
+    else if(i1 == string::npos) {
+        i = i2;
+    }
+    else if(i2 == string::npos) {
+        i = i1;
+    }
+
+    path = fullPath.substr(0, i);
+    fileName = fullPath.substr(i+1, fullPath.length() - i);
+}
+
 void initializeLogging() {
   logStream.open(LOG_FILE_NAME);
   if(logStream.is_open()) {
@@ -1321,11 +1342,13 @@ int main(int argc, char* argv[])
     return -1;
   }
 
-  cout << "argv1 = " << argv[1] << "\n";
-  cout << "argv1 = " << argv[2] << "\n";
+  std::string path, file;
+  splitPathAndFilename(argv[2], path, file);
+  cout << "name = " << argv[1] << "\n";
+  cout << "path = " << argv[2] << "\n";
 
-  std::string path = argv[1];
-  std::string FMUPath = /*path+"/"+*/argv[2];
+  std::string name = argv[1];
+  std::string FMUPath = argv[2];
   std::string tmpPath = path+"/"+TEMP_DIR_NAME;
   std::string fmiConfigPath = path+"/"+FMI_CONFIG_FILE_NAME;
   std::string tlmConfigPath = path+"/"+TLM_CONFIG_FILE_NAME;
