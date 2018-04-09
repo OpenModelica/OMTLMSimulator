@@ -165,11 +165,10 @@ void checkPortAvailability(int &port) {
       // Bind the socket, first try the predefined port, then increase port number.
       while(bind(theSckt,(struct sockaddr *) &sa, sizeof(struct sockaddr_in)) < 0 && bindCount < maxIterations) {
           port++;
-          std::cout << "Increasing port number to " << port << "\n";
+          //std::cout << "Increasing port number to " << port << "\n";
           bindCount++;
           sa.sin_port = htons(port);
       }
-      std::cout << "Finished testing port number.\n";
 
       if(bindCount == maxIterations) {
           BCloseSocket(theSckt);
@@ -185,8 +184,6 @@ void checkPortAvailability(int &port) {
 TLMPlugin* InitializeTLMConnection(omtlm_CompositeModel& model, std::string& serverName) {
   TLMPlugin* TLMlink = MonitoringPluginImplementer::CreateInstance();
 
-  std::cout << "Trying to register TLM monitor on host " << serverName << "\n";
-
   TLMErrorLog::Info("Trying to register TLM monitor on host " + serverName);
 
   if(! TLMlink->Init("monitor",
@@ -200,7 +197,7 @@ TLMPlugin* InitializeTLMConnection(omtlm_CompositeModel& model, std::string& ser
     return 0;
   }
 
-  std::cout << "Initialization successful.\n";
+  std::cout << "Monitor initialized.\n";
 
   int nTLMInterfaces = model.GetInterfacesNum();
   for(int i=0; i<nTLMInterfaces; i++) {
@@ -208,18 +205,17 @@ TLMPlugin* InitializeTLMConnection(omtlm_CompositeModel& model, std::string& ser
     TLMComponentProxy& component = model.GetTLMComponentProxy(interfaceProxy.GetComponentID());
 
     TLMErrorLog::Info("Trying to register monitoring interface " + interfaceProxy.GetName());
-    std::cout << "Trying to register monitoring interface " << interfaceProxy.GetName() << "\n";
     int TLMInterfaceID = TLMlink->RegisteTLMInterface(component.GetName() + "." + interfaceProxy.GetName(),
                                                       interfaceProxy.GetDimensions(), interfaceProxy.GetCausality(),
                                                       interfaceProxy.GetDomain());
 
     if(TLMInterfaceID >= 0) {
       TLMErrorLog::Info("Registration was successful");
-      std::cout << "Registration was successful\n";
+      std::string compName = model.GetTLMComponentProxy(interfaceProxy.GetComponentID()).GetName();
+      std::cout << "Registered monitoring interface: " <<  compName << "." << interfaceProxy.GetName() << "\n";
     }
     else {
       TLMErrorLog::Info("Interface not connected in Meta-Model: " + component.GetName() + "." + interfaceProxy.GetName());
-      std::cout << "Interface not connected in Meta-Model: " << component.GetName() << "." << interfaceProxy.GetName() << "\n";
     }
   }
 
@@ -830,7 +826,6 @@ int startMonitor(double timeStep,
                  omtlm_CompositeModel &model) {
 
   TLMErrorLog::Info("Starting monitoring...");
-  std::cout << "Monitoring server = " << server << "\n";
 
 #ifndef USE_THREADS
 #ifdef _WIN32
@@ -872,9 +867,7 @@ int startMonitor(double timeStep,
   }
 
   // Initialize TLM
-  std::cout << "Number of components (monitor): " << model.GetComponentsNum() << "\n";
   model.CheckTheModel();
-  std::cout << "Initializing monitor plugin...\n";
   TLMPlugin* thePlugin = InitializeTLMConnection(model, server);
   if(!thePlugin) {
     TLMErrorLog::FatalError("Failed to initialize TLM interface, give up.");
@@ -1016,8 +1009,6 @@ int startManager(int serverPort,
                  ManagerCommHandler::CommunicationMode comMode,
                  omtlm_CompositeModel &model) {
 
-  std::cout << "Number of components (manager): " << model.GetComponentsNum() << "\n";
-
   TLMErrorLog::Info("Printing from manager thread.");
 
   // Set preferred network port
@@ -1075,8 +1066,6 @@ void simulateInternal(void *pModel,
     comMode = ManagerCommHandler::InterfaceRequestMode;
   }
 
-  std::cout << "singleModel = " << singleModel << "\n";
-
   //Set log level
   TLMErrorLog::SetLogLevel(TLMLogLevel(pModelProxy->logLevel));
   if(comMode == ManagerCommHandler::InterfaceRequestMode) {       //Always enable debug for interface request /robbr
@@ -1110,7 +1099,6 @@ void simulateInternal(void *pModel,
                                 server,
                                 modelName,
                                 std::ref(*pCompositeModel));
-    std::cout << "Monitoring thread started.\n";
   }
 
   // Wait for threads to finish
@@ -1273,6 +1261,10 @@ void omtlm_unloadModel(void *pModel)
 }
 
 void omtlm_simulate(void *model) {
+  CompositeModelProxy *pModelProxy = (CompositeModelProxy*)model;
+  std::cout << "Starting simulation.\n";
+  std::cout << "Start time = " << pModelProxy->startTime << "\n";
+  std::cout << "Stop time = " << pModelProxy->stopTime << "\n";
   simulateInternal(model,
                    false,
                    "");
@@ -1289,7 +1281,6 @@ void omtlm_setStartTime(void *pModel, double startTime)
 
   double writeTimeStep = (stopTime-startTime)/1000.0;
   pCompositeModel->GetSimParams().SetWriteTimeStep(writeTimeStep);
-  std::cout << "Setting startT: " << startTime << ", stopT: " << stopTime << "\n";
 }
 
 void omtlm_setStopTime(void *pModel, double stopTime)
@@ -1303,7 +1294,6 @@ void omtlm_setStopTime(void *pModel, double stopTime)
 
   double writeTimeStep = (stopTime-startTime)/1000.0;
   pCompositeModel->GetSimParams().SetWriteTimeStep(writeTimeStep);
-  std::cout << "Setting startT: " << startTime << ", stopT: " << stopTime << "\n";
 }
 
 void omtlm_setLogLevel(void *pModel, int logLevel) {

@@ -86,7 +86,7 @@ void TLMErrorLog::FatalError(const std::string& mess) {
 void  TLMErrorLog::Warning(const std::string& mess) {
     if(LogLevel < TLMLogLevel::Warning) return;
     Open();
-    std::cout << TimeStr() << " Warning: " << mess << std::endl;
+    //std::cout << TimeStr() << " Warning: " << mess << std::endl;
     *outStream << TimeStr() << " Warning: " << mess << std::endl;
 
     if(NormalErrorLogOn) {

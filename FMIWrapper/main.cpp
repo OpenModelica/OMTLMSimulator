@@ -1344,8 +1344,6 @@ int main(int argc, char* argv[])
 
   std::string path, file;
   splitPathAndFilename(argv[2], path, file);
-  cout << "name = " << argv[1] << "\n";
-  cout << "path = " << argv[2] << "\n";
 
   std::string name = argv[1];
   std::string FMUPath = argv[2];
@@ -1368,7 +1366,7 @@ int main(int argc, char* argv[])
       simConfig.solver = IDA;
     else if(!strcmp(argv[i],"-d")) {
       TLMErrorLog::SetLogLevel(TLMLogLevel::Debug);
-      cout << "Activating debug output" << endl;
+      //cout << "Activating debug output" << endl;
     }
     else if(!strcmp(argv[i],"-l") && argc > i+1) {
       int logLevel = atoi(argv[i+1]);
