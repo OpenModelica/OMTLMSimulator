@@ -20,6 +20,7 @@
 /bin/omtlmsimulator
 /bin/OpenModelica/
 /bin/StartTLM*
+/build/
 /common/LINUX32/
 /common/LINUX64/
 /common/WINDOWS32/
