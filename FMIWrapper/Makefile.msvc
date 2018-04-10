@@ -1,0 +1,120 @@
+BINDIR=../bin/
+BUILDDIR=build\win
+TARGETDIR=..\bin
+
+CC=cl /DMSC_VER /DWIN32 /D_WIN32 /EHsc /DNOMINMAX /GR /DUSE_THREADS /MP /c 
+cc=cl
+LINK=link
+
+BNAME=FMIWrapper.exe
+MISCHOME=../3rdParty/misc
+
+INCLUDES= /I. \
+	/I"../FMIWrapper" \
+    /I"FMILibrary-2.0.1/src/Import/include" \
+    /I"FMILibrary-2.0.1/install/include" \
+	/I"../common" \
+	/I"../3rdParty/misc/include" \
+	/I"cvode-2.9.0/include" \
+	/I"ida-2.9.0/include"
+    
+LIBS= \
+ FMILibrary-2.0.1/install/lib/fmilib_shared.lib \
+ ws2_32.lib
+
+SRC= main.cpp \
+	../common/Plugin/PluginImplementer.cc \
+	../common/Communication/TLMClientComm.cc \
+	../common/Communication/TLMCommUtil.cc \
+	../common/Interfaces/TLMInterface.cc \
+	../common/Interfaces/TLMInterfaceSignal.cc \
+	../common/Interfaces/TLMInterfaceSignalInput.cc \
+	../common/Interfaces/TLMInterfaceSignalOutput.cc \
+	../common/Interfaces/TLMInterface1D.cc \
+	../common/Interfaces/TLMInterface3D.cc \
+	../common/Parameters/ComponentParameter.cc \
+	../common/Logging/TLMErrorLog.cc \
+	../common/Plugin/TLMPlugin.cc \
+	../3rdParty/misc/src/coordTransform.cc \
+	../3rdParty/misc/src/double3.cc \
+	../3rdParty/misc/src/double33.cc \
+	../3rdParty/misc/src/ErrorLog.cc \
+	../3rdParty/misc/src/double33s.cc \
+	../3rdParty/misc/src/dsyevq3.cc \
+	../3rdParty/misc/src/dsyevv3.cc \
+	../3rdParty/misc/src/dsyevc3.cc \
+	../3rdParty/misc/src/dsytrd3.cc \
+	../3rdParty/misc/src/Bstring.cc \
+	../3rdParty/misc/src/tostr.cc \
+	cvode-2.9.0/src/nvec_ser/nvector_serial.c \
+	cvode-2.9.0/src/sundials/sundials_math.c \
+	cvode-2.9.0/src/sundials/sundials_nvector.c \
+	cvode-2.9.0/src/sundials/sundials_direct.c \
+	cvode-2.9.0/src/sundials/sundials_dense.c \
+	cvode-2.9.0/src/cvode/cvode.c \
+	cvode-2.9.0/src/cvode/cvode_dense.c \
+	cvode-2.9.0/src/cvode/cvode_direct.c \
+	cvode-2.9.0/src/cvode/cvode_io.c \
+	ida-2.9.0/src/ida/ida.c \
+	ida-2.9.0/src/ida/ida_dense.c \
+	ida-2.9.0/src/ida/ida_direct.c \
+	ida-2.9.0/src/ida/ida_io.c
+
+OBJ=  $(BUILDDIR)/main.obj \
+	$(BUILDDIR)/PluginImplementer.obj \
+	$(BUILDDIR)/TLMClientComm.obj \
+	$(BUILDDIR)/TLMCommUtil.obj \
+	$(BUILDDIR)/TLMInterface.obj \
+	$(BUILDDIR)/TLMInterfaceSignal.obj \
+	$(BUILDDIR)/TLMInterfaceSignalInput.obj \
+	$(BUILDDIR)/TLMInterfaceSignalOutput.obj \
+	$(BUILDDIR)/TLMInterface1D.obj \
+	$(BUILDDIR)/TLMInterface3D.obj \
+	$(BUILDDIR)/ComponentParameter.obj \
+	$(BUILDDIR)/TLMErrorLog.obj \
+	$(BUILDDIR)/TLMPlugin.obj \
+	$(BUILDDIR)/coordTransform.obj \
+	$(BUILDDIR)/double3.obj \
+	$(BUILDDIR)/double33.obj \
+	$(BUILDDIR)/ErrorLog.obj \
+	$(BUILDDIR)/double33s.obj \
+	$(BUILDDIR)/dsyevq3.obj \
+	$(BUILDDIR)/dsyevv3.obj \
+	$(BUILDDIR)/dsyevc3.obj \
+	$(BUILDDIR)/dsytrd3.obj \
+	$(BUILDDIR)/Bstring.obj \
+	$(BUILDDIR)/tostr.obj \
+	$(BUILDDIR)/nvector_serial.obj \
+	$(BUILDDIR)/sundials_math.obj \
+	$(BUILDDIR)/sundials_nvector.obj \
+	$(BUILDDIR)/sundials_direct.obj \
+	$(BUILDDIR)/sundials_dense.obj \
+	$(BUILDDIR)/cvode.obj \
+	$(BUILDDIR)/cvode_dense.obj \
+	$(BUILDDIR)/cvode_direct.obj \
+	$(BUILDDIR)/cvode_io.obj \
+	$(BUILDDIR)/ida.obj \
+	$(BUILDDIR)/ida_dense.obj \
+	$(BUILDDIR)/ida_direct.obj \
+	$(BUILDDIR)/ida_io.obj
+   
+default: dirs link 
+ -move FMIWrapper.exe $(TARGETDIR)
+  
+dirs: $(BUILDDIR)
+
+$(BUILDDIR):
+ -mkdir $(BUILDDIR)
+ 
+link: $(OBJ)
+ $(LINK) $(OBJ) $(LIBS) /OUT:FMIWrapper.exe
+  
+$(OBJ): $(SRC)
+ $(CC) $(SRC) $(INCLUDES) /c
+ -xcopy *.obj $(BUILDDIR)
+ -del *.obj
+ 
+clean:
+ -del $(BUILDDIR)\*.obj
+ -del $(TARGETDIR)\FMIWrapper.exe
+  

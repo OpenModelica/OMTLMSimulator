@@ -114,16 +114,18 @@ default: dirs
 	$(MAKE) $(ABIOBJS)
 	$(LINK) $(ABIOBJS$) -o $(ABI)/$(BNAME) $(LIBS)
 
-copyfiles:
+
+install: default
 	cp $(ABI)/$(BNAME) $(BINDIR)
 	cp StartTLMFmiWrapper* $(BINDIR)
 
-install: | default copyfiles
 
 wrapper: dirs $(ABIOBJS)
 	$(LINK) $(ABIOBJS$) -o $(ABI)/$(BNAME) $(LIBS)
 
-wrapper_install: | wrapper copyfiles
+wrapper_install: wrapper
+	cp $(ABI)/$(BNAME) $(BINDIR)
+	cp StartTLMFmiWrapper* $(BINDIR)
 
 
 .PHONY: dirs clean
@@ -138,7 +140,7 @@ dirs:
 
 fmil:
 	mkdir -p FMILibrary-2.0.1/build
-	(cd FMILibrary-2.0.1/build && $(CMAKE) -D CMAKE_AR:String="$(AR)" $(FMIL_FLAGS) -D FMILIB_BUILD_TESTS:Bool=OFF -D FMILIB_GENERATE_DOXYGEN_DOC:Bool=OFF -DFMILIB_INSTALL_PREFIX:String=../install .. -G $(CMAKE_TARGET))
+	(cd FMILibrary-2.0.1/build && $(CMAKE) $(FMIL_FLAGS) -D FMILIB_BUILD_TESTS:Bool=OFF -D FMILIB_GENERATE_DOXYGEN_DOC:Bool=OFF -DBUILD_TESTING:BOOL=0 -DFMILIB_BUILD_BEFORE_TESTS:BOOL=0 -DFMILIB_INSTALL_PREFIX:String=../install .. $(CMAKE_TARGET))
 	$(MAKE) -C FMILibrary-2.0.1/build
 	$(MAKE) -C FMILibrary-2.0.1/build install
 	cp -p FMILibrary-2.0.1/install/lib/libfmilib_shared$(SHREXT) $(BINDIR)

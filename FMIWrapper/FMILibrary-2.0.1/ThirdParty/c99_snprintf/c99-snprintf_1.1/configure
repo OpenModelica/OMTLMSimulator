@@ -4475,7 +4475,7 @@ _ACEOF
 else
 
 cat >>confdefs.h <<\_ACEOF
-#define vsnprintf rpl_vsnprintf
+# #define vsnprintf rpl_vsnprintf
 _ACEOF
 
 
