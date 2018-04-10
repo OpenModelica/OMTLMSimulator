@@ -37,7 +37,7 @@ fi
 mkdir -p $MODELDIR
 cd $MODELDIR
 
-echo Starting an FMIWrapper simulation with input file: $6 > $NAME.simlog
+echo Starting an FMIWrapper simulation with input file: $6 >> $NAME.simlog
 echo execution directory is $MODELDIR >> $NAME.simlog
 echo Make sure that: >> $NAME.simlog
 echo time = $2 >> $NAME.simlog

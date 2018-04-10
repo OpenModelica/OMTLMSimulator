@@ -1,3 +1,5 @@
+#define _WINSOCKAPI_
+
 // C++ includes
 #include <iostream>
 #include <string>
@@ -6,7 +8,9 @@
 #include <sys/stat.h>
 #include <cstdio>
 #include <cstdlib>
+#ifndef _MSC_VER
 #include <unistd.h>
+#endif
 #include <vector>
 #include <fstream>
 #include <map>

@@ -269,8 +269,8 @@
 #define HAVE___VA_COPY 1
 #endif	/* !defined(HAVE___VA_COPY) */
 #endif	/* HAVE_CONFIG_H */
-#define snprintf rpl_snprintf
-#define vsnprintf rpl_vsnprintf
+//#define snprintf rpl_snprintf
+//#define vsnprintf rpl_vsnprintf
 #define asprintf rpl_asprintf
 #define vasprintf rpl_vasprintf
 #endif	/* TEST_SNPRINTF */
