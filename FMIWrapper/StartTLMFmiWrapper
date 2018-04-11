@@ -34,26 +34,26 @@ if [ ! -f "$MODELPATH" ] ; then
 	exit 1
 fi
 
-mkdir $MODELDIR
-echo execution directory is $MODELDIR
+mkdir -p $MODELDIR
 cd $MODELDIR
 
-echo Starting an FMIWrapper simulation with input file: $6
-echo Make sure that: 
-echo time = $2
-echo timeEnd = $3
-echo MaxTimeStep "<"= $4
-echo 
+echo Starting an FMIWrapper simulation with input file: $6 >> $NAME.simlog
+echo execution directory is $MODELDIR >> $NAME.simlog
+echo Make sure that: >> $NAME.simlog
+echo time = $2 >> $NAME.simlog
+echo timeEnd = $3 >> $NAME.simlog
+echo MaxTimeStep "<"= $4 >> $NAME.simlog
+echo >> $NAME.simlog
 
-echo Writing caseID $NAME and server name $5 to file $TLMCONFIGFILE
-echo $1 > $TLMCONFIGFILE 
+echo Writing caseID $NAME and server name $5 to file $TLMCONFIGFILE >> $NAME.simlog
+echo $1 > $TLMCONFIGFILE
 echo $5 >> $TLMCONFIGFILE
 echo $2 >> $TLMCONFIGFILE
 echo $3 >> $TLMCONFIGFILE
 echo $4 >> $TLMCONFIGFILE
 
-echo Starting FMIWrapper
-echo $FMIWrapper_Cmd
-echo DOING THIS: $FMIWrapper_Cmd > $NAME.simlog
+echo Starting FMIWrapper >> $NAME.simlog
+echo $FMIWrapper_Cmd >> $NAME.simlog
+echo DOING THIS: $FMIWrapper_Cmd >> $NAME.simlog
 $FMIWrapper_Cmd
-echo DONE THIS: $FMIWrapper_Cmd > $NAME.simlog
+echo DONE THIS: $FMIWrapper_Cmd >> $NAME.simlog

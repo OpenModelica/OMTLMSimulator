@@ -87,8 +87,8 @@ foreach(check ${CHECKS})
     endif()
 endforeach()
 add_definitions(
-    -Dvsnprintf=rpl_vsnprintf
-    -Dsnprintf=rpl_snprintf
+#    -Dvsnprintf=rpl_vsnprintf
+#    -Dsnprintf=rpl_snprintf
     -Dvasprintf=rpl_vasprintf
     -Dasprintf=rpl_asprintf
     ${DEFINES})
