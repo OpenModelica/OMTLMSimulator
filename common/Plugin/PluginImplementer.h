@@ -50,7 +50,7 @@ protected:
     void CheckModel();
 
     //! Registered interfaces
-    std::vector<TLMInterface*> Interfaces;
+    std::vector<omtlm_TLMInterface*> Interfaces;
 
     //! Registered parameters
     std::vector<ComponentParameter*> Parameters;
@@ -104,7 +104,7 @@ protected:
     //! Input:
     //!   reqIfc - TLM interface that triggered the request;
     //!   time - time needed
-    virtual void ReceiveTimeData(TLMInterface* reqIfc, double time);
+    virtual void ReceiveTimeData(omtlm_TLMInterface* reqIfc, double time);
 
     //! Evaluate the reaction force from the TLM connection
     //! for a specified interface. Might need to receive messages from the

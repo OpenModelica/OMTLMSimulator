@@ -10,7 +10,7 @@
 static const double TLM_DAMP_DELAY = 1.5;
 
 TLMInterface1D::TLMInterface1D(TLMClientComm &theComm, std::string &aName, double StartTime, std::string Domain)
-    : TLMInterface(theComm, aName, StartTime, 1, "Bidirectional", Domain) {}
+    : omtlm_TLMInterface(theComm, aName, StartTime, 1, "Bidirectional", Domain) {}
 
 TLMInterface1D::~TLMInterface1D() {
     if(DataToSend.size() != 0) {
@@ -242,17 +242,17 @@ void TLMInterface1D::InterpolateLinear(TLMTimeData1D& Instance, TLMTimeData1D& p
     const double t1 = p1.time;
 
     // interpolate force "wave"
-    Instance.GenForce = TLMInterface::linear_interpolate(time, t0, t1, p0.GenForce, p1.GenForce);
+    Instance.GenForce = omtlm_TLMInterface::linear_interpolate(time, t0, t1, p0.GenForce, p1.GenForce);
 
     if(OnlyForce) return;
 
     // The rest is optional
 
     // interpolate position
-    Instance.Position = TLMInterface::linear_interpolate(time, t0, t1, p0.Position, p1.Position);
+    Instance.Position = omtlm_TLMInterface::linear_interpolate(time, t0, t1, p0.Position, p1.Position);
 
     // interpolate velocity
-    Instance.Velocity = TLMInterface::linear_interpolate(time, t0, t1, p0.Velocity, p1.Velocity);
+    Instance.Velocity = omtlm_TLMInterface::linear_interpolate(time, t0, t1, p0.Velocity, p1.Velocity);
 }
 
 

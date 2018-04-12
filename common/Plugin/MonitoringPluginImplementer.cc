@@ -12,7 +12,7 @@ MonitoringPluginImplementer* MonitoringPluginImplementer::CreateInstance() {
     return new MonitoringPluginImplementer();
 }
 
-void MonitoringPluginImplementer::ReceiveTimeData(TLMInterface* reqIfc, double time) {
+void MonitoringPluginImplementer::ReceiveTimeData(omtlm_TLMInterface* reqIfc, double time) {
     while(time > reqIfc->GetNextRecvTime()) { // while data is needed
 
         // Receive data untill there is info for this interface
@@ -23,7 +23,7 @@ void MonitoringPluginImplementer::ReceiveTimeData(TLMInterface* reqIfc, double t
                               TLMErrorLog::ToStdStr(time));
         }
 
-        TLMInterface* ifc = NULL;
+        omtlm_TLMInterface* ifc = NULL;
 
         do {
 

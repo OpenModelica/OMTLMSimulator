@@ -28,6 +28,7 @@
 extern "C"
 {
 #endif
+
 DLLEXPORT void* omtlm_newModel(const char *name);
 
 /**
@@ -135,6 +136,8 @@ DLLEXPORT void omtlm_setLogLevel(void *pModel, int logLevel);
  * @param address IP address to where manger process is running.
  */
 DLLEXPORT void omtlm_setAddress(void *pModel, std::string address);
+
+DLLEXPORT void omtlm_checkPortAvailability(int *port);
 
 /**
  * \brief Sets manager port.

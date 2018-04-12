@@ -118,7 +118,7 @@ public:
     //! RunStartupProtocol implements startup protocol that
     //! enables client registration at the manager
     void RunStartupProtocol();
-    
+
 
     //! ProcessRegComponentMessage processes the first message after "accept"
     //! It is expected to be a component registration message.

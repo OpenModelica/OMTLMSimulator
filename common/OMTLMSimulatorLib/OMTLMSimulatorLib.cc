@@ -36,6 +36,7 @@
 #define BCloseSocket close
 #else
 #include <winsock2.h>
+#define NOMINMAX
 #include <windows.h>
 #include <cassert>
 #include <io.h>
@@ -91,94 +92,6 @@ public:
   int numLogSteps = 1000;
 
 };
-
-
-
-void checkPortAvailability(int &port) {
-      struct sockaddr_in sa;  // My socket addr.
-
-  #define MAXHOSTNAME 1024
-
-      char myname[MAXHOSTNAME+1];
-      struct hostent *hp;
-
-  #ifdef WIN32
-      WSADATA ws;
-      int d;
-      d=WSAStartup(0x0101,&ws);
-      assert(d==0);
-  #endif
-
-      memset(&sa,0, sizeof(struct sockaddr_in));
-      gethostname(myname,MAXHOSTNAME);
-      hp = gethostbyname((const char*) myname);
-
-      if(hp==NULL) {
-          TLMErrorLog::FatalError("Create server socket - failed to get my hostname, check that name resolves, e.g. /etc/hosts has "+std::string(myname));
-          // See BZ2161.
-
-          // Adding this line to /etc/hosts resolves (for me) the problem with
-          //  "Create server socket - failed to get my hostname"
-
-          // 127.0.0.3       homer.mathcore.local
-
-
-          port = -1;
-          return;
-      }
-      sa.sin_family = hp->h_addrtype;
-
-  #ifdef WIN32
-      char* localIP;
-      localIP = inet_ntoa (*(struct in_addr *)*hp->h_addr_list);
-      sa.sin_addr.s_addr = inet_addr(localIP);
-  #endif
-
-      if(AF_INET != sa.sin_family) {
-          TLMErrorLog::FatalError("Unsupported address family returned by gethostbyname");
-          port = -1;
-          return;
-      }
-      sa.sin_port = htons(port);
-
-      int theSckt;
-
-      if((theSckt =
-       #ifdef WIN32
-           socket(AF_INET, SOCK_STREAM,IPPROTO_TCP)
-       #else
-           socket(AF_INET, SOCK_STREAM,0)
-
-       #endif
-          ) < 0) {
-          TLMErrorLog::FatalError("Create server socket - failed to get a socket handle");
-
-          port = -1;
-          return;
-      }
-
-      bool val = true;
-      setsockopt(theSckt, SOL_SOCKET, SO_REUSEADDR, (char*)&val, sizeof(int));
-
-      int bindCount = 0;
-      int maxIterations = 1000; // BUG: should be calculated from a max. port range!
-      // Bind the socket, first try the predefined port, then increase port number.
-      while(bind(theSckt,(struct sockaddr *) &sa, sizeof(struct sockaddr_in)) < 0 && bindCount < maxIterations) {
-          port++;
-          //std::cout << "Increasing port number to " << port << "\n";
-          bindCount++;
-          sa.sin_port = htons(port);
-      }
-
-      if(bindCount == maxIterations) {
-          BCloseSocket(theSckt);
-          TLMErrorLog::FatalError("Create server socket - failed to bind. Check that the port is free.");
-          port = -1;
-          return;
-      }
-
-      close(theSckt);
-}
 
 
 TLMPlugin* InitializeTLMConnection(omtlm_CompositeModel& model, std::string& serverName) {
@@ -1058,8 +971,8 @@ void simulateInternal(void *pModel,
 
   CompositeModelProxy *pModelProxy = (CompositeModelProxy*)pModel;
 
-  checkPortAvailability(pModelProxy->managerPort);
-  checkPortAvailability(pModelProxy->monitorPort);
+  //checkPortAvailability(pModelProxy->managerPort);
+  //checkPortAvailability(pModelProxy->monitorPort);
 
   ManagerCommHandler::CommunicationMode comMode=ManagerCommHandler::CoSimulationMode;
   if(interfaceRequest) {
@@ -1201,7 +1114,7 @@ void omtlm_addConnection(void *pModel,
                          double Zf,
                          double Zfr,
                          double alpha) {
-  // Todo: Error checking
+    // Todo: Error checking
 
   int interfaceId1 = interfaceMap.find(std::string(interfaceName1))->second;
   int interfaceId2 = interfaceMap.find(std::string(interfaceName2))->second;
@@ -1299,6 +1212,92 @@ void omtlm_setStopTime(void *pModel, double stopTime)
 void omtlm_setLogLevel(void *pModel, int logLevel) {
   CompositeModelProxy *pModelProxy = (CompositeModelProxy*)pModel;
   pModelProxy->logLevel = logLevel;
+}
+
+void omtlm_checkPortAvailability(int *port) {
+      struct sockaddr_in sa;  // My socket addr.
+
+  #define MAXHOSTNAME 1024
+
+      char myname[MAXHOSTNAME+1];
+      struct hostent *hp;
+
+  #ifdef WIN32
+      WSADATA ws;
+      int d;
+      d=WSAStartup(0x0101,&ws);
+      assert(d==0);
+  #endif
+
+      memset(&sa,0, sizeof(struct sockaddr_in));
+      gethostname(myname,MAXHOSTNAME);
+      hp = gethostbyname((const char*) myname);
+
+      if(hp==NULL) {
+          TLMErrorLog::FatalError("Create server socket - failed to get my hostname, check that name resolves, e.g. /etc/hosts has "+std::string(myname));
+          // See BZ2161.
+
+          // Adding this line to /etc/hosts resolves (for me) the problem with
+          //  "Create server socket - failed to get my hostname"
+
+          // 127.0.0.3       homer.mathcore.local
+
+
+          (*port) = -1;
+          return;
+      }
+      sa.sin_family = hp->h_addrtype;
+
+  #ifdef WIN32
+      char* localIP;
+      localIP = inet_ntoa (*(struct in_addr *)*hp->h_addr_list);
+      sa.sin_addr.s_addr = inet_addr(localIP);
+  #endif
+
+      if(AF_INET != sa.sin_family) {
+          TLMErrorLog::FatalError("Unsupported address family returned by gethostbyname");
+          (*port) = -1;
+          return;
+      }
+      sa.sin_port = htons(*port);
+
+      int theSckt;
+
+      if((theSckt =
+       #ifdef WIN32
+           socket(AF_INET, SOCK_STREAM,IPPROTO_TCP)
+       #else
+           socket(AF_INET, SOCK_STREAM,0)
+
+       #endif
+          ) < 0) {
+          TLMErrorLog::FatalError("Create server socket - failed to get a socket handle");
+
+          (*port) = -1;
+          return;
+      }
+
+      bool val = true;
+      setsockopt(theSckt, SOL_SOCKET, SO_REUSEADDR, (char*)&val, sizeof(int));
+
+      int bindCount = 0;
+      int maxIterations = 1000; // BUG: should be calculated from a max. port range!
+      // Bind the socket, first try the predefined port, then increase port number.
+      while(bind(theSckt,(struct sockaddr *) &sa, sizeof(struct sockaddr_in)) < 0 && bindCount < maxIterations) {
+          (*port)++;
+          //std::cout << "Increasing port number to " << port << "\n";
+          bindCount++;
+          sa.sin_port = htons(*port);
+      }
+
+      if(bindCount == maxIterations) {
+          BCloseSocket(theSckt);
+          TLMErrorLog::FatalError("Create server socket - failed to bind. Check that the port is free.");
+          (*port) = -1;
+          return;
+      }
+
+      close(theSckt);
 }
 
 void omtlm_setAddress(void *pModel, std::string address) {

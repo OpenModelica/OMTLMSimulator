@@ -22,7 +22,7 @@ using std::ofstream;
 
 
 // TLMInterface constructor
-TLMInterface::TLMInterface(TLMClientComm& theComm, std::string& aName, double StartTime,
+omtlm_TLMInterface::omtlm_TLMInterface(TLMClientComm& theComm, std::string& aName, double StartTime,
                            int dimensions, std::string causality, std::string domain):
     LastSendTime(StartTime),
     NextRecvTime(0.0),
@@ -55,12 +55,12 @@ TLMInterface::TLMInterface(TLMClientComm& theComm, std::string& aName, double St
 }
 
 
-TLMInterface::~TLMInterface() {}
+omtlm_TLMInterface::~omtlm_TLMInterface() {}
 
 
 // Hermite cubic interpolation. For the given 4 data points t[i], f[i] and time,
 // such that t[0]<t[1]<time<t[2]<t[3], returns f(time). .
-double TLMInterface::InterpolateHermite(double time, double t[4], double f[4]) {
+double omtlm_TLMInterface::InterpolateHermite(double time, double t[4], double f[4]) {
     double fa = f[1];
     double fb = f[2];
     double  ta = t[1];

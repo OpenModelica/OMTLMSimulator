@@ -1,6 +1,5 @@
 #include "Communication/TLMCommUtil.h"
 #include "Logging/TLMErrorLog.h"
-#include "tostr.h"
 
 #include <string>
 
@@ -32,8 +31,8 @@ void TLMCommUtil::SendMessage(TLMMessage& mess) {
 
     if(doDetailedLogging) {
         TLMErrorLog::Info("SendMessage: wants to send "+
-                         Int2Str(sizeof(TLMMessageHeader))+"+"+
-                         Int2Str(DataSize)+ " bytes ");
+                         std::to_string(sizeof(TLMMessageHeader))+"+"+
+                         std::to_string(DataSize)+ " bytes ");
     }
 
     if(TLMMessageHeader::IsBigEndianSystem != mess.Header.SourceIsBigEndianSystem) {
@@ -57,11 +56,11 @@ void TLMCommUtil::SendMessage(TLMMessage& mess) {
 
 #ifdef  WIN32
     int errcode = WSAGetLastError();
-    if(errcode) TLMErrorLog::Warning("send() SOCKET_ERROR received, error code ="+Int2Str(errcode));
+    if(errcode) TLMErrorLog::Warning("send() SOCKET_ERROR received, error code ="+std::to_string(errcode));
 #endif
 
     if(doDetailedLogging) {
-        TLMErrorLog::Info("SendMessage:send() sent "+Int2Str(sendBytes)+ " bytes ");
+        TLMErrorLog::Info("SendMessage:send() sent "+std::to_string(sendBytes)+ " bytes ");
     }
 
     if(DataSize > 0) {
@@ -74,11 +73,11 @@ void TLMCommUtil::SendMessage(TLMMessage& mess) {
 
 #ifdef  WIN32
         int errcode = WSAGetLastError();
-        if(errcode) TLMErrorLog::Warning("send() SOCKET_ERROR received, error code ="+Int2Str(errcode));
+        if(errcode) TLMErrorLog::Warning("send() SOCKET_ERROR received, error code ="+std::to_string(errcode));
 #endif
 
         if(doDetailedLogging) {
-            TLMErrorLog::Info("SendMessage:send()(part 2) sent "+Int2Str(sendBytes)+ " bytes ");
+            TLMErrorLog::Info("SendMessage:send()(part 2) sent "+std::to_string(sendBytes)+ " bytes ");
         }
 
     }
@@ -118,14 +117,14 @@ bool TLMCommUtil::ReceiveMessage(TLMMessage& mess) {
         int errcode=WSAGetLastError();
         if(errcode==WSAECONNRESET)
             // This is called by normal termination of BEAST
-            TLMErrorLog::Info("SOCKET_ERROR received, error code ="+Int2Str(errcode));
+            TLMErrorLog::Info("SOCKET_ERROR received, error code ="+std::to_string(errcode));
         else
-            TLMErrorLog::Warning("SOCKET_ERROR received, error code ="+Int2Str(errcode));
+            TLMErrorLog::Warning("SOCKET_ERROR received, error code ="+std::to_string(errcode));
 #endif
         return false;
     }
     if(doDetailedLogging) {
-        TLMErrorLog::Info("ReceiveMessage:recv() returned "+Int2Str(bcount)+ " bytes ");
+        TLMErrorLog::Info("ReceiveMessage:recv() returned "+std::to_string(bcount)+ " bytes ");
     }
 
     if(strncmp(mess.Header.Signature, TLMMessageHeader::TLMSignature, TLMMessageHeader::TLM_SIGNATURE_LENGTH) != 0) {
@@ -169,13 +168,13 @@ bool TLMCommUtil::ReceiveMessage(TLMMessage& mess) {
 
 #ifdef  WIN32
             int errcode=WSAGetLastError();
-            TLMErrorLog::Warning("SOCKET_ERROR received(part 2), error code ="+Int2Str(errcode));
+            TLMErrorLog::Warning("SOCKET_ERROR received(part 2), error code ="+std::to_string(errcode));
 #endif
 
             return false;
         }
         if(doDetailedLogging) {
-            TLMErrorLog::Info("ReceiveMessage:recv()(part 2) returned "+Int2Str(bcount)+ " bytes ");
+            TLMErrorLog::Info("ReceiveMessage:recv()(part 2) returned "+std::to_string(bcount)+ " bytes ");
         }
         if(bcount != mess.Header.DataSize) {
             TLMErrorLog::FatalError("Error receiving message data");
