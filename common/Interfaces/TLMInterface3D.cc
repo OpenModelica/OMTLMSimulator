@@ -10,7 +10,7 @@
 static const double TLM_DAMP_DELAY = 1.5;
 
 TLMInterface3D::TLMInterface3D(TLMClientComm &theComm, std::string &aName, double StartTime, std::string Domain)
-    : TLMInterface(theComm, aName, StartTime, 6, "Bidirectional", Domain) {}
+    : omtlm_TLMInterface(theComm, aName, StartTime, 6, "Bidirectional", Domain) {}
 
 TLMInterface3D::~TLMInterface3D() {
     if(DataToSend.size() != 0) {
@@ -344,7 +344,7 @@ void TLMInterface3D::InterpolateLinear(TLMTimeData3D& Instance, TLMTimeData3D& p
 
     while(j-- > 0) { // interpolate force "wave"
         Instance.GenForce[j] =
-                TLMInterface::linear_interpolate(time, t0, t1, p0.GenForce[j], p1.GenForce[j]);
+                omtlm_TLMInterface::linear_interpolate(time, t0, t1, p0.GenForce[j], p1.GenForce[j]);
     }
 
     if(OnlyForce) return;
@@ -354,13 +354,13 @@ void TLMInterface3D::InterpolateLinear(TLMTimeData3D& Instance, TLMTimeData3D& p
     j = 3;
     while(j-- > 0) { // interpolate position
         Instance.Position[j] =
-                TLMInterface::linear_interpolate(time, t0, t1, p0.Position[j], p1.Position[j]);
+                omtlm_TLMInterface::linear_interpolate(time, t0, t1, p0.Position[j], p1.Position[j]);
     }
 
     j = 6;
     while(j-- > 0) { // interpolate velocity
         Instance.Velocity[j] =
-                TLMInterface::linear_interpolate(time, t0, t1, p0.Velocity[j], p1.Velocity[j]);
+                omtlm_TLMInterface::linear_interpolate(time, t0, t1, p0.Velocity[j], p1.Velocity[j]);
     }
 
     // interpolation of angles require special treatment.
@@ -383,7 +383,7 @@ void TLMInterface3D::InterpolateLinear(TLMTimeData3D& Instance, TLMTimeData3D& p
 
     j = 4;
     while(--j > 0) {
-        phi(j) = TLMInterface::linear_interpolate(time, t0, t1, 0.0, phi(j));
+        phi(j) = omtlm_TLMInterface::linear_interpolate(time, t0, t1, 0.0, phi(j));
     }
     // now get the matrix (into A[0]):
     A0 *= A321(phi);
@@ -426,7 +426,7 @@ void TLMInterface3D::InterpolateHermite(TLMTimeData3D& Instance, std::deque<TLMT
         while(i-- > 0) {
             f[i] = p[i]->GenForce[j];
         }
-        Instance.GenForce[j] = TLMInterface::InterpolateHermite(time, t, f);
+        Instance.GenForce[j] = omtlm_TLMInterface::InterpolateHermite(time, t, f);
     }
 
     if(OnlyForce) return;
@@ -439,7 +439,7 @@ void TLMInterface3D::InterpolateHermite(TLMTimeData3D& Instance, std::deque<TLMT
         while(i-- > 0) {
             f[i] = p[i]->Position[j];
         }
-        Instance.Position[j] = TLMInterface::InterpolateHermite(time, t, f);
+        Instance.Position[j] = omtlm_TLMInterface::InterpolateHermite(time, t, f);
     }
 
     // interpolation of angles require special treatment.
@@ -473,7 +473,7 @@ void TLMInterface3D::InterpolateHermite(TLMTimeData3D& Instance, std::deque<TLMT
         while(i-- > 0) {
             f[i] = phi[i](j);
         }
-        phi_out(j) = TLMInterface::InterpolateHermite(time, t, f);
+        phi_out(j) = omtlm_TLMInterface::InterpolateHermite(time, t, f);
     }
     // now get the matrix (into A[0]):
     A[0] *= A321(phi_out);

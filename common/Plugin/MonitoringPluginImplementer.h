@@ -30,7 +30,7 @@ public:
     //! Input:
     //!   reqIfc - TLM interface that triggered the request;
     //!   time - time needed
-    void ReceiveTimeData(TLMInterface *reqIfc, double time);
+    void ReceiveTimeData(omtlm_TLMInterface *reqIfc, double time);
 
     //! Initialize plugin for interface monitoring. Should be called
     //! after the default constructor. It will initialize the object

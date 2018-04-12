@@ -7,7 +7,6 @@
 #include "Communication/TLMClientComm.h"
 #include "Logging/TLMErrorLog.h"
 #include "Interfaces/TLMInterface.h"
-#include "tostr.h"
 #include <vector>
 #include <deque>
 #include <string>
@@ -29,6 +28,7 @@ using std::string;
 #include <arpa/inet.h>
 #else
 #include <winsock2.h>
+#define NOMINMAX
 #include <windows.h>
 #include <cassert>
 #include <io.h>
@@ -290,9 +290,9 @@ void TLMClientComm::UnpackRegInterfaceMessage(TLMMessage& mess, TLMConnectionPar
     if(mess.Header.DataSize == 0) return; // non connected interface
     if(mess.Header.DataSize != sizeof(TLMConnectionParams)) {
         TLMErrorLog::FatalError("Wrong size of message in interface registration : DataSize "+
-            Int2Str(mess.Header.DataSize)+
+            std::to_string(mess.Header.DataSize)+
             " sizeof(TLMConnectionParams)="+
-            Int2Str(sizeof(TLMConnectionParams)));
+            std::to_string(sizeof(TLMConnectionParams)));
     }
 
     // check if we have byte order missmatch in the message and perform
@@ -313,9 +313,9 @@ void TLMClientComm::UnpackRegParameterMessage(TLMMessage &mess, std::string &Val
     char ValueBuf[100];
     if(mess.Header.DataSize != sizeof(ValueBuf)) {
         TLMErrorLog::FatalError("Wrong size of message in parameter registration : DataSize "+
-            Int2Str(mess.Header.DataSize)+
+            std::to_string(mess.Header.DataSize)+
             " sizeof(ValueBuf)="+
-            Int2Str(sizeof(ValueBuf)));
+            std::to_string(sizeof(ValueBuf)));
     }
 
     // check if we have byte order missmatch in the message and perform

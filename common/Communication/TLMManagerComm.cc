@@ -23,6 +23,7 @@ using std::string;
 #define BCloseSocket close
 #else
 #include <winsock2.h>
+#define NOMINMAX
 #include <windows.h>
 #include <cassert>
 #include <io.h>
