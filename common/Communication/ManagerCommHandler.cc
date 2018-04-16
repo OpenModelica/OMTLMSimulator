@@ -19,6 +19,7 @@
 #include <unistd.h> 
 #endif
 
+
 using std::string;
 using std::cerr;
 using std::endl;
@@ -106,6 +107,7 @@ void ManagerCommHandler::RunStartupProtocol() {
     tTM_Info tInfo;
     TM_Init(&tInfo);
     TM_Start(&tInfo);
+
 
     while((numToRegister > 0) || (numCheckModel < TheModel.GetComponentsNum())) {
         Comm.SelectReadSocket();

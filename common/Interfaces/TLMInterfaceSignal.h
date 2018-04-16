@@ -15,7 +15,7 @@
 //!
 //! TLMInterfaceSignal provides the base class for client side functionality for a single signal interface
 //!
-class TLMInterfaceSignal : public TLMInterface {
+class TLMInterfaceSignal : public omtlm_TLMInterface {
 public:
   TLMInterfaceSignal(TLMClientComm &theComm, std::string &aName, double StartTime, int Dimensions,
                      std::string Causality, std::string Domain="Signal");

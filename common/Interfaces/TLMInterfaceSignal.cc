@@ -12,7 +12,7 @@ static const double TLM_DAMP_DELAY = 1.5;
 TLMInterfaceSignal::TLMInterfaceSignal(TLMClientComm &theComm, std::string &aName, double StartTime,
                                        int Dimensions, std::string Causality,
                                        std::string Domain)
-    : TLMInterface(theComm, aName, StartTime, Dimensions, Causality, Domain) {}
+    : omtlm_TLMInterface(theComm, aName, StartTime, Dimensions, Causality, Domain) {}
 
 TLMInterfaceSignal::~TLMInterfaceSignal() {}
 
@@ -147,6 +147,6 @@ void TLMInterfaceSignal::linear_interpolate(TLMTimeDataSignal &Instance, TLMTime
     const double t1 = p1.time;
 
     // interpolate value
-    Instance.Value = TLMInterface::linear_interpolate(time, t0, t1, p0.Value, p1.Value);
+    Instance.Value = omtlm_TLMInterface::linear_interpolate(time, t0, t1, p0.Value, p1.Value);
 }
 

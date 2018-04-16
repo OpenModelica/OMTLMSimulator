@@ -116,7 +116,7 @@ PluginImplementer::PluginImplementer():
 
 PluginImplementer::~PluginImplementer() {
 
-    for(vector<TLMInterface*>::iterator it = Interfaces.begin();
+    for(vector<omtlm_TLMInterface*>::iterator it = Interfaces.begin();
         it != Interfaces.end(); ++it) {
         delete (*it);
     }
@@ -205,7 +205,7 @@ int  PluginImplementer::RegisteTLMInterface(std::string name , int dimensions,
                                             std::string causality, std::string domain) {
     TLMErrorLog::Info(string("Register Interface ") + name);
 
-    TLMInterface *ifc;
+    omtlm_TLMInterface *ifc;
     if(dimensions==6) {
         TLMErrorLog::Info("Registers TLM interface of type 3D");
         ifc = new TLMInterface3D(ClientComm, name, StartTime, domain);
@@ -273,7 +273,7 @@ int PluginImplementer::RegisterComponentParameter(std::string name, std::string 
 // before the desired message is received.
 // Input:
 //   interfaceID - ID of a TLM interface that triggered the request
-void PluginImplementer::ReceiveTimeData(TLMInterface* reqIfc, double time) {
+void PluginImplementer::ReceiveTimeData(omtlm_TLMInterface* reqIfc, double time) {
     while(time > reqIfc->GetNextRecvTime()) { // while data is needed
 
         // Receive data untill there is info for this interface
@@ -291,7 +291,7 @@ void PluginImplementer::ReceiveTimeData(TLMInterface* reqIfc, double time) {
             break;
         }
 
-        TLMInterface* ifc = NULL;
+        omtlm_TLMInterface* ifc = NULL;
 
         do {
 
@@ -445,7 +445,7 @@ void PluginImplementer::SetMotion3D(int forceID,
     }
     else {
         // Check if all interfaces wait for shutdown
-        std::vector<TLMInterface*>::iterator iter;
+        std::vector<omtlm_TLMInterface*>::iterator iter;
         for(iter=Interfaces.begin(); iter!=Interfaces.end(); iter++) {
             if((*iter)->GetCausality() == "Input") continue;
             if(! (*iter)->waitForShutdown()) return;
@@ -480,7 +480,7 @@ void PluginImplementer::SetValueSignal(int valueID,
     }
     else {
         // Check if all interfaces wait for shutdown
-        std::vector<TLMInterface*>::iterator iter;
+        std::vector<omtlm_TLMInterface*>::iterator iter;
         for(iter=Interfaces.begin(); iter!=Interfaces.end(); iter++) {
             if((*iter)->GetCausality() == "Input") continue;
             if(! (*iter)->waitForShutdown()) return;
@@ -516,7 +516,7 @@ void PluginImplementer::SetMotion1D(int forceID,
     }
     else {
         // Check if all interfaces wait for shutdown
-        std::vector<TLMInterface*>::iterator iter;
+        std::vector<omtlm_TLMInterface*>::iterator iter;
         for(iter=Interfaces.begin(); iter!=Interfaces.end(); iter++) {
             if((*iter)->GetCausality() == "Input") continue;
             if(! (*iter)->waitForShutdown()) return;
@@ -538,7 +538,7 @@ void PluginImplementer::GetConnectionParams(int interfaceID, TLMConnectionParams
 
     // Use the ID to get to the right interface object
     int idx = GetInterfaceIndex(interfaceID);
-    TLMInterface* ifc = Interfaces[idx];
+    omtlm_TLMInterface* ifc = Interfaces[idx];
     assert(ifc -> GetInterfaceID() == interfaceID);
 
     ParamsOut = ifc->GetConnParams();
