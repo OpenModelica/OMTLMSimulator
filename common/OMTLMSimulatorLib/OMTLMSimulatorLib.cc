@@ -110,8 +110,6 @@ TLMPlugin* InitializeTLMConnection(omtlm_CompositeModel& model, std::string& ser
     return 0;
   }
 
-  std::cout << "Monitor initialized.\n";
-
   int nTLMInterfaces = model.GetInterfacesNum();
   for(int i=0; i<nTLMInterfaces; i++) {
     TLMInterfaceProxy& interfaceProxy = model.GetTLMInterfaceProxy(i);
@@ -125,7 +123,6 @@ TLMPlugin* InitializeTLMConnection(omtlm_CompositeModel& model, std::string& ser
     if(TLMInterfaceID >= 0) {
       TLMErrorLog::Info("Registration was successful");
       std::string compName = model.GetTLMComponentProxy(interfaceProxy.GetComponentID()).GetName();
-      std::cout << "Registered monitoring interface: " <<  compName << "." << interfaceProxy.GetName() << "\n";
     }
     else {
       TLMErrorLog::Info("Interface not connected in Meta-Model: " + component.GetName() + "." + interfaceProxy.GetName());
@@ -786,7 +783,6 @@ int startMonitor(double timeStep,
     TLMErrorLog::FatalError("Failed to initialize TLM interface, give up.");
     exit(1);
   }
-  std::cout << "Success.\n";
 
   // Setup simulation time for logging.
   double simTime = model.GetSimParams().GetStartTime();
@@ -939,9 +935,7 @@ int startManager(int serverPort,
 
 
   // Run the simulation
-  std::cout << "Starting manager.\n";
   manager.Run(comMode);
-  std::cout << "Manager finished.\n";
 
   // Print interface information if needed.
   if(comMode == ManagerCommHandler::InterfaceRequestMode) {
@@ -1021,8 +1015,6 @@ void simulateInternal(void *pModel,
   }
   managerThread.join();
   std::cout << "Manager thread finished.\n";
-
-  std::cout << "Exiting.\n";
 
   return;
 }
@@ -1175,9 +1167,7 @@ void omtlm_unloadModel(void *pModel)
 
 void omtlm_simulate(void *model) {
   CompositeModelProxy *pModelProxy = (CompositeModelProxy*)model;
-  std::cout << "Starting simulation.\n";
-  std::cout << "Start time = " << pModelProxy->startTime << "\n";
-  std::cout << "Stop time = " << pModelProxy->stopTime << "\n";
+  std::cout << "Starting TLM simulation.\n";
   simulateInternal(model,
                    false,
                    "");
