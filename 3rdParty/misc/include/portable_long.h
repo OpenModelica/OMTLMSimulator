@@ -31,7 +31,7 @@ typedef  long long int long64 ;
     #if (defined(__BIG_ENDIAN) && __BIG_ENDIAN)
       #define _BIG_ENDIAN
     #else
-      #if defined(_X86) || defined(__x86_64) || defined(_M_IX86) || defined(__alpha) || defined(__i386) || defined(_M_X64) || defined(__amd64__) 
+      #if defined(_X86) || defined(__x86_64) || defined(_M_IX86) || defined(__alpha) || defined(__i386) || defined(_M_X64) || defined(__amd64__) || defined(__arm__)
         #define _LITTLE_ENDIAN
       #else
         #if defined(__sparc) || defined (__mips)
