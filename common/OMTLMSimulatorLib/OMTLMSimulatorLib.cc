@@ -116,6 +116,7 @@ TLMPlugin* InitializeTLMConnection(omtlm_CompositeModel& model, std::string& ser
     TLMComponentProxy& component = model.GetTLMComponentProxy(interfaceProxy.GetComponentID());
 
     TLMErrorLog::Info("Trying to register monitoring interface " + interfaceProxy.GetName());
+    std::cout << "Monitor registering interface, dimensions = " << interfaceProxy.GetDimensions() << "\n";
     int TLMInterfaceID = TLMlink->RegisteTLMInterface(component.GetName() + "." + interfaceProxy.GetName(),
                                                       interfaceProxy.GetDimensions(), interfaceProxy.GetCausality(),
                                                       interfaceProxy.GetDomain());
@@ -1108,8 +1109,12 @@ void omtlm_addConnection(void *pModel,
                          double alpha) {
     // Todo: Error checking
 
+  std::cout << "omtlm_addConnection\n";
+
   int interfaceId1 = interfaceMap.find(std::string(interfaceName1))->second;
   int interfaceId2 = interfaceMap.find(std::string(interfaceName2))->second;
+
+  std::cout << "omtlm debug 1\n";
 
   CompositeModelProxy *pModelProxy = (CompositeModelProxy*)pModel;
   omtlm_CompositeModel *pCompositeModel = pModelProxy->mpCompositeModel;
@@ -1119,14 +1124,23 @@ void omtlm_addConnection(void *pModel,
   params.Zfr = Zfr;
   params.alpha = alpha;
 
+  std::cout << "omtlm debug 2\n";
+
   int connId = pCompositeModel->RegisterTLMConnection(interfaceId1,
                                                       interfaceId2,
                                                       params);
 
+  std::cout << "omtlm debug 3\n";
+
   TLMConnection connection = pCompositeModel->GetTLMConnection(connId);
 
+    std::cout << "omtlm debug 3.1\n";
+
   pCompositeModel->GetTLMInterfaceProxy(interfaceId1).SetConnected();
+  std::cout << "omtlm debug 3.2\n";
   pCompositeModel->GetTLMInterfaceProxy(interfaceId1).SetConnection(connection);
+
+  std::cout << "omtlm debug 4\n";
 
   pCompositeModel->GetTLMInterfaceProxy(interfaceId2).SetConnected();
   pCompositeModel->GetTLMInterfaceProxy(interfaceId2).SetConnection(connection);

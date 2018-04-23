@@ -205,6 +205,10 @@ int  PluginImplementer::RegisteTLMInterface(std::string name , int dimensions,
                                             std::string causality, std::string domain) {
     TLMErrorLog::Info(string("Register Interface ") + name);
 
+    std::cout << "Register interface. Dimensions: " << dimensions <<
+                 ", causality: " << causality <<
+                 ", domain: " << domain << "\n";
+
     omtlm_TLMInterface *ifc;
     if(dimensions==6) {
         TLMErrorLog::Info("Registers TLM interface of type 3D");

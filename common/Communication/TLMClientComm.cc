@@ -93,6 +93,14 @@ void TLMClientComm::PackTimeDataMessage1D(int InterfaceID,
     out_mess.Data.clear();
     out_mess.Data.resize(out_mess.Header.DataSize);
     memcpy(& out_mess.Data[0], & Data[0], out_mess.Header.DataSize);
+
+    for(int i=0; i<Data.size(); ++i) {
+      TLMErrorLog::Info("Sending force: "+
+                        std::to_string(Data[i].GenForce)+
+                        "(t="+
+                        std::to_string(Data[i].time)+
+                        ")");
+    }
 }
 
 
@@ -156,6 +164,11 @@ void TLMClientComm::UnpackTimeDataMessage1D(TLMMessage& mess, deque<TLMTimeData1
             TLMErrorLog::Info(" RECV for time= " + TLMErrorLog::ToStdStr(Next->time));
         }
         Data.push_back(*Next);
+        TLMErrorLog::Info("Received force: "+
+                          std::to_string(Next->GenForce)+
+                          "(t="+
+                          std::to_string(Data[i].time)+
+                          ")");
     }
 }
 
