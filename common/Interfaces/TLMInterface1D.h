@@ -46,6 +46,7 @@ public:
     void GetTimeData(TLMTimeData1D &Instance);
     void GetTimeData(TLMTimeData1D &Instance, std::deque<TLMTimeData1D> &Data, bool OnlyForce);
     void GetForce(double time, double speed, double *force);
+    void GetWave(double time, double *wave);
     void SetTimeData(double time, double position, double speed);
     void SendAllData();
     void SetInitialForce(double force);
