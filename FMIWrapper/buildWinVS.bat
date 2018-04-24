@@ -70,11 +70,11 @@ echo ======================
 cd %dirname%
 mkdir build-fmilib
 cd build-fmilib
-cmake -Wno-dev -G "MinGW Makefiles" -DFMILIB_FMI_PLATFORM="win64" ../
+cmake -Wno-dev -G "MinGW Makefiles" -DFMILIB_FMI_PLATFORM="win64" -DFMILIB_BUILD_TESTS:BOOL=0 -DFMILIB_GENERATE_DOXYGEN_DOC:BOOL=0 -DBUILD_TESTING:BOOL=0 -DFMILIB_BUILD_BEFORE_TESTS:BOOL=0 ../
 mingw32-make.exe -j4 -B
 mingw32-make.exe install
 
-xcopy    libfmilib_shared.dll ..\..\..\bin
+xcopy libfmilib_shared.dll ..\..\..\bin
 
 echo.
 echo Done
