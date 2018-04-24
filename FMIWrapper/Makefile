@@ -17,7 +17,7 @@ endif
 
 include $(MAKEFILEHEADHOME)/Makefile.head
 
-# For microsoft and Dymola 
+# For microsoft and Dymola
 #CC=mycl cl -DWIN32 -D_WIN32 -DXMSTATIC -DYY_NEVER_INTERACTIVE  /EHsc
 #cc=mycl cl -DWIN32 -D_WIN32 -DXMSTATIC -DYY_NEVER_INTERACTIVE  /EHsc
 
@@ -33,41 +33,41 @@ INCLUDES=  -I. \
 	-I"../common" -I"../3rdParty/misc/include" \
 	-I"cvode-2.9.0/include" \
 	-I"ida-2.9.0/include"
-    
+
 ifeq ($(OS),Windows_NT)
 	LIBS = 	-lws2_32 \
 	        -LFMILibrary-2.0.1/install/lib \
-		-llibfmilib_shared 
+		-llibfmilib_shared
 else
 	LIBS = 	-LFMILibrary-2.0.1/install/lib \
-		-lfmilib_shared 
+		-lfmilib_shared
 endif
 
 $(ABI)/%.o: %.cpp
 	$(CC) $(INCLUDES) -c $< -o $@
 
 $(ABI)/%.o: ../common/%.cc
-	$(CC) $(INCLUDES) -c $< -o $@ 
-
-$(ABI)/%.o: $(MISCHOME)/src/%.cc
-	$(CC) $(INCLUDES) -c $< -o $@ 
+	$(CC) $(INCLUDES) -c $< -o $@
 
 $(ABI)/%.o: $(MISCHOME)/src/%.cc
 	$(CC) $(INCLUDES) -c $< -o $@
-    
+
+$(ABI)/%.o: $(MISCHOME)/src/%.cc
+	$(CC) $(INCLUDES) -c $< -o $@
+
 $(ABI)/%.o: cvode-2.9.0/src/nvec_ser/%.c
 	$(CC) $(INCLUDES) -c $< -o $@
 
 $(ABI)/%.o: cvode-2.9.0/src/sundials/%.c
 	$(CC) $(INCLUDES) -c $< -o $@
-    
+
 $(ABI)/%.o: cvode-2.9.0/src/cvode/%.c
-	$(CC) $(INCLUDES) -c $< -o $@    
-    
+	$(CC) $(INCLUDES) -c $< -o $@
+
 $(ABI)/%.o: ida-2.9.0/src/ida/%.c
-	$(CC) $(INCLUDES) -c $< -o $@        
-    
-OBJS=  main.o 
+	$(CC) $(INCLUDES) -c $< -o $@
+
+OBJS=  main.o
 
 EXT_OBJS = Plugin/PluginImplementer.o \
 	Communication/TLMClientComm.o \
@@ -105,12 +105,12 @@ EXT_OBJS = Plugin/PluginImplementer.o \
 	ida_dense.o \
 	ida_direct.o \
 	ida_io.o
-   
+
 
 ABIOBJS=$(OBJS:%.o= $(ABI)/%.o) $(EXT_OBJS:%.o= $(ABI)/%.o)
 
-default: dirs 
-	$(MAKE) fmil 
+default: dirs
+	$(MAKE) fmil
 	$(MAKE) $(ABIOBJS)
 	$(LINK) $(ABIOBJS$) -o $(ABI)/$(BNAME) $(LIBS)
 
@@ -140,13 +140,13 @@ dirs:
 
 fmil:
 	mkdir -p FMILibrary-2.0.1/build
-	(cd FMILibrary-2.0.1/build && $(CMAKE) $(FMIL_FLAGS) -D FMILIB_BUILD_TESTS:Bool=OFF -D FMILIB_GENERATE_DOXYGEN_DOC:Bool=OFF -DBUILD_TESTING:BOOL=0 -DFMILIB_BUILD_BEFORE_TESTS:BOOL=0 -DFMILIB_INSTALL_PREFIX:String=../install .. $(CMAKE_TARGET))
+	(cd FMILibrary-2.0.1/build && $(CMAKE) $(FMIL_FLAGS) -DFMILIB_BUILD_TESTS:BOOL=0 -DFMILIB_GENERATE_DOXYGEN_DOC:BOOL=0 -DBUILD_TESTING:BOOL=0 -DFMILIB_BUILD_BEFORE_TESTS:BOOL=0 -DFMILIB_INSTALL_PREFIX:String=../install .. $(CMAKE_TARGET))
 	$(MAKE) -C FMILibrary-2.0.1/build
 	$(MAKE) -C FMILibrary-2.0.1/build install
 	cp -p FMILibrary-2.0.1/install/lib/libfmilib_shared$(SHREXT) $(BINDIR)
 
-# Problem that MingW contains no shell to perform the "if" command.	
-dirs_unix:	
+# Problem that MingW contains no shell to perform the "if" command.
+dirs_unix:
 	-if [ ! -d $(ABI) ] ; then \
 	mkdir $(ABI) ; fi ;
 
