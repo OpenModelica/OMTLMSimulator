@@ -24,6 +24,7 @@ TLMPlugin* TLMPlugin::CreateInstance() {
     return PluginImplementerInstance;
 }
 
+
 void PluginImplementer::InterfaceReadyForTakedown(std::string IfcName) {
     ++nIfcWaitingForTakedown;
 
@@ -422,6 +423,34 @@ void PluginImplementer::GetForce3D(int interfaceID,
     ifc->GetForce(time, position, orientation, speed, ang_speed, force);
 }
 
+
+
+void PluginImplementer::GetWaveImpedance1D(int interfaceID, double time, double *impedance, double *wave) {
+  if(!ModelChecked) CheckModel();
+
+  // Use the ID to get to the right interface object
+  int idx = GetInterfaceIndex(interfaceID);
+  TLMInterface1D* ifc = dynamic_cast<TLMInterface1D*>(Interfaces[idx]);
+
+  assert(!ifc || (ifc -> GetInterfaceID() == interfaceID));
+
+  if(!ifc) {
+      (*wave) = 0.0;
+      (*impedance) = 0.0;
+
+      TLMErrorLog::Warning(string("No interface in GetForce1D()"));
+
+      return;
+  }
+
+  // Check if the interface expects more data from the coupled simulation
+  // Receive if necessary .Note that potentially more that one receive is possible
+  ReceiveTimeData(ifc, time);
+
+  // evaluate the reaction force from the TLM connection
+  ifc->GetWave(time, wave);
+  (*impedance) = ifc->GetConnParams().Zf;
+}
 
 
 void PluginImplementer::SetMotion3D(int forceID,
