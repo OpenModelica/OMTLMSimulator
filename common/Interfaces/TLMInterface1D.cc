@@ -70,7 +70,7 @@ void TLMInterface1D::GetTimeData(TLMTimeData1D& Instance, std::deque<TLMTimeData
     if(CurrentIntervalIndex >= size) {
         CurrentIntervalIndex =  size - 1;
     }
-    if((time >= Data[0].time) && (time <= Data[size-1].time)) {
+    if((time >= Data[0].time) && (time < Data[size-1].time)) {
         // the desired time is in the Data boundaries
         // find interpolation spot in data
         while(Data[CurrentIntervalIndex].time < time)
