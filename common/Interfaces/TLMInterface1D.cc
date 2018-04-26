@@ -150,6 +150,15 @@ void TLMInterface1D::GetForce(double time,
     }
 }
 
+void TLMInterface1D::GetWave(double time, double *wave) {
+  TLMTimeData1D request;
+  request.time = time - Params.Delay;
+  GetTimeData(request);
+
+  //Default value is the initial value
+  (*wave)=request.GenForce;
+}
+
 
 // Set motion data and communicate if necessary.
 void TLMInterface1D::SetTimeData(double time,

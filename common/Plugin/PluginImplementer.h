@@ -35,6 +35,7 @@ public:
                            double t1, double t2, double t3);
     void SetInitialForce1D(int interfaceID, double force);
     void SetInitialValue(int interfaceID, double value);
+
 protected:
     //! Connected flag tells if the connection to TLM manager is established.
     bool Connected;
@@ -139,6 +140,8 @@ protected:
                     double speed[],
                     double ang_speed[],
                     double* force);
+
+    void GetWaveImpedance1D(int interfaceID, double time, double *impedance, double *wave);
 
     //! Set the motion of a TLM interface after a successful integration step.
     //! The information is eventually sent to the TLM manager and forwarded
