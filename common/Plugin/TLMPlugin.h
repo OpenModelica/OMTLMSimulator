@@ -102,6 +102,10 @@ public:
                                     double time,
                                     double* impedance,
                                     double* wave)  = 0;
+    virtual void GetWaveImpedance3D(int interfaceID,
+                                    double time,
+                                    double* impedance,
+                                    double* wave)  = 0;
 
     //! Set the motion of a TLM interface after a successful integration step.
     //! The information is eventually sent to the TLM manager and forwarded

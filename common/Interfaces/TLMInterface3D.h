@@ -48,6 +48,7 @@ public:
     void GetTimeData(TLMTimeData3D &Instance);
 
     void GetForce(double time, double position[], double orientation[], double speed[], double ang_speed[], double *force);
+    void GetWave(double time, double *wave);
     void SetTimeData(double time, double position[], double orientation[], double speed[], double ang_speed[]);
     void TransformTimeDataToCG(std::vector<TLMTimeData3D> &timeData, TLMConnectionParams &params);
     void SendAllData();
