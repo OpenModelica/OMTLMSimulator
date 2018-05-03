@@ -175,6 +175,14 @@ void TLMInterface3D::GetForce(double time,
 
 }
 
+void TLMInterface3D::GetWave(double time, double *wave)
+{
+    TLMTimeData3D request;
+    request.time = time - Params.Delay;
+    GetTimeData(request);
+    memcpy(wave, request.GenForce, sizeof(double)*6);
+}
+
 
 
 // Set motion data and communicate if necessary.

@@ -426,30 +426,60 @@ void PluginImplementer::GetForce3D(int interfaceID,
 
 
 void PluginImplementer::GetWaveImpedance1D(int interfaceID, double time, double *impedance, double *wave) {
-  if(!ModelChecked) CheckModel();
+    if(!ModelChecked) CheckModel();
 
-  // Use the ID to get to the right interface object
-  int idx = GetInterfaceIndex(interfaceID);
-  TLMInterface1D* ifc = dynamic_cast<TLMInterface1D*>(Interfaces[idx]);
+    // Use the ID to get to the right interface object
+    int idx = GetInterfaceIndex(interfaceID);
+    TLMInterface1D* ifc = dynamic_cast<TLMInterface1D*>(Interfaces[idx]);
 
-  assert(!ifc || (ifc -> GetInterfaceID() == interfaceID));
+    assert(!ifc || (ifc -> GetInterfaceID() == interfaceID));
 
-  if(!ifc) {
-      (*wave) = 0.0;
-      (*impedance) = 0.0;
+    if(!ifc) {
+        (*wave) = 0.0;
+        (*impedance) = 0.0;
 
-      TLMErrorLog::Warning(string("No interface in GetForce1D()"));
+        TLMErrorLog::Warning(string("No interface in GetForce1D()"));
 
-      return;
-  }
+        return;
+    }
 
-  // Check if the interface expects more data from the coupled simulation
-  // Receive if necessary .Note that potentially more that one receive is possible
-  ReceiveTimeData(ifc, time);
+    // Check if the interface expects more data from the coupled simulation
+    // Receive if necessary .Note that potentially more that one receive is possible
+    ReceiveTimeData(ifc, time);
 
-  // evaluate the reaction force from the TLM connection
-  ifc->GetWave(time, wave);
-  (*impedance) = ifc->GetConnParams().Zf;
+    // evaluate the reaction force from the TLM connection
+    ifc->GetWave(time, wave);
+    (*impedance) = ifc->GetConnParams().Zf;
+}
+
+void PluginImplementer::GetWaveImpedance3D(int interfaceID, double time, double *impedance, double *wave)
+{
+    if(!ModelChecked) CheckModel();
+
+    // Use the ID to get to the right interface object
+    int idx = GetInterfaceIndex(interfaceID);
+    TLMInterface3D* ifc = dynamic_cast<TLMInterface3D*>(Interfaces[idx]);
+
+    assert(!ifc || (ifc -> GetInterfaceID() == interfaceID));
+
+    if(!ifc) {
+        for(int i = 0; i < 6; i++) {
+            wave[i] = 0.0;
+        }
+        (*impedance) = 0.0;
+
+        TLMErrorLog::Warning(string("No interface in GetForce1D()"));
+
+        return;
+    }
+
+    // Check if the interface expects more data from the coupled simulation
+    // Receive if necessary .Note that potentially more that one receive is possible
+    ReceiveTimeData(ifc, time);
+
+    // evaluate the reaction force from the TLM connection
+    ifc->GetWave(time, wave);
+    (*impedance) = ifc->GetConnParams().Zf;
 }
 
 
