@@ -143,7 +143,7 @@ protected:
 
     void GetWaveImpedance1D(int interfaceID, double time, double *impedance, double *wave);
 
-    void GetWaveImpedance3D(int interfaceID, double time, double *impedance, double *wave);
+    void GetWaveImpedance3D(int interfaceID, double time, double *Zt, double *Zr, double *wave);
 
     //! Set the motion of a TLM interface after a successful integration step.
     //! The information is eventually sent to the TLM manager and forwarded

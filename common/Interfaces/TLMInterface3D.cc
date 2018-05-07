@@ -180,6 +180,7 @@ void TLMInterface3D::GetWave(double time, double *wave)
     TLMTimeData3D request;
     request.time = time - Params.Delay;
     GetTimeData(request);
+    //std::cout << request.GenForce[0] << "\n";
     memcpy(wave, request.GenForce, sizeof(double)*6);
 }
 
