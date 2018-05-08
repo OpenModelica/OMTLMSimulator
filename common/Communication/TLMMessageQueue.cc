@@ -81,6 +81,25 @@ void TLMMessageQueue::ReleaseSlot(TLMMessage* mess) {
 }
 
 void TLMMessageQueue::Terminate() {
+
+    //Clear free TLM messages
+    FreeBufLock.lock();
+    while(!FreeBuffers.empty()) {
+        TLMMessage *msg = FreeBuffers.top();
+        delete msg;
+        FreeBuffers.pop();
+    }
+    FreeBufLock.unlock();
+
+    //Clear messages from send queue (should probably not be any)
+    SendBufLock.lock();
+    while(!SendBuffers.empty()) {
+        TLMMessage *msg = SendBuffers.front();
+        delete msg;
+        SendBuffers.pop();
+    }
+    SendBufLock.unlock();
+
     Terminated = true;
     
     SenderWait.signal(); // to be sure that no one "hangs" on it
