@@ -121,6 +121,7 @@ PluginImplementer::~PluginImplementer() {
         it != Interfaces.end(); ++it) {
         delete (*it);
     }
+    TLMErrorLog::Close();
 }
 
 void PluginImplementer::HandleSignal(int signum) {
