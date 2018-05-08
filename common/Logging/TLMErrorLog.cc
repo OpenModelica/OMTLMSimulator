@@ -55,6 +55,16 @@ void TLMErrorLog::Open() {
     }
 }
 
+void TLMErrorLog::Close()
+{
+  std::ostream* temp = outStream;   //Use temporary variable to avoid double free error
+  if(TLMErrorLog::outStream!=NULL) {
+    outStream = NULL;
+    *temp << TimeStr() << " Log finished." << std::endl;
+    delete temp;
+  }
+}
+
 
 // FatalError function writes a message to log file
 // then terminates the program abnormally.

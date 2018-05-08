@@ -69,6 +69,8 @@ public:
 
     //! Return current time as string.
     static std::string TimeStr();
+
+    static void Close();
 private:
 
     //! LogLevel specifies level of logging to be used
