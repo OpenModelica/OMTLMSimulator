@@ -453,7 +453,7 @@ void PluginImplementer::GetWaveImpedance1D(int interfaceID, double time, double 
     (*impedance) = ifc->GetConnParams().Zf;
 }
 
-void PluginImplementer::GetWaveImpedance3D(int interfaceID, double time, double *impedance, double *wave)
+void PluginImplementer::GetWaveImpedance3D(int interfaceID, double time, double *Zt, double *Zr, double *wave)
 {
     if(!ModelChecked) CheckModel();
 
@@ -467,7 +467,7 @@ void PluginImplementer::GetWaveImpedance3D(int interfaceID, double time, double 
         for(int i = 0; i < 6; i++) {
             wave[i] = 0.0;
         }
-        (*impedance) = 0.0;
+        (*Zt) = 0.0;
 
         TLMErrorLog::Warning(string("No interface in GetForce1D()"));
 
@@ -480,7 +480,8 @@ void PluginImplementer::GetWaveImpedance3D(int interfaceID, double time, double 
 
     // evaluate the reaction force from the TLM connection
     ifc->GetWave(time, wave);
-    (*impedance) = ifc->GetConnParams().Zf;
+    (*Zt) = ifc->GetConnParams().Zf;
+    (*Zr) = ifc->GetConnParams().Zfr;
 }
 
 
