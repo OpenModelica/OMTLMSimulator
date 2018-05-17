@@ -100,7 +100,7 @@ LIBPTHREAD-WINDOWS32=-L$(OMDEV)/tools/msys/mingw32/bin/ -lwinpthread-1
 XTRLIBS-WINDOWS32=-lws2_32
 
 INCLXML-LINUX64=-I/usr/include/libxml2
-LIBXML-LINUX64=-lxml2
+LIBXML-LINUX64=-L$(UP)/../install/linux/lib -lxml2
 CP-LIBXML-LINUX64=
 XTRLIBS-LINUX64=-lrt
 LIBPTHREAD-LINUX64=-L$(UP)/extralibs/pthread/$(ABI)/lib -lpthread
