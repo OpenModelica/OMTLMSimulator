@@ -1078,6 +1078,25 @@ void generateFmiConfigFile()
       fmi2_import_variable_t* var = fmi2_import_get_variable(list,i);
       if(fmi2_import_get_variable_base_type(var) == fmi2_base_type_real) {
         std::string name = fmi2_import_get_variable_name(var);
+
+        //Verify that name is alphanumeric and starts with a letter
+        if(fmi2_import_get_causality(var) == fmi2_causality_enu_input ||
+           fmi2_import_get_causality(var) == fmi2_causality_enu_output) {
+          TLMErrorLog::Info("Examining variable name: "+name);
+          bool nameOk = isalpha(name[0]);
+          if(nameOk) {
+            nameOk = find_if(name.begin(), name.end(),
+                            [](char c) { return !(isalnum(c)); }) == name.end();
+          }
+
+          if(!nameOk) {
+            TLMErrorLog::FatalError("Variable name: "+name+" contains illegal "+
+                                    "characers. Names must start with a letter "+
+                                    "and contain only letters and numbers. FMI "+
+                                    "configuration file cannot be auto-generated.");
+          }
+        }
+
         if(fmi2_import_get_causality(var) == fmi2_causality_enu_input) {
           fmiConfigStream << "name," << name << "\n";
           fmiConfigStream << "domain,Signal\n";
