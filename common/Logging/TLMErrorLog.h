@@ -14,8 +14,9 @@
 #include <ostream>
 #include <fstream>
 #include <iostream>
+#include "Communication/TLMThreadSynch.h"
 
-enum TLMLogLevel { Fatal, Warning, Info, Debug };
+enum TLMLogLevel { Disabled, Fatal, Warning, Info, Debug };
 
 //! Error handling is implemented in the most simple way
 //! with the functions that write messages to standard error output (cerr).
@@ -72,6 +73,8 @@ public:
 
     static void Close();
 private:
+
+    static SimpleLock LogStreamLock;
 
     //! LogLevel specifies level of logging to be used
     static TLMLogLevel LogLevel;

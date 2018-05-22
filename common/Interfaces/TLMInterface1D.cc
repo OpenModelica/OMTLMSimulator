@@ -17,8 +17,8 @@ TLMInterface1D::~TLMInterface1D() {
         TLMErrorLog::Info(std::string("Interface ") + GetName() + " sends rest of data for time= " +
                          TLMErrorLog::ToStdStr(DataToSend.back().time));
 
-        Comm.PackTimeDataMessage1D(InterfaceID, DataToSend, Message);
-        TLMCommUtil::SendMessage(Message);
+        Comm.PackTimeDataMessage1D(InterfaceID, DataToSend, *Message);
+        TLMCommUtil::SendMessage(*Message);
     }
 }
 
@@ -225,8 +225,8 @@ void TLMInterface1D::SendAllData() {
                           TLMErrorLog::ToStdStr(LastSendTime));
     }
 
-    Comm.PackTimeDataMessage1D(InterfaceID, DataToSend, Message);
-    TLMCommUtil::SendMessage(Message);
+    Comm.PackTimeDataMessage1D(InterfaceID, DataToSend, *Message);
+    TLMCommUtil::SendMessage(*Message);
     DataToSend.resize(0);
 
     // In data request mode we shutdown after sending the first data package.

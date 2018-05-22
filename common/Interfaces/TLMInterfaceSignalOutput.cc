@@ -19,8 +19,8 @@ TLMInterfaceOutput::~TLMInterfaceOutput() {
                               TLMErrorLog::ToStdStr(DataToSend.back().time));
         }
 
-        Comm.PackTimeDataMessageSignal(InterfaceID, DataToSend, Message);
-        TLMCommUtil::SendMessage(Message);
+        Comm.PackTimeDataMessageSignal(InterfaceID, DataToSend, *Message);
+        TLMCommUtil::SendMessage(*Message);
     }
 }
 

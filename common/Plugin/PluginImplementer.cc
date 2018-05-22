@@ -39,10 +39,10 @@ void PluginImplementer::InterfaceReadyForTakedown(std::string IfcName) {
 void PluginImplementer::AwaitClosePermission()
 {
   TLMErrorLog::Info("Awaiting close permission...");
-  Message.Header.MessageType = TLMMessageTypeConst::TLM_CLOSE_REQUEST;
-  TLMCommUtil::SendMessage(Message);
-  while(Message.Header.MessageType != TLMMessageTypeConst::TLM_CLOSE_PERMISSION) {
-    TLMCommUtil::ReceiveMessage(Message);
+  Message->Header.MessageType = TLMMessageTypeConst::TLM_CLOSE_REQUEST;
+  TLMCommUtil::SendMessage(*Message);
+  while(Message->Header.MessageType != TLMMessageTypeConst::TLM_CLOSE_PERMISSION) {
+    TLMCommUtil::ReceiveMessage(*Message);
   }
   TLMErrorLog::Info("Close permission received.");
 }
@@ -100,7 +100,6 @@ PluginImplementer::PluginImplementer():
     ModelChecked(false),
     Interfaces(),
     ClientComm(),
-    Message(),
     MapID2Ind(),
     StartTime(0.0),
     EndTime(0.0),
@@ -122,12 +121,14 @@ PluginImplementer::~PluginImplementer() {
         delete (*it);
     }
     TLMErrorLog::Close();
+
+    delete Message;
 }
 
 void PluginImplementer::HandleSignal(int signum) {
     if(Connected) {
-        Message.Header.MessageType = TLMMessageTypeConst::TLM_ABORT;
-        TLMCommUtil::SendMessage(Message);
+        Message->Header.MessageType = TLMMessageTypeConst::TLM_ABORT;
+        TLMCommUtil::SendMessage(*Message);
     }
 
     TLMErrorLog::Info("Got signal " + TLMErrorLog::ToStdStr(signum));
@@ -139,14 +140,14 @@ void PluginImplementer::CheckModel() {
         TLMErrorLog::FatalError("Check model cannot be called before the TLM client is connected to manager");
     }
 
-    Message.Header.MessageType =  TLMMessageTypeConst::TLM_CHECK_MODEL;
+    Message->Header.MessageType =  TLMMessageTypeConst::TLM_CHECK_MODEL;
 
-    TLMCommUtil::SendMessage(Message);
-    TLMCommUtil::ReceiveMessage(Message);
+    TLMCommUtil::SendMessage(*Message);
+    TLMCommUtil::ReceiveMessage(*Message);
 
-    if(! Message.Header.TLMInterfaceID) {
+    if(! Message->Header.TLMInterfaceID) {
         TLMErrorLog::Info("Error detected on TLM manager while checking meta model");
-        TLMErrorLog::FatalError("Header id is " + TLMErrorLog::ToStdStr(int(Message.Header.TLMInterfaceID)));
+        TLMErrorLog::FatalError("Header id is " + TLMErrorLog::ToStdStr(int(Message->Header.TLMInterfaceID)));
     }
 
     ModelChecked = true;
@@ -175,19 +176,22 @@ bool PluginImplementer::Init(std::string model,
 
     string host = ServerName.substr(0,colPos);
 
-    if((Message.SocketHandle = ClientComm.ConnectManager(host, port)) < 0) {
+    Message = new TLMMessage();
+
+    if((Message->SocketHandle = ClientComm.ConnectManager(host, port)) < 0) {
         TLMErrorLog::Warning("Init failed: could not connect to TLM manager");
         return false;
     }
 
     TLMErrorLog::Info("Sending Component registration request");
 
-    ClientComm.CreateComponentRegMessage(model, Message);
-    TLMCommUtil::SendMessage(Message);
-    TLMCommUtil::ReceiveMessage(Message);
+
+    ClientComm.CreateComponentRegMessage(model, *Message);
+    TLMCommUtil::SendMessage(*Message);
+    TLMCommUtil::ReceiveMessage(*Message);
 
     TLMErrorLog::Info(string("Got component ID: ") +
-                     TLMErrorLog::ToStdStr(Message.Header.TLMInterfaceID));
+                     TLMErrorLog::ToStdStr(Message->Header.TLMInterfaceID));
 
     StartTime = timeStart;
     EndTime = timeEnd;
@@ -298,18 +302,18 @@ void PluginImplementer::ReceiveTimeData(omtlm_TLMInterface* reqIfc, double time)
         do {
 
             // Receive a message
-            if(!TLMCommUtil::ReceiveMessage(Message)) // on error leave this loop and use extrapolation
+            if(!TLMCommUtil::ReceiveMessage(*Message)) // on error leave this loop and use extrapolation
                 break;
 
             // Get the target ID
-            int id = Message.Header.TLMInterfaceID;
+            int id = Message->Header.TLMInterfaceID;
 
             // Use the ID to get to the right interface object
             int idx = GetInterfaceIndex(id);
             ifc = Interfaces[idx];
 
             // Unpack the message into the Interface object data structures
-            ifc->UnpackTimeData(Message);
+            ifc->UnpackTimeData(*Message);
 
             // Received data
             if(TLMErrorLog::GetLogLevel() >= TLMLogLevel::Info) {

@@ -4,7 +4,9 @@
 #include <string>
 using namespace std;
 
-MonitoringPluginImplementer::MonitoringPluginImplementer() {}
+MonitoringPluginImplementer::MonitoringPluginImplementer() {
+  Message = new TLMMessage();
+}
 
 //! CreateInstance static "factory" method returns
 //! a pointer to the object implementing the interface.
@@ -28,18 +30,18 @@ void MonitoringPluginImplementer::ReceiveTimeData(omtlm_TLMInterface* reqIfc, do
         do {
 
             // Receive a message
-            if(!TLMCommUtil::ReceiveMessage(Message)) // on error leave this loop and use extrapolation
+            if(!TLMCommUtil::ReceiveMessage(*Message)) // on error leave this loop and use extrapolation
                 break;
 
             // Get the target ID
-            int id = Message.Header.TLMInterfaceID;
+            int id = Message->Header.TLMInterfaceID;
 
             // Use the ID to get to the right interface object
             int idx = GetInterfaceIndex(id);
             ifc = Interfaces[idx];
 
             // Unpack the message into the Interface object data structures
-            ifc->UnpackTimeData(Message);
+            ifc->UnpackTimeData(*Message);
 
             // Received data
             if(TLMErrorLog::GetLogLevel() >= TLMLogLevel::Info) {
@@ -92,10 +94,10 @@ bool MonitoringPluginImplementer::Init(std::string name,
         nSecs++;
     }
 #else
-    Message.SocketHandle = ClientComm.ConnectManager(host, port);
+    Message->SocketHandle = ClientComm.ConnectManager(host, port);
 #endif
 
-    if(Message.SocketHandle < 0) {
+    if(Message->SocketHandle < 0) {
         TLMErrorLog::Warning("In " + name + ": initialization failed, could not connect to TLM manager");
         return false;
     }

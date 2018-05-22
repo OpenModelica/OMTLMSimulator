@@ -5,6 +5,7 @@
 */
 
 #include "Logging/TLMErrorLog.h"
+#include "Communication/TLMThreadSynch.h"
 #include <iostream>
 #include <cstdlib>
 #include <cstring>
@@ -46,23 +47,26 @@ bool  TLMErrorLog::ExceptionOn = false;
 bool  TLMErrorLog::NormalErrorLogOn = false;
 bool  TLMErrorLog::LogTimeOn = false;
 std::ostream* TLMErrorLog::outStream = NULL;
-
+SimpleLock TLMErrorLog::LogStreamLock = SimpleLock();
 
 void TLMErrorLog::Open() {
+    LogStreamLock.lock();
     if(TLMErrorLog::outStream==NULL) {
         TLMErrorLog::outStream=new std::ofstream("TLMlogfile.log");
         *outStream << TimeStr() << " Starting log" << std::endl;
     }
+    LogStreamLock.unlock();
 }
 
 void TLMErrorLog::Close()
 {
-  std::ostream* temp = outStream;   //Use temporary variable to avoid double free error
-  if(TLMErrorLog::outStream!=NULL) {
-    outStream = NULL;
-    *temp << TimeStr() << " Log finished." << std::endl;
-    delete temp;
+  LogStreamLock.lock();
+  if(outStream!=NULL) {
+    *outStream << TimeStr() << " Log finished." << std::endl;
+    delete outStream;
+    LogLevel = Disabled;
   }
+  LogStreamLock.unlock();
 }
 
 

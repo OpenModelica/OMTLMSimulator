@@ -153,6 +153,7 @@ void ManagerCommHandler::RunStartupProtocol() {
 
                 comp.SetReadyToSim();
                 numCheckModel++;
+                MessageQueue.ReleaseSlot(message);
             }
             else if(message->Header.MessageType == TLMMessageTypeConst::TLM_REG_PARAMETER) {
                 TLMErrorLog::Info(string("Component ") + comp.GetName() + " registers parameter");
@@ -183,6 +184,7 @@ void ManagerCommHandler::RunStartupProtocol() {
             TLMMessage* message = MessageQueue.GetReadSlot();
             message->SocketHandle = hdl;
             if(!TLMCommUtil::ReceiveMessage(*message)) {
+                MessageQueue.ReleaseSlot(message);
                 TLMErrorLog::FatalError("Failed to get message, exiting");
                 abort();
             }
@@ -521,6 +523,7 @@ void ManagerCommHandler::ReaderThreadRun() {
                 message->SocketHandle = hdl;
                 if(TLMCommUtil::ReceiveMessage(*message)) {
                     if(message->Header.MessageType == TLMMessageTypeConst::TLM_CLOSE_REQUEST) {
+                        MessageQueue.ReleaseSlot(message);
                         TLMErrorLog::Info("Received close permission request from "+comp.GetName());
                         closedSockets.push_back(iSock);
                         nClosedSock++;
@@ -537,6 +540,7 @@ void ManagerCommHandler::ReaderThreadRun() {
                     else {
                         // CommMode == InterfaceRequestMode
                         UnpackAndStoreTimeData(*message);
+                        MessageQueue.ReleaseSlot(message);
                     }
                 }
                 else {
@@ -890,6 +894,7 @@ void ManagerCommHandler::MonitorThreadRun() {
                 TLMErrorLog::Warning("Failed to get message from monitor, disconected?");
                 //abort();
                 monComm.DropActiveSocket(hdl);
+                MessageQueue.ReleaseSlot(message);
                 continue;
             }
             

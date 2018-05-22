@@ -82,7 +82,7 @@ protected:
     double NextRecvTime;
 
     //! Message buffer used to transfer information between different methods
-    TLMMessage Message;
+    TLMMessage *Message;
 
     //! Parameters of the TLM connection attached to this interface
     TLMConnectionParams Params;
