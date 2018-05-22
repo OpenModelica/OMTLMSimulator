@@ -60,7 +60,7 @@ protected:
     TLMClientComm ClientComm;
 
     //! The message object used as a buffer
-    TLMMessage Message;
+    TLMMessage *Message;
 
     //! MapID2Ind provides a mapping between the ID of interfaces
     //!  and their index in the Interfaces vector

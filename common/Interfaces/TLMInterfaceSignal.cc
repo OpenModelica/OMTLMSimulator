@@ -32,8 +32,8 @@ void TLMInterfaceSignal::SendAllData() {
                          TLMErrorLog::ToStdStr(LastSendTime));
     }
 
-    Comm.PackTimeDataMessageSignal(InterfaceID, DataToSend, Message);
-    TLMCommUtil::SendMessage(Message);
+    Comm.PackTimeDataMessageSignal(InterfaceID, DataToSend, *Message);
+    TLMCommUtil::SendMessage(*Message);
     DataToSend.resize(0);
 
     // In data request mode we shutdown after sending the first data package.
