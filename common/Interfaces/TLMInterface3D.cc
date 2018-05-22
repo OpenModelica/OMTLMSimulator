@@ -17,8 +17,8 @@ TLMInterface3D::~TLMInterface3D() {
         TLMErrorLog::Info(std::string("Interface ") + GetName() + " sends rest of data for time= " +
                          TLMErrorLog::ToStdStr(DataToSend.back().time));
 
-        Comm.PackTimeDataMessage3D(InterfaceID, DataToSend, Message);
-        TLMCommUtil::SendMessage(Message);
+        Comm.PackTimeDataMessage3D(InterfaceID, DataToSend, *Message);
+        TLMCommUtil::SendMessage(*Message);
     }
 }
 
@@ -319,8 +319,8 @@ void TLMInterface3D::SendAllData() {
     // Transform to global inertial system cG ans send
     TransformTimeDataToCG(DataToSend, Params);
 
-    Comm.PackTimeDataMessage3D(InterfaceID, DataToSend, Message);
-    TLMCommUtil::SendMessage(Message);
+    Comm.PackTimeDataMessage3D(InterfaceID, DataToSend, *Message);
+    TLMCommUtil::SendMessage(*Message);
     DataToSend.resize(0);
 
     // In data request mode we shutdown after sending the first data package.

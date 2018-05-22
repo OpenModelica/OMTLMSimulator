@@ -26,7 +26,6 @@ omtlm_TLMInterface::omtlm_TLMInterface(TLMClientComm& theComm, std::string& aNam
                            int dimensions, std::string causality, std::string domain):
     LastSendTime(StartTime),
     NextRecvTime(0.0),
-    Message(),
     Params(),
     CurrentIntervalIndex(0),
     Name(aName),
@@ -36,26 +35,31 @@ omtlm_TLMInterface::omtlm_TLMInterface(TLMClientComm& theComm, std::string& aNam
     Dimensions(dimensions),
     Causality(causality),
     Domain(domain) {
-    Comm.CreateInterfaceRegMessage(aName, Dimensions, Causality, Domain, Message);
-    Message.SocketHandle = Comm.GetSocketHandle();
 
-    TLMCommUtil::SendMessage(Message);
+    Message = new TLMMessage();
+    Comm.CreateInterfaceRegMessage(aName, Dimensions, Causality, Domain, *Message);
+    Message->SocketHandle = Comm.GetSocketHandle();
 
-    TLMCommUtil::ReceiveMessage(Message);
-    while(Message.Header.MessageType != TLMMessageTypeConst::TLM_REG_INTERFACE) {
-        TLMCommUtil::ReceiveMessage(Message);
+    TLMCommUtil::SendMessage(*Message);
+
+    TLMCommUtil::ReceiveMessage(*Message);
+    while(Message->Header.MessageType != TLMMessageTypeConst::TLM_REG_INTERFACE) {
+        TLMCommUtil::ReceiveMessage(*Message);
     }
-    InterfaceID =  Message.Header.TLMInterfaceID;
+    InterfaceID =  Message->Header.TLMInterfaceID;
 
     TLMErrorLog::Info(std::string("Interface ") + GetName() + " got ID " + TLMErrorLog::ToStdStr(InterfaceID));
 
-    Comm.UnpackRegInterfaceMessage(Message, Params);
+    Comm.UnpackRegInterfaceMessage(*Message, Params);
 
     NextRecvTime = StartTime + Params.Delay;
 }
 
 
-omtlm_TLMInterface::~omtlm_TLMInterface() {}
+omtlm_TLMInterface::~omtlm_TLMInterface()
+{
+    delete Message;
+}
 
 
 // Hermite cubic interpolation. For the given 4 data points t[i], f[i] and time,
