@@ -27,6 +27,7 @@
 /common/LINUX64/
 /common/WINDOWS32/
 /common/WINDOWS64/
+/FMIWrapper/*.obj
 /FMIWrapper/build/
 /FMIWrapper/FMILibrary-*/build-fmilib/
 /FMIWrapper/FMILibrary-*/build/

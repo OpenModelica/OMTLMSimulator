@@ -1,7 +1,7 @@
 //!
 //! \file TLMCommUtil.h
-//! 
-//! Defines the common classes & data structures used for 
+//!
+//! Defines the common classes & data structures used for
 //! sending/receiving messages between TLM clients and the manager
 //!
 //! \author   Iakov Nakhimovski
@@ -73,7 +73,7 @@ struct TLMMessageHeader {
 
     //! Constructor
     TLMMessageHeader();
-    
+
     //! The signature, used for checking
     // Note, length was TLM_SIGNATURE_LENGTH, I added one since it's a string and is copied from
     // TLMSignature. I'm not totally sure if this affects big-little endian swapping though!?
@@ -157,11 +157,11 @@ public:
 };
 
 inline void TLMCommUtil::ByteSwap(void * Buff, size_t type_size, size_t items) {
-    register unsigned char * b = (unsigned char *)Buff;
-    register size_t items_cnt = items;
+    unsigned char * b = (unsigned char *)Buff;
+    size_t items_cnt = items;
     while(items_cnt-- > 0) {
-        register size_t i = 0; // was int, warning removed.
-        register size_t j = type_size-1;
+        size_t i = 0;
+        size_t j = type_size-1;
         while(i<j)   {
             std::swap(b[i], b[j]);
             i++, j--;
