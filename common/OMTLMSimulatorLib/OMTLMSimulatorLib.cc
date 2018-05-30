@@ -1098,6 +1098,43 @@ void omtlm_addInterface(void *pModel,
 }
 
 
+void omtlm_setInitialPositionAndOrientation(void *pModel,
+                                            const char* interfaceName,
+                                            std::vector<double> position,
+                                            std::vector<double> orientation)
+{
+  std::string ifcName = interfaceName;
+  if(ifcName.find(".") == ifcName.npos) {
+    //Apply position and orientation to a component
+    int compId = subModelMap.find(std::string(ifcName))->second;
+    CompositeModelProxy *pModelProxy = (CompositeModelProxy*)pModel;
+    omtlm_CompositeModel *pCompositeModel = pModelProxy->mpCompositeModel;
+    TLMComponentProxy& compProxy = pCompositeModel->GetTLMComponentProxy(compId);
+    double x[3];
+    double A[9];
+    std::copy(position.begin(), position.end(), x);
+    std::copy(orientation.begin(), orientation.end(), A);
+    compProxy.SetInertialTranformation(x,A);
+  }
+  else {
+    //Apply position and orientation to an interface
+    int interfaceId = interfaceMap.find(std::string(interfaceName))->second;
+    CompositeModelProxy *pModelProxy = (CompositeModelProxy*)pModel;
+    omtlm_CompositeModel *pCompositeModel = pModelProxy->mpCompositeModel;
+    TLMInterfaceProxy& ifcProxy = pCompositeModel->GetTLMInterfaceProxy(interfaceId);
+    if(ifcProxy.GetDimensions() == 6) {
+      if(position.size() != 3 || orientation.size() != 9) {
+        TLMErrorLog::FatalError("Wrong size of vectors with initial position and orientation for interface "+ifcProxy.GetName());
+      }
+      std::copy(position.begin(), position.end(), ifcProxy.getTime0Data3D().Position);
+      std::copy(orientation.begin(), orientation.end(), ifcProxy.getTime0Data3D().RotMatrix);
+    }
+    else {
+      TLMErrorLog::FatalError("Can only set initial position and orientation for 3D interfaces.");
+    }
+  }
+}
+
 
 void omtlm_addConnection(void *pModel,
                          const char *interfaceName1,
