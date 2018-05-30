@@ -76,6 +76,11 @@ DLLEXPORT void omtlm_addInterface(void* pModel,
                   const char *causality,
                   const char *domain);
 
+DLLEXPORT void omtlm_setInitialPositionAndOrientation(void *pModel,
+                                                      const char* interfaceName,
+                                                      std::vector<double> position,
+                                                      std::vector<double> orientation);
+
 /**
  * \brief Adds a connection between two interfaces.
  *
