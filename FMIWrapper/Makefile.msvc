@@ -1,6 +1,8 @@
 BINDIR=../bin/
 BUILDDIR=build\win
 TARGETDIR=..\bin
+PTHREADHOME=../../3rdParty/pthread
+
 
 CC=cl /DMSC_VER /DWIN32 /D_WIN32 /EHsc /DNOMINMAX /GR /DUSE_THREADS /MP /c 
 cc=cl
@@ -16,10 +18,12 @@ INCLUDES= /I. \
 	/I"../common" \
 	/I"../3rdParty/misc/include" \
 	/I"cvode-2.9.0/include" \
-	/I"ida-2.9.0/include"
+	/I"ida-2.9.0/include" \
+	/I$(PTHREADHOME)/install/win/include
     
 LIBS= \
  FMILibrary-2.0.1/install/lib/fmilib_shared.lib \
+ $(PTHREADHOME)\install\win\lib\pthreadVC2.lib \
  ws2_32.lib
 
 SRC= main.cpp \
@@ -117,4 +121,4 @@ $(OBJ): $(SRC)
 clean:
  -del $(BUILDDIR)\*.obj
  -del $(TARGETDIR)\FMIWrapper.exe
-  
+
