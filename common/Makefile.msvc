@@ -1,14 +1,14 @@
 APA=
 MISCHOME=../3rdParty/misc
 TIMEHOME=../3rdParty/rtime
-LIBXMLHOME=../../3rdParty/libxml2
+LIBXMLHOME=../../3rdParty/libxml2/install/win/
 PTHREADHOME=../../3rdParty/pthread
 
 BUILDDIR=..\build\win
 TARGETDIR=..\bin
 
 TARGET=omtlmsimulator.dll
-CC=cl /DMSC_VER /DWIN32 /D_WIN32 /EHsc /DNOMINMAX /GR /DUSE_THREADS /MP /c 
+CC=cl /DMSC_VER /DWIN32 /D_WIN32 /EHsc /DNOMINMAX /GR /DUSE_THREADS /MP /c
 cc=cl
 LINK=link /DLL
 AR=ar
@@ -19,16 +19,16 @@ DIR_BIN_X86 = $(DIR_BIN)\x86
 INCLUDES= /I. \
  /I$(MISCHOME)/include \
  /I$(TIMEHOME) \
- /I$(LIBXMLHOME)/include \
+ /I$(LIBXMLHOME)/include/libxml2 \
  /I$(PTHREADHOME)/install/win/include
 
 LIBS= \
- ..\..\3rdParty\libxml2\install\win\lib\libxml2.lib \
+ $(LIBXMLHOME)/lib/libxml2.lib \
  ..\..\3rdParty\pthread\install\win\lib\pthreadVC2.lib \
  Ws2_32.lib \
  ..\3rdParty\install\win\lib\misc.lib \
  ..\3rdParty\install\win\lib\rtime.lib
- 
+
 SRC=\
  Plugin/PluginImplementer.cc \
  Plugin/MonitoringPluginImplementer.cc \
@@ -70,26 +70,26 @@ OBJ = \
  $(BUILDDIR)/TLMManagerComm.obj \
  $(BUILDDIR)/TLMMessageQueue.obj \
  $(BUILDDIR)/OMTLMSimulatorLib.obj
- 
-default: dirs link 
+
+default: dirs link
  -move omtlmsimulator.dll $(TARGETDIR)
  -move omtlmsimulator.lib $(TARGETDIR)
  -move omtlmsimulator.exp $(TARGETDIR)
-  
+
 dirs: $(BUILDDIR)
 
 $(BUILDDIR):
  -mkdir $(BUILDDIR)
- 
+
 link: $(OBJ)
  $(LINK) $(OBJ) $(LIBS) /OUT:omtlmsimulator.dll
-  
+
 $(OBJ): $(SRC)
  $(CC) $(SRC) $(INCLUDES) /c
  -xcopy *.obj $(BUILDDIR)
  -del *.obj
- 
+
 clean:
  -del $(BUILDDIR)\*.obj
  -del $(TARGETDIR)\omtlmsimulator.dll
-  
+
