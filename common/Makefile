@@ -126,7 +126,7 @@ lib_s:
 	$(MAKE) dir
 	$(MAKE) SRCTYPE=SRCSRVLIB $(ABI)/libTLM_s.a
 
-manager: 
+manager:
 	$(MAKE) dir
 	$(MAKE) SRCTYPE=SRCMGR $(ABI)/tlmmanager$(FEXT)
 
@@ -150,10 +150,10 @@ $(ABI)/libTLM.a: $(OBJS)
 	$(MAKE) dir
 	@echo Use TLM-library for client applications using misc library.
 	@echo Use TLM_m library otherwise.
-	$(AR) ruv $(ABI)/libTLM.a $(OBJS) 
+	$(AR) ruv $(ABI)/libTLM.a $(OBJS)
 
 $(ABI)/libTLM_s.a: $(OBJS)
-	$(AR) ruv $(ABI)/libTLM_s.a $(OBJS) 
+	$(AR) ruv $(ABI)/libTLM_s.a $(OBJS)
 
 $(ABI)/tlmmanager$(FEXT): $(OBJS)
 	$(MAKE) dir
@@ -208,7 +208,7 @@ $(ABI):
 	mkdir -p $@/Parameters
 	mkdir -p $@/Logging
 	mkdir -p $@/OMTLMSimulatorLib
-depend: 
+depend:
 	@echo > $(ABI)/makedepend.tail
 	makedepend -Y -p"\$$(ABI)/" -f $(ABI)/makedepend.tail \
 			$(INCLUDES) $(SRCCLT) $(SRCMGR) $(FORDEPEND) 2> /dev/null
