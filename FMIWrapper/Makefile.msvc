@@ -2,7 +2,7 @@ BINDIR=../bin/
 BUILDDIR=build\win
 TARGETDIR=..\bin
 
-CC=cl /DMSC_VER /DWIN32 /D_WIN32 /EHsc /DNOMINMAX /GR /DUSE_THREADS /MP /c 
+CC=cl /DMSC_VER /DWIN32 /D_WIN32 /EHsc /DNOMINMAX /GR /DUSE_THREADS /MP /c
 cc=cl
 LINK=link
 
@@ -11,16 +11,18 @@ MISCHOME=../3rdParty/misc
 
 INCLUDES= /I. \
 	/I"../FMIWrapper" \
-    /I"FMILibrary-2.0.1/src/Import/include" \
-    /I"FMILibrary-2.0.1/install/include" \
+	/I"FMILibrary-2.0.1/src/Import/include" \
+	/I"FMILibrary-2.0.1/install/include" \
 	/I"../common" \
 	/I"../3rdParty/misc/include" \
 	/I"cvode-2.9.0/include" \
-	/I"ida-2.9.0/include"
-    
+	/I"ida-2.9.0/include" \
+	/I"../../3rdParty/pthread/install/win/include"
+
 LIBS= \
  FMILibrary-2.0.1/install/lib/fmilib_shared.lib \
- ws2_32.lib
+ ws2_32.lib \
+ ..\..\3rdParty\pthread\install\win\lib\pthreadVC2.lib
 
 SRC= main.cpp \
 	../common/Plugin/PluginImplementer.cc \
@@ -97,24 +99,23 @@ OBJ=  $(BUILDDIR)/main.obj \
 	$(BUILDDIR)/ida_dense.obj \
 	$(BUILDDIR)/ida_direct.obj \
 	$(BUILDDIR)/ida_io.obj
-   
-default: dirs link 
+
+default: dirs link
  -move FMIWrapper.exe $(TARGETDIR)
-  
+
 dirs: $(BUILDDIR)
 
 $(BUILDDIR):
  -mkdir $(BUILDDIR)
- 
+
 link: $(OBJ)
  $(LINK) $(OBJ) $(LIBS) /OUT:FMIWrapper.exe
-  
+
 $(OBJ): $(SRC)
  $(CC) $(SRC) $(INCLUDES) /c
  -xcopy *.obj $(BUILDDIR)
  -del *.obj
- 
+
 clean:
  -del $(BUILDDIR)\*.obj
  -del $(TARGETDIR)\FMIWrapper.exe
-  
