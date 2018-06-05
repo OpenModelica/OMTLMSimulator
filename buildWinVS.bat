@@ -40,14 +40,6 @@ cd ..\..\common
 echo Building common
 nmake -f Makefile.msvc
 IF NOT ["%ERRORLEVEL%"]==["0"] GOTO fail
-cd ..\FMIWrapper\FMILibrary-2.0.1
-mkdir build-fmilib
-cd build-fmilib
-cmake -DHAVE_SNPRINTF=1 -DHAVE_VSNPRINTF=1 -G %OMS_VS_VERSION% ../
-cmake --build . --config MinSizeRel --target install
-xcopy install/bin/fmilib_shared.dll ..\..\..\bin
-xcopy install/bin/fmilib_shared.dll ..\..\..\..\lib
-cd ../../
 nmake -f Makefile.msvc
 IF NOT ["%ERRORLEVEL%"]==["0"] GOTO fail
 xcopy ..\..\bin\FMIWrapper ..\..\..\bin
