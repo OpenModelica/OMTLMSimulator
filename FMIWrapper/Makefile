@@ -29,18 +29,18 @@ MISCHOME=../3rdParty/misc
 
 INCLUDES=  -I. \
 	-I"../FMIWrapper" \
-	-I"../FMIWrapper/FMILibrary-2.0.1/install/include" \
+	-I"../../3rdParty/FMIL/$(INSTALL_DIR)/include" \
 	-I"../common" -I"../3rdParty/misc/include" \
 	-I"cvode-2.9.0/include" \
 	-I"ida-2.9.0/include"
 
 ifeq ($(OS),Windows_NT)
 	LIBS = 	-lws2_32 \
-	        -LFMILibrary-2.0.1/install/lib \
-		-llibfmilib_shared
+	        -L../../3rdParty/FMIL/$(INSTALL_DIR)/lib \
+		-lfmilib -lshlwapi
 else
-	LIBS = 	-LFMILibrary-2.0.1/install/lib \
-		-lfmilib_shared
+	LIBS = 	-L../../3rdParty/FMIL/$(INSTALL_DIR)/lib \
+		-lfmilib -ldl
 endif
 
 $(ABI)/%.o: %.cpp
@@ -110,7 +110,6 @@ EXT_OBJS = Plugin/PluginImplementer.o \
 ABIOBJS=$(OBJS:%.o= $(ABI)/%.o) $(EXT_OBJS:%.o= $(ABI)/%.o)
 
 default: dirs
-	$(MAKE) fmil
 	$(MAKE) $(ABIOBJS)
 	$(LINK) $(ABIOBJS$) -o $(ABI)/$(BNAME) $(LIBS)
 
@@ -138,13 +137,6 @@ dirs:
 	-mkdir -p $(ABI)/Logging
 	-mkdir -p $(ABI)/Communication
 
-fmil:
-	mkdir -p FMILibrary-2.0.1/build
-	(cd FMILibrary-2.0.1/build && $(CMAKE) $(FMIL_FLAGS) -DFMILIB_BUILD_TESTS:BOOL=0 -DFMILIB_GENERATE_DOXYGEN_DOC:BOOL=0 -DBUILD_TESTING:BOOL=0 -DFMILIB_BUILD_BEFORE_TESTS:BOOL=0 -DFMILIB_INSTALL_PREFIX:String=../install .. $(CMAKE_TARGET))
-	$(MAKE) -C FMILibrary-2.0.1/build
-	$(MAKE) -C FMILibrary-2.0.1/build install
-	cp -p FMILibrary-2.0.1/install/lib/libfmilib_shared$(SHREXT) $(BINDIR)
-
 # Problem that MingW contains no shell to perform the "if" command.
 dirs_unix:
 	-if [ ! -d $(ABI) ] ; then \
@@ -159,7 +151,5 @@ clean:
 	rm -rf $(ABI)/Communication
 	rm -rf $(BINDIR)/FMIWrapper$(FEXT)
 	rm -rf $(BINDIR)/StartTLMFmiWrapper*
-	rm -rf FMILibrary-2.0.1/build
-	rm -rf FMILibrary-2.0.1/install
 
 # DO NOT DELETE
