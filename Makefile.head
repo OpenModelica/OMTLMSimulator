@@ -23,7 +23,7 @@ ifeq ($(ABI),WINDOWS64)
     OMDEVMSYS=$(shell cygpath $$OMDEV)
     CMAKE = $(OMDEVMSYS)/bin/cmake/bin/cmake
     CMAKE_TARGET=-G "MSYS Makefiles"
-    FMIL_FLAGS=-DFMILIB_FMI_PLATFORM=win64
+    INSTALL_DIR = install/mingw
   else
     CC=mycl cl64 /DMSC_VER /DWIN32 /D_WIN32 /EHsc /DNOMINMAX /GR
     cc=mycl cl64
@@ -31,6 +31,7 @@ ifeq ($(ABI),WINDOWS64)
     AR=ar
     CP=cp
     FEXT=.exe
+    INSTALL_DIR = install/mingw
   endif
 else ifeq ($(ABI),WINDOWS32)
   ifeq (MINGW32,$(findstring MINGW32,$(shell uname)))
@@ -44,7 +45,7 @@ else ifeq ($(ABI),WINDOWS32)
     OMDEVMSYS=$(shell cygpath $$OMDEV)
     CMAKE = $(OMDEVMSYS)/bin/cmake/bin/cmake
     CMAKE_TARGET=-G "MSYS Makefiles"
-    FMIL_FLAGS=-DFMILIB_FMI_PLATFORM=win32
+    INSTALL_DIR = install/mingw
   else
     $(error No compiler found to build for WINDOWS32)
   endif
@@ -57,7 +58,7 @@ else ifeq ($(ABI),MAC64)
     SHREXT=.dylib
     CMAKE=cmake
     CMAKE_TARGET="-G Unix Makefiles"
-    FMIL_FLAGS=
+    INSTALL_DIR = install/mac
 else
     CC=g++
     cc=gcc
@@ -67,7 +68,7 @@ else
     SHREXT=.so
     CMAKE=cmake
     CMAKE_TARGET="-GUnix Makefiles"
-    FMIL_FLAGS=
+    INSTALL_DIR = install/linux
 endif
 
 MISCHOME=$(UP)/extralibs/misc

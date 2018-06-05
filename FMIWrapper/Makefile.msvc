@@ -11,8 +11,7 @@ MISCHOME=../3rdParty/misc
 
 INCLUDES= /I. \
 	/I"../FMIWrapper" \
-	/I"FMILibrary-2.0.1/src/Import/include" \
-	/I"FMILibrary-2.0.1/install/include" \
+	/I"..\..\3rdParty\FMIL\install\win\include" \
 	/I"../common" \
 	/I"../3rdParty/misc/include" \
 	/I"cvode-2.9.0/include" \
@@ -20,7 +19,7 @@ INCLUDES= /I. \
 	/I"../../3rdParty/pthread/install/win/include"
 
 LIBS= \
- FMILibrary-2.0.1/install/lib/fmilib_shared.lib \
+ ..\..\3rdParty\FMIL\install\win\lib\fmilib.lib \
  ws2_32.lib \
  ..\..\3rdParty\pthread\install\win\lib\pthreadVC2.lib
 
