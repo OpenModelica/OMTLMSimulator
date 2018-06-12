@@ -183,6 +183,48 @@ double get_tlm_delay()
     return res;
 }
 
+void set_initial_force(void* in_TLMPluginStructObj,
+                       const char* interfaceID,
+                       double force[])
+{
+    TLMPluginStruct* TLMPluginStructObj = (TLMPluginStruct*)in_TLMPluginStructObj;
+    if( MarkerIDmap.find(interfaceID) != MarkerIDmap.end() ){
+        int id = MarkerIDmap[interfaceID];
+
+        if( id >= 0 ){
+            TLMPluginStructObj->Plugin->SetInitialForce3D(id,
+                                                          force[0],
+                                                          force[1],
+                                                          force[2],
+                                                          force[3],
+                                                          force[4],
+                                                          force[5]);
+        }
+
+    }
+    else {
+        TLMErrorLog::Warning( "set_initial_force(...), called for non initialized interface " + std::string(interfaceID));
+    }
+}
+
+void set_initial_force_1d(void* in_TLMPluginStructObj,
+                       const char* interfaceID,
+                       double force)
+{
+    TLMPluginStruct* TLMPluginStructObj = (TLMPluginStruct*)in_TLMPluginStructObj;
+    if( MarkerIDmap.find(interfaceID) != MarkerIDmap.end() ){
+        int id = MarkerIDmap[interfaceID];
+
+        if( id >= 0 ){
+            TLMPluginStructObj->Plugin->SetInitialForce1D(id, force);
+        }
+
+    }
+    else {
+        TLMErrorLog::Warning( "set_initial_force(...), called for non initialized interface " + std::string(interfaceID));
+    }
+}
+
 void set_tlm_motion(void* in_TLMPluginStructObj,
 		    const char* interfaceID,   // The calling marker ID
                     double simTime,    // Current simulation time
