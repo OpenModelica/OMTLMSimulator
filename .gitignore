@@ -19,6 +19,7 @@
 /bin/libomtlmsimulator.dll
 /bin/libomtlmsimulator.so
 /bin/libstdc++-6.dll
+/bin/libTLM.a
 /bin/libwinpthread-1.dll
 /bin/libxml2-2.dll
 /bin/Modelica/
