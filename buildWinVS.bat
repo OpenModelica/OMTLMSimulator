@@ -27,6 +27,20 @@ IF ["%OMS_VS_TARGET%"]==["VS14-Win64"] @CALL "%VS140COMNTOOLS%\..\..\VC\vcvarsal
 IF ["%OMS_VS_TARGET%"]==["VS15-Win32"] @CALL "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvarsall.bat" x86
 IF ["%OMS_VS_TARGET%"]==["VS15-Win64"] @CALL "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvarsall.bat" x86_amd64
 
+IF NOT EXIST build\\ mkdir build
+IF NOT EXIST build\\win\\ mkdir build\\win
+
+IF NOT EXIST install\\ mkdir install
+IF NOT EXIST install\\win\\ mkdir install\\win
+IF NOT EXIST install\\win\\lib\\ mkdir install\\win\\lib
+
+IF NOT EXIST 3rdParty\\build\\ mkdir 3rdParty\\build
+IF NOT EXIST 3rdParty\\build\\win\\ mkdir 3rdParty\\build\\win
+
+IF NOT EXIST 3rdParty\\install\\ mkdir 3rdParty\\install
+IF NOT EXIST 3rdParty\\install\\win\\ mkdir 3rdParty\\install\\win
+IF NOT EXIST 3rdParty\\install\\win\\lib\\ mkdir 3rdParty\\install\\win\\lib
+
 IF NOT DEFINED CMAKE_BUILD_TYPE SET CMAKE_BUILD_TYPE="Release"
 cd 3rdParty\misc
 echo Building 3rdParty\misc
