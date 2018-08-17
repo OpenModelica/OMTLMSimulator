@@ -183,7 +183,13 @@ void TLMInterface1D::SetTimeData(double time,
     }
 
     //Default value is the initial value
-    item.GenForce=InitialForce;
+    if(Domain == "Hydraulic") {
+      item.GenForce = InitialForce + Params.Zf*InitialFlow;
+    }
+    else {
+      item.GenForce = InitialForce - Params.Zf*InitialFlow;
+    }
+
 
     if(Domain == "Hydraulic") {
         TLMPlugin::GetForce1D(-speed, request, Params, &item.GenForce);
@@ -235,7 +241,12 @@ void TLMInterface1D::SendAllData() {
 
 void TLMInterface1D::SetInitialForce(double force)
 {
-    InitialForce = force;
+  InitialForce = force;
+}
+
+void TLMInterface1D::SetInitialFlow(double flow)
+{
+  InitialFlow = flow;
 }
 
 

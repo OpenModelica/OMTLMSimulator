@@ -133,9 +133,13 @@ public:
 
     virtual void SetInitialValue(int interfaceID, double value) = 0;
     virtual void SetInitialForce1D(int interfaceID, double force) = 0;
+    virtual void SetInitialFlow1D(int interfaceID, double flow) = 0;
     virtual void SetInitialForce3D(int interfaceID,
                                    double f1, double f2, double f3,
                                    double t1, double t2, double t3) = 0;
+    virtual void SetInitialFlow3D(int interfaceID,
+                                   double v1, double v2, double v3,
+                                   double w1, double w2, double w3) = 0;
 
     //! Check if the object is initialized (Init was called).
     bool IsInitialized() const { return Initialized; }
