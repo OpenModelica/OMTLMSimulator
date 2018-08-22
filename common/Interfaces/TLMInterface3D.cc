@@ -222,7 +222,12 @@ void TLMInterface3D::SetTimeData(double time,
     }
 
     //Default values are the initial values
-    memcpy(item.GenForce, InitialForce, sizeof(double)*6);
+    item.GenForce[0] = InitialForce[0] - Params.Zf*InitialFlow[0];
+    item.GenForce[1] = InitialForce[1] - Params.Zf*InitialFlow[1];
+    item.GenForce[2] = InitialForce[2] - Params.Zf*InitialFlow[2];
+    item.GenForce[3] = InitialForce[3] - Params.Zfr*InitialFlow[3];
+    item.GenForce[4] = InitialForce[4] - Params.Zfr*InitialFlow[4];
+    item.GenForce[5] = InitialForce[5] - Params.Zfr*InitialFlow[5];
 
     TLMPlugin::GetForce3D(position, orientation,
                           speed, ang_speed,
@@ -335,6 +340,16 @@ void TLMInterface3D::SetInitialForce(double f1, double f2, double f3, double t1,
     InitialForce[3] = t1;
     InitialForce[4] = t2;
     InitialForce[5] = t3;
+}
+
+void TLMInterface3D::SetInitialFlow(double v1, double v2, double v3, double w1, double w2, double w3)
+{
+  InitialFlow[0] = v1;
+  InitialFlow[1] = v2;
+  InitialFlow[2] = v3;
+  InitialFlow[3] = w1;
+  InitialFlow[4] = w2;
+  InitialFlow[5] = w3;
 }
 
 

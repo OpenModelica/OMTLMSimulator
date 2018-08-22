@@ -33,7 +33,11 @@ public:
     void SetInitialForce3D(int interfaceID,
                            double f1, double f2, double f3,
                            double t1, double t2, double t3);
+    void SetInitialFlow3D(int interfaceID,
+                          double v1, double v2, double v3,
+                          double w1, double w2, double w3);
     void SetInitialForce1D(int interfaceID, double force);
+    void SetInitialFlow1D(int interfaceID, double flow);
     void SetInitialValue(int interfaceID, double value);
 
 protected:
@@ -181,7 +185,7 @@ protected:
 
     //! StartTime - start time for the simulation
     double StartTime;
-    
+
     //! End time for the simulation
     double EndTime;
 

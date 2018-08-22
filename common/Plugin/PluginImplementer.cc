@@ -58,6 +58,17 @@ void PluginImplementer::SetInitialForce3D(int interfaceID, double f1, double f2,
     ifc->SetInitialForce(f1,f2,f3,t1,t2,t3);
 }
 
+void PluginImplementer::SetInitialFlow3D(int interfaceID, double v1, double v2, double v3, double w1, double w2, double w3)
+{
+  // Use the ID to get to the right interface object
+  int idx = GetInterfaceIndex(interfaceID);
+  TLMInterface3D* ifc = dynamic_cast<TLMInterface3D*>(Interfaces[idx]);
+
+  assert(!ifc || (ifc -> GetInterfaceID() == interfaceID));
+
+  ifc->SetInitialFlow(v1,v2,v3,w1,w2,w3);
+}
+
 void PluginImplementer::SetInitialValue(int interfaceID, double value)
 {
     // Use the ID to get to the right interface object
@@ -71,8 +82,6 @@ void PluginImplementer::SetInitialValue(int interfaceID, double value)
 
 void PluginImplementer::SetInitialForce1D(int interfaceID, double force)
 {
-    //if(!ModelChecked) CheckModel();
-
     // Use the ID to get to the right interface object
     int idx = GetInterfaceIndex(interfaceID);
     TLMInterface1D* ifc = dynamic_cast<TLMInterface1D*>(Interfaces[idx]);
@@ -80,6 +89,17 @@ void PluginImplementer::SetInitialForce1D(int interfaceID, double force)
     assert(!ifc || (ifc -> GetInterfaceID() == interfaceID));
 
     ifc->SetInitialForce(force);
+}
+
+void PluginImplementer::SetInitialFlow1D(int interfaceID, double flow)
+{
+  // Use the ID to get to the right interface object
+  int idx = GetInterfaceIndex(interfaceID);
+  TLMInterface1D* ifc = dynamic_cast<TLMInterface1D*>(Interfaces[idx]);
+
+  assert(!ifc || (ifc -> GetInterfaceID() == interfaceID));
+
+  ifc->SetInitialFlow(flow);
 }
 
 

@@ -40,6 +40,7 @@ public:
     std::vector<TLMTimeData1D> DataToSend;
 
     double InitialForce = 0;
+    double InitialFlow = 0;
 
     void UnpackTimeData(TLMMessage &mess);
 
@@ -50,6 +51,7 @@ public:
     void SetTimeData(double time, double position, double speed);
     void SendAllData();
     void SetInitialForce(double force);
+    void SetInitialFlow(double flow);
 
     //! linear_interpolate is called with a vector containing 2 points
     //! computes the interpolation (or extrapolation) point with the the linear

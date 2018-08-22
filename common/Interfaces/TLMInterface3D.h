@@ -40,6 +40,7 @@ public:
     std::vector<TLMTimeData3D> DataToSend;
 
     double InitialForce[6] = {0,0,0,0,0,0};
+    double InitialFlow[6]  = {0,0,0,0,0,0};
 
     //! Evaluate the data from deque for the time specified by this Instance
     //! If OnleForce is set, then the position and velocity are not computed.
@@ -53,6 +54,7 @@ public:
     void TransformTimeDataToCG(std::vector<TLMTimeData3D> &timeData, TLMConnectionParams &params);
     void SendAllData();
     void SetInitialForce(double f1, double f2, double f3, double t1, double t2, double t3);
+    void SetInitialFlow(double v1, double v2, double v3, double w1, double w2, double w3);
 
     //! linear_interpolate is called with a vector containing 2 points
     //! computes the interpolation (or extrapolation) point with the the linear
