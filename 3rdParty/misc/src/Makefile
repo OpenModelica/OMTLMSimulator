@@ -11,8 +11,8 @@ ifeq ($(MAKEFILEHEADHOME),)
 CCSRC_FOR_BEAST=
 INCLUDE_FOR_BEAST=
 # These symbols are defined in Makefile.head, we need them for generic make
-CC=g++ -std=c++11 -fPIC
-cc=gcc 
+cc := $(CC)
+CC := $(CXX) -std=c++11 -fPIC
 
 else
 
