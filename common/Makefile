@@ -34,7 +34,7 @@ else
 RTIMELIB = -lrtime
 endif
 
-CC := $(CC) -std=c++11 $(EXTRAFLAGS)
+override CC += $(CFLAGS) -std=c++11 $(EXTRAFLAGS)
 
 SRCCLT= Plugin/PluginImplementer.cc \
 	Plugin/MonitoringPluginImplementer.cc \

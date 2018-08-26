@@ -21,8 +21,9 @@ include $(MAKEFILEHEADHOME)/Makefile.head
 #CC=mycl cl -DWIN32 -D_WIN32 -DXMSTATIC -DYY_NEVER_INTERACTIVE  /EHsc
 #cc=mycl cl -DWIN32 -D_WIN32 -DXMSTATIC -DYY_NEVER_INTERACTIVE  /EHsc
 
-CC := $(CC) -pipe -O2 -frtti -Wall -Wextra -fexceptions -DUNICODE -DINTERFACE_TYPES -std=c++11
-cc := $(CC)
+override CC += -pipe -O2 -frtti -Wall -Wextra -fexceptions -DUNICODE -DINTERFACE_TYPES
+override CXX += -pipe -O2 -frtti -Wall -Wextra -fexceptions -DUNICODE -DINTERFACE_TYPES -std=c++11
+
 
 BNAME=FMIWrapper$(FEXT)
 MISCHOME=../3rdParty/misc
@@ -44,16 +45,16 @@ else
 endif
 
 $(ABI)/%.o: %.cpp
-	$(CC) $(INCLUDES) -c $< -o $@
+	$(CXX) $(INCLUDES) -c $< -o $@
 
 $(ABI)/%.o: ../common/%.cc
-	$(CC) $(INCLUDES) -c $< -o $@
+	$(CXX) $(INCLUDES) -c $< -o $@
 
 $(ABI)/%.o: $(MISCHOME)/src/%.cc
-	$(CC) $(INCLUDES) -c $< -o $@
+	$(CXX) $(INCLUDES) -c $< -o $@
 
 $(ABI)/%.o: $(MISCHOME)/src/%.cc
-	$(CC) $(INCLUDES) -c $< -o $@
+	$(CXX) $(INCLUDES) -c $< -o $@
 
 $(ABI)/%.o: cvode-2.9.0/src/nvec_ser/%.c
 	$(CC) $(INCLUDES) -c $< -o $@
