@@ -14,7 +14,7 @@
 #include <vector>
 #include <fstream>
 #include <map>
-#include <regex>
+#include <RegEx.h>
 
 #define Ith(v,i)    NV_Ith_S(v,i-1)       /* Ith numbers components 1..NEQ */
 #define IJth(A,i,j) DENSE_ELEM(A,i-1,j-1) /* IJth numbers rows,cols 1..NEQ */
@@ -129,14 +129,14 @@ void splitPathAndFilename(const string& fullPath,
 void initializeLogging() {
   logStream.open(LOG_FILE_NAME);
   if(logStream.is_open()) {
-    std::regex exp(simConfig.variableFilter);
+    oms_regex exp(simConfig.variableFilter);
     fmi2_import_variable_list_t *list = fmi2_import_get_variable_list(fmu,0);
     size_t nVar = fmi2_import_get_variable_list_size(list);
     for(size_t i=0; i<nVar; ++i) {
       fmi2_import_variable_t* var = fmi2_import_get_variable(list,i);
       std::string name = fmi2_import_get_variable_name(var);
       if (fmi2_import_get_variable_base_type(var) == fmi2_base_type_real &&
-          std::regex_match(name, exp)) {
+          oms_regex_match(name, exp)) {
         logVariables.push_back(fmi2_import_get_variable_vr(var));
         TLMErrorLog::Debug("Logging variable with value reference = "+to_string(logVariables[logVariables.size()-1]));
       }
