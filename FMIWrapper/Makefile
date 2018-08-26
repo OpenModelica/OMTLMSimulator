@@ -24,6 +24,21 @@ include $(MAKEFILEHEADHOME)/Makefile.head
 override CC += -pipe -O2 -frtti -Wall -Wextra -fexceptions -DUNICODE -DINTERFACE_TYPES
 override CXX += -pipe -O2 -frtti -Wall -Wextra -fexceptions -DUNICODE -DINTERFACE_TYPES -std=c++11
 
+# deal with regex crap
+ifeq (gcc,$(findstring gcc,$(CC)))
+	MIN_GCC_VERSION = "4.9.2"
+endif
+ifeq (clang,$(findstring clang,$(CC)))
+	MIN_GCC_VERSION = "3.8.2"
+endif
+GCC_VERSION := "`$(CC) -dumpversion`"
+IS_GCC_ABOVE_MIN_VERSION := $(shell expr "$(GCC_VERSION)" ">=" "$(MIN_GCC_VERSION)")
+ifeq "$(IS_GCC_ABOVE_MIN_VERSION)" "1"
+    EXTRA_LIBS=
+else
+    EXTRA_LIBS=-lboost_regex
+endif
+
 
 BNAME=FMIWrapper$(FEXT)
 MISCHOME=../3rdParty/misc
@@ -41,7 +56,7 @@ ifeq ($(OS),Windows_NT)
 		-lfmilib -lshlwapi
 else
 	LIBS = 	-L../../3rdParty/FMIL/$(INSTALL_DIR)/lib \
-		-lfmilib -ldl
+		-lfmilib -ldl $(EXTRA_LIBS)
 endif
 
 $(ABI)/%.o: %.cpp
