@@ -11,8 +11,8 @@ ifeq ($(MAKEFILEHEADHOME),)
 CCSRC_FOR_BEAST=
 INCLUDE_FOR_BEAST=
 # These symbols are defined in Makefile.head, we need them for generic make
-cc := $(CC)
-CC := $(CXX) -std=c++11 -fPIC
+override CXX += -std=c++11 -fPIC
+override CC += -fPIC
 
 else
 
@@ -40,10 +40,10 @@ OBJS=$(CCSRC:%.cc=$(ABI)/%.o)
 OBJS+=$(CSRC:%.c=$(ABI)/%.o)
 
 $(ABI)/%.o: %.cc
-	$(CC) $(SPECFLAGS) $(CCFLAGS) $(OPTFLAGS4) $(MINCLUDE) -c $< -o $@ 
+	$(CXX) $(SPECFLAGS) $(CXXFLAGS) $(OPTFLAGS4) $(MINCLUDE) -c $< -o $@ 
 
 $(ABI)/%.o: %.c
-	$(cc) $(SPECFLAGS) $(CFLAGS) $(CLIBFLAGS) $(MINCLUDE) -c $< -o $@ 
+	$(CC) $(SPECFLAGS) $(CFLAGS) $(CLIBFLAGS) $(MINCLUDE) -c $< -o $@ 
 
 lib: dirs ../lib/$(ABI)/libmisc.a
 
@@ -53,7 +53,7 @@ LPTHREAD = -lpthread
 endif
 
 %_unittest: %_unittest.cc ../lib/$(ABI)/libmisc.a $(GTEST)
-	$(CC) $(SPECFLAGS) $(CLIBFLAGS) $(MINCLUDE) -I$(GTEST)/include -c $< -o $(ABI)/$@.o
+	$(CXX) $(SPECFLAGS) $(CLIBFLAGS) $(MINCLUDE) -I$(GTEST)/include -c $< -o $(ABI)/$@.o
 	$(LINK) -o  $(ABI)/$@  $(LPTHREAD) $(ABI)/$@.o $(GTEST)/make/$(ABI)/gtest-all.o $(GTEST)/make/$(ABI)/gtest_main.o ../lib/$(ABI)/libmisc.a
 	$(ABI)/$@
 
@@ -68,28 +68,28 @@ clean:
 	-rm -f ../lib/$(ABI)/libmisc.a 
 
 testpp: testpp.cc PrivPack.cc ../include/PrivPack.h
-	$(CC) -o testpp $(MINCLUDE) testpp.cc \
+	$(CXX) -o testpp $(MINCLUDE) testpp.cc \
 		../lib/$(ABI)/libmisc.a \
 		-lm
 
 testbp: testbp.cc boolPack.cc ../include/boolPack.h
-	$(CC) -o testbp $(MINCLUDE) testbp.cc \
+	$(CXX) -o testbp $(MINCLUDE) testbp.cc \
 		../lib/$(ABI)/libmisc.a \
 		-lm
 
 
 testdouble33s: testdouble33s.cc double33s.cc ../include/double33s.h lib
-	$(CC) -o testdouble33s  $(SPECFLAGS) $(CCFLAGS) $(OPTFLAGS4) $(MINCLUDE) testdouble33s.cc \
+	$(CXX) -o testdouble33s  $(SPECFLAGS) $(CCFLAGS) $(OPTFLAGS4) $(MINCLUDE) testdouble33s.cc \
 		../lib/$(ABI)/libmisc.a \
 		-lm
 
 testlightmat: testlightmat.cc lib
-	$(CC) -o testlightmat $(MINCLUDE) testlightmat.cc \
+	$(CXX) -o testlightmat $(MINCLUDE) testlightmat.cc \
 		../lib/$(ABI)/libmisc.a \
 		-lm
 
 testString: lib testString.cc
-	$(CC) -g -o testString $(MINCLUDE) testString.cc \
+	$(CXX) -g -o testString $(MINCLUDE) testString.cc \
 		../lib/$(ABI)/libmisc.a \
 		-lm
 
