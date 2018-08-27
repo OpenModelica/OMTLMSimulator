@@ -17,12 +17,8 @@ endif
 
 include $(MAKEFILEHEADHOME)/Makefile.head
 
-# For microsoft and Dymola
-#CC=mycl cl -DWIN32 -D_WIN32 -DXMSTATIC -DYY_NEVER_INTERACTIVE  /EHsc
-#cc=mycl cl -DWIN32 -D_WIN32 -DXMSTATIC -DYY_NEVER_INTERACTIVE  /EHsc
-
 override CC += -pipe -O2 -frtti -Wall -Wextra -fexceptions -DUNICODE -DINTERFACE_TYPES
-override CXX += -pipe -O2 -frtti -Wall -Wextra -fexceptions -DUNICODE -DINTERFACE_TYPES -std=c++11
+override CXX += -pipe -O2 -frtti -Wall -Wextra -fexceptions -DUNICODE -DINTERFACE_TYPES
 
 # deal with regex crap
 ifeq (gcc,$(findstring gcc,$(CC)))

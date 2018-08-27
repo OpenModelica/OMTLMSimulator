@@ -25,19 +25,18 @@ INCLUDES=  -I. \
 
 MISCHOME=../3rdParty/misc
 MEX_DEBUGFLG=
-CC += -fPIC -std=c++11
 
 $(ABI)/%.o: %.c
-	$(cc) $(DEFINES) $(CFLAGS) -DWIN32 $(OPTFLAGS4) $(INCLUDES) -c $< -o $@
+	$(CC) $(DEFINES) $(CFLAGS) -DWIN32 $(OPTFLAGS4) $(INCLUDES) -c $< -o $@
 
 $(ABI)/%.o: %.cc
-	$(CC) $(DEFINES) $(CCFLAGS) -DWIN32 $(OPTFLAGS4) $(INCLUDES) -c $< -o $@ 
+	$(CXX) $(DEFINES) $(CXXFLAGS) -DWIN32 $(OPTFLAGS4) $(INCLUDES) -c $< -o $@ 
 
 $(ABI)/%.o: ../common/%.cc
-	$(CC) $(DEFINES) $(CCFLAGS) -DWIN32 $(OPTFLAGS4) $(INCLUDES) -c $< -o $@ 
+	$(CXX) $(DEFINES) $(CXXFLAGS) -DWIN32 $(OPTFLAGS4) $(INCLUDES) -c $< -o $@ 
 
 $(ABI)/%.o: $(MISCHOME)/src/%.cc
-	$(CC) $(DEFINES) $(CCFLAGS) -DWIN32 $(OPTFLAGS4) $(INCLUDES) -c $< -o $@
+	$(CXX) $(DEFINES) $(CXXFLAGS) -DWIN32 $(OPTFLAGS4) $(INCLUDES) -c $< -o $@
 
 OBJS=   
 

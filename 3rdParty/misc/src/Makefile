@@ -79,7 +79,7 @@ testbp: testbp.cc boolPack.cc ../include/boolPack.h
 
 
 testdouble33s: testdouble33s.cc double33s.cc ../include/double33s.h lib
-	$(CXX) -o testdouble33s  $(SPECFLAGS) $(CCFLAGS) $(OPTFLAGS4) $(MINCLUDE) testdouble33s.cc \
+	$(CXX) -o testdouble33s  $(SPECFLAGS) $(CXXFLAGS) $(OPTFLAGS4) $(MINCLUDE) testdouble33s.cc \
 		../lib/$(ABI)/libmisc.a \
 		-lm
 
