@@ -17,13 +17,6 @@ endif
 
 include $(MAKEFILEHEADHOME)/Makefile.head
 
-# For microsoft and Dymola 
-#CC=mycl cl -DWIN32 -D_WIN32 -DXMSTATIC -DYY_NEVER_INTERACTIVE  /EHsc
-#cc=mycl cl -DWIN32 -D_WIN32 -DXMSTATIC -DYY_NEVER_INTERACTIVE  /EHsc
-
-CC := $(CC) -pipe -O2 -frtti -Wall -Wextra -fexceptions -DUNICODE -DINTERFACE_TYPES -std=c++11
-cc := $(cc) -pipe -O2 -frtti -Wall -Wextra -fexceptions -DUNICODE -DINTERFACE_TYPES -std=c++11
-
 BNAME=OMFMISimulatorWrapper$(FEXT)
 MISCHOME=../3rdParty/misc
 
@@ -37,16 +30,16 @@ LIBS = 	-L${OMFMISimulatorPath}/install/lib \
 	-lfmilib_shared
 
 $(ABI)/%.o: %.cpp
-	$(CC) $(INCLUDES) -c $< -o $@
+	$(CXX) $(INCLUDES) -c $< -o $@
 
 $(ABI)/%.o: ../common/%.cc
-	$(CC) $(INCLUDES) -c $< -o $@ 
+	$(CXX) $(INCLUDES) -c $< -o $@ 
 
 $(ABI)/%.o: $(MISCHOME)/src/%.cc
-	$(CC) $(INCLUDES) -c $< -o $@ 
+	$(CXX) $(INCLUDES) -c $< -o $@ 
 
 $(ABI)/%.o: $(MISCHOME)/src/%.cc
-	$(CC) $(INCLUDES) -c $< -o $@
+	$(CXX) $(INCLUDES) -c $< -o $@
     
 OBJS=  main.o 
 

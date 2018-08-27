@@ -13,9 +13,9 @@ endif
 
 ifeq ($(ABI),WINDOWS64)
   ifeq (MINGW64,$(findstring MINGW64,$(shell uname)))
-    CC=g++
-    cc=gcc
-    LINK=g++
+    CC=gcc
+    CXX=g++
+    LINK=$(CXX)
     AR=ar
     CP=cp
     FEXT=.exe
@@ -36,9 +36,9 @@ ifeq ($(ABI),WINDOWS64)
   endif
 else ifeq ($(ABI),WINDOWS32)
   ifeq (MINGW32,$(findstring MINGW32,$(shell uname)))
-    CC=g++
-    cc=gcc
-    LINK=g++
+    CC=gcc
+    CXX=g++
+    LINK=$(CXX)
     AR=ar
     CP=cp
     FEXT=.exe
@@ -52,9 +52,9 @@ else ifeq ($(ABI),WINDOWS32)
     $(error No compiler found to build for WINDOWS32)
   endif
 else ifeq ($(ABI),MAC64)
-    CC=g++
-    cc=gcc
-    LINK=g++
+    CC=gcc
+    CXX=g++
+    LINK=$(CXX)
     AR=ar
     CP=cp
     SHREXT=.dylib
@@ -63,9 +63,9 @@ else ifeq ($(ABI),MAC64)
     CMAKE_TARGET="-G Unix Makefiles"
     INSTALL_DIR = install/mac
 else
-    CC=g++
-    cc=gcc
-    LINK=g++
+    CC=gcc
+    CXX=g++
+    LINK=$(CXX)
     AR=ar
     CP=cp
     SHREXT=.so
@@ -80,6 +80,28 @@ TIMEHOME=$(UP)/extralibs/rtime
 
 DEFINES= -DUSE_THREADS
 OPTFLAGS4=-O2
+
+TARGET_TRIPLE	:= $(subst -, ,$(shell $(CC) -dumpmachine))
+TARGET_ARCH		:= $(word 1,$(TARGET_TRIPLE))
+TARGET_OS		:= $(word 3,$(TARGET_TRIPLE))
+
+EXTRAFLAGS =
+ifeq ($TARGET_OS,mingw32)
+else ifeq ($TARGET_OS,cygwin)
+else
+EXTRAFLAGS = -fPIC
+endif
+
+detected_OS := $(shell uname -s)
+ifeq ($(detected_OS),Darwin)
+EXTRAFLAGS += -DNO_RTIME
+RTIMELIB =
+else
+RTIMELIB = -lrtime
+endif
+
+override CC += $(CFLAGS) $(EXTRAFLAGS)
+override CXX += $(CXXFLAGS) -std=c++11 $(EXTRAFLAGS)
 
 ifeq (MINGW64,$(findstring MINGW64,$(shell uname)))
   INCLXML-WINDOWS64=-I$(OMDEV)/tools/msys/mingw64/include/libxml2
