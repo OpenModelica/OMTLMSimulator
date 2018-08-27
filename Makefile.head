@@ -20,6 +20,7 @@ ifeq ($(ABI),WINDOWS64)
     CP=cp
     FEXT=.exe
     SHREXT=.dll
+    STAEXT=.a
     OMDEVMSYS=$(shell cygpath $$OMDEV)
     CMAKE = $(OMDEVMSYS)/bin/cmake/bin/cmake
     CMAKE_TARGET=-G "MSYS Makefiles"
@@ -42,6 +43,7 @@ else ifeq ($(ABI),WINDOWS32)
     CP=cp
     FEXT=.exe
     SHREXT=.dll
+    STAEXT=.a
     OMDEVMSYS=$(shell cygpath $$OMDEV)
     CMAKE = $(OMDEVMSYS)/bin/cmake/bin/cmake
     CMAKE_TARGET=-G "MSYS Makefiles"
@@ -56,6 +58,7 @@ else ifeq ($(ABI),MAC64)
     AR=ar
     CP=cp
     SHREXT=.dylib
+    STAEXT=.a
     CMAKE=cmake
     CMAKE_TARGET="-G Unix Makefiles"
     INSTALL_DIR = install/mac
@@ -66,6 +69,7 @@ else
     AR=ar
     CP=cp
     SHREXT=.so
+    STAEXT=.a
     CMAKE=cmake
     CMAKE_TARGET="-GUnix Makefiles"
     INSTALL_DIR = install/linux
