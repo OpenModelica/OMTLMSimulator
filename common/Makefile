@@ -15,28 +15,6 @@ include $(MAKEFILEHEADHOME)/Makefile.head
 MISCHOME = ../3rdParty/misc
 TIMEHOME = ../3rdParty/rtime
 
-TARGET_TRIPLE	:= $(subst -, ,$(shell $(CC) -dumpmachine))
-TARGET_ARCH		:= $(word 1,$(TARGET_TRIPLE))
-TARGET_OS		:= $(word 3,$(TARGET_TRIPLE))
-
-EXTRAFLAGS =
-ifeq ($TARGET_OS,mingw32)
-else ifeq ($TARGET_OS,cygwin)
-else
-EXTRAFLAGS = -fPIC
-endif
-
-detected_OS := $(shell uname -s)
-ifeq ($(detected_OS),Darwin)
-EXTRAFLAGS += -DNO_RTIME
-RTIMELIB =
-else
-RTIMELIB = -lrtime
-endif
-
-override CC += $(CFLAGS) -std=c++11 $(EXTRAFLAGS)
-override CXX += $(CXXFLAGS) -std=c++11 $(EXTRAFLAGS)
-
 SRCCLT= Plugin/PluginImplementer.cc \
 	Plugin/MonitoringPluginImplementer.cc \
 	Communication/TLMClientComm.cc \
@@ -185,7 +163,7 @@ $(ABI)/testapp$(FEXT): $(ABI)/TLMTestApp.o
 	$(LINK) $(ABI)/TLMTestApp.o -o $(ABI)/testapp$(FEXT) -L$(ABI) -lTLM $(LIBS) $(XTRLIBS) $(LIBPTHREAD)
 
 $(ABI)/%.o: %.cc
-	$(CC) $(DEFINES) $(CCFLAGS) $(OPTFLAGS4) $(INCLUDES) $(INCLXML) -c $< -o $@
+	$(CXX) $(DEFINES) $(CXXFLAGS) $(OPTFLAGS4) $(INCLUDES) $(INCLXML) -c $< -o $@
 
 .PHONY: clean dir depend lib manager test
 

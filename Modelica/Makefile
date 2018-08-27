@@ -17,12 +17,8 @@ endif
 
 include $(MAKEFILEHEADHOME)/Makefile.head
 
-# For microsoft and Dymola 
-#CC=mycl cl -DWIN32 -D_WIN32 -DXMSTATIC -DYY_NEVER_INTERACTIVE  /EHsc
-#cc=mycl cl -DWIN32 -D_WIN32 -DXMSTATIC -DYY_NEVER_INTERACTIVE  /EHsc
-
-CC += -std=c++11 -DYY_NEVER_INTERACTIVE -fPIC
-cc += -std=c++11 -DYY_NEVER_INTERACTIVE -fPIC
+override CC += -DYY_NEVER_INTERACTIVE 
+override CXX += -DYY_NEVER_INTERACTIVE
 
 #################################################################################
 #
@@ -42,19 +38,19 @@ INCLUDES=  -I. \
 	-I$(MISCHOME)/include
 
 $(ABI)/%.o: %.c
-	$(cc) $(INCLUDES) -c $< -o $@
+	$(CC) $(INCLUDES) -c $< -o $@
 
 $(ABI)/%.o: %.cc
-	$(CC) $(INCLUDES) -c $< -o $@ 
+	$(CXX) $(INCLUDES) -c $< -o $@ 
 
 $(ABI)/%.o: ../common/%.cc
-	$(CC) $(INCLUDES) -c $< -o $@ 
+	$(CXX) $(INCLUDES) -c $< -o $@ 
 
 $(ABI)/%.o: $(MISCHOME)/src/%.cc
-	$(CC) $(INCLUDES) -c $< -o $@ 
+	$(CXX) $(INCLUDES) -c $< -o $@ 
 
 $(ABI)/%.o: $(MISCHOME)/src/%.cc
-	$(CC) $(INCLUDES) -c $< -o $@
+	$(CXX) $(INCLUDES) -c $< -o $@
 
 OBJS=  tlmforce.o 
 

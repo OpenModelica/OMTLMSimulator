@@ -21,8 +21,8 @@ include $(MAKEFILEHEADHOME)/Makefile.head
 #CC=mycl cl -DWIN32 -D_WIN32 -DXMSTATIC -DYY_NEVER_INTERACTIVE  /EHsc
 #cc=mycl cl -DWIN32 -D_WIN32 -DXMSTATIC -DYY_NEVER_INTERACTIVE  /EHsc
 
-CC += -std=c++11 -DYY_NEVER_INTERACTIVE -fPIC -DINTERFACE_TYPES
-cc += -DYY_NEVER_INTERACTIVE -fPIC -DINTERFACE_TYPES
+override CC += -DYY_NEVER_INTERACTIVE -DINTERFACE_TYPES
+override CXX += -DYY_NEVER_INTERACTIVE -DINTERFACE_TYPES
 
 #################################################################################
 #
@@ -42,16 +42,16 @@ INCLUDES=  -I. \
 	-I$(MISCHOME)/include
 
 $(ABI)/%.o: %.c
-	$(cc) $(INCLUDES) -c $< -o $@
+	$(CC) $(INCLUDES) -c $< -o $@
 
 $(ABI)/%.o: %.cc
-	$(CC) $(INCLUDES) -c $< -o $@ 
+	$(CXX) $(INCLUDES) -c $< -o $@ 
 
 $(ABI)/%.o: ../common/%.cc
-	$(CC) $(INCLUDES) -c $< -o $@ 
+	$(CXX) $(INCLUDES) -c $< -o $@ 
 
 $(ABI)/%.o: $(MISCHOME)/src/%.cc
-	$(CC) $(INCLUDES) -c $< -o $@
+	$(CXX) $(INCLUDES) -c $< -o $@
 
 OBJS=  tlmforce.o 
 
