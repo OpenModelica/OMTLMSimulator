@@ -21,15 +21,8 @@ override CC += -pipe -O2 -frtti -Wall -Wextra -fexceptions -DUNICODE -DINTERFACE
 override CXX += -pipe -O2 -frtti -Wall -Wextra -fexceptions -DUNICODE -DINTERFACE_TYPES
 
 # deal with regex crap
-ifeq (gcc,$(findstring gcc,$(CC)))
-	MIN_GCC_VERSION = "4.9.2"
-endif
-ifeq (clang,$(findstring clang,$(CC)))
-	MIN_GCC_VERSION = "3.8.2"
-endif
-GCC_VERSION := "`$(CC) -dumpversion`"
-IS_GCC_ABOVE_MIN_VERSION := $(shell expr "$(GCC_VERSION)" ">=" "$(MIN_GCC_VERSION)")
-ifeq ("$(IS_GCC_ABOVE_MIN_VERSION)", "1")
+STD_REGEX = `../../3rdParty/RegEx/OMSRegEx`
+ifeq ("STD_REGEX","1")
 	EXTRA_LIBS=
 else
 	EXTRA_LIBS=-lboost_regex
@@ -42,6 +35,7 @@ MISCHOME=../3rdParty/misc
 INCLUDES=  -I. \
 	-I"../FMIWrapper" \
 	-I"../../3rdParty/FMIL/$(INSTALL_DIR)/include" \
+	-I"../../3rdParty/RegEx" \
 	-I"../common" -I"../3rdParty/misc/include" \
 	-I"cvode-2.9.0/include" \
 	-I"ida-2.9.0/include"
@@ -122,7 +116,7 @@ EXT_OBJS = Plugin/PluginImplementer.o \
 ABIOBJS=$(OBJS:%.o= $(ABI)/%.o) $(EXT_OBJS:%.o= $(ABI)/%.o)
 
 default: dirs
-	echo GCC: $(GCC_VERSION) Min GCC: $(MIN_GCC_VERSION) Above: $(IS_GCC_ABOVE_MIN_VERSION) Extra libs: $(EXTRA_LIBS)
+	echo Using std::regex: $(STD_REGEX)
 	$(MAKE) $(ABIOBJS)
 	$(LINK) $(ABIOBJS$) -o $(ABI)/$(BNAME) $(LIBS)
 
