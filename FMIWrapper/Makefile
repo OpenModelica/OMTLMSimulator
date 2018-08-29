@@ -29,10 +29,10 @@ ifeq (clang,$(findstring clang,$(CC)))
 endif
 GCC_VERSION := "`$(CC) -dumpversion`"
 IS_GCC_ABOVE_MIN_VERSION := $(shell expr "$(GCC_VERSION)" ">=" "$(MIN_GCC_VERSION)")
-ifeq "$(IS_GCC_ABOVE_MIN_VERSION)" "1"
-    EXTRA_LIBS=
+ifeq ("$(IS_GCC_ABOVE_MIN_VERSION)", "1")
+	EXTRA_LIBS=
 else
-    EXTRA_LIBS=-lboost_regex
+	EXTRA_LIBS=-lboost_regex
 endif
 
 
@@ -122,6 +122,7 @@ EXT_OBJS = Plugin/PluginImplementer.o \
 ABIOBJS=$(OBJS:%.o= $(ABI)/%.o) $(EXT_OBJS:%.o= $(ABI)/%.o)
 
 default: dirs
+	echo GCC: $(GCC_VERSION) Min GCC: $(MIN_GCC_VERSION) Above: $(IS_GCC_ABOVE_MIN_VERSION) Extra libs: $(EXTRA_LIBS)
 	$(MAKE) $(ABIOBJS)
 	$(LINK) $(ABIOBJS$) -o $(ABI)/$(BNAME) $(LIBS)
 
