@@ -132,6 +132,12 @@ CP-LIBXML-LINUX64=
 XTRLIBS-LINUX64=-lrt
 LIBPTHREAD-LINUX64=-L$(UP)/extralibs/pthread/$(ABI)/lib -lpthread
 
+INCLXML-LINUX32=-I$(UP)/../3rdParty/libxml2/install/linux/include/libxml2
+LIBXML-LINUX32=-L$(UP)/../3rdParty/libxml2/install/linux/lib -lxml2
+CP-LIBXML-LINUX32=
+XTRLIBS-LINUX32=-lrt
+LIBPTHREAD-LINUX32=-L$(UP)/extralibs/pthread/$(ABI)/lib -lpthread
+
 INCLXML-MAC64=-I/usr/include/libxml2
 LIBXML-MAC64=-lxml2
 CP-LIBXML-MAC64=
