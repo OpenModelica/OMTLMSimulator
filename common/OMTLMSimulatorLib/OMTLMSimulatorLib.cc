@@ -834,6 +834,8 @@ int startMonitor(double timeStep,
 
   } while(simTime < endTime);
 
+  delete thePlugin;
+
   return 0;
 }
 
