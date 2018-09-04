@@ -118,7 +118,7 @@ ABIOBJS=$(OBJS:%.o= $(ABI)/%.o) $(EXT_OBJS:%.o= $(ABI)/%.o)
 default: dirs
 	echo Using std::regex: $(STD_REGEX)
 	$(MAKE) $(ABIOBJS)
-	$(LINK) $(ABIOBJS$) -o $(ABI)/$(BNAME) $(LIBS)
+	$(LINK) $(ABIOBJS) -o $(ABI)/$(BNAME) $(LIBS)
 
 
 install: default
@@ -127,7 +127,7 @@ install: default
 
 
 wrapper: dirs $(ABIOBJS)
-	$(LINK) $(ABIOBJS$) -o $(ABI)/$(BNAME) $(LIBS)
+	$(LINK) $(ABIOBJS) -o $(ABI)/$(BNAME) $(LIBS)
 
 wrapper_install: wrapper
 	cp $(ABI)/$(BNAME) $(BINDIR)

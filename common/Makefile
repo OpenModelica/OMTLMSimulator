@@ -92,12 +92,13 @@ help:
 	@echo Possible targets are:
 	@echo lib - creates the libTLM.a and libTLM_m.a libraries - the client side of the plugin
 	@echo manager - creates the tlmmanager application
-	@echo all, defaulf: build everything.
+	@echo all, default: build everything.
 
 
 all: lib manager monitor omtlmlib test
 
 lib: lib_s
+	echo ABI: $(ABI)
 	$(MAKE) dir
 	$(MAKE) SRCTYPE=SRCCLT $(ABI)/libTLM.a
 
@@ -156,7 +157,7 @@ $(ABI)/omtlmsimulator$(FEXT): $(OBJS)
 	$(CP) $(ABI)/omtlmsimulator$(FEXT) $(BINDIR)/omtlmsimulator$(FEXT)
 
 $(ABI)/libomtlmsimulator$(SHREXT): $(OBJS)
-	$(LINK) -shared -fPIC -o $(ABI)/libomtlmsimulator$(SHREXT) $(OBJS) $(LIBS) $(XTRLIBS) $(LIBXML) $(LIBPTHREAD)
+	$(LINK) -shared -o $(ABI)/libomtlmsimulator$(SHREXT) $(OBJS) $(LIBS) $(XTRLIBS) $(LIBXML) $(LIBPTHREAD)
 	$(CP) $(ABI)/libomtlmsimulator$(SHREXT) $(BINDIR)/libomtlmsimulator$(SHREXT)
 
 $(ABI)/testapp$(FEXT): $(ABI)/TLMTestApp.o
