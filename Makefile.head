@@ -86,8 +86,8 @@ TARGET_ARCH		:= $(word 1,$(TARGET_TRIPLE))
 TARGET_OS		:= $(word 3,$(TARGET_TRIPLE))
 
 EXTRAFLAGS =
-ifeq ($TARGET_OS,mingw32)
-else ifeq ($TARGET_OS,cygwin)
+ifeq ($(ABI),WINDOWS32)
+else ifeq ($(ABI),WINDOWS64)
 else
 EXTRAFLAGS = -fPIC
 endif

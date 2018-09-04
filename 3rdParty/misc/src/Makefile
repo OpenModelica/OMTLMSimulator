@@ -11,8 +11,16 @@ ifeq ($(MAKEFILEHEADHOME),)
 CCSRC_FOR_BEAST=
 INCLUDE_FOR_BEAST=
 # These symbols are defined in Makefile.head, we need them for generic make
-override CXX += -std=c++11 -fPIC
-override CC += -fPIC
+
+EXTRAFLAGS =
+ifeq ($(ABI),WINDOWS32)
+else ifeq ($(ABI),WINDOWS64)
+else
+EXTRAFLAGS = -fPIC
+endif
+
+override CXX += -std=c++11 $(EXTRAFLAGS)
+override CC += $(EXTRAFLAGS)
 
 else
 
@@ -94,6 +102,7 @@ testString: lib testString.cc
 		-lm
 
 dirs : $(ABI) ../lib/$(ABI)
+	echo ABI: $(ABI)
 
 ../lib/$(ABI) : 
 	mkdir -p ../lib/$(ABI)

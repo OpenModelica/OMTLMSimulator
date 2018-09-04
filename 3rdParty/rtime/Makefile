@@ -8,7 +8,15 @@ HOST_OFILES =
 
 srcdir = .
 
+EXTRAFLAGS =
+ifeq ($(ABI),WINDOWS32)
+else ifeq ($(ABI),WINDOWS64)
+else
+EXTRAFLAGS = -fPIC
+endif
 
+override CXX += -std=c++11 $(EXTRAFLAGS)
+override CC += $(EXTRAFLAGS)
 
 INSTALL = ./install-sh
 
@@ -49,7 +57,7 @@ $(ABI)/timing_test: $(ABI)/timing_test.o $(LIBNAME)
 	$(LINK) -o $@ $(ABI)/timing_test.o $(LDLIBS)
 
 $(ABI)/%.o: %.c
-	$(CC) -fPIC -c $< $(INCLUDES) -o $@ 
+	$(CC) -c $< $(INCLUDES) -o $@ 
 
 install: rtime.h $(LIBNAME)
 	$(INSTALL) -d $(INSTALLDIR)/include
