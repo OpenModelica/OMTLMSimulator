@@ -40,6 +40,10 @@ public:
     void SetInitialFlow1D(int interfaceID, double flow);
     void SetInitialValue(int interfaceID, double value);
 
+    //! CheckModel method results in CheckModel request sent to TLM manager.
+    //! The successful return indicates that the simulation is ready to run.
+    void CheckModel();
+
 protected:
     //! Connected flag tells if the connection to TLM manager is established.
     bool Connected;
@@ -49,10 +53,6 @@ protected:
 
     //! Checked flag tells if the manager confirmed start of a simulation
     bool ModelChecked;
-
-    //! CheckModel method results in CheckModel request sent to TLM manager.
-    //! The successful return indicates that the simulation is ready to run.
-    void CheckModel();
 
     //! Registered interfaces
     std::vector<omtlm_TLMInterface*> Interfaces;
