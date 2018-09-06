@@ -141,6 +141,8 @@ public:
                                    double v1, double v2, double v3,
                                    double w1, double w2, double w3) = 0;
 
+    virtual void CheckModel() = 0;
+
     //! Check if the object is initialized (Init was called).
     bool IsInitialized() const { return Initialized; }
 
