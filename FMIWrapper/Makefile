@@ -21,8 +21,8 @@ override CC += -pipe -O2 -frtti -Wall -Wextra -fexceptions -DUNICODE -DINTERFACE
 override CXX += -pipe -O2 -frtti -Wall -Wextra -fexceptions -DUNICODE -DINTERFACE_TYPES
 
 # deal with regex crap
-STD_REGEX = `../../3rdParty/RegEx/OMSRegEx`
-ifeq ("STD_REGEX","1")
+STD_REGEX=$(shell ../../3rdParty/RegEx/OMSRegEx)
+ifeq ("$(STD_REGEX)","1")
 	EXTRA_LIBS=
 else
 	EXTRA_LIBS=-lboost_regex
