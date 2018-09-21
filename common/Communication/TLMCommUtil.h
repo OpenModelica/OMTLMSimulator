@@ -17,7 +17,9 @@
 
 #if defined(WIN32) || defined(__MINGW32__)
 #include <winsock2.h>
+#if !defined(NOMINMAX)
 #define NOMINMAX
+#endif
 #include <windows.h>
 
 //// #define MSG_WAITALL 0
