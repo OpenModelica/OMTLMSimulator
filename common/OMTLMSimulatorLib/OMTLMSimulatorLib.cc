@@ -810,9 +810,6 @@ int startMonitor(double timeStep,
   TM_Clear(&tInfo);
 
   do {
-    // Next time step (yes I know, we miss the first step)
-    simTime += timeStep;
-
     // Adjust to meet end-time step.
     if(simTime > endTime) simTime = endTime;
 
@@ -832,6 +829,8 @@ int startMonitor(double timeStep,
     // Update run status
     PrintRunStatus(model, runFile, tInfo, simTime);
 
+    // Next time step
+    simTime += timeStep;
   } while(simTime < endTime);
 
   delete thePlugin;
