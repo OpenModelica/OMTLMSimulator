@@ -461,7 +461,7 @@ void PrintHeader(omtlm_CompositeModel& model, std::ofstream& dataFile) {
   int nTLMInterfaces = model.GetInterfacesNum();
 
   // First variable written is time.
-  dataFile << "\"" << "time\",";
+  dataFile << "\"" << "time\",\"wallTime\",";
 
   int nActiveInterfaces = 0;
   for(int i=0; i<nTLMInterfaces; i++) {
@@ -533,10 +533,13 @@ void PrintHeader(omtlm_CompositeModel& model, std::ofstream& dataFile) {
 
 void PrintData(omtlm_CompositeModel& model,
                std::ofstream& dataFile,
+               tTM_Info& tInfo,
                std::map<int, TLMTimeDataSignal> &dataStorageSignal,
                std::map<int, TLMTimeData1D>& dataStorage1D,
                std::map<int, TLMTimeData3D> &dataStorage3D) {
   double startTime = model.GetSimParams().GetStartTime();
+
+  double wallTime = tInfo.total.tv_sec + tInfo.total.tv_nsec/1.0e9;
 
   // Get data from TLM-Manager here!
   int nTLMInterfaces = model.GetInterfacesNum();
@@ -563,6 +566,7 @@ void PrintData(omtlm_CompositeModel& model,
         // Print time only once, that is, for the first entry.
         if(printTimeFlg) {
           dataFile << timeData.time << ",";
+          dataFile << wallTime << ",";
           printTimeFlg = false;
         }
 
@@ -623,6 +627,7 @@ void PrintData(omtlm_CompositeModel& model,
         // Print time only once, that is, for the first entry.
         if(printTimeFlg) {
           dataFile << timeData.time << ",";
+          dataFile << wallTime << ",";
           printTimeFlg = false;
         }
 
@@ -680,6 +685,7 @@ void PrintData(omtlm_CompositeModel& model,
         // Print time only once, that is, for the first entry.
         if(printTimeFlg) {
           dataFile << timeData.time << ",";
+          dataFile << wallTime << ",";
           printTimeFlg = false;
         }
 
@@ -824,7 +830,7 @@ int startMonitor(double timeStep,
     TM_Stop(&tInfo);
 
     // Print data row
-    PrintData(model, outdataFile, dataSignal, data1D, data3D);
+    PrintData(model, outdataFile, tInfo, dataSignal, data1D, data3D);
 
     // Update run status
     PrintRunStatus(model, runFile, tInfo, simTime);
