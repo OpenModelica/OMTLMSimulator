@@ -105,10 +105,10 @@ override CXX += $(CXXFLAGS) -std=c++11 $(EXTRAFLAGS)
 
 ifeq (MINGW64,$(findstring MINGW64,$(shell uname)))
   INCLXML-WINDOWS64=-I$(OMDEV)/tools/msys/mingw64/include/libxml2
-  LIBXML-WINDOWS64=-L$(OMDEV)/tools/msys/mingw64/bin -lxml2-2
+  LIBXML-WINDOWS64=-Wl,-Bstatic -lxml2 -lz -llzma  -liconv -lws2_32 -Wl,-Bdynamic
   CP-LIBXML-WINDOWS64=cp $(OMDEV)/tools/msys/mingw64/bin/libxml2-2.dll $(OMDEV)/tools/msys/mingw64/bin/libiconv-2.dll $(OMDEV)/tools/msys/mingw64/bin/zlib1.dll $(OMDEV)/tools/msys/mingw64/bin/libwinpthread-1.dll $(OMDEV)/tools/msys/mingw64/bin/libstdc++-6.dll $(OMDEV)/tools/msys/mingw64/bin/libgcc_s_seh-1.dll $(OMDEV)/tools/msys/mingw64/bin/liblzma-5.dll $(UP)/bin
   INCLPTHREAD-WINDOWS64=
-  LIBPTHREAD-WINDOWS64=-L$(OMDEV)/tools/msys/mingw64/bin/ -lwinpthread-1
+  LIBPTHREAD-WINDOWS64=-Wl,-Bstatic -lpthread -Wl,-Bdynamic
   XTRLIBS-WINDOWS64=-lws2_32
 else
   INCLXML-WINDOWS64=-I$(UP)/extralibs/libxml2/include
@@ -120,10 +120,10 @@ else
 endif
 
 INCLXML-WINDOWS32=-I$(OMDEV)/tools/msys/mingw32/include/libxml2
-LIBXML-WINDOWS32=-L$(OMDEV)/tools/msys/mingw32/bin -lxml2-2
+LIBXML-WINDOWS32=-Wl,-Bstatic -lxml2 -lz -llzma  -liconv -lws2_32 -Wl,-Bdynamic
 CP-LIBXML-WINDOWS32=cp $(OMDEV)/tools/msys/mingw32/bin/libxml2-2.dll $(OMDEV)/tools/msys/mingw32/bin/libiconv-2.dll $(OMDEV)/tools/msys/mingw32/bin/zlib1.dll $(OMDEV)/tools/msys/mingw32/bin/libwinpthread-1.dll $(OMDEV)/tools/msys/mingw32/bin/libstdc++-6.dll $(OMDEV)/tools/msys/mingw32/bin/libgcc_s_dw2-1.dll $(OMDEV)/tools/msys/mingw32/bin/liblzma-5.dll $(UP)/bin
 INCLPTHREAD-WINDOWS32=
-LIBPTHREAD-WINDOWS32=-L$(OMDEV)/tools/msys/mingw32/bin/ -lwinpthread-1
+LIBPTHREAD-WINDOWS32=-Wl,-Bstatic -lpthread -Wl,-Bdynamic
 XTRLIBS-WINDOWS32=-lws2_32
 
 INCLXML-LINUX64=-I$(UP)/../3rdParty/libxml2/install/linux/include/libxml2
