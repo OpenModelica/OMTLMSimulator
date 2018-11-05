@@ -174,7 +174,7 @@ void MonitorTimeStep(TLMPlugin* TLMlink,
                 + PrevTimeData.GenForce[i] * alpha;
           }
         }
-        else if(dimensions == 1 && causality == "Bidirectional") {
+        else if(dimensions == 1 && causality == "bidirectional") {
           TLMTimeData1D& PrevTimeData = dataStorage1D[interfaceID];
           TLMTimeData1D& CurTimeData = dataStorage1D[interfaceID];
 
@@ -187,7 +187,7 @@ void MonitorTimeStep(TLMPlugin* TLMlink,
           //Apply damping factor, since this can not be done in GetTimeData (DampedTimeData is not available for monitor)
           CurTimeData.GenForce = CurTimeData.GenForce*(1-alpha) + PrevTimeData.GenForce*alpha;
         }
-        else if(dimensions == 1 && causality == "Output") {
+        else if(dimensions == 1 && causality == "output") {
           TLMTimeDataSignal& CurTimeData = dataStorageSignal[interfaceID];
           int linkedID = interfaceProxy.GetLinkedID();
           TLMlink->GetTimeDataSignal(interfaceID, SimTime, CurTimeData, true);
@@ -487,27 +487,27 @@ void PrintHeader(omtlm_CompositeModel& model, std::ofstream& dataFile) {
         nActiveInterfaces++;
       }
       else if(interfaceProxy.GetDimensions() == 1 &&
-              interfaceProxy.GetCausality() == "Bidirectional") {
+              interfaceProxy.GetCausality() == "bidirectional") {
         // Comma between interfaces
         if(nActiveInterfaces > 0) dataFile << ",";
 
         // Add all TLM variable names for all active interfaces
         std::string name = component.GetName() + "." + interfaceProxy.GetName();
-        if(interfaceProxy.GetDomain() == "Hydraulic") {
+        if(interfaceProxy.GetDomain() == "hydraulic") {
           dataFile << "\"" << name << ".q [m^3/s]\","; // Volume flow
           dataFile << "\"" << name << ".p [Pa]\""; // Pressure
         }
-        else if(interfaceProxy.GetDomain() == "Mechanical") {
+        else if(interfaceProxy.GetDomain() == "mechanical") {
           dataFile << "\"" << name << ".x [m]\","; // Position
           dataFile << "\"" << name << ".v [m/s]\","; // Speed
           dataFile << "\"" << name << ".F [N]\""; // Force
         }
-        else if(interfaceProxy.GetDomain() == "Rotational") {
+        else if(interfaceProxy.GetDomain() == "rotational") {
           dataFile << "\"" << name << ".phi [rad]\","; // Position
           dataFile << "\"" << name << ".w [rad/s]\","; // Speed
           dataFile << "\"" << name << ".T [Nm]\""; // Force
         }
-        else if(interfaceProxy.GetDomain() == "Electric") {
+        else if(interfaceProxy.GetDomain() == "electric") {
           dataFile << "\"" << name << ".I [A]\","; // Current
           dataFile << "\"" << name << ".U [V]\""; // Voltage
         }
@@ -515,7 +515,7 @@ void PrintHeader(omtlm_CompositeModel& model, std::ofstream& dataFile) {
         nActiveInterfaces++;
       }
       else if(interfaceProxy.GetDimensions() == 1 &&
-              interfaceProxy.GetCausality() == "Output") {
+              interfaceProxy.GetCausality() == "output") {
         // Comma between interfaces
         if(nActiveInterfaces > 0) dataFile << ",";
 
@@ -612,7 +612,7 @@ void PrintData(omtlm_CompositeModel& model,
         nActiveInterfaces++;
       }
       else if(interfaceProxy.GetDimensions() == 1 &&
-              interfaceProxy.GetCausality() == "Bidirectional") {
+              interfaceProxy.GetCausality() == "bidirectional") {
         if(TLMErrorLog::GetLogLevel() >= TLMLogLevel::Info) {
           std::stringstream ss;
           ss << "Printing data for 1D interface " << interfaceProxy.GetID();
@@ -641,27 +641,27 @@ void PrintData(omtlm_CompositeModel& model,
         TLMConnection& connection = model.GetTLMConnection(interfaceProxy.GetConnectionID());
 
         double force;
-        if(interfaceProxy.GetDomain() == "Hydraulic") {
+        if(interfaceProxy.GetDomain() == "hydraulic") {
           force =  timeData.GenForce + connection.GetParams().Zf * timeData.Velocity;
         }
         else {
           force =  -timeData.GenForce + connection.GetParams().Zf * timeData.Velocity;
         }
 
-        if(interfaceProxy.GetDomain() == "Hydraulic") {
+        if(interfaceProxy.GetDomain() == "hydraulic") {
           dataFile << timeData.Velocity << ",";     //Flow
           dataFile << force;                        //Pressure
-        } else if(interfaceProxy.GetDomain() == "Mechanical") {
+        } else if(interfaceProxy.GetDomain() == "mechanical") {
           dataFile << timeData.Position << ",";
           dataFile << timeData.Velocity << ",";
           dataFile << force;
         }
-        else if(interfaceProxy.GetDomain() == "Rotational") {
+        else if(interfaceProxy.GetDomain() == "rotational") {
           dataFile << timeData.Position << ",";   //Angle
           dataFile << timeData.Velocity << ",";   //Angular velocity
           dataFile << force;                      //Torque
         }
-        else if(interfaceProxy.GetDomain() == "Electric") {
+        else if(interfaceProxy.GetDomain() == "electric") {
           dataFile << timeData.Velocity << ",";     //Current
           dataFile << force;                        //Voltage
         }
@@ -669,7 +669,7 @@ void PrintData(omtlm_CompositeModel& model,
         nActiveInterfaces++;
       }
       else if(interfaceProxy.GetDimensions() == 1 &&
-              interfaceProxy.GetCausality() == "Output") {
+              interfaceProxy.GetCausality() == "output") {
 
         if(TLMErrorLog::GetLogLevel() >= TLMLogLevel::Info) {
           std::stringstream ss;

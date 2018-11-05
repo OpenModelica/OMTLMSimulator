@@ -19,7 +19,7 @@ class TLMTimeData1D;
 //!
 class TLMInterface1D : public omtlm_TLMInterface {
 public:
-    TLMInterface1D(TLMClientComm &theComm, std::string &aName, double StartTime, std::string Domain="Mechanical");
+    TLMInterface1D(TLMClientComm &theComm, std::string &aName, double StartTime, std::string Domain="mechanical");
 
     //! Destructor. Sends the rest of the data if necessary.
     ~TLMInterface1D();

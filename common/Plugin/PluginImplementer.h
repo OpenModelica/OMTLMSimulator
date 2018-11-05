@@ -96,7 +96,7 @@ protected:
     //! and returns the ID for the interface. '-1' is returned if
     //! the interface is not connected in the CompositeModel.
     int RegisteTLMInterface(std::string name, int dimensions=6 ,
-                            std::string causality="Bidirectional", std::string domain="Mechanical");
+                            std::string causality="bidirectional", std::string domain="mechanical");
 
     int RegisterComponentParameter(std::string name, std::string defaultValue);
 

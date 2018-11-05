@@ -10,7 +10,7 @@
 static const double TLM_DAMP_DELAY = 1.5;
 
 TLMInterface3D::TLMInterface3D(TLMClientComm &theComm, std::string &aName, double StartTime, std::string Domain)
-    : omtlm_TLMInterface(theComm, aName, StartTime, 6, "Bidirectional", Domain) {}
+    : omtlm_TLMInterface(theComm, aName, StartTime, 6, "bidirectional", Domain) {}
 
 TLMInterface3D::~TLMInterface3D() {
     if(DataToSend.size() != 0) {

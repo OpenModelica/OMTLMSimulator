@@ -256,8 +256,8 @@ void ManagerCommHandler::ProcessRegInterfaceMessage(int compID, TLMMessage& mess
     string aName, dimStr, causality, domain;
     if(aSpecification.find(':') == std::string::npos) {     //This is for backwards compatibility with BEAST.
         dimStr = "6";                                         //Remove this later when  BEAST supports dimensions,
-        causality="Bidirectional";                          //causality and domain.
-        domain="Mechanical";
+        causality="bidirectional";                          //causality and domain.
+        domain="mechanical";
     }
     bool readingName=true;
     bool readingDimensions=false;
@@ -298,10 +298,10 @@ void ManagerCommHandler::ProcessRegInterfaceMessage(int compID, TLMMessage& mess
         dimensions = std::atoi(dimStr.c_str());
     }
     if(causality == "") {
-        causality = "Bidirectional";
+        causality = "bidirectional";
     }
     if(domain == "") {
-        domain = "Mechanical";
+        domain = "mechanical";
     }
 
     int IfcID = TheModel.GetTLMInterfaceID(compID, aName);
@@ -441,7 +441,7 @@ void ManagerCommHandler::SetupInterfaceConnectionMessage(int IfcID, std::string&
     for(int i=0; i<3; i++) param.Nom_cI_R_cX_cX[i] = td.Position[i];
     for(int i=0; i<9; i++) param.Nom_cI_A_cX[i] = td.RotMatrix[i];
     //}
-    //    else if(ifc.GetDimensions() == 3 && ifc.GetCausality() == "Bidirectional") {
+    //    else if(ifc.GetDimensions() == 3 && ifc.GetCausality() == "bidirectional") {
     //        TLMTimeData1D& td = ifc.getTime0Data1D();
     //        param.Nom_cI_R_cX_cX[0] = 0;        param.Nom_cI_R_cX_cX[1] = 0;    param.Nom_cI_R_cX_cX[2] = 0;
     //        param.Nom_cI_A_cX[0] = td.Position; param.Nom_cI_A_cX[1] = 0;       param.Nom_cI_A_cX[2] = 0;
@@ -639,7 +639,7 @@ void ManagerCommHandler::UnpackAndStoreTimeData(TLMMessage& message) {
 
     TLMInterfaceProxy& ip = TheModel.GetTLMInterfaceProxy(message.Header.TLMInterfaceID);
 
-    if(ip.GetDimensions() == 6 && ip.GetCausality() == "Bidirectional") {
+    if(ip.GetDimensions() == 6 && ip.GetCausality() == "bidirectional") {
         // since mess.Data is continious we can just convert the pointer
         TLMTimeData3D* Next = (TLMTimeData3D*)(&message.Data[0]);
 
@@ -656,7 +656,7 @@ void ManagerCommHandler::UnpackAndStoreTimeData(TLMMessage& message) {
         TLMErrorLog::Info("Unpack and store 3D time data for " + ip.GetName());
         data = *Next;
     }
-    else if(ip.GetDimensions() == 1 && ip.GetCausality() == "Bidirectional") {
+    else if(ip.GetDimensions() == 1 && ip.GetCausality() == "bidirectional") {
         // since mess.Data is continious we can just convert the pointer
         TLMTimeData1D* Next = (TLMTimeData1D*)(&message.Data[0]);
 

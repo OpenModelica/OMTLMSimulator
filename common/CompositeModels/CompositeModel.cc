@@ -7,6 +7,7 @@
 #include <set>
 #include <sstream>
 #include <vector>
+#include <locale>
 #include "CompositeModels/CompositeModel.h"
 #include "Communication/TLMCommUtil.h"
 //#include "portability.h"
@@ -200,7 +201,9 @@ bool omtlm_CompositeModel::CheckTheModel()
         std::string toComponentName = GetTLMComponentProxy(toComponent).GetName();
         std::string toName = toComponentName+"."+toInterfaceName;
 
-        if(fromProxy.GetDomain() != toProxy.GetDomain()) {
+        if(fromProxy.GetDomain() != toProxy.GetDomain() &&
+           !(fromProxy.GetDomain() == "input" && toProxy.GetDomain() == "output") &&
+           !(fromProxy.GetDomain() == "output" && toProxy.GetDomain() == "input")) {
            TLMErrorLog::Warning(fromName+" and "+toName+
                                 " are connected but have different domains!");
         }
@@ -210,10 +213,10 @@ bool omtlm_CompositeModel::CheckTheModel()
 
         numConnectedInterfaces += 2;
 
-        if((fromProxy.GetCausality() == "Bidirectional" && toProxy.GetCausality() != "Bidirectional") ||
-          (fromProxy.GetCausality() != "Bidirectional" && toProxy.GetCausality() == "Bidirectional") ||
-          (fromProxy.GetCausality() == "Input" && toProxy.GetCausality() != "Output") ||
-          (fromProxy.GetCausality() == "Output" && toProxy.GetCausality() != "Input")) {
+        if((fromProxy.GetCausality() == "bidirectional" && toProxy.GetCausality() != "bidirectional") ||
+          (fromProxy.GetCausality() != "bidirectional" && toProxy.GetCausality() == "bidirectional") ||
+          (fromProxy.GetCausality() == "input" && toProxy.GetCausality() != "output") ||
+          (fromProxy.GetCausality() == "output" && toProxy.GetCausality() != "input")) {
           TLMErrorLog::Warning(fromName+" is connected to "+toName+
                                " with wrong causalities!");
           abort=true;
@@ -282,16 +285,24 @@ int omtlm_CompositeModel::GetTLMInterfaceID(string& FullName) {
 // Add TLM interface proxy with a given name to the Model, return its ID.
 int omtlm_CompositeModel::RegisterTLMInterfaceProxy(const int ComponentID, string& Name, int Dimensions,
                                          std::string Causality, std::string Domain) {
+
+    //Convert causality and domain to lower-case for backwards compatibility
+    std::string causality = Causality;
+    std::string domain = Domain;
+    std::locale loc;
+    causality[0] = std::tolower(causality[0],loc);
+    domain[0] = std::tolower(domain[0],loc);
+
     TLMInterfaceProxy* ifc =
-            new TLMInterfaceProxy(ComponentID, Interfaces.size(), Name, Dimensions, Causality, Domain);
+            new TLMInterfaceProxy(ComponentID, Interfaces.size(), Name, Dimensions, causality, domain);
 
     TLMErrorLog::Info("Registering interface proxy."
                      " Id = "+TLMErrorLog::ToStdStr(int(Interfaces.size()))+
                      ", ComponentId = "+TLMErrorLog::ToStdStr(ComponentID)+
                      ", Name = " + Name+
                      ", Dimensions = " + TLMErrorLog::ToStdStr(Dimensions)+
-                     ", Causality = " + Causality+
-                     ", Domain = " + Domain);
+                     ", Causality = " + causality+
+                     ", Domain = " + domain);
 
     Interfaces.insert(Interfaces.end(), ifc);
     return Interfaces.size()-1;
