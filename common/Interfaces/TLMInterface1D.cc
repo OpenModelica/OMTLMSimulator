@@ -10,7 +10,7 @@
 static const double TLM_DAMP_DELAY = 1.5;
 
 TLMInterface1D::TLMInterface1D(TLMClientComm &theComm, std::string &aName, double StartTime, std::string Domain)
-    : omtlm_TLMInterface(theComm, aName, StartTime, 1, "Bidirectional", Domain) {}
+    : omtlm_TLMInterface(theComm, aName, StartTime, 1, "bidirectional", Domain) {}
 
 TLMInterface1D::~TLMInterface1D() {
     if(DataToSend.size() != 0) {
@@ -136,7 +136,7 @@ void TLMInterface1D::GetForce(double time,
     //Default value is the initial value
     (*force)=InitialForce;
 
-    if(Domain == "Hydraulic") {
+    if(Domain == "hydraulic") {
         TLMPlugin::GetForce1D(-speed, request, Params, force);
     }
     else {
@@ -183,7 +183,7 @@ void TLMInterface1D::SetTimeData(double time,
     }
 
     //Default value is the initial value
-    if(Domain == "Hydraulic") {
+    if(Domain == "hydraulic") {
       item.GenForce = InitialForce + Params.Zf*InitialFlow;
     }
     else {
@@ -191,7 +191,7 @@ void TLMInterface1D::SetTimeData(double time,
     }
 
 
-    if(Domain == "Hydraulic") {
+    if(Domain == "hydraulic") {
         TLMPlugin::GetForce1D(-speed, request, Params, &item.GenForce);
     }
     else {
@@ -199,7 +199,7 @@ void TLMInterface1D::SetTimeData(double time,
     }
 
     // The wave to send is: (- Force + Impedance * Velocity)
-    if(Domain == "Hydraulic") {
+    if(Domain == "hydraulic") {
         item.GenForce   = item.GenForce   +  Params.Zf * speed;
     }
     else {

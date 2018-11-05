@@ -18,7 +18,7 @@
 class TLMInterfaceSignal : public omtlm_TLMInterface {
 public:
   TLMInterfaceSignal(TLMClientComm &theComm, std::string &aName, double StartTime, int Dimensions,
-                     std::string Causality, std::string Domain="Signal");
+                     std::string Causality, std::string Domain="signal");
 
   //! Destructor. Sends the rest of the data if necessary.
   virtual ~TLMInterfaceSignal();

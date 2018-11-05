@@ -60,7 +60,7 @@ public:
     //! the interface is not connected in the CompositeModel.
     //! \param name Name of the TLM interface
     virtual int RegisteTLMInterface(std::string name, int dimensions=6,
-                                     std::string causality="Bidirectional", std::string domain="Mechanical") = 0;
+                                     std::string causality="bidirectional", std::string domain="mechanical") = 0;
 
     virtual int RegisterComponentParameter(std::string name, std::string defaultValue) = 0;
 

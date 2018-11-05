@@ -10,7 +10,7 @@
 static const double TLM_DAMP_DELAY = 1.5;
 
 TLMInterfaceInput::TLMInterfaceInput(TLMClientComm &theComm, std::string &aName, double StartTime, std::string Domain)
-    : TLMInterfaceSignal(theComm, aName, StartTime, 1, "Input", Domain) {}
+    : TLMInterfaceSignal(theComm, aName, StartTime, 1, "input", Domain) {}
 
 TLMInterfaceInput::~TLMInterfaceInput() {}
 

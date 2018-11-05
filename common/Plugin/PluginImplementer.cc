@@ -7,6 +7,8 @@
 #include <iostream>
 #include <csignal>
 #include <sstream>
+#include <algorithm>
+#include <locale>
 #ifndef _WIN32
 #include <unistd.h>
 #endif
@@ -231,25 +233,30 @@ int  PluginImplementer::RegisteTLMInterface(std::string name , int dimensions,
                                             std::string causality, std::string domain) {
     TLMErrorLog::Info(string("Register Interface ") + name);
 
+    //Convert causality and domain to lower-case for backwards compatibility
+    std::locale loc;
+    causality[0] = std::tolower(causality[0],loc);
+    domain[0] = std::tolower(domain[0],loc);
+
     omtlm_TLMInterface *ifc;
     if(dimensions==6) {
         TLMErrorLog::Info("Registers TLM interface of type 3D");
         ifc = new TLMInterface3D(ClientComm, name, StartTime, domain);
     }
-    else if(dimensions == 1 && causality == "Bidirectional") {
+    else if(dimensions == 1 && causality == "bidirectional") {
         TLMErrorLog::Info("Registers TLM interface of type 1D");
         ifc = new TLMInterface1D(ClientComm, name, StartTime, domain);
     }
-    else if(dimensions == 1 && causality == "Input") {
+    else if(dimensions == 1 && causality == "input") {
         TLMErrorLog::Info("Registers TLM interface of type SignalInput");
         ifc = new TLMInterfaceInput(ClientComm, name, StartTime, domain);
     }
-    else if(dimensions == 1 && causality == "Output") {
+    else if(dimensions == 1 && causality == "output") {
         TLMErrorLog::Info("Registers TLM interface of type SignalOutput");
         ifc = new TLMInterfaceOutput(ClientComm, name, StartTime, domain);
     }
     else {
-        TLMErrorLog::FatalError("Unknown interface type.");
+        TLMErrorLog::FatalError("Unknown interface type : "+domain+":"+std::to_string(dimensions));
     }
 
     int id = ifc->GetInterfaceID();
@@ -310,7 +317,7 @@ void PluginImplementer::ReceiveTimeData(omtlm_TLMInterface* reqIfc, double time)
 
         double allowedMaxTime = reqIfc->GetLastSendTime() + reqIfc->GetConnParams().Delay;
 
-        if(allowedMaxTime < time && reqIfc->GetCausality() != "Input") {            //Why not for signal interfaces?
+        if(allowedMaxTime < time && reqIfc->GetCausality() != "input") {            //Why not for signal interfaces?
             TLMErrorLog::Warning("Interface " + reqIfc->GetName() +
                              " is NOT ALLOWED to ask data after time= " + TLMErrorLog::ToStdStr(allowedMaxTime) +
                              ". The error is: "+TLMErrorLog::ToStdStr(time - allowedMaxTime));
@@ -532,7 +539,7 @@ void PluginImplementer::SetMotion3D(int forceID,
         // Check if all interfaces wait for shutdown
         std::vector<omtlm_TLMInterface*>::iterator iter;
         for(iter=Interfaces.begin(); iter!=Interfaces.end(); iter++) {
-            if((*iter)->GetCausality() == "Input") continue;
+            if((*iter)->GetCausality() == "input") continue;
             if(! (*iter)->waitForShutdown()) return;
         }
 #ifdef _MSC_VER
@@ -567,7 +574,7 @@ void PluginImplementer::SetValueSignal(int valueID,
         // Check if all interfaces wait for shutdown
         std::vector<omtlm_TLMInterface*>::iterator iter;
         for(iter=Interfaces.begin(); iter!=Interfaces.end(); iter++) {
-            if((*iter)->GetCausality() == "Input") continue;
+            if((*iter)->GetCausality() == "input") continue;
             if(! (*iter)->waitForShutdown()) return;
         }
 #ifdef _MSC_VER
@@ -603,7 +610,7 @@ void PluginImplementer::SetMotion1D(int forceID,
         // Check if all interfaces wait for shutdown
         std::vector<omtlm_TLMInterface*>::iterator iter;
         for(iter=Interfaces.begin(); iter!=Interfaces.end(); iter++) {
-            if((*iter)->GetCausality() == "Input") continue;
+            if((*iter)->GetCausality() == "input") continue;
             if(! (*iter)->waitForShutdown()) return;
         }
 #ifdef _MSC_VER     

@@ -48,7 +48,7 @@ public:
     //! IfcID - ID of this interface
     //! aName - name of this interface
     TLMInterfaceProxy(int CompID, int IfcID, std::string& aName, int aDimensions=6,
-                      std::string aCausality="Bidirectional", std::string aDomain="Mechanical");
+                      std::string aCausality="bidirectional", std::string aDomain="mechanical");
 
     //! Get the name of this interface
     const std::string& GetName() const {
@@ -558,7 +558,7 @@ public:
 
     //! Add TLM interface proxy with a given name to the Model, return its ID.
     int RegisterTLMInterfaceProxy(const int ComponentID, std::string& Name, int Dimensions=6,
-                                  std::string Causality="Bidirectional", std::string Domain="Mechanical");
+                                  std::string Causality="bidirectional", std::string Domain="mechanical");
 
     int RegisterComponentParameterProxy(const int ComponentID, std::string& Name, std::string& DefaultValue);
 

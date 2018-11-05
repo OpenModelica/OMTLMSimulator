@@ -26,7 +26,7 @@ public:
     //! TLMInterface constructor. Sends a registration message to the TLM manager
     //! and prepares the object for simulation.
     omtlm_TLMInterface(TLMClientComm& theComm, std::string& aName, double StartTime, int dimensions=6,
-                 std::string causality="Bidirecitonal", std::string domain="Mechanical");
+                 std::string causality="bidirecitonal", std::string domain="mechanical");
     virtual ~omtlm_TLMInterface();
     //! Indecates if the interface is finished and waits for shutdown.
     //! This is use for interface request mode and not simulation mode.

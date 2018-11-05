@@ -113,13 +113,13 @@ void CompositeModelReader::ReadTLMInterfaceNodes(xmlNode* node, int ComponentID)
                 Dimensions = atoi((const char*)curAttrVal->content);
             }
 
-            string Causality = "Bidirectional";
+            string Causality = "bidirectional";
             curAttrVal = FindAttributeByName(curNode, "Causality");
             if(curAttrVal) {
                 Causality = (const char*)curAttrVal->content;
             }
 
-            string Domain="Mechanical";
+            string Domain="mechanical";
             curAttrVal = FindAttributeByName(curNode, "Domain");
             if(curAttrVal) {
                 Domain = (const char*)curAttrVal->content;
@@ -353,13 +353,13 @@ void CompositeModelReader::ReadTLMConnectionNode(xmlNode* node) {
 
                 TLMErrorLog::Info("Delay = "+TLMErrorLog::ToStdStr(conParam.Delay)+" s");
 
-                if(fromIfc.GetCausality() == "Bidirectional") {
+                if(fromIfc.GetCausality() == "bidirectional") {
                     curAttr = FindAttributeByName(curNode, "Zf");
                     conParam.Zf = atof((const char*)curAttr->content);
                     TLMErrorLog::Info("Zf    = "+TLMErrorLog::ToStdStr(conParam.Zf));
                 }
 
-                if(fromIfc.GetCausality() == "Bidirectional" && fromIfc.GetDimensions() > 1) {
+                if(fromIfc.GetCausality() == "bidirectional" && fromIfc.GetDimensions() > 1) {
                     curAttr = FindAttributeByName(curNode, "Zfr",false);
                     if(curAttr) {
                         conParam.Zfr = atof((const char*)curAttr->content);
@@ -371,7 +371,7 @@ void CompositeModelReader::ReadTLMConnectionNode(xmlNode* node) {
                     TLMErrorLog::Info("Zf    = "+TLMErrorLog::ToStdStr(conParam.Zfr));
                 }
 
-                if(fromIfc.GetCausality() == "Bidirectional") {
+                if(fromIfc.GetCausality() == "bidirectional") {
                     curAttr = FindAttributeByName(curNode, "alpha",false);
                     if(curAttr) {
                         conParam.alpha =  atof((const char*)curAttr->content);

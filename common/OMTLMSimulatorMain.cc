@@ -163,13 +163,13 @@ int main(int argc, char *argv[])
   omtlm_addSubModel(pModel, "source2","/home/robbr48/Documents/Git/OMTLMSimulator/CompositeModels/FmiTestLinux/cs_source1fmu1/cs_source1.fmu", "StartTLMFmiWrapper");
   omtlm_addSubModel(pModel, "gain","/home/robbr48/Documents/Git/OMTLMSimulator/CompositeModels/FmiTestLinux/gainfmu1/gain.fmu", "StartTLMFmiWrapper");
 
-  omtlm_addInterface(pModel,"adder","x1",1,"Input","Signal");
-  omtlm_addInterface(pModel,"adder","x2",1,"Input","Signal");
-  omtlm_addInterface(pModel,"adder","y",1,"Output","Signal");
-  omtlm_addInterface(pModel,"source1","y",1,"Output","Signal");
-  omtlm_addInterface(pModel,"source2","y",1,"Output","Signal");
-  omtlm_addInterface(pModel,"gain","y",1,"Input","Signal");
-  omtlm_addInterface(pModel,"gain","u",1,"Output","Signal");
+  omtlm_addInterface(pModel,"adder","x1",1,"input","signal");
+  omtlm_addInterface(pModel,"adder","x2",1,"input","signal");
+  omtlm_addInterface(pModel,"adder","y",1,"output","signal");
+  omtlm_addInterface(pModel,"source1","y",1,"output","signal");
+  omtlm_addInterface(pModel,"source2","y",1,"output","signal");
+  omtlm_addInterface(pModel,"gain","y",1,"input","signal");
+  omtlm_addInterface(pModel,"gain","u",1,"output","signal");
 
   omtlm_addConnection(pModel, "adder.x1", "source2.y",0);
   omtlm_addConnection(pModel, "adder.x2", "source1.y",0);
