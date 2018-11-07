@@ -61,9 +61,10 @@ void TLMErrorLog::Open() {
 void TLMErrorLog::Close()
 {
   LogStreamLock.lock();
-  if(outStream!=NULL) {
+  if(outStream!=nullptr) {
     *outStream << TimeStr() << " Log finished." << std::endl;
     delete outStream;
+    outStream = nullptr;
     LogLevel = Disabled;
   }
   LogStreamLock.unlock();
