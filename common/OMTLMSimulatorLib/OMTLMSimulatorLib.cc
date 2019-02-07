@@ -54,6 +54,9 @@
 #include "double3.h"
 #include "double33.h"
 
+#if defined(__unix__)
+#include <signal.h>
+#endif
 
 #ifdef _MSC_VER
 #include "mygetopt.h"
@@ -96,6 +99,10 @@ public:
 
 TLMPlugin* InitializeTLMConnection(omtlm_CompositeModel& model, std::string& serverName) {
   TLMPlugin* TLMlink = MonitoringPluginImplementer::CreateInstance();
+
+#if defined(__unix__)
+  signal(SIGPIPE, SIG_IGN); // Handle return value of send instead of crashing on Linux
+#endif
 
   TLMErrorLog::Info("Trying to register TLM monitor on host " + serverName);
 
