@@ -48,10 +48,15 @@ void TLMCommUtil::SendMessage(TLMMessage& mess) {
     // NOTE, "MSG_MORE" flag is important for Linux socket performance!
     int sendBytes = send(mess.SocketHandle, (const char*)&(mess.Header) , sizeof(TLMMessageHeader), MSG_MORE);
 
-    if(sendBytes < 0) {
+    int attempts = 1;
+    while(attempts < 10 && sendBytes < 0) {
         // try to resend
         TLMErrorLog::Warning("Failed to send message header, will try again (code: "+std::to_string(sendBytes)+"), type = "+std::to_string(mess.Header.MessageType));
         sendBytes = send(mess.SocketHandle, (const char*)&(mess.Header) , sizeof(TLMMessageHeader), MSG_MORE);
+        ++attempts;
+    }
+    if(sendBytes < 0) {
+        TLMErrorLog::FatalError("Failed to send message header. Aborting.");
     }
 
 #ifdef  WIN32
@@ -65,11 +70,15 @@ void TLMCommUtil::SendMessage(TLMMessage& mess) {
 
     if(DataSize > 0) {
         sendBytes = send(mess.SocketHandle, (const char*)&(mess.Data[0]), DataSize, 0);
-        if(sendBytes < 0) {
+        attempts = 1;
+        if(attempts < 10 && sendBytes < 0) {
             // try to resend
-            TLMErrorLog::Warning("Failed to send data, will try to continue anyway");
+            TLMErrorLog::Warning("Failed to send message data, will try to continue anyway");
             sendBytes=send(mess.SocketHandle, (const char*)&(mess.Data[0]), DataSize, 0);
         };
+        if(sendBytes < 0) {
+            TLMErrorLog::FatalError("Failed to send message data. Aborting.");
+        }
 
 #ifdef  WIN32
         int errcode = WSAGetLastError();
