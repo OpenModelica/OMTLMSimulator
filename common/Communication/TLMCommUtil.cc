@@ -50,7 +50,7 @@ void TLMCommUtil::SendMessage(TLMMessage& mess) {
 
     if(sendBytes < 0) {
         // try to resend
-        TLMErrorLog::Warning("Failed to send message header, will try to continue anyway");
+        TLMErrorLog::Warning("Failed to send message header, will try again (code: "+std::to_string(sendBytes)+"), type = "+std::to_string(mess.Header.MessageType));
         sendBytes = send(mess.SocketHandle, (const char*)&(mess.Header) , sizeof(TLMMessageHeader), MSG_MORE);
     }
 

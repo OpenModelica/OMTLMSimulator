@@ -91,6 +91,7 @@ protected:
     void InterfaceReadyForTakedown(std::string IfcName);
 
     void AwaitClosePermission();
+    void SendCloseNotification();
 
     //! Register TLM interface sends a registration request to TLMManager
     //! and returns the ID for the interface. '-1' is returned if
