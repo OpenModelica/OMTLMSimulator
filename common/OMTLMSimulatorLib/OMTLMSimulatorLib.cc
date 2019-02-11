@@ -1033,6 +1033,8 @@ void simulateInternal(void *pModel,
   managerThread.join();
   std::cout << "Manager thread finished.\n";
 
+  TLMErrorLog::Close();
+
   return;
 }
 
