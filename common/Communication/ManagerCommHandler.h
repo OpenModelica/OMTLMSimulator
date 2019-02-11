@@ -38,6 +38,7 @@ private:
     omtlm_CompositeModel& TheModel;
 
     bool MonitorConnected;
+    bool MonitorDisconnected;
 
 public:
     //! The communication protocol modes, i.e., real co-simulation or interface information request.
@@ -74,6 +75,7 @@ public:
         Comm(Model.GetComponentsNum(), Model.GetSimParams().GetPort()),
         TheModel(Model),
         MonitorConnected(false),
+        MonitorDisconnected(false),
         CommMode(CoSimulationMode),
         monitorInterfaceMap(),
         monitorMapLock(),

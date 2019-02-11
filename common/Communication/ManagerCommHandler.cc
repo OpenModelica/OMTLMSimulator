@@ -509,7 +509,7 @@ void ManagerCommHandler::ReaderThreadRun() {
 
     int nClosedSock = 0;
     std::vector<int> closedSockets;
-    while(nClosedSock < TheModel.GetComponentsNum()) {
+    while(nClosedSock < TheModel.GetComponentsNum() || !MonitorDisconnected) {
         Comm.SelectReadSocket(); // wait for a change
 
         for(int iSock =  TheModel.GetComponentsNum() - 1; iSock >= 0; --iSock) {
@@ -765,6 +765,9 @@ int ManagerCommHandler::ProcessInterfaceMonitoringMessage(TLMMessage& message) {
 }
 
 void ManagerCommHandler::ForwardToMonitor(TLMMessage& message) {
+    if(MonitorDisconnected)
+        return;
+
     monitorMapLock.lock();
 
     // We forward to the sender!
@@ -853,7 +856,7 @@ void ManagerCommHandler::MonitorThreadRun() {
     std::multimap<int,int> localIntMap;
 
     //assert(runningMode == RunMode);
-    while(runningMode != ShutdownMode) {
+    while(runningMode != ShutdownMode && !MonitorDisconnected) {
         int hdl = -1;
 
         monComm.SelectReadSocket();
@@ -905,6 +908,11 @@ void ManagerCommHandler::MonitorThreadRun() {
                 message->Header.DataSize = 0;
 
                 MessageQueue.PutWriteSlot(message);
+            }
+            else if(message->Header.MessageType == TLMMessageTypeConst::TLM_CLOSE_REQUEST) {
+                TLMErrorLog::Info("Received close permission from monitor.");
+                MonitorDisconnected=true;
+                MessageQueue.ReleaseSlot(message);
             }
             else {
                 int IfcID = ProcessInterfaceMonitoringMessage(*message);

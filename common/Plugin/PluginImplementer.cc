@@ -40,13 +40,20 @@ void PluginImplementer::InterfaceReadyForTakedown(std::string IfcName) {
 
 void PluginImplementer::AwaitClosePermission()
 {
-  TLMErrorLog::Info("Awaiting close permission...");
-  Message->Header.MessageType = TLMMessageTypeConst::TLM_CLOSE_REQUEST;
-  TLMCommUtil::SendMessage(*Message);
-  while(Message->Header.MessageType != TLMMessageTypeConst::TLM_CLOSE_PERMISSION) {
-    TLMCommUtil::ReceiveMessage(*Message);
-  }
-  TLMErrorLog::Info("Close permission received.");
+    Message->Header.MessageType = TLMMessageTypeConst::TLM_CLOSE_REQUEST;
+    TLMCommUtil::SendMessage(*Message);
+    while(Message->Header.MessageType != TLMMessageTypeConst::TLM_CLOSE_PERMISSION) {
+        TLMErrorLog::Info("Awaiting close permission...");
+        TLMCommUtil::ReceiveMessage(*Message);
+    }
+    TLMErrorLog::Info("Close permission received.");
+}
+
+void PluginImplementer::SendCloseNotification()
+{
+    Message->Header.MessageType = TLMMessageTypeConst::TLM_CLOSE_REQUEST;
+    TLMCommUtil::SendMessage(*Message);
+    TLMErrorLog::Info("Close notification sent.");
 }
 
 void PluginImplementer::SetInitialForce3D(int interfaceID, double f1, double f2, double f3, double t1, double t2, double t3)
