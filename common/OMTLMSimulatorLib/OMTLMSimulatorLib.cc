@@ -1258,6 +1258,7 @@ void omtlm_setStopTime(void *pModel, double stopTime)
 void omtlm_setLogLevel(void *pModel, int logLevel) {
   CompositeModelProxy *pModelProxy = (CompositeModelProxy*)pModel;
   pModelProxy->logLevel = logLevel;
+  TLMErrorLog::SetLogLevel(TLMLogLevel(pModelProxy->logLevel));
 }
 
 void omtlm_checkPortAvailability(int *port) {
