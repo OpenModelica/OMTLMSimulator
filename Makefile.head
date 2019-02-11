@@ -11,8 +11,10 @@ ifeq ($(OMDEV),)
   OMDEV = $(OPENMODELICAHOME)
 endif
 
+detected_OS ?= $(shell uname -s)
+
 ifeq ($(ABI),WINDOWS64)
-  ifeq (MINGW64,$(findstring MINGW64,$(shell uname)))
+  ifeq (MINGW64,$(findstring MINGW64,$(detected_OS)))
     CC=gcc
     CXX=g++
     LINK=$(CXX)
@@ -21,9 +23,10 @@ ifeq ($(ABI),WINDOWS64)
     FEXT=.exe
     SHREXT=.dll
     STAEXT=.a
-    OMDEVMSYS=$(shell cygpath $$OMDEV)
-    CMAKE = $(OMDEVMSYS)/bin/cmake/bin/cmake
-    CMAKE_TARGET=-G "MSYS Makefiles"
+    OMDEVDIR ?= $(shell cygpath $$OMDEV)
+    MSYSROOT ?= $(OMDEVDIR)/tools/msys
+    CMAKE ?= $(MSYSROOT)/bin/cmake/bin/cmake
+    CMAKE_TARGET ?= -G "MSYS Makefiles"
     INSTALL_DIR = install/mingw
   else
     CC=mycl cl64 /DMSC_VER /DWIN32 /D_WIN32 /EHsc /DNOMINMAX /GR
@@ -35,7 +38,7 @@ ifeq ($(ABI),WINDOWS64)
     INSTALL_DIR = install/mingw
   endif
 else ifeq ($(ABI),WINDOWS32)
-  ifeq (MINGW32,$(findstring MINGW32,$(shell uname)))
+  ifeq (MINGW32,$(findstring MINGW32,$(detected_OS)))
     CC=gcc
     CXX=g++
     LINK=$(CXX)
@@ -44,9 +47,10 @@ else ifeq ($(ABI),WINDOWS32)
     FEXT=.exe
     SHREXT=.dll
     STAEXT=.a
-    OMDEVMSYS=$(shell cygpath $$OMDEV)
-    CMAKE = $(OMDEVMSYS)/bin/cmake/bin/cmake
-    CMAKE_TARGET=-G "MSYS Makefiles"
+    OMDEVDIR ?= $(shell cygpath $$OMDEV)
+    MSYSROOT ?= $(OMDEVDIR)/tools/msys
+    CMAKE ?= $(MSYSROOT)/bin/cmake/bin/cmake
+    CMAKE_TARGET ?= -G "MSYS Makefiles"
     INSTALL_DIR = install/mingw
   else
     $(error No compiler found to build for WINDOWS32)
@@ -92,7 +96,6 @@ else
 EXTRAFLAGS = -fPIC
 endif
 
-detected_OS := $(shell uname -s)
 ifeq ($(detected_OS),Darwin)
 EXTRAFLAGS += -DNO_RTIME
 RTIMELIB =
@@ -103,10 +106,10 @@ endif
 override CC += $(CFLAGS) $(EXTRAFLAGS)
 override CXX += $(CXXFLAGS) -std=c++11 $(EXTRAFLAGS)
 
-ifeq (MINGW64,$(findstring MINGW64,$(shell uname)))
-  INCLXML-WINDOWS64=-I$(OMDEV)/tools/msys/mingw64/include/libxml2
-  LIBXML-WINDOWS64=-Wl,-Bstatic -lxml2 -lz -llzma  -liconv -lws2_32 -Wl,-Bdynamic
-  CP-LIBXML-WINDOWS64=cp $(OMDEV)/tools/msys/mingw64/bin/libxml2-2.dll $(OMDEV)/tools/msys/mingw64/bin/libiconv-2.dll $(OMDEV)/tools/msys/mingw64/bin/zlib1.dll $(OMDEV)/tools/msys/mingw64/bin/libwinpthread-1.dll $(OMDEV)/tools/msys/mingw64/bin/libstdc++-6.dll $(OMDEV)/tools/msys/mingw64/bin/libgcc_s_seh-1.dll $(OMDEV)/tools/msys/mingw64/bin/liblzma-5.dll $(UP)/bin
+ifeq (MINGW64,$(findstring MINGW64,$(detected_OS)))
+  INCLXML-WINDOWS64=-I$(MSYSROOT)/mingw64/include/libxml2 -I$(MSYSROOT)/mingw64/include/
+  LIBXML-WINDOWS64=-L$(MSYSROOT)/mingw64/lib -Wl,-Bstatic -lxml2 -lz -llzma  -liconv -lws2_32 -Wl,-Bdynamic -static-libgcc
+  CP-LIBXML-WINDOWS64=cp $(MSYSROOT)/mingw64/bin/libxml2-2.dll $(MSYSROOT)/mingw64/bin/libiconv-2.dll $(MSYSROOT)/mingw64/bin/zlib1.dll $(MSYSROOT)/mingw64/bin/libwinpthread-1.dll $(MSYSROOT)/mingw64/bin/libstdc++-6.dll $(MSYSROOT)/mingw64/bin/libgcc_s_seh-1.dll $(MSYSROOT)/mingw64/bin/liblzma-5.dll $(UP)/bin
   INCLPTHREAD-WINDOWS64=
   LIBPTHREAD-WINDOWS64=-Wl,-Bstatic -lpthread -Wl,-Bdynamic
   XTRLIBS-WINDOWS64=-lws2_32
@@ -119,9 +122,9 @@ else
   LIBPTHREAD-WINDOWS64=-L$(UP)/extralibs/pthread/$(ABI)/lib pthreadVC2.lib
 endif
 
-INCLXML-WINDOWS32=-I$(OMDEV)/tools/msys/mingw32/include/libxml2
-LIBXML-WINDOWS32=-Wl,-Bstatic -lxml2 -lz -llzma  -liconv -lws2_32 -Wl,-Bdynamic
-CP-LIBXML-WINDOWS32=cp $(OMDEV)/tools/msys/mingw32/bin/libxml2-2.dll $(OMDEV)/tools/msys/mingw32/bin/libiconv-2.dll $(OMDEV)/tools/msys/mingw32/bin/zlib1.dll $(OMDEV)/tools/msys/mingw32/bin/libwinpthread-1.dll $(OMDEV)/tools/msys/mingw32/bin/libstdc++-6.dll $(OMDEV)/tools/msys/mingw32/bin/libgcc_s_dw2-1.dll $(OMDEV)/tools/msys/mingw32/bin/liblzma-5.dll $(UP)/bin
+INCLXML-WINDOWS32=-I$(MSYSROOT)/mingw32/include/libxml2
+LIBXML-WINDOWS32=-Wl,-Bstatic -lxml2 -lz -llzma  -liconv -lws2_32 -Wl,-Bdynamic -static-libgcc
+CP-LIBXML-WINDOWS32=cp $(MSYSROOT)/mingw32/bin/libxml2-2.dll $(MSYSROOT)/mingw32/bin/libiconv-2.dll $(MSYSROOT)/mingw32/bin/zlib1.dll $(MSYSROOT)/mingw32/bin/libwinpthread-1.dll $(MSYSROOT)/mingw32/bin/libstdc++-6.dll $(MSYSROOT)/mingw32/bin/libgcc_s_dw2-1.dll $(MSYSROOT)/mingw32/bin/liblzma-5.dll $(UP)/bin
 INCLPTHREAD-WINDOWS32=
 LIBPTHREAD-WINDOWS32=-Wl,-Bstatic -lpthread -Wl,-Bdynamic
 XTRLIBS-WINDOWS32=-lws2_32

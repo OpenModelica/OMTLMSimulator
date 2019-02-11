@@ -40,7 +40,14 @@ INCLUDES=  -I. \
 	-I"cvode-2.9.0/include" \
 	-I"ida-2.9.0/include"
 
-ifeq ($(OS),Windows_NT)
+ifeq (MINGW,$(findstring MINGW, $(detected_OS)))
+  ISWINDOWS = 1
+endif
+ifeq (Windows_NT,$(OS))
+  ISWINDOWS = 1
+endif
+
+ifeq (1,$(ISWINDOWS))
 	LIBS = 	-lws2_32 \
 	        -L../../3rdParty/FMIL/$(INSTALL_DIR)/lib \
 		-lfmilib -lshlwapi
