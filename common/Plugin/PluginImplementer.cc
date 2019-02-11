@@ -149,7 +149,6 @@ PluginImplementer::~PluginImplementer() {
         it != Interfaces.end(); ++it) {
         delete (*it);
     }
-    TLMErrorLog::Close();
 
     delete Message;
 }
