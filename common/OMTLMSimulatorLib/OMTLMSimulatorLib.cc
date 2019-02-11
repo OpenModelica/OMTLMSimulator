@@ -1264,11 +1264,6 @@ void omtlm_setLogLevel(void *pModel, int logLevel) {
 void omtlm_checkPortAvailability(int *port) {
       struct sockaddr_in sa;  // My socket addr.
 
-  #define MAXHOSTNAME 1024
-
-      char myname[MAXHOSTNAME+1];
-      struct hostent *hp;
-
   #ifdef WIN32
       WSADATA ws;
       int d;
@@ -1277,23 +1272,7 @@ void omtlm_checkPortAvailability(int *port) {
   #endif
 
       memset(&sa,0, sizeof(struct sockaddr_in));
-      gethostname(myname,MAXHOSTNAME);
-      hp = gethostbyname((const char*) myname);
-
-      if(hp==NULL) {
-          TLMErrorLog::FatalError("Create server socket - failed to get my hostname, check that name resolves, e.g. /etc/hosts has "+std::string(myname));
-          // See BZ2161.
-
-          // Adding this line to /etc/hosts resolves (for me) the problem with
-          //  "Create server socket - failed to get my hostname"
-
-          // 127.0.0.3       homer.mathcore.local
-
-
-          (*port) = -1;
-          return;
-      }
-      sa.sin_family = hp->h_addrtype;
+      sa.sin_family = AF_INET;
 
   #ifdef WIN32
       char* localIP;
@@ -1301,11 +1280,6 @@ void omtlm_checkPortAvailability(int *port) {
       sa.sin_addr.s_addr = inet_addr(localIP);
   #endif
 
-      if(AF_INET != sa.sin_family) {
-          TLMErrorLog::FatalError("Unsupported address family returned by gethostbyname");
-          (*port) = -1;
-          return;
-      }
       sa.sin_port = htons(*port);
 
       int theSckt;
