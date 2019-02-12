@@ -509,7 +509,7 @@ void ManagerCommHandler::ReaderThreadRun() {
 
     int nClosedSock = 0;
     std::vector<int> closedSockets;
-    while(nClosedSock < TheModel.GetComponentsNum() || !MonitorDisconnected) {
+    while(nClosedSock < TheModel.GetComponentsNum() || DisconnectedMonitors.size() < MonitorSockets.size()) {
         Comm.SelectReadSocket(); // wait for a change
 
         for(int iSock =  TheModel.GetComponentsNum() - 1; iSock >= 0; --iSock) {
@@ -554,23 +554,28 @@ void ManagerCommHandler::ReaderThreadRun() {
 
     TLMErrorLog::Info("Simulation complete.");
 
-    for(int i=0; i<closedSockets.size(); ++i) {
-      int iSock = closedSockets.at(i);
+    for(int iSock : closedSockets) {
       TLMMessage message;
       TLMComponentProxy& comp = TheModel.GetTLMComponentProxy(iSock);
       int hdl = comp.GetSocketHandle();
       message.SocketHandle = hdl;
-
       TLMErrorLog::Info("Sending close permission to "+comp.GetName());
-
       message.Header.MessageType = TLMMessageTypeConst::TLM_CLOSE_PERMISSION;
       TLMCommUtil::SendMessage(message);
-
       Comm.DropActiveSocket(hdl);
       comp.SetSocketHandle(-1);
-
       TLMErrorLog::Info(string("Connection to component ") + comp.GetName() + " is closed");
     }
+
+    //Send close permission to all monitors
+    for(int iSock : DisconnectedMonitors) {
+        TLMErrorLog::Info("Sending close permission to monitor");
+        TLMMessage message;
+        message.SocketHandle = iSock;
+        message.Header.MessageType = TLMMessageTypeConst::TLM_CLOSE_PERMISSION;
+        TLMCommUtil::SendMessage(message);
+    }
+    MonitorsDisconnected = true;
 
     TLMErrorLog::Info("All sockets are closed.");
     runningMode = ShutdownMode;
@@ -765,7 +770,7 @@ int ManagerCommHandler::ProcessInterfaceMonitoringMessage(TLMMessage& message) {
 }
 
 void ManagerCommHandler::ForwardToMonitor(TLMMessage& message) {
-    if(MonitorDisconnected)
+    if(MonitorsDisconnected)
         return;
 
     monitorMapLock.lock();
@@ -850,13 +855,11 @@ void ManagerCommHandler::MonitorThreadRun() {
     monComm.AddActiveSocket(acceptSocket);
 
     TLMErrorLog::Info("Wait for monitoring connections...");
-    
-    std::vector<int> socks;
 
     std::multimap<int,int> localIntMap;
 
     //assert(runningMode == RunMode);
-    while(runningMode != ShutdownMode && !MonitorDisconnected) {
+    while(runningMode != ShutdownMode && !MonitorsDisconnected) {
         int hdl = -1;
 
         monComm.SelectReadSocket();
@@ -873,10 +876,10 @@ void ManagerCommHandler::MonitorThreadRun() {
             }
             monComm.AddActiveSocket(hdl);
             MonitorConnected = true;
-            socks.push_back(hdl);
+            MonitorSockets.push_back(hdl);
         }
         else {
-            for(std::vector<int>::iterator it=socks.begin(); it != socks.end(); it++) {
+            for(std::vector<int>::iterator it=MonitorSockets.begin(); it != MonitorSockets.end(); it++) {
                 if(monComm.HasData(*it)) {
                     TLMErrorLog::Info("Accepted data on monitoring connection");
 
@@ -911,7 +914,9 @@ void ManagerCommHandler::MonitorThreadRun() {
             }
             else if(message->Header.MessageType == TLMMessageTypeConst::TLM_CLOSE_REQUEST) {
                 TLMErrorLog::Info("Received close permission from monitor.");
-                MonitorDisconnected=true;
+                monitorMapLock.lock();
+                DisconnectedMonitors.push_back(message->SocketHandle);
+                monitorMapLock.unlock();
                 MessageQueue.ReleaseSlot(message);
             }
             else {

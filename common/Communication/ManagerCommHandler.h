@@ -37,8 +37,11 @@ private:
     //! Meta-model
     omtlm_CompositeModel& TheModel;
 
+
+    std::vector<int> MonitorSockets;
     bool MonitorConnected;
-    bool MonitorDisconnected;
+    bool MonitorsDisconnected;
+    std::vector<int> DisconnectedMonitors;
 
 public:
     //! The communication protocol modes, i.e., real co-simulation or interface information request.
@@ -75,7 +78,7 @@ public:
         Comm(Model.GetComponentsNum(), Model.GetSimParams().GetPort()),
         TheModel(Model),
         MonitorConnected(false),
-        MonitorDisconnected(false),
+        MonitorsDisconnected(false),
         CommMode(CoSimulationMode),
         monitorInterfaceMap(),
         monitorMapLock(),

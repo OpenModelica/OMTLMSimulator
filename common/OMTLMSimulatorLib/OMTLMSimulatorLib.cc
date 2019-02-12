@@ -847,7 +847,7 @@ int startMonitor(double timeStep,
   } while(simTime < endTime);
 
   TLMErrorLog::Info("Monitor sending close request (simTime = "+std::to_string(simTime)+", endTime = "+std::to_string(endTime)+")");
-  thePlugin->SendCloseNotification();
+  thePlugin->AwaitClosePermission();
 
   delete thePlugin;
 
