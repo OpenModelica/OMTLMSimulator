@@ -54,7 +54,6 @@ public:
                        std::string serverName) = 0;
 
     virtual void AwaitClosePermission() = 0;
-    virtual void SendCloseNotification() = 0;
 
     //! Register TLM interface sends a registration request to TLMManager
     //! and returns the ID for the interface. '-1' is returned if

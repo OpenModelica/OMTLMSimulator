@@ -49,13 +49,6 @@ void PluginImplementer::AwaitClosePermission()
     TLMErrorLog::Info("Close permission received.");
 }
 
-void PluginImplementer::SendCloseNotification()
-{
-    Message->Header.MessageType = TLMMessageTypeConst::TLM_CLOSE_REQUEST;
-    TLMCommUtil::SendMessage(*Message);
-    TLMErrorLog::Info("Close notification sent.");
-}
-
 void PluginImplementer::SetInitialForce3D(int interfaceID, double f1, double f2, double f3, double t1, double t2, double t3)
 {
     // Use the ID to get to the right interface object
