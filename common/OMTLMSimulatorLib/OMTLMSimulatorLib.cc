@@ -1276,7 +1276,7 @@ void omtlm_checkPortAvailability(int *port) {
 
   #ifdef WIN32
       char* localIP;
-	  hostent* hp = gethostbyname("");
+      hostent* hp = gethostbyname("");
       localIP = inet_ntoa (*(struct in_addr *)*hp->h_addr_list);
       sa.sin_addr.s_addr = inet_addr(localIP);
   #endif
