@@ -194,24 +194,13 @@ int TLMClientComm::ConnectManager(string& callname, int portnr) {
     s = socket(hp->h_addrtype, SOCK_STREAM, IPPROTO_TCP);
 
 #else
-    struct hostent *hp;
-
     TLMErrorLog::Info("Trying to find TLM manager host " + callname);
 
-    hp = gethostbyname(callname.c_str());
-    if(hp == NULL) {
-        TLMErrorLog::FatalError(string("TLM: Cannot resolve the host :") + callname + ":");
-        return(-1);
-    }
-
-    TLMErrorLog::Info(string("TLM: connect to :") + callname + ":" + TLMErrorLog::ToStdStr(portnr));
 
     memset(&sa, 0 , sizeof(sa));
-    memcpy((char *)&sa.sin_addr, hp->h_addr, hp->h_length);
-
-    sa.sin_family = hp->h_addrtype;
+    sa.sin_family = AF_INET;
     sa.sin_port = htons((u_short)portnr);
-    s = socket(hp->h_addrtype,SOCK_STREAM,0);
+    s = socket(AF_INET,SOCK_STREAM,0);
 #endif
 
     if(s < 0) {
