@@ -930,12 +930,15 @@ void PrintInterfaceInformation(omtlm_CompositeModel& theModel) {
 
 
 
-int startManager(int serverPort,
+int startManager(std::string address,
+                 int serverPort,
                  int monitorPort,
                  ManagerCommHandler::CommunicationMode comMode,
                  omtlm_CompositeModel &model) {
 
   TLMErrorLog::Info("Printing from manager thread.");
+
+  model.GetSimParams().SetAddress(address);
 
   // Set preferred network port
   if(serverPort > 0) {
@@ -1008,6 +1011,7 @@ void simulateInternal(void *pModel,
 
   // Start manager thread
   std::thread managerThread = std::thread(startManager,
+                                          pModelProxy->serverAddress,
                                           pModelProxy->managerPort,
                                           pModelProxy->monitorPort,
                                           comMode,
@@ -1236,7 +1240,7 @@ void omtlm_setStartTime(void *pModel, double startTime)
 
   double stopTime = pModelProxy->stopTime;
   omtlm_CompositeModel *pCompositeModel = pModelProxy->mpCompositeModel;
-  pCompositeModel->GetSimParams().Set(11111,startTime,stopTime);
+  pCompositeModel->GetSimParams().SetStartTime(startTime);
 
   double writeTimeStep = (stopTime-startTime)/1000.0;
   pCompositeModel->GetSimParams().SetWriteTimeStep(writeTimeStep);
@@ -1249,7 +1253,7 @@ void omtlm_setStopTime(void *pModel, double stopTime)
 
   double startTime = pModelProxy->startTime;
   omtlm_CompositeModel *pCompositeModel = pModelProxy->mpCompositeModel;
-  pCompositeModel->GetSimParams().Set(11111,startTime,stopTime);
+  pCompositeModel->GetSimParams().SetEndTime(stopTime);
 
   double writeTimeStep = (stopTime-startTime)/1000.0;
   pCompositeModel->GetSimParams().SetWriteTimeStep(writeTimeStep);

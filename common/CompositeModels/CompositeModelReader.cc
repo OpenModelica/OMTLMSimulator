@@ -262,7 +262,9 @@ void CompositeModelReader::ReadSimParams(xmlNode* node) {
     //std::string Infile = (const char*)curAttrVal->content;
 
     // Note, order is important here!
-    TheModel.GetSimParams().Set(Port, StartTime, StopTime);
+    TheModel.GetSimParams().SetPort(Port);
+    TheModel.GetSimParams().SetStartTime(StartTime);
+    TheModel.GetSimParams().SetEndTime(StopTime);
     TheModel.GetSimParams().SetWriteTimeStep(WriteTimeStep);
 
     TLMErrorLog::Info("StartTime     = "+TLMErrorLog::ToStdStr(StartTime)+" s");
