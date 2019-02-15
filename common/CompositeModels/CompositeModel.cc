@@ -33,7 +33,7 @@ string SimulationParams::GetServerName() const {
 #define MAXHOSTNAME 1024
 
     char Buf[MAXHOSTNAME + 50];
-    if(Address != "") {
+    if(Address == "") {
         gethostname(Buf, MAXHOSTNAME); // this sometimes return unreliable (short) names
 
         // getting IP
@@ -51,7 +51,6 @@ string SimulationParams::GetServerName() const {
     }
     else {
         std::string serverName = Address+":"+std::to_string(Port);
-        std::cout << "Server name: " << serverName << "\n";
         return serverName;
     }
 
