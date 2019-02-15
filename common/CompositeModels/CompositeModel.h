@@ -395,6 +395,8 @@ class SimulationParams {
     //! Defaults is (TimeEnd-TimeStart)/1000.0
     double WriteTimeStep;
 
+    std::string Address;
+
     //! Port where the server is listening
     int Port;
 
@@ -409,11 +411,12 @@ public:
 
     //! Constructor
     SimulationParams() {
-        Set(0, 0.0, 0.0);
+        Set("", 0, 0.0, 0.0);
     }
 
     //! Set method assign the attributes of the object
-    void Set(int aPort, double StartTime, double StopTime, int aTimeout = 600, int aMonitorPort = -1) {
+    void Set(std::string address, int aPort, double StartTime, double StopTime, int aTimeout = 600, int aMonitorPort = -1) {
+        Address = address;
         Port = aPort;
         TimeStart = StartTime;
         TimeEnd = StopTime;
@@ -425,6 +428,10 @@ public:
     //! Get the port number
     int GetPort() const {
         return Port;
+    }
+
+    void SetAddress(std::string address) {
+        Address = address;
     }
 
     //! Set the port number
@@ -442,6 +449,11 @@ public:
         MonitorPort = aPort;
     }
 
+    //! Set simulation start time
+    void SetStartTime(double StartTime) {
+        TimeStart = StartTime;
+    }
+
     //! Get simulation start time
     double GetStartTime() const {
         return TimeStart;
@@ -452,6 +464,11 @@ public:
         char Buf[50];
         sprintf(Buf, "%g", TimeStart);
         return std::string(Buf);
+    }
+
+    //! Set simulation end time
+    void SetEndTime(double EndTime) {
+        TimeEnd = EndTime;
     }
 
     //! Get simulation end time

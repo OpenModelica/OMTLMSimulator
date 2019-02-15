@@ -33,23 +33,31 @@ string SimulationParams::GetServerName() const {
 #define MAXHOSTNAME 1024
 
     char Buf[MAXHOSTNAME + 50];
-    gethostname(Buf, MAXHOSTNAME); // this sometimes return unreliable (short) names
-    
-    // getting IP
-    struct hostent *hp;
-    hp = gethostbyname(Buf);
+    if(Address != "") {
+        gethostname(Buf, MAXHOSTNAME); // this sometimes return unreliable (short) names
 
-    if(hp==NULL) {
-        TLMErrorLog::FatalError("GetServerName: Failed to get my host IP");
-        return string();
+        // getting IP
+        struct hostent *hp;
+        hp = gethostbyname(Buf);
+
+        if(hp==NULL) {
+            TLMErrorLog::FatalError("GetServerName: Failed to get my host IP");
+            return string();
+        }
+
+        char* localIP;
+        localIP = inet_ntoa (*(struct in_addr *)*hp->h_addr_list);
+        sprintf(Buf,"%s:%d", localIP, Port);
     }
-
-    char* localIP;
-    localIP = inet_ntoa (*(struct in_addr *)*hp->h_addr_list);
+    else {
+        std::string serverName = Address+":"+std::to_string(Port);
+        std::cout << "Server name: " << serverName << "\n";
+        return serverName;
+    }
 
     ////////
 
-    sprintf(Buf,"%s:%d", localIP, Port);
+
     return string(Buf);
 }
 
