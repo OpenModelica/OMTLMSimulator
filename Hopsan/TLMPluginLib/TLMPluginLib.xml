@@ -2,21 +2,29 @@
 <hopsancomponentlibrary name="TLMPluginLib" xmlversion="0.1" libversion="1">
     <lib debug_ext="_d">TLMPluginLib</lib>
     <source>TLMPluginLib.cc</source>
-    <source>../../common/PluginImplementer.cc</source>
-    <source>../../common/TLMClientComm.cc</source>
-    <source>../../common/TLMCommUtil.cc</source>
-    <source>../../common/TLMErrorLog.cc</source>
-    <source>../../common/TLMInterface.cc</source>
-    <source>../../common/TLMInterfaceSignalInput.cc</source>
-    <source>../../common/TLMInterfaceSignalOutput.cc</source>
-    <source>../../common/TLMInterfaceSignal.cc</source>
-    <source>../../common/TLMInterface1D.cc</source>
-    <source>../../common/TLMInterface3D.cc</source>
-    <source>../../common/TLMPlugin.cc</source>
-    <source>../../3rdParty/misc/src/tostr.cc</source>
+    <source>../../common/Plugin/PluginImplementer.cc</source>
+    <source>../../common/Communication/TLMClientComm.cc</source>
+    <source>../../common/Communication/TLMCommUtil.cc</source>
+    <source>../../common/Logging/TLMErrorLog.cc</source>
+    <source>../../common/Interfaces/TLMInterface.cc</source>
+    <source>../../common/Plugin/TLMPlugin.cc</source>
+    <source>../../3rdParty/misc/src/Bstring.cc</source>
+    <source>../../3rdParty/misc/src/ErrorLog.cc</source>
     <source>../../3rdParty/misc/src/coordTransform.cc</source>
     <source>../../3rdParty/misc/src/double3.cc</source>
     <source>../../3rdParty/misc/src/double33.cc</source>
+    <source>../../3rdParty/misc/src/double33s.cc</source>
+    <source>../../3rdParty/misc/src/dsyevq3.cc</source>
+    <source>../../3rdParty/misc/src/dsyevv3.cc</source>
+    <source>../../3rdParty/misc/src/dsytrd3.cc</source>
+    <source>../../3rdParty/misc/src/dsyevc3.cc</source>
+    <source>../../3rdParty/misc/src/tostr.cc</source>
+    <source>../../common/Interfaces/TLMInterfaceSignal.cc</source>
+    <source>../../common/Interfaces/TLMInterfaceSignalInput.cc</source>
+    <source>../../common/Interfaces/TLMInterfaceSignalOutput.cc</source>
+    <source>../../common/Interfaces/TLMInterface1D.cc</source>
+    <source>../../common/Interfaces/TLMInterface3D.cc</source>
+    <source>../../common/Parameters/ComponentParameter.cc</source>
     <component>TLMPluginHandler.hpp</component>
     <component>TLMPluginInterfaceSignalInput.hpp</component>
     <component>TLMPluginInterfaceSignalOutput.hpp</component>
@@ -26,7 +34,6 @@
     <caf>TLMPluginInterface1D.xml</caf>
     <caf>TLMPluginHandler.xml</caf>
     <buildflags>
-      <cflags>-I../../common -I../../extralibs/misc/include</cflags>
-      <lflags>-lws2_32</lflags>
+      <cflags>-I../../common -I../../3rdParty/misc/include -std=c++11</cflags>
     </buildflags>
 </hopsancomponentlibrary>

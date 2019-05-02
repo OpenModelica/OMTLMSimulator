@@ -32,6 +32,7 @@
 
 // TLMPlugin includes
 #include "Plugin/TLMPlugin.h"
+#include "Logging/TLMErrorLog.h"
 
 namespace hopsan {
 
@@ -84,10 +85,10 @@ namespace hopsan {
                     TLMErrorLog::SetOutStream(mDebugOutFile);
                 }
 
-                TLMErrorLog::SetLogLevel(TLMLogLevel::Debug);
+                TLMErrorLog::SetLogLevel(Debug);
             }
             else {
-                TLMErrorLog::SetLogLevel(TLMLogLevel::Warning);
+                TLMErrorLog::SetLogLevel(Warning);
             }
 
             //Register parameters
