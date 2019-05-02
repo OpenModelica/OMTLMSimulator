@@ -117,7 +117,7 @@ struct optionsType {
 
     FILE *modelFile = fopen(model.c_str(), "r");
     if (!modelFile) {
-      std::cout << "Error: Model file does not exist or is not accessible.\n";
+      std::cout << "Error: Model file does not exist or is not accessible: " << model << "\n";
       exit(-1);
     }
     fclose(modelFile);

@@ -255,7 +255,7 @@ int  PluginImplementer::RegisteTLMInterface(std::string name , int dimensions,
         ifc = new TLMInterfaceOutput(ClientComm, name, StartTime, domain);
     }
     else {
-        TLMErrorLog::FatalError("Unknown interface type : "+domain+":"+std::to_string(dimensions));
+        TLMErrorLog::FatalError("Unknown interface type : "+domain+":"+std::to_string(dimensions)+" ("+causality+")");
     }
 
     int id = ifc->GetInterfaceID();
