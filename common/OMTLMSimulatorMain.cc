@@ -155,8 +155,9 @@ int main(int argc, char *argv[])
   // Start simulation //
   //////////////////////
 
-  //void* pModel = omtlm_loadModel(options.model.c_str());
-
+  void* pModel = omtlm_loadModel(options.model.c_str());
+  omtlm_setLogLevel(pModel, options.logLevel);
+/*
   void *pModel = omtlm_newModel("FmiTest");
   omtlm_addSubModel(pModel, "adder","/home/robbr48/Documents/Git/OMTLMSimulator/CompositeModels/FmiTestLinux/cs_adder1fmu1/cs_adder1.fmu", "StartTLMFmiWrapper");
   omtlm_addSubModel(pModel, "source1","/home/robbr48/Documents/Git/OMTLMSimulator/CompositeModels/FmiTestLinux/cs_source1fmu1/cs_source1.fmu", "StartTLMFmiWrapper");
@@ -190,7 +191,7 @@ int main(int argc, char *argv[])
   omtlm_setMonitorPort( pModel, options.monitor);
   omtlm_setNumLogStep(  pModel, options.numLogSteps);
   omtlm_setLogStepSize( pModel, options.logStepSize);
-
+*/
   std::cout << "Starting simulation.\n";
 
   omtlm_simulate(pModel);
