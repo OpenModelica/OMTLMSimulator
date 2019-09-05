@@ -1000,9 +1000,21 @@ void simulateInternal(void *pModel,
   }
 
 
-  omtlm_CompositeModel *pCompositeModel = pModelProxy->mpCompositeModel;
-
-  pCompositeModel->CheckTheModel();
+  omtlm_CompositeModel *pCompositeModel;
+  if(interfaceRequest) {
+     int id = pModelProxy->mpCompositeModel->GetTLMComponentID(singleModel);
+     TLMComponentProxy proxy = pModelProxy->mpCompositeModel->GetTLMComponentProxy(id);
+     pCompositeModel = new omtlm_CompositeModel();
+     pCompositeModel->RegisterTLMComponentProxy(proxy.GetName(),
+                                                proxy.GetStartCommand(),
+                                                proxy.GetModelFile(),
+                                                false,
+                                                "");
+  }
+  else {
+    pCompositeModel = pModelProxy->mpCompositeModel;
+    pCompositeModel->CheckTheModel();
+  }
 
   std::string modelName = pCompositeModel->GetModelName();
 
@@ -1355,4 +1367,12 @@ void omtlm_printModelStructure(void *pModel)
 {
   CompositeModelProxy *pModelProxy = (CompositeModelProxy*)pModel;
   pModelProxy->mpCompositeModel->Print(std::cout);
+}
+
+void omtlm_fetchInterfaces(void *pModel, const char *subModelName)
+{
+    std::string nameStr(subModelName);
+    simulateInternal(pModel,
+                     true,
+                     nameStr);
 }

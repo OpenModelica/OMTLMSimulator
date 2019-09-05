@@ -286,6 +286,16 @@ public:
         return Name;
     }
 
+    //! read the start command
+    std::string& GetStartCommand() {
+        return StartCommand;
+    }
+
+    //! read the model file
+    std::string& GetModelFile() {
+        return ModelName;
+    }
+
     //! Start the component executable
     void StartComponent(SimulationParams& SimParams, double MaxStep);
 
@@ -411,7 +421,7 @@ public:
 
     //! Constructor
     SimulationParams() {
-        Set("", 0, 0.0, 0.0);
+        Set("127.0.0.1", 11111, 0.0, 1.0, 12111);
     }
 
     //! Set method assign the attributes of the object
