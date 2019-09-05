@@ -76,6 +76,14 @@ DLLEXPORT void omtlm_addInterface(void* pModel,
                   const char *causality,
                   const char *domain);
 
+/**
+ * @brief omtlm_fetchInterfaces
+ * @param pModel Model as opaque pointer.
+ * @param subModelName Name of sub-model.
+ */
+DLLEXPORT void omtlm_fetchInterfaces(void* pModel,
+                                     const char *subModelName);
+
 DLLEXPORT void omtlm_setInitialPositionAndOrientation(void *pModel,
                                                       const char* interfaceName,
                                                       std::vector<double> position,
