@@ -365,7 +365,11 @@ int omtlm_CompositeModel::RegisterTLMConnection(int ifc1, int ifc2, TLMConnectio
 
 // Start components
 void omtlm_CompositeModel::StartComponents() {
+#ifdef WIN32
+    // no SIGCHLD on Windows!
+#else
     signal(SIGCHLD, child_signal_handler);
+#endif
     for(unsigned i = 0; i < Components.size(); i++) {
         TLMErrorLog::Info(string("-----  Starting External Tool  ----- "));
         TLMErrorLog::Info("Name: "+Components[i]->GetName());
