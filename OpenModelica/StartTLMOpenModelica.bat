@@ -13,7 +13,7 @@ rem set path to OpenModelica installation folder
 set OpenModelicaPath=%OPENMODELICAHOME%
 
 rem *********************SETUP SIMULATION*********************************************
-set OMC_Cmd=%OpenModelicaPath%/bin/omc.exe
+set OMC_Cmd="%OpenModelicaPath%/bin/omc.exe"
 set TLMCONFIGFILE=tlm.config
 
 If "%6" == "" goto USAGE
