@@ -217,7 +217,7 @@ inline void SimpleCond::wait(SimpleLock& lock) {
 #ifndef SKIP_PTHREADS
     DBG_VALIDATE(pthread_cond_wait(&the_cond, &(lock.the_lock)));
 #else
-    lock; // does nothing, just to avoid warning.
+    (void)lock; // does nothing, just to avoid warning.
 #endif
 #ifdef DEBUG_TQ_VER_FLG
     lock.ownerThreadID = savedID;
