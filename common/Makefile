@@ -151,7 +151,7 @@ $(ABI)/tlmmonitor$(FEXT): $(OBJS)
 
 $(ABI)/omtlmsimulator$(FEXT): $(OBJS)
 	$(MAKE) dir
-	$(LINK) -o $(ABI)/omtlmsimulator$(FEXT) $(OBJS) $(LIBPTHREAD) -L$(ABI) -lomtlmsimulator
+	$(LINK) -o $(ABI)/omtlmsimulator$(FEXT) $(OBJS) $(LIBPTHREAD) -L$(ABI) -Wl,-Bdynamic -lomtlmsimulator
 	if [ -f $(ABI)/omtlmsimulator.exe.manifest ] ; then \
 		(cd $(ABI) ; mt.exe -manifest omtlmsimulator.exe.manifest -outputresource:omtlmsimulator.exe\;1); fi
 	$(CP) $(ABI)/omtlmsimulator$(FEXT) $(BINDIR)/omtlmsimulator$(FEXT)
