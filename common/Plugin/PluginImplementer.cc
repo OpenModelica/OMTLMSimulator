@@ -237,7 +237,7 @@ int  PluginImplementer::RegisteTLMInterface(std::string name , int dimensions,
     causality[0] = std::tolower(causality[0],loc);
     domain[0] = std::tolower(domain[0],loc);
 
-    omtlm_TLMInterface *ifc;
+    omtlm_TLMInterface *ifc = NULL;
     if(dimensions==6) {
         TLMErrorLog::Info("Registers TLM interface of type 3D");
         ifc = new TLMInterface3D(ClientComm, name, StartTime, domain);
@@ -612,11 +612,11 @@ void PluginImplementer::SetMotion1D(int forceID,
             if((*iter)->GetCausality() == "input") continue;
             if(! (*iter)->waitForShutdown()) return;
         }
-#ifdef _MSC_VER     
+#ifdef _MSC_VER
         WSACleanup(); // BZ306 fixed here
 #else
         // needed anything ?
-#endif     
+#endif
 
         InterfaceReadyForTakedown(ifc->GetName());
     }
@@ -709,4 +709,3 @@ void PluginImplementer::GetParameterValue(int parameterID, std::string &Name, st
     Name = pPar->GetName();
     Value = pPar->GetValue();
 }
-
