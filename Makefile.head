@@ -108,7 +108,7 @@ override CXX += $(CXXFLAGS) -std=c++11 $(EXTRAFLAGS)
 
 ifeq (MINGW64,$(findstring MINGW64,$(detected_OS)))
   INCLXML-WINDOWS64=-I$(MSYSROOT)/mingw64/include/libxml2 -I$(MSYSROOT)/mingw64/include/
-  LIBXML-WINDOWS64=-L$(MSYSROOT)/mingw64/lib -Wl,-Bstatic -lxml2 -lz -llzma  -liconv -lws2_32 -Wl,-Bdynamic -static-libgcc
+  LIBXML-WINDOWS64=-L$(MSYSROOT)/mingw64/lib -Wl,-Bstatic -lxml2 -lz -llzma  -liconv -lws2_32 -Wl,-Bdynamic -static-libgcc -static-libstdc++
   CP-LIBXML-WINDOWS64=cp $(MSYSROOT)/mingw64/bin/libxml2-2.dll $(MSYSROOT)/mingw64/bin/libiconv-2.dll $(MSYSROOT)/mingw64/bin/zlib1.dll $(MSYSROOT)/mingw64/bin/libwinpthread-1.dll $(MSYSROOT)/mingw64/bin/libstdc++-6.dll $(MSYSROOT)/mingw64/bin/libgcc_s_seh-1.dll $(MSYSROOT)/mingw64/bin/liblzma-5.dll $(UP)/bin
   INCLPTHREAD-WINDOWS64=
   LIBPTHREAD-WINDOWS64=-Wl,-Bstatic -lpthread -Wl,-Bdynamic
