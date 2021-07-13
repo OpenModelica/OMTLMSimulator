@@ -122,8 +122,8 @@ else
   LIBPTHREAD-WINDOWS64=-L$(UP)/extralibs/pthread/$(ABI)/lib pthreadVC2.lib
 endif
 
-INCLXML-WINDOWS32=-I$(MSYSROOT)/mingw32/include/libxml2
-LIBXML-WINDOWS32=-Wl,-Bstatic -lxml2 -lz -llzma  -liconv -lws2_32 -Wl,-Bdynamic -static-libgcc
+INCLXML-WINDOWS32=-I$(MSYSROOT)/mingw32/include/libxml2 -I$(MSYSROOT)/mingw32/include/
+LIBXML-WINDOWS32=-L$(MSYSROOT)/mingw32/lib -Wl,-Bstatic -lxml2 -lz -llzma  -liconv -lws2_32 -Wl,-Bdynamic -static-libgcc -static-libstdc++
 CP-LIBXML-WINDOWS32=cp $(MSYSROOT)/mingw32/bin/libxml2-2.dll $(MSYSROOT)/mingw32/bin/libiconv-2.dll $(MSYSROOT)/mingw32/bin/zlib1.dll $(MSYSROOT)/mingw32/bin/libwinpthread-1.dll $(MSYSROOT)/mingw32/bin/libstdc++-6.dll $(MSYSROOT)/mingw32/bin/libgcc_s_dw2-1.dll $(MSYSROOT)/mingw32/bin/liblzma-5.dll $(UP)/bin
 INCLPTHREAD-WINDOWS32=
 LIBPTHREAD-WINDOWS32=-Wl,-Bstatic -lpthread -Wl,-Bdynamic
