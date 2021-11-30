@@ -20,7 +20,8 @@ TLMMessageHeader::TLMMessageHeader():
     MessageType(0),
     SourceIsBigEndianSystem(IsBigEndianSystem),
     DataSize(0),
-    TLMInterfaceID(-1) {
+    TLMInterfaceID(-1),
+    ComponentParameterID(0) {
     strncpy(Signature, TLMSignature, TLM_SIGNATURE_LENGTH);
 }
 
