@@ -210,8 +210,8 @@ int TLMClientComm::ConnectManager(string& callname, int portnr) {
         TLMErrorLog::Info("TLM manager host found, trying to connect...");
     }
 
-    bool val = true;
-    setsockopt(s, SOL_SOCKET, SO_REUSEADDR, (char*)&val, sizeof(int));
+    int val = 1;
+    setsockopt(s, SOL_SOCKET, SO_REUSEADDR, &val, sizeof(int));
 
     count = 0;
 

@@ -71,8 +71,8 @@ int TLMManagerComm::CreateServerSocket() {
         return -1;
     }
 
-    bool val = true;
-    setsockopt(theSckt, SOL_SOCKET, SO_REUSEADDR, (char*)&val, sizeof(int));
+    int val = 1;
+    setsockopt(theSckt, SOL_SOCKET, SO_REUSEADDR, &val, sizeof(int));
 
     int bindCount = 0;
     int maxIterations = 1000; // BUG: should be calculated from a max. port range!
