@@ -28,7 +28,9 @@ using std::string;
 #include <arpa/inet.h>
 #else
 #include <winsock2.h>
-#define NOMINMAX
+#ifndef NOMINMAX
+  #define NOMINMAX
+#endif
 #include <windows.h>
 #include <cassert>
 #include <io.h>
@@ -210,8 +212,12 @@ int TLMClientComm::ConnectManager(string& callname, int portnr) {
         TLMErrorLog::Info("TLM manager host found, trying to connect...");
     }
 
+#ifdef WIN32
+    const char val = 1;
+#else
     int val = 1;
-    setsockopt(s, SOL_SOCKET, SO_REUSEADDR, &val, sizeof(int));
+#endif
+    setsockopt(s, SOL_SOCKET, SO_REUSEADDR, &val, sizeof(val));
 
     count = 0;
 

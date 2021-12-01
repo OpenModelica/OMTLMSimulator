@@ -23,7 +23,9 @@ using std::string;
 #define BCloseSocket close
 #else
 #include <winsock2.h>
-#define NOMINMAX
+#ifndef NOMINMAX
+  #define NOMINMAX
+#endif
 #include <windows.h>
 #include <cassert>
 #include <io.h>
@@ -71,8 +73,12 @@ int TLMManagerComm::CreateServerSocket() {
         return -1;
     }
 
+#ifdef WIN32
+    const char val = 1;
+#else
     int val = 1;
-    setsockopt(theSckt, SOL_SOCKET, SO_REUSEADDR, &val, sizeof(int));
+#endif
+    setsockopt(theSckt, SOL_SOCKET, SO_REUSEADDR, &val, sizeof(val));
 
     int bindCount = 0;
     int maxIterations = 1000; // BUG: should be calculated from a max. port range!
