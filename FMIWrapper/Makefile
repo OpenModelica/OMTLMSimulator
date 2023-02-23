@@ -17,8 +17,8 @@ endif
 
 include $(MAKEFILEHEADHOME)/Makefile.head
 
-override CC += -pipe -O2 -frtti -Wall -Wextra -fexceptions -DUNICODE -DINTERFACE_TYPES
-override CXX += -pipe -O2 -frtti -Wall -Wextra -fexceptions -DUNICODE -DINTERFACE_TYPES
+override CC += -pipe -O2 -frtti -Wall -Wextra -fexceptions -DUNICODE -DINTERFACE_TYPES -DFMI4C_STATIC
+override CXX += -pipe -O2 -frtti -Wall -Wextra -fexceptions -DUNICODE -DINTERFACE_TYPES -DFMI4C_STATIC
 
 # deal with regex crap
 STD_REGEX=$(shell ../../3rdParty/RegEx/OMSRegEx)
@@ -34,7 +34,7 @@ MISCHOME=../3rdParty/misc
 
 INCLUDES=  -I. \
 	-I"../FMIWrapper" \
-	-I"../../3rdParty/FMIL/$(INSTALL_DIR)/include" \
+	-I"../../3rdParty/fmi4c/$(INSTALL_DIR)/include" \
 	-I"../../3rdParty/RegEx" \
 	-I"../common" -I"../3rdParty/misc/include" \
 	-I"cvode-2.9.0/include" \
@@ -47,13 +47,18 @@ ifeq (Windows_NT,$(OS))
   ISWINDOWS = 1
 endif
 
+
 ifeq (1,$(ISWINDOWS))
 	LIBS = 	-lws2_32 \
-	        -L../../3rdParty/FMIL/$(INSTALL_DIR)/lib \
-		-lfmilib -lshlwapi
+			-L../../3rdParty/fmi4c/$(INSTALL_DIR)/lib -lfmi4c \
+			-L../../3rdParty/minizip/$(INSTALL_DIR)/lib -lminizip \
+			-L../../3rdParty/zlib/$(INSTALL_DIR)/lib -lzlibstatic \
+			-lshlwapi
 else
-	LIBS = 	-L../../3rdParty/FMIL/$(INSTALL_DIR)/lib \
-		-lfmilib -ldl $(EXTRA_LIBS)
+	LIBS = 	-L../../3rdParty/fmi4c/$(INSTALL_DIR)/lib -lfmi4c \
+			-L../../3rdParty/minizip/$(INSTALL_DIR)/lib -lminizip \
+			-L../../3rdParty/zlib/$(INSTALL_DIR)/lib -lzlibstatic \
+			-ldl $(EXTRA_LIBS)
 endif
 
 $(ABI)/%.o: %.cpp
