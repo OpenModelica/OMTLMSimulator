@@ -32,6 +32,7 @@
 #include "sundials/sundials_types.h"
 
 #include <fmi4c.h>
+#include <stdarg.h>
 // TLMPlugin includes
 #include "Plugin/TLMPlugin.h"
 #include "Logging/TLMErrorLog.h"
