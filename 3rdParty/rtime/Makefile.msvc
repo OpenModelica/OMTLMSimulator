@@ -1,4 +1,4 @@
-CC=cl -EHsc /MP
+CC=cl -EHsc /MP /MD
 cc=cl
 
 INCLUDES=/Iinclude /I../../../3rdParty/pthread/install/win/include
